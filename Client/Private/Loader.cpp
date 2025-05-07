@@ -46,7 +46,8 @@ HRESULT CLoader::Initialize(LEVEL eNextLevelID)
 
 HRESULT CLoader::Loading()
 {
-	CoInitializeEx(nullptr, 0);	
+	if (FAILED(CoInitializeEx(nullptr, 0)))
+		return E_FAIL;
 
 	EnterCriticalSection(&m_CriticalSection);
 
@@ -63,14 +64,11 @@ HRESULT CLoader::Loading()
 		break;
 	}
 
+	LeaveCriticalSection(&m_CriticalSection);
 	if (FAILED(hr))
 		return E_FAIL;
-
-	LeaveCriticalSection(&m_CriticalSection);
-
-
-
-	return S_OK;
+	else
+		return S_OK;
 }
 
 HRESULT CLoader::Loading_For_Logo()
@@ -81,6 +79,13 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Logo_BackGround*/
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_BackGround"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+		return E_FAIL;
+
+
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 

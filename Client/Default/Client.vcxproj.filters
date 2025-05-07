@@ -37,6 +37,9 @@
     <Filter Include="02.GameObjects\01.Terrain">
       <UniqueIdentifier>{191921a7-783e-4ca6-bb37-84f789e968ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\MapTool">
+      <UniqueIdentifier>{1561a74d-c864-4ddc-8b26-3c64d9be88be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -78,6 +81,9 @@
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\01.Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_MapTool.h">
+      <Filter>01.Levels\MapTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -116,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObjects\01.Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_MapTool.cpp">
+      <Filter>01.Levels\MapTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
