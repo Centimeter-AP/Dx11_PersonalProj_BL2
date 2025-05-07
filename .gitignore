@@ -1,11 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,c++
 
-### Ignore the ignore !! ###
-!Client\Bin\
-
-
-
 ### C++ ###
 # Prerequisites
 *.d
@@ -70,7 +65,6 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
-[Bb]in/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
