@@ -62,6 +62,11 @@ HRESULT CLoader::Loading()
 	case LEVEL::GAMEPLAY:
 		hr = Loading_For_GamePlay();
 		break;
+		
+	case LEVEL::MAPTOOL:
+		hr = Loading_For_Maptool();
+		break;
+		
 	}
 
 	LeaveCriticalSection(&m_CriticalSection);
@@ -179,6 +184,15 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	m_isFinished = true;
 
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_For_Maptool()
+{
+
+	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
+
+	m_isFinished = true;
 	return S_OK;
 }
 

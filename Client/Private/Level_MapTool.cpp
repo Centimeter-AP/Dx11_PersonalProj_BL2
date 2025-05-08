@@ -4,6 +4,11 @@
 #include "Level_Loading.h"
 //#include "Camera_Free.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "ImGuizmo.h"
+
 CLevel_MapTool::CLevel_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel{ pDevice, pContext }
 {
@@ -17,8 +22,11 @@ HRESULT CLevel_MapTool::Initialize()
     //if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
     //    return E_FAIL;
 
-    if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+    if (FAILED(Ready_ImGui()))
         return E_FAIL;
+
+    //if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+    //    return E_FAIL;
 
 
     return S_OK;
@@ -34,34 +42,80 @@ HRESULT CLevel_MapTool::Render()
 #ifdef _DEBUG
     SetWindowText(g_hWnd, TEXT("맵툴 레벨입니다."));
 #endif
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+    //ImGui::ShowDemoWindow(); // Show demo window! :)
 
+    ImGui_Render();
+    //렌더링 어쩌구저쩌구들
+
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    //ImGui::UpdatePlatformWindows();
+    //ImGui::RenderPlatformWindowsDefault();
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Ready_ImGui()
+{
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // multi-viewport?
+    ImGui::StyleColorsDark();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplWin32_Init(g_hWnd);
+    ImGui_ImplDX11_Init(m_pDevice, m_pContext);
+
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::ImGui_Render()
+{
+    ImGui::DockSpaceOverViewport();
+
+    if (FAILED(Window_ObjectList()))
+        return E_FAIL;
+    if (FAILED(Window_ObjectInspector()))
+        return E_FAIL;
+    if (FAILED(Window_ResourceList()))
+        return E_FAIL;
+
+
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Window_ObjectList()
+{
+    ImGui::Begin("Hierachy");
+
+    ImGui::End();
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Window_ObjectInspector()
+{
+    ImGui::Begin("Inspector");
+
+    ImGui::End();
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Window_ResourceList()
+{
+    ImGui::Begin("Resources");
+
+    ImGui::End();
     return S_OK;
 }
 
 HRESULT CLevel_MapTool::Ready_Lights()
 {
-    //LIGHT_DESC          LightDesc{};
-
-    //LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-    //LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-    //LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-    //LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-    //LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-    //if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-    //    return E_FAIL;
-
-    //LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-    //// LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-    //LightDesc.vPosition = _float4(20.f, 5.f, 20.f, 1.f);
-    //LightDesc.fRange = 20.f;
-    //LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-    //LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
-    //LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-
-    //if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-    //    return E_FAIL;
-
     return S_OK;
 }
 
@@ -135,6 +189,12 @@ CLevel_MapTool* CLevel_MapTool::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 
 void CLevel_MapTool::Free()
 {
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    //ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable; // 멀티 뷰포트 비활성화
+    //ImGui::GetIO().Fonts->Clear(); // 폰트 캐시 정리
+    ImGui::DestroyContext();
+
     __super::Free();
 
 }

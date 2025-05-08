@@ -16,6 +16,16 @@ public:
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+private:
+	HRESULT Ready_ImGui();
+
+private:
+	HRESULT ImGui_Render();
+	HRESULT Window_ObjectList();
+	HRESULT Window_ObjectInspector();
+	HRESULT Window_ResourceList();
+
+
 public:
 	HRESULT Ready_Lights();
 	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);

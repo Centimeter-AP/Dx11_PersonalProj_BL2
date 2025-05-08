@@ -40,6 +40,33 @@
     <Filter Include="01.Levels\MapTool">
       <UniqueIdentifier>{1561a74d-c864-4ddc-8b26-3c64d9be88be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\00.BackGround\ClassCode">
+      <UniqueIdentifier>{504db603-5210-4ff9-ba4e-88a43f997efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI">
+      <UniqueIdentifier>{147fd8f1-c03c-496d-abe4-ef7fd31b3909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Level_Logo">
+      <UniqueIdentifier>{ccbf66b7-e022-4ecb-95e6-1765d9a08954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\StaticUI">
+      <UniqueIdentifier>{c4cb7a60-3ab0-49ed-8030-24896353daea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\StaticUI\NewFilter1">
+      <UniqueIdentifier>{c11db0ff-a100-4d4d-9910-0b2c6bc36259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\Inventory">
+      <UniqueIdentifier>{1b101d00-b404-4920-a495-1d291e8d14f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\UI\NewFilter1">
+      <UniqueIdentifier>{e7652dd2-9df2-40a8-a8eb-687d8d276cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Default\Imgui_Docking">
+      <UniqueIdentifier>{bc98f8ba-3648-49e9-b6aa-7cb1a4a12500}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98.Default\Imgui_Docking\Backend">
+      <UniqueIdentifier>{e38fff58-4698-469a-9a91-4b89aae11392}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -75,14 +102,50 @@
     <ClInclude Include="..\public\MainApp.h">
       <Filter>00.MainApp</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\BackGround.h">
-      <Filter>02.GameObjects\00.BackGround</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Terrain.h">
       <Filter>02.GameObjects\01.Terrain</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_MapTool.h">
       <Filter>01.Levels\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\BackGround.h">
+      <Filter>02.GameObjects\00.BackGround\ClassCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Logo_Background.h">
+      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\GameLogo.h">
+      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Macro.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\backends\imgui_impl_dx11.h">
+      <Filter>98.Default\Imgui_Docking\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\backends\imgui_impl_win32.h">
+      <Filter>98.Default\Imgui_Docking\Backend</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImGuizmo.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -117,14 +180,44 @@
     <ClCompile Include="..\private\MainApp.cpp">
       <Filter>00.MainApp</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\BackGround.cpp">
-      <Filter>02.GameObjects\00.BackGround</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Terrain.cpp">
       <Filter>02.GameObjects\01.Terrain</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_MapTool.cpp">
       <Filter>01.Levels\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\BackGround.cpp">
+      <Filter>02.GameObjects\00.BackGround\ClassCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Logo_Background.cpp">
+      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\GameLogo.cpp">
+      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\backends\imgui_impl_dx11.cpp">
+      <Filter>98.Default\Imgui_Docking\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\backends\imgui_impl_win32.cpp">
+      <Filter>98.Default\Imgui_Docking\Backend</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\ImGuizmo.cpp">
+      <Filter>98.Default\Imgui_Docking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
