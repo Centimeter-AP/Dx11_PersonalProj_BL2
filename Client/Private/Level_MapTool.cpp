@@ -79,8 +79,8 @@ HRESULT CLevel_MapTool::ImGui_Render()
 {
     //ImGui::DockSpaceOverViewport();  똥
     ImGui_Docking_Settings();
-
-   
+    //Toolbar_Menus();
+    Show_ExternWindows();
 
     if (FAILED(Window_ObjectList()))
         return E_FAIL;
@@ -142,12 +142,61 @@ HRESULT CLevel_MapTool::ImGui_Docking_Settings()
     ImGui::Begin("DockSpace", nullptr, window_flags);
     ImGui::PopStyleVar(3);
 
+    Toolbar_Menus();
+
     ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
     ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
     ImGui::End();
 
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Toolbar_Menus()
+{
+    if (ImGui::BeginMenuBar()) {
+        if (ImGui::BeginMenu("File")) {
+            if (ImGui::MenuItem("Open", "Ctrl+O")) { /* 파일 열기 로직 */ }
+            if (ImGui::MenuItem("Save", "Ctrl+S")) { /* 파일 저장 로직 */ }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Edit")) {
+            if (ImGui::MenuItem("Undo", "Ctrl+Z")) { /* 실행 취소 로직 */ }
+            if (ImGui::MenuItem("Redo", "Ctrl+Y")) { /* 다시 실행 로직 */ }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Tool")) {
+            if (ImGui::MenuItem("Anim Model")) {   }
+            if (ImGui::MenuItem("NonAnim Model")) {}
+            ImGui::MenuItem("Terrain", NULL, &m_tWindowData.ShowTerrainMenu);
+            if (ImGui::BeginMenu("Components")) {
+                ImGui::MenuItem("Debug Log", NULL, false, true);
+                if (ImGui::MenuItem("Collider")) {}
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenuBar();
+    }
+
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Terrain_Tools(_bool* p_open)
+{
+    ImGui::SetNextWindowSize(ImVec2(600, 400));
+    ImGui::Begin("Terrain Tools", p_open, ImGuiWindowFlags_MenuBar);
+
+ 
+
+    ImGui::End();
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Show_ExternWindows()
+{
+    if (m_tWindowData.ShowTerrainMenu) { Terrain_Tools(&m_tWindowData.ShowTerrainMenu); }
     return S_OK;
 }
 

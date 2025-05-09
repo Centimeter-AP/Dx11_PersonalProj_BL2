@@ -3,21 +3,21 @@
 #include "Shader.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CComponent { pDevice, pContext }
+	: CComponent{ pDevice, pContext }
 {
 }
 
 CTransform::CTransform(const CTransform& Prototype)
 	: CComponent{ Prototype }
-	, m_WorldMatrix { Prototype.m_WorldMatrix }
+	, m_WorldMatrix{ Prototype.m_WorldMatrix }
 {
 }
 
 _float3 CTransform::Get_Scaled()
-{	
+{
 	return _float3(XMVectorGetX(XMVector3Length(Get_State(STATE::RIGHT))),
 		XMVectorGetX(XMVector3Length(Get_State(STATE::UP))),
-		XMVectorGetX(XMVector3Length(Get_State(STATE::LOOK))));		
+		XMVectorGetX(XMVector3Length(Get_State(STATE::LOOK))));
 }
 
 HRESULT CTransform::Initialize_Prototype()
@@ -58,7 +58,7 @@ void CTransform::Go_Straight(_float fTimeDelta)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
-		
+
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
 	Set_State(STATE::POSITION, vPosition);
@@ -98,8 +98,17 @@ void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDista
 {
 	_vector		vMoveDir = vTarget - Get_State(STATE::POSITION);
 
-	if(fMinDistance <= XMVectorGetX(XMVector3Length(vMoveDir)))
+	if (fMinDistance <= XMVectorGetX(XMVector3Length(vMoveDir)))
 		Set_State(STATE::POSITION, Get_State(STATE::POSITION) + XMVector3Normalize(vMoveDir) * m_fSpeedPerSec * fTimeDelta);
+}
+
+void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
+{
+	_matrix			RotationMatrix = XMMatrixRotationAxis(vAxis, m_fRotationPerSec * fTimeDelta);
+
+	Set_State(STATE::RIGHT, XMVector4Transform(Get_State(STATE::RIGHT), RotationMatrix));
+	Set_State(STATE::UP, XMVector4Transform(Get_State(STATE::UP), RotationMatrix));
+	Set_State(STATE::LOOK, XMVector4Transform(Get_State(STATE::LOOK), RotationMatrix));
 }
 
 void CTransform::LookAt(_fvector vAt)
@@ -117,7 +126,7 @@ void CTransform::LookAt(_fvector vAt)
 
 HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstantName)
 {
-	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);	
+	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);
 }
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

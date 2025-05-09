@@ -53,27 +53,34 @@ public:
 #pragma endregion
 
 
-#pragma region 	
+#pragma region 	PIPELINE
 	void Set_Transform(D3DTS eState, _fmatrix TransformMatrix);
 	const _float4x4* Get_Transform_Float4x4(D3DTS eState) const;
 	_matrix Get_Transform_Matrix(D3DTS eState) const;
 	const _float4* Get_CamPosition() const;
 #pragma endregion
-//
-//#pragma region PICKING
-//	void Transform_Picking_ToLocalSpace(const _float4x4& WorldMatrixInverse);
-//	_bool Picking_InWorld(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
-//	_bool Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
-//#pragma endregion
+
+#pragma region INPUT_DEVICE
+	_byte	Get_DIKeyState(_ubyte byKeyID);
+	_byte	Get_DIMouseState(DIM eMouse);
+	_long	Get_DIMouseMove(DIMM eMouseState);
+#pragma endregion
+	//
+	//#pragma region PICKING
+	//	void Transform_Picking_ToLocalSpace(const _float4x4& WorldMatrixInverse);
+	//	_bool Picking_InWorld(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
+	//	_bool Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
+	//#pragma endregion
 
 private:
-	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
-	class CLevel_Manager*		m_pLevel_Manager = { nullptr };
-	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
-	class CObject_Manager*		m_pObject_Manager = { nullptr };
-	class CRenderer*			m_pRenderer = { nullptr };
-	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
-	class CPipeLine*			m_pPipeLine = { nullptr };
+	class CGraphic_Device* m_pGraphic_Device = { nullptr };
+	class CInput_Device* m_pInput_Device = { nullptr };
+	class CLevel_Manager* m_pLevel_Manager = { nullptr };
+	class CPrototype_Manager* m_pPrototype_Manager = { nullptr };
+	class CObject_Manager* m_pObject_Manager = { nullptr };
+	class CRenderer* m_pRenderer = { nullptr };
+	class CTimer_Manager* m_pTimer_Manager = { nullptr };
+	class CPipeLine* m_pPipeLine = { nullptr };
 	// class CPicking*				m_pPicking = { nullptr };
 
 public:

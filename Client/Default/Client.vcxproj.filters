@@ -67,6 +67,12 @@
     <Filter Include="98.Default\Imgui_Docking\Backend">
       <UniqueIdentifier>{e38fff58-4698-469a-9a91-4b89aae11392}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02. Camera">
+      <UniqueIdentifier>{6eb594ac-683f-4ded-b74c-763ac24a8aea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Monster">
+      <UniqueIdentifier>{aaeea020-29b6-442c-bdd0-4b9cfb0f1891}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -147,6 +153,12 @@
     <ClInclude Include="imgui\ImGuizmo.h">
       <Filter>98.Default\Imgui_Docking</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera_Free.h">
+      <Filter>02.GameObjects\02. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Monster.h">
+      <Filter>02.GameObjects\03. Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -219,12 +231,21 @@
     <ClCompile Include="imgui\ImGuizmo.cpp">
       <Filter>98.Default\Imgui_Docking</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Camera_Free.cpp">
+      <Filter>02.GameObjects\02. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Monster.cpp">
+      <Filter>02.GameObjects\03. Monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -17,16 +17,29 @@ public:
 	virtual HRESULT Render() override;
 
 private:
+	typedef struct tagIsMenuOpen {
+		_bool	ShowTerrainMenu = false;
+	}ISOPEN;
+
+private:
 	HRESULT Ready_ImGui();
 
 private:
 	HRESULT ImGui_Render();
+	HRESULT ImGui_Docking_Settings();
 	HRESULT Window_ObjectList();
 	HRESULT Window_ObjectInspector();
 	HRESULT Window_ResourceList();
 
-	HRESULT ImGui_Docking_Settings();
+private: /* 상단 툴 바 */
+	HRESULT Toolbar_Menus();
+	HRESULT Terrain_Tools(_bool* p_open);
+	HRESULT Show_ExternWindows();
 
+
+private:
+	class CGameObject*	m_pCurSelectedObj;
+	ISOPEN				m_tWindowData;
 
 public:
 	HRESULT Ready_Lights();

@@ -3,6 +3,7 @@
 //#include "Picking.h"
 #include "Renderer.h"
 #include "PipeLine.h"
+#include "Input_Device.h"
 #include "Level_Manager.h"
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
@@ -20,6 +21,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	m_pGraphic_Device = CGraphic_Device::Create(EngineDesc.hWnd, EngineDesc.isWindowed, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY, ppDeviceOut, ppContextOut);
 	if (nullptr == m_pGraphic_Device)
 		return E_FAIL;
+
+	m_pInput_Device = CInput_Device::Create(EngineDesc.hInstance, EngineDesc.hWnd);
+	if (nullptr == m_pInput_Device)
+		return E_FAIL;
+
 
 	m_pTimer_Manager = CTimer_Manager::Create();
 	if (nullptr == m_pTimer_Manager)
@@ -58,11 +64,13 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
+	m_pInput_Device->Update();
+
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
 	m_pPipeLine->Update();
 
-	m_pObject_Manager->Update(fTimeDelta);	
+	m_pObject_Manager->Update(fTimeDelta);
 
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
@@ -102,7 +110,7 @@ HRESULT CGameInstance::End_Draw()
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	/* 특정 레벨의 자원을 삭제한다. */
-	
+
 	/* 특정 레벨의 객체을 삭제한다. */
 	m_pObject_Manager->Clear(iLevelIndex);
 
@@ -113,12 +121,12 @@ void CGameInstance::Clear(_uint iLevelIndex)
 
 _float CGameInstance::Compute_Random_Normal()
 {
-	return rand() / static_cast<_float>(RAND_MAX);	
+	return rand() / static_cast<_float>(RAND_MAX);
 }
 
 _float CGameInstance::Compute_Random(_float fMin, _float fMax)
 {
-	return fMin + (fMax - fMin) * Compute_Random_Normal();	
+	return fMin + (fMax - fMin) * Compute_Random_Normal();
 }
 
 #pragma region LEVEL_MANAGER
@@ -151,7 +159,7 @@ HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring
 CComponent* CGameInstance::Get_Component(_uint iLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex)
 {
 	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex);
-	
+
 }
 
 #pragma endregion
@@ -205,6 +213,21 @@ const _float4* CGameInstance::Get_CamPosition() const
 	return m_pPipeLine->Get_CamPosition();
 }
 
+_byte CGameInstance::Get_DIKeyState(_ubyte byKeyID)
+{
+	return m_pInput_Device->Get_DIKeyState(byKeyID);
+}
+
+_byte CGameInstance::Get_DIMouseState(DIM eMouse)
+{
+	return m_pInput_Device->Get_DIMouseState(eMouse);
+}
+
+_long CGameInstance::Get_DIMouseMove(DIMM eMouseState)
+{
+	return m_pInput_Device->Get_DIMouseMove(eMouseState);
+}
+
 #pragma endregion
 
 //#pragma region PICKING
@@ -239,6 +262,8 @@ void CGameInstance::Release_Engine()
 
 	Safe_Release(m_pLevel_Manager);
 
+	Safe_Release(m_pInput_Device);
+
 	Safe_Release(m_pGraphic_Device);
 
 	Destroy_Instance();
@@ -250,5 +275,5 @@ void CGameInstance::Free()
 
 
 
-	
+
 }
