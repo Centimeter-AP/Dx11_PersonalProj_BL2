@@ -8,7 +8,7 @@ CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CTransform::CTransform(const CTransform& Prototype)
-	: CComponent{ Prototype }
+	: CComponent(Prototype)
 	, m_WorldMatrix{ Prototype.m_WorldMatrix }
 {
 }

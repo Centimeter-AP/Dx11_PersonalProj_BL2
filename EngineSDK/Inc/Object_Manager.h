@@ -25,7 +25,8 @@ public:
 	void Clear(_uint iLevelIndex);
 private:	
 	_uint								m_iNumLevels = {};
-	map<const _wstring, class CLayer*>* m_pLayers = { nullptr };
+	typedef unordered_map<_wstring, class CLayer*> LAYERS;
+	LAYERS* m_pLayers = { nullptr };
 	class CGameInstance*				m_pGameInstance = { nullptr };
 
 private:

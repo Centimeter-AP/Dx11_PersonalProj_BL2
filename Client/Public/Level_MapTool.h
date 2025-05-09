@@ -3,6 +3,10 @@
 #include "Client_Defines.h"
 #include "Level.h"
 
+NS_BEGIN(Engine)
+class CGameObject;
+NS_END
+
 NS_BEGIN(Client)
 
 class CLevel_MapTool final : public CLevel
@@ -38,12 +42,12 @@ private: /* 상단 툴 바 */
 
 
 private:
-	class CGameObject*	m_pCurSelectedObj;
+	CGameObject*		m_pCurSelectedObj;
 	ISOPEN				m_tWindowData;
 
 public:
 	HRESULT Ready_Lights();
-	HRESULT Ready_Layer_Camera(const _wstring& strLayerTag);
+	HRESULT Ready_Layer_Camera(const _wstring strLayerTag);
 	HRESULT Ready_Layer_Player(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_BackGround(const _wstring& strLayerTag);

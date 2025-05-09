@@ -24,6 +24,7 @@ using namespace DirectX;
 
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <list>
 #include <vector>
 using namespace std;

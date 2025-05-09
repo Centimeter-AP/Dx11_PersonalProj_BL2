@@ -13,6 +13,13 @@ NS_BEGIN(Client)
 
 class CTerrain final : public CGameObject
 {
+public:
+	typedef struct tagTerrainDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+		LEVEL		eLevelID = {LEVEL::END};
+
+	}DESC;
+
 private:
 	CTerrain(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CTerrain(const CTerrain& Prototype);
@@ -30,6 +37,7 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CTexture*			m_pTextureCom = { nullptr };
 	CVIBuffer_Terrain*	m_pVIBufferCom = { nullptr };
+	LEVEL				m_eLevelID = { LEVEL::END };
 
 private:
 	HRESULT Ready_Components();

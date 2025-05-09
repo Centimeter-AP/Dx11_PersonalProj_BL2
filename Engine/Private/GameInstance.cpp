@@ -10,7 +10,13 @@
 #include "Object_Manager.h"
 #include "Prototype_Manager.h"
 
-IMPLEMENT_SINGLETON(CGameInstance);
+CGameInstance* CGameInstance::m_pInstance = nullptr; CGameInstance* CGameInstance::Get_Instance() {
+	if (nullptr == m_pInstance) m_pInstance = new CGameInstance; return m_pInstance;
+} unsigned int CGameInstance::Destroy_Instance() {
+	unsigned int iRefCnt = {}; if (nullptr != m_pInstance) {
+		iRefCnt = m_pInstance->Release(); if (0 == iRefCnt) m_pInstance = nullptr;
+	} return iRefCnt;
+};
 
 CGameInstance::CGameInstance()
 {
@@ -266,14 +272,12 @@ void CGameInstance::Release_Engine()
 
 	Safe_Release(m_pGraphic_Device);
 
-	Destroy_Instance();
+	//Destroy_Instance();
 }
 
 void CGameInstance::Free()
 {
 	__super::Free();
-
-
 
 
 }

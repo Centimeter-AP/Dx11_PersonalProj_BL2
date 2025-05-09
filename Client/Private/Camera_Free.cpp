@@ -8,7 +8,7 @@ CCamera_Free::CCamera_Free(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CCamera_Free::CCamera_Free(const CCamera_Free& Prototype)
-	: CCamera { Prototype }
+	: CCamera (Prototype)
 {
 
 }

@@ -22,7 +22,7 @@ CComponent* CObject_Manager::Get_Component(_uint iLevelIndex, const _wstring& st
 
 HRESULT CObject_Manager::Initialize(_uint iNumLevels)
 {
-	m_pLayers = new map<const _wstring, CLayer*>[iNumLevels];
+	m_pLayers = new LAYERS[iNumLevels];
 
 	m_iNumLevels = iNumLevels;
 

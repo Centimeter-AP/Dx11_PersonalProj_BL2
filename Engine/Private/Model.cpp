@@ -58,10 +58,6 @@ HRESULT CModel::Render()
 
 HRESULT CModel::Ready_Meshes()
 {
-	m_iNumMeshes = m_pAIScene->mNumMeshes;
-
-
-
 	for (size_t i = 0; i < m_iNumMeshes; i++)
 	{
 		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_pAIScene->mMeshes[i]);
@@ -70,6 +66,7 @@ HRESULT CModel::Ready_Meshes()
 
 		m_Meshes.push_back(pMesh);
 	}
+
 
 	return S_OK;
 }
