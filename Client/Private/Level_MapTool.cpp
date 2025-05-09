@@ -45,10 +45,10 @@ HRESULT CLevel_MapTool::Render()
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
-    //ImGui::ShowDemoWindow(); // Show demo window! :)
 
     ImGui_Render();
     //·»´õ¸µ ¾îÂ¼±¸ÀúÂ¼±¸µé
+    ImGui::ShowDemoWindow(); // Show demo window! :)
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -77,7 +77,10 @@ HRESULT CLevel_MapTool::Ready_ImGui()
 
 HRESULT CLevel_MapTool::ImGui_Render()
 {
-    ImGui::DockSpaceOverViewport();
+    //ImGui::DockSpaceOverViewport();  ¶Ë
+    ImGui_Docking_Settings();
+
+   
 
     if (FAILED(Window_ObjectList()))
         return E_FAIL;
@@ -92,7 +95,7 @@ HRESULT CLevel_MapTool::ImGui_Render()
 
 HRESULT CLevel_MapTool::Window_ObjectList()
 {
-    ImGui::Begin("Hierachy");
+    ImGui::Begin("Object Lists");
 
     ImGui::End();
     return S_OK;
@@ -111,6 +114,40 @@ HRESULT CLevel_MapTool::Window_ResourceList()
     ImGui::Begin("Resources");
 
     ImGui::End();
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::ImGui_Docking_Settings()
+{
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGuiWindowFlags window_flags =
+        ImGuiWindowFlags_NoDocking |
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoCollapse |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoBringToFrontOnFocus |
+        ImGuiWindowFlags_NoNavFocus |
+        ImGuiWindowFlags_NoBackground |
+        ImGuiWindowFlags_NoDecoration |
+        ImGuiWindowFlags_MenuBar;
+
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin("DockSpace", nullptr, window_flags);
+    ImGui::PopStyleVar(3);
+
+    ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+    ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+    ImGui::End();
+
     return S_OK;
 }
 

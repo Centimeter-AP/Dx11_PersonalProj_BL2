@@ -25,6 +25,8 @@ private:
 	HRESULT Window_ObjectInspector();
 	HRESULT Window_ResourceList();
 
+	HRESULT ImGui_Docking_Settings();
+
 
 public:
 	HRESULT Ready_Lights();
