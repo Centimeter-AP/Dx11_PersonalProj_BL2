@@ -12,6 +12,13 @@ using namespace ImGui;
 
 class CLevel_MapTool final : public CLevel
 {
+public:
+	enum class IMGUITOOL {
+		TERRAIN,
+		OBJECT,
+		CAMERA,
+		END
+	};
 private:
 	CLevel_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CLevel_MapTool() = default;
@@ -20,11 +27,6 @@ public:
 	virtual HRESULT Initialize() override;
 	virtual void Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
-
-private:
-	typedef struct tagIsMenuOpen {
-		_bool	ShowTerrainMenu = false;
-	}ISOPEN;
 
 private:
 	HRESULT Ready_ImGui();
@@ -46,10 +48,11 @@ private:
 	ISOPEN				m_tWindowData;
 
 private:
-	vector<class CImGuiTool*> m_ImGuiTools;
+	class CImGuiTool* m_ImGuiTools[ENUM_CLASS(IMGUITOOL::END)];
 
 public:
 	HRESULT Ready_Lights();
+	HRESULT Ready_ImGuiTools();
 	HRESULT Ready_Layer_Camera(const _wstring strLayerTag);
 	HRESULT Ready_Layer_Player(const _wstring& strLayerTag);
 	HRESULT Ready_Layer_Monster(const _wstring& strLayerTag);

@@ -180,6 +180,9 @@
     <ClInclude Include="..\public\ImGuiTool.h">
       <Filter>01.Levels\MapTool\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -261,9 +264,6 @@
     <ClCompile Include="..\Private\Camera_Tool.cpp">
       <Filter>02.GameObjects\02. Camera\Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Theif_TerrainEditor.cpp">
-      <Filter>01.Levels\MapTool</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\TerrainTool.cpp">
       <Filter>01.Levels\MapTool\Tools\TerrainTool</Filter>
     </ClCompile>
@@ -279,9 +279,6 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
-      <Filter>97.ShaderFiles</Filter>
-    </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\test_brush.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

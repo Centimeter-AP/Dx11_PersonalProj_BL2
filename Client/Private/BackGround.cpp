@@ -9,7 +9,7 @@ CBackGround::CBackGround(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CBackGround::CBackGround(const CBackGround& Prototype)
-	: CUIObject{ Prototype }
+	: CUIObject( Prototype )
 {
 
 }

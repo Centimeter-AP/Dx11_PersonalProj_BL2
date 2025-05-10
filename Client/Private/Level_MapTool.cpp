@@ -1,15 +1,20 @@
 #include "Level_MapTool.h"
+#include "Level_Loading.h"
 #include "GameInstance.h"
 
-#include "Level_Loading.h"
-//#include "Camera_Free.h"
 #include "Terrain.h"
+
+#include "TerrainTool.h"
 
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 #include "ImGuizmo.h"
-#include "imgui.h"
 
+#pragma push_macro("new")
+#undef new
+#include "imgui.h"
+#include "imgui_internal.h"
+#pragma pop_macro("new")
 
 CLevel_MapTool::CLevel_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel{ pDevice, pContext }
@@ -23,6 +28,8 @@ HRESULT CLevel_MapTool::Initialize()
 
     if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
         return E_FAIL;
+
+
 
     if (FAILED(Ready_ImGui()))
         return E_FAIL;
@@ -72,7 +79,6 @@ HRESULT CLevel_MapTool::Ready_ImGui()
 	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Consola.ttf", 14.0f);
 
     ImGui::StyleColorsDark();
-
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(g_hWnd);
@@ -230,10 +236,19 @@ HRESULT CLevel_MapTool::Terrain_Tools(_bool* p_open)
             ImGui::End();
             return E_FAIL;
         }
+        
     }
     Separator();
-	Text("");
-    InputFloat("input float", nullptr, 0.01f, 1.0f, "%.3f");
+	static _int iVerticesX = 0.f;
+	static _int iVerticesZ = 0.f;
+    SetNextItemWidth(130);
+    InputInt("Vertices X", &iVerticesX);
+    SetNextItemWidth(130);
+    InputInt("Vertices Z", &iVerticesZ);
+
+    Separator();
+
+
 
     ImGui::End();
     return S_OK;
@@ -247,6 +262,29 @@ HRESULT CLevel_MapTool::Show_ExternWindows()
 
 HRESULT CLevel_MapTool::Ready_Lights()
 {
+    return S_OK;
+}
+
+HRESULT CLevel_MapTool::Ready_ImGuiTools()
+{
+	for (_uint i = 0; i < ENUM_CLASS(IMGUITOOL::END); ++i)
+	{
+        switch (static_cast<IMGUITOOL>(i))
+        {
+        case IMGUITOOL::TERRAIN:
+            m_ImGuiTools[i] = CTerrainTool::Create(m_pDevice, m_pContext);
+            if (nullptr == m_ImGuiTools[i])
+                return E_FAIL;
+            break;
+        case IMGUITOOL::OBJECT:
+            break;
+        case IMGUITOOL::CAMERA:
+            break;
+        case IMGUITOOL::END:
+            break;
+        }
+		
+	}
     return S_OK;
 }
 
@@ -303,6 +341,11 @@ void CLevel_MapTool::Free()
     //ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable; // 멀티 뷰포트 비활성화
     //ImGui::GetIO().Fonts->Clear(); // 폰트 캐시 정리
     ImGui::DestroyContext();
+
+	for (_uint i = 0; i < ENUM_CLASS(IMGUITOOL::END); ++i)
+	{
+		Safe_Release(m_ImGuiTools[i]);
+	}
 
     __super::Free();
 
