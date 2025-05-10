@@ -79,6 +79,12 @@
     <Filter Include="02.GameObjects\02. Camera\Free">
       <UniqueIdentifier>{c1e4354a-4a0d-4fbf-9d43-c298b7a1d043}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\MapTool\Tools">
+      <UniqueIdentifier>{740da3dc-ca29-470f-8747-b96434507764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\MapTool\Tools\TerrainTool">
+      <UniqueIdentifier>{63dccc74-a1ad-4ea6-b64b-2f21c42edd01}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -168,6 +174,12 @@
     <ClInclude Include="..\Public\Camera_Tool.h">
       <Filter>02.GameObjects\02. Camera\Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TerrainTool.h">
+      <Filter>01.Levels\MapTool\Tools\TerrainTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ImGuiTool.h">
+      <Filter>01.Levels\MapTool\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -249,6 +261,15 @@
     <ClCompile Include="..\Private\Camera_Tool.cpp">
       <Filter>02.GameObjects\02. Camera\Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Theif_TerrainEditor.cpp">
+      <Filter>01.Levels\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\TerrainTool.cpp">
+      <Filter>01.Levels\MapTool\Tools\TerrainTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ImGuiTool.cpp">
+      <Filter>01.Levels\MapTool\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -258,6 +279,9 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxMesh.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\test_brush.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

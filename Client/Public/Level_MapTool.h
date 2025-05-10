@@ -8,6 +8,7 @@ class CGameObject;
 NS_END
 
 NS_BEGIN(Client)
+using namespace ImGui;
 
 class CLevel_MapTool final : public CLevel
 {
@@ -40,10 +41,12 @@ private: /* 상단 툴 바 */
 	HRESULT Terrain_Tools(_bool* p_open);
 	HRESULT Show_ExternWindows();
 
-
 private:
 	CGameObject*		m_pCurSelectedObj;
 	ISOPEN				m_tWindowData;
+
+private:
+	vector<class CImGuiTool*> m_ImGuiTools;
 
 public:
 	HRESULT Ready_Lights();

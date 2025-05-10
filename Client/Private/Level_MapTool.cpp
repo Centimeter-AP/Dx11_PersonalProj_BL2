@@ -10,6 +10,7 @@
 #include "ImGuizmo.h"
 #include "imgui.h"
 
+
 CLevel_MapTool::CLevel_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel{ pDevice, pContext }
 {
@@ -67,7 +68,11 @@ HRESULT CLevel_MapTool::Ready_ImGui()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // multi-viewport?
+     
+	io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Consola.ttf", 14.0f);
+
     ImGui::StyleColorsDark();
+
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(g_hWnd);
@@ -112,6 +117,8 @@ HRESULT CLevel_MapTool::Window_ObjectList()
 {
     ImGui::Begin("Object Lists");
 
+
+
     ImGui::End();
     return S_OK;
 }
@@ -119,6 +126,16 @@ HRESULT CLevel_MapTool::Window_ObjectList()
 HRESULT CLevel_MapTool::Window_ObjectInspector()
 {
     ImGui::Begin("Inspector");
+
+    Text("Mouse Pos X : %.2f", 0.f);
+    Text("Mouse Pos Y : %.2f", 0.f);
+    Separator();
+    Separator();
+    Text("Mouse Pos on Terrain");
+    Text("(%.2f, %.2f, %.2f)", 0.f, 0.f, 0.f);
+    
+
+
 
     ImGui::End();
     return S_OK;
@@ -214,6 +231,9 @@ HRESULT CLevel_MapTool::Terrain_Tools(_bool* p_open)
             return E_FAIL;
         }
     }
+    Separator();
+	Text("");
+    InputFloat("input float", nullptr, 0.01f, 1.0f, "%.3f");
 
     ImGui::End();
     return S_OK;
