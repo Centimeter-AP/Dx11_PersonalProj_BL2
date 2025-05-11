@@ -3,6 +3,7 @@
 
 NS_BEGIN(Client)
 
+
 class CTerrainTool final : public CImGuiTool
 {
 private:
@@ -11,6 +12,7 @@ private:
 	virtual ~CTerrainTool() = default;
 
 public:
+	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
 	virtual void Update(_float fTimeDelta);
@@ -18,11 +20,16 @@ public:
 	virtual HRESULT Render();
 
 private:
-	HRESULT Main_Tool();
+	HRESULT Render_TerrainTool();
+
+private:
+	_int	m_iVerticesX = {};
+	_int	m_iVerticesZ = {};
 
 public:
-	static CTerrainTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
+	static CTerrainTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
-};
 
+};
 NS_END

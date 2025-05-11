@@ -1,21 +1,29 @@
 #include "TerrainTool.h"
-#include <Terrain.h>
+#include "Terrain.h"
+#include "GameInstance.h"
 
 CTerrainTool::CTerrainTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImGuiTool{ pDevice, pContext }
 {
-	
+
 }
 
 CTerrainTool::CTerrainTool(const CTerrainTool& Prototype)
-	: CImGuiTool( Prototype )
+	: CImGuiTool(Prototype)
 {
 
 }
 
+HRESULT CTerrainTool::Initialize_Prototype()
+{
+	return S_OK;
+}
 
 HRESULT CTerrainTool::Initialize(void* pArg)
 {
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -26,6 +34,7 @@ void CTerrainTool::Priority_Update(_float fTimeDelta)
 
 void CTerrainTool::Update(_float fTimeDelta)
 {
+
 }
 
 void CTerrainTool::Late_Update(_float fTimeDelta)
@@ -34,43 +43,48 @@ void CTerrainTool::Late_Update(_float fTimeDelta)
 
 HRESULT CTerrainTool::Render()
 {
+	if (m_pWindowData->ShowTerrainMenu)
+	{
+		if (FAILED(Render_TerrainTool()))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
-HRESULT CTerrainTool::Main_Tool()
+HRESULT CTerrainTool::Render_TerrainTool()
 {
-    ImGui::SetNextWindowSize(ImVec2(600, 400));
-    ImGui::Begin("Terrain Tools", p_open, ImGuiWindowFlags_MenuBar);
+	ImGui::SetNextWindowSize(ImVec2(600, 400));
+	ImGui::Begin("Terrain Tools", &m_pWindowData->ShowTerrainMenu, ImGuiWindowFlags_MenuBar);
 
-    if (ImGui::Button("Create Terrain (Default)"))
-    {
-        CTerrain::DESC desc{};
-        desc.eLevelID = LEVEL::MAPTOOL;
-        if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Terrain"),
-            ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), &desc)))
-        {
-            ImGui::End();
-            return E_FAIL;
-        }
+	if (ImGui::Button("Create Terrain (Default)"))
+	{
+		CTerrain::DESC desc{};
+		desc.eLevelID = LEVEL::MAPTOOL;
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Terrain"),
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), &desc)))
+		{
+			ImGui::End();
+			return E_FAIL;
+		}
 
-    }
-    Separator();
-    static _int iVerticesX = 0.f;
-    static _int iVerticesZ = 0.f;
-    SetNextItemWidth(130);
-    InputInt("Vertices X", &iVerticesX);
-    SetNextItemWidth(130);
-    InputInt("Vertices Z", &iVerticesZ);
+	}
+	Separator();
+	static _int iVerticesX = 0.f;
+	static _int iVerticesZ = 0.f;
+	SetNextItemWidth(130);
+	InputInt("Vertices X", &iVerticesX);
+	SetNextItemWidth(130);
+	InputInt("Vertices Z", &iVerticesZ);
 
-    Separator();
+	Separator();
 
 
 
-    ImGui::End();
-    return S_OK;
-
+	ImGui::End();
 	return S_OK;
 }
+
 
 CTerrainTool* CTerrainTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
@@ -84,6 +98,20 @@ CTerrainTool* CTerrainTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* p
 
 	return pInstance;
 }
+
+CGameObject* CTerrainTool::Clone(void* pArg)
+{
+	CTerrainTool* pInstance = new CTerrainTool(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CTerrainTool");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
 
 void CTerrainTool::Free()
 {

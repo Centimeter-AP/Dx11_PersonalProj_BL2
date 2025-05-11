@@ -3,7 +3,7 @@
 namespace Client
 {
 	typedef struct tagIsMenuOpen {
-		_bool	ShowTerrainMenu = false;
-	}ISOPEN;
+		bool	ShowTerrainMenu = false;
+	}IMGUIWINDATA;
 
 }

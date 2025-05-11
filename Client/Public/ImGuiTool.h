@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Base.h"
+#include "GameObject.h"
 #include "Client_Defines.h"
 
-
-using namespace ImGui;
 NS_BEGIN(Client)
 
-class CImGuiTool abstract : public CBase
+class CImGuiTool abstract : public CGameObject
 {
 protected:
 	CImGuiTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -15,6 +13,7 @@ protected:
 	virtual ~CImGuiTool() = default;
 
 public:
+	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
 	virtual void Update(_float fTimeDelta);
@@ -22,11 +21,11 @@ public:
 	virtual HRESULT Render();
 
 protected:
-	ISOPEN*				m_tWindowData;
-
-
+	IMGUIWINDATA* m_pWindowData = { nullptr };
 public:
+	virtual CGameObject* Clone(void* pArg) =0;
 	virtual void Free() override;
+
 };
 
 NS_END

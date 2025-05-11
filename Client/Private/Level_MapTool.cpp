@@ -6,15 +6,7 @@
 
 #include "TerrainTool.h"
 
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-#include "ImGuizmo.h"
 
-#pragma push_macro("new")
-#undef new
-#include "imgui.h"
-#include "imgui_internal.h"
-#pragma pop_macro("new")
 
 CLevel_MapTool::CLevel_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CLevel{ pDevice, pContext }
@@ -29,9 +21,9 @@ HRESULT CLevel_MapTool::Initialize()
     if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
         return E_FAIL;
 
-
-
     if (FAILED(Ready_ImGui()))
+        return E_FAIL; 
+    if (FAILED(Ready_ImGuiTools()))
         return E_FAIL;
 
     //if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
@@ -43,7 +35,13 @@ HRESULT CLevel_MapTool::Initialize()
 
 void CLevel_MapTool::Update(_float fTimeDelta)
 {
-
+    for (size_t i = 0; i < static_cast<size_t>(IMGUITOOL::END); i++)
+    {
+        if (m_ImGuiTools[i] != nullptr)
+        {
+            m_ImGuiTools[i]->Update(fTimeDelta);
+        }
+    }
 }
 
 HRESULT CLevel_MapTool::Render()
@@ -104,8 +102,18 @@ HRESULT CLevel_MapTool::ImGui_Render()
     if (FAILED(ImGui_Docking_Settings()))
         return E_FAIL;
     /* 툴 바 등에서 호출한 개별 창들 생성 */
-    if (FAILED(Show_ExternWindows()))
-        return E_FAIL;
+    /* 분리합시다... */
+    //if (FAILED(Show_ExternWindows()))
+    //    return E_FAIL;
+
+    for (size_t i = 0; i < static_cast<size_t>(IMGUITOOL::END); i++)
+    {
+		if (m_ImGuiTools[i] != nullptr)
+		{
+			if (FAILED(m_ImGuiTools[i]->Render()))
+				return E_FAIL;
+		}
+    }
 
     /* 기본 윈도우들 */
     if (FAILED(Window_ObjectList()))
@@ -139,9 +147,6 @@ HRESULT CLevel_MapTool::Window_ObjectInspector()
     Separator();
     Text("Mouse Pos on Terrain");
     Text("(%.2f, %.2f, %.2f)", 0.f, 0.f, 0.f);
-    
-
-
 
     ImGui::End();
     return S_OK;
@@ -264,7 +269,7 @@ HRESULT CLevel_MapTool::Ready_Lights()
 {
     return S_OK;
 }
-
+    
 HRESULT CLevel_MapTool::Ready_ImGuiTools()
 {
 	for (_uint i = 0; i < ENUM_CLASS(IMGUITOOL::END); ++i)
@@ -272,13 +277,15 @@ HRESULT CLevel_MapTool::Ready_ImGuiTools()
         switch (static_cast<IMGUITOOL>(i))
         {
         case IMGUITOOL::TERRAIN:
-            m_ImGuiTools[i] = CTerrainTool::Create(m_pDevice, m_pContext);
+            m_ImGuiTools[i] = CTerrainTool::Create(m_pDevice, m_pContext, &m_tWindowData);
             if (nullptr == m_ImGuiTools[i])
                 return E_FAIL;
             break;
         case IMGUITOOL::OBJECT:
+            m_ImGuiTools[i] = nullptr;
             break;
         case IMGUITOOL::CAMERA:
+            m_ImGuiTools[i] = nullptr;
             break;
         case IMGUITOOL::END:
             break;

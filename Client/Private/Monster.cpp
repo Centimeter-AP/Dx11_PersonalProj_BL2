@@ -9,7 +9,7 @@ CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CMonster::CMonster(const CMonster& Prototype)
-	: CGameObject { Prototype }
+	: CGameObject (Prototype )
 {
 
 }

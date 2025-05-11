@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Client_Defines.h"
 #include "Level.h"
+#include "Client_Defines.h"
 
 NS_BEGIN(Engine)
 class CGameObject;
 NS_END
 
 NS_BEGIN(Client)
-using namespace ImGui;
 
 class CLevel_MapTool final : public CLevel
 {
@@ -45,7 +44,7 @@ private: /* 상단 툴 바 */
 
 private:
 	CGameObject*		m_pCurSelectedObj;
-	ISOPEN				m_tWindowData;
+	IMGUIWINDATA		m_tWindowData;
 
 private:
 	class CImGuiTool* m_ImGuiTools[ENUM_CLASS(IMGUITOOL::END)];
