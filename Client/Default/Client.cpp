@@ -4,7 +4,9 @@
 #include "framework.h"
 #include "Client.h"
 
+#define USE_IMGUI
 #include "MainApp.h"
+#undef USE_IMGUI
 #include "GameInstance.h"
 
 #define MAX_LOADSTRING 100

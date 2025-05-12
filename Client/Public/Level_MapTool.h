@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Level.h"
+
+#define USE_IMGUI
 #include "Client_Defines.h"
+#undef USE_IMGUI
 
 NS_BEGIN(Engine)
 class CGameObject;

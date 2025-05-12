@@ -11,7 +11,6 @@
 #include "Client_Struct.h"
 #include "Client_Macro.h"
 
-#define USE_IMGUI
 
 #ifdef USE_IMGUI
 #pragma push_macro("new")
@@ -22,6 +21,7 @@
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "ImGuizmo.h"
+#include "ImGuiFileDialog.h"
 using namespace ImGui;
 #endif
 

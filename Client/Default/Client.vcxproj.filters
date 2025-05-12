@@ -184,6 +184,15 @@
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\TerrainBrush.h" />
+    <ClInclude Include="imgui\ImGuiFileDialog.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImGuiFileDialogConfig.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\dirent\dirent.h">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -272,6 +281,9 @@
       <Filter>01.Levels\MapTool\Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\private\TerrainBrush.cpp" />
+    <ClCompile Include="imgui\ImGuiFileDialog.cpp">
+      <Filter>98.Default\Imgui_Docking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

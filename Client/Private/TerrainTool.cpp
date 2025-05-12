@@ -2,6 +2,10 @@
 #include "Terrain.h"
 #include "GameInstance.h"
 
+//ImGuiFileDialog g_ImGuiFileDialog;
+//ImGuiFileDialog::Instance() 이래 싱글톤으로 쓰라고 신이 말하고 감
+
+
 CTerrainTool::CTerrainTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CImGuiTool{ pDevice, pContext }
 {
@@ -11,7 +15,6 @@ CTerrainTool::CTerrainTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CTerrainTool::CTerrainTool(const CTerrainTool& Prototype)
 	: CImGuiTool(Prototype)
 {
-
 }
 
 HRESULT CTerrainTool::Initialize_Prototype()
@@ -34,41 +37,7 @@ void CTerrainTool::Priority_Update(_float fTimeDelta)
 
 void CTerrainTool::Update(_float fTimeDelta)
 {
-	if (!m_bBrushEnable)
-		return;
-
-	// 마우스 좌클릭 상태 확인
-	ImGuiIO& io = ImGui::GetIO();
-	if (!io.WantCaptureMouse)
-	{
-		if (m_pGameInstance->Get_DIMouseState(DIM::LBUTTON) & 0x80)
-		{
-			// Terrain 찾기
-			auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), 0));
-			if (nullptr == pTerrain)
-				return;
-
-			// 버텍스와 인덱스 정보 가져오기
-			auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
-			if (nullptr == pVIBuffer)
-				return;
-
-			const _float3* pVertices = pVIBuffer->Get_VertexPositions();
-			const _uint* pIndices = pVIBuffer->Get_Indices();
-			_uint iNumIndices = pVIBuffer->Get_NumIndices();
-
-			// 월드 행렬 가져오기
-			_matrix WorldMatrix = pTerrain->Get_Transform()->Get_WorldMatrix();
-
-			// 피킹된 위치 저장
-			_float3 vPickedPos = {};
-			if (m_pGameInstance->Pick_Terrain(WorldMatrix, pVertices, pIndices, iNumIndices, vPickedPos))
-			{
-				// 브러시 적용
-				pVIBuffer->Apply_Brush(vPickedPos, m_fBrushRadius, m_fBrushPower, fTimeDelta);
-			}
-		}
-	}
+	Height_Update(fTimeDelta);
 }
 
 void CTerrainTool::Late_Update(_float fTimeDelta)
@@ -107,12 +76,14 @@ HRESULT CTerrainTool::Render_TerrainTool()
 		}
 		else
 		{
+			/* 프로토타입 */
 			if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_VIBuffer_Terrain_Toolver"),
 				CVIBuffer_Terrain::Create(m_pDevice, m_pContext, m_iVerticesX, m_iVerticesZ))))
 				return E_FAIL;
 			CTerrain::DESC desc{};
 			desc.eLevelID = LEVEL::MAPTOOL;
 			desc.isToolver = true;
+			/* 생성 */
 			if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Terrain"),
 				ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), &desc)))
 			{
@@ -124,7 +95,18 @@ HRESULT CTerrainTool::Render_TerrainTool()
 
 	/************************Terrain Height Edit************************/
 	SeparatorText("Terrain Height Edit");
+	Terrian_HeightEditor();
 
+	SeparatorText("Terrain Object Edit");
+	Terrian_ObjectEditor();
+
+
+	End();
+	return S_OK;
+}
+
+void CTerrainTool::Terrian_HeightEditor()
+{
 	SliderFloat(" ", &m_fBrushRadius, 1.0f, 50.0f);
 	Text("Brush Radius");
 	SetNextItemWidth(200);
@@ -147,9 +129,51 @@ HRESULT CTerrainTool::Render_TerrainTool()
 		}
 		m_fBrushRadius = CLAMP(m_fBrushRadius, 1.0f, 50.0f);
 	}
+}
 
-	End();
-	return S_OK;
+void CTerrainTool::Terrian_ObjectEditor()
+{
+
+
+}
+
+void CTerrainTool::Height_Update(_float fTimeDelta)
+{
+	if (!m_bBrushEnable)
+		return;
+
+	// 마우스 좌클릭 상태 확인
+	ImGuiIO& io = ImGui::GetIO();
+	if (!io.WantCaptureMouse)
+	{
+		if (m_pGameInstance->Get_DIMouseState(DIM::LBUTTON) & 0x80)
+		{
+			// Terrain 찾기
+			auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), 0));
+			if (nullptr == pTerrain)
+				return;
+
+			// 버텍스와 인덱스 정보 가져오기
+			auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
+			if (nullptr == pVIBuffer)
+				return;
+
+			const _float3* pVertices = pVIBuffer->Get_VertexPositions();
+			const _uint* pIndices = pVIBuffer->Get_Indices();
+			_uint iNumIndices = pVIBuffer->Get_NumIndices();
+
+			// 월드 행렬 가져오기
+			_matrix WorldMatrix = pTerrain->Get_Transform()->Get_WorldMatrix();
+
+			// 피킹된 위치 저장
+			_float3 vPickedPos = {};
+			if (m_pGameInstance->Pick_Terrain(WorldMatrix, pVertices, pIndices, iNumIndices, vPickedPos))
+			{
+				// 브러시 적용
+				pVIBuffer->Apply_Brush(vPickedPos, m_fBrushRadius, m_fBrushPower, fTimeDelta);
+			}
+		}
+	}
 }
 
 CTerrainTool* CTerrainTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
