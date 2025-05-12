@@ -183,6 +183,7 @@
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\TerrainBrush.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -270,6 +271,7 @@
     <ClCompile Include="..\private\ImGuiTool.cpp">
       <Filter>01.Levels\MapTool\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\TerrainBrush.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

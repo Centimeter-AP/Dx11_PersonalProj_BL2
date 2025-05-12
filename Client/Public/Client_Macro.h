@@ -85,4 +85,7 @@ _float3 vCameraPos = { matCamWorld._41, matCamWorld._42, matCamWorld._43 };
 #define MOUSE_PRESSING	m_pGameInstance->Mouse_Pressing
 #define MOUSE_UP		m_pGameInstance->Mouse_Up
 
+#define CLAMP(x, min, max) (x < min ? min : (x > max ? max : x))
+
+
 #pragma endregion

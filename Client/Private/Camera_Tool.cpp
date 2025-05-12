@@ -56,11 +56,11 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 		}
 		if (m_pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
 		{
-			m_pTransformCom->Go_Straight(fTimeDelta);
+			m_pTransformCom->Go_Straight_Hover(fTimeDelta);
 		}
 		if (m_pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
 		{
-			m_pTransformCom->Go_Backward(fTimeDelta);
+			m_pTransformCom->Go_Backward_Hover(fTimeDelta);
 		}
 
 		_long		MouseMove = {};
@@ -73,9 +73,20 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 		{
 			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
 		}
+
+		_long		MouseWheel = {};
+		if (MouseWheel = m_pGameInstance->Get_DIMouseMove(DIMM::WHEEL))
+		{
+			if (MouseWheel > 0)
+			{
+				m_pTransformCom->Go_Straight(MouseWheel * fTimeDelta * m_fSensor);
+			}	
+			else
+			{
+				m_pTransformCom->Go_Backward(-MouseWheel * fTimeDelta * m_fSensor);
+			}
+		}
 	}
-
-
 
 	__super::Bind_Matrices();
 }

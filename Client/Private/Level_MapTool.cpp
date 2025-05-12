@@ -290,7 +290,6 @@ HRESULT CLevel_MapTool::Ready_ImGuiTools()
         case IMGUITOOL::END:
             break;
         }
-		
 	}
     return S_OK;
 }

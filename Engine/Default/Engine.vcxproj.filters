@@ -94,6 +94,9 @@
     <ClInclude Include="..\Public\Mesh.h">
       <Filter>01.Utility\04.Components\Model\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Picking_Manager.h">
+      <Filter>01.Utility\07. Picking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -173,6 +176,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Mesh.cpp">
       <Filter>01.Utility\04.Components\Model\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Picking_Manager.cpp">
+      <Filter>01.Utility\07. Picking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +283,9 @@
     </Filter>
     <Filter Include="01.Utility\04.Components\Model\Mesh">
       <UniqueIdentifier>{233b9d61-cc20-48a6-b2dd-37fae0752e20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\07. Picking">
+      <UniqueIdentifier>{20cf2035-6bd3-4ccb-879e-a108376bf629}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

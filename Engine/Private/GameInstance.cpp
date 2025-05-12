@@ -1,6 +1,6 @@
 #include "GameInstance.h"
 
-//#include "Picking.h"
+#include "Picking_Manager.h"
 #include "Renderer.h"
 #include "PipeLine.h"
 #include "Input_Device.h"
@@ -58,9 +58,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 		return E_FAIL;
 
 
-	//m_pPicking = CPicking::Create(*ppOut, EngineDesc.hWnd, EngineDesc.iWinSizeX, EngineDesc.iWinSizeY);
-	//if (nullptr == m_pPicking)
-	//	return E_FAIL;
+	m_pPicking_Manager = CPicking_Manager::Create(*ppDeviceOut, *ppContextOut, EngineDesc.hWnd);
+	if (nullptr == m_pPicking_Manager)
+		return E_FAIL;
 
 
 
@@ -81,6 +81,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
 	m_pLevel_Manager->Update(fTimeDelta);
+
+	m_pPicking_Manager->Update();
 }
 
 HRESULT CGameInstance::Begin_Draw()
@@ -234,9 +236,21 @@ _long CGameInstance::Get_DIMouseMove(DIMM eMouseState)
 	return m_pInput_Device->Get_DIMouseMove(eMouseState);
 }
 
+
 #pragma endregion
 
-//#pragma region PICKING
+#pragma region PICKING
+
+
+_bool CGameInstance::Picking(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC)
+{
+	return m_pPicking_Manager->Picking(vPickedPos, vPointA, vPointB, vPointC);;
+}
+
+_bool CGameInstance::Pick_Terrain(const _matrix& WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos)
+{
+	return m_pPicking_Manager->Pick_Terrain(WorldMatrix, pVertices, pIndices, iNumIndices, vOutPickedPos);
+}
 //void CGameInstance::Transform_Picking_ToLocalSpace(const _float4x4& WorldMatrixInverse)
 //{
 //	m_pPicking->Transform_ToLocalSpace(WorldMatrixInverse);
@@ -250,11 +264,11 @@ _long CGameInstance::Get_DIMouseMove(DIMM eMouseState)
 //	return m_pPicking->Picking_InLocal(vPickedPos, vPointA, vPointB, vPointC);
 //}
 //
-//#pragma endregion
+#pragma endregion
 
 void CGameInstance::Release_Engine()
 {
-	//Safe_Release(m_pPicking);
+	Safe_Release(m_pPicking_Manager);
 
 	Safe_Release(m_pPipeLine);
 
@@ -278,6 +292,4 @@ void CGameInstance::Release_Engine()
 void CGameInstance::Free()
 {
 	__super::Free();
-
-
 }

@@ -94,6 +94,26 @@ void CTransform::Go_Left(_float fTimeDelta)
 	Set_State(STATE::POSITION, vPosition);
 }
 
+void CTransform::Go_Straight_Hover(_float fTimeDelta)
+{
+	_vector		vPosition = Get_State(STATE::POSITION);
+	_vector		vLook = Get_State(STATE::LOOK);
+	vLook = XMVectorSetY(vLook, 0.0f);
+	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
+
+	Set_State(STATE::POSITION, vPosition);
+}
+
+void CTransform::Go_Backward_Hover(_float fTimeDelta)
+{
+	_vector		vPosition = Get_State(STATE::POSITION);
+	_vector		vLook = Get_State(STATE::LOOK);
+	vLook = XMVectorSetY(vLook, 0.0f);
+	vPosition -= XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
+
+	Set_State(STATE::POSITION, vPosition);
+}
+
 void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance)
 {
 	_vector		vMoveDir = vTarget - Get_State(STATE::POSITION);

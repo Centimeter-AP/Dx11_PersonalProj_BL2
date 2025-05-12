@@ -173,6 +173,7 @@
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\Terrain.h" />
+    <ClInclude Include="..\public\TerrainBrush.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
+    <ClCompile Include="..\private\TerrainBrush.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="imgui\backends\imgui_impl_dx11.cpp" />

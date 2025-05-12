@@ -17,7 +17,7 @@ public:
 	typedef struct tagTerrainDesc : public CGameObject::GAMEOBJECT_DESC
 	{
 		LEVEL		eLevelID = {LEVEL::END};
-
+		_bool		isToolver = { false };
 	}DESC;
 
 private:
@@ -38,6 +38,7 @@ private:
 	CTexture*			m_pTextureCom = { nullptr };
 	CVIBuffer_Terrain*	m_pVIBufferCom = { nullptr };
 	LEVEL				m_eLevelID = { LEVEL::END };
+	_bool				m_isToolver = { false };
 
 private:
 	HRESULT Ready_Components();

@@ -49,6 +49,8 @@ public:
 	void Go_Backward(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
 	void Go_Left(_float fTimeDelta);
+	void Go_Straight_Hover(_float fTimeDelta);
+	void Go_Backward_Hover(_float fTimeDelta);
 	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
 	void Turn(_fvector vAxis, _float fTimeDelta);
 
