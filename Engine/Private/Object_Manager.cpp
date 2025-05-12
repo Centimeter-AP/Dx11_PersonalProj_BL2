@@ -100,6 +100,12 @@ CLayer* CObject_Manager::Find_Layer(_uint iLevelIndex, const _wstring& strLayerT
 	return iter->second;
 }
 
+CGameObject* CObject_Manager::Find_Object(_uint iLevelIndex, const _wstring& strLayerTag, _uint iVectorIndex)
+{
+	return Find_Layer(iLevelIndex, strLayerTag)->Find_Object(iVectorIndex);
+}
+
+
 CObject_Manager* CObject_Manager::Create(_uint iNumLevels)
 {
 	CObject_Manager* pInstance = new CObject_Manager();

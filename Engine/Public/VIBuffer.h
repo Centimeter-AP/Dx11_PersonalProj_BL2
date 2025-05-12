@@ -35,6 +35,7 @@ protected:
 	_uint						m_iNumVertexBuffers = {};
 	DXGI_FORMAT					m_eIndexFormat = {};
 	D3D11_PRIMITIVE_TOPOLOGY	m_ePrimitiveTopology = {};
+	_bool						m_isCloned = { false };
 
 public:
 	virtual CComponent* Clone(void* pArg) = 0;

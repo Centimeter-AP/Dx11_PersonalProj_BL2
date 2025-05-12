@@ -19,18 +19,17 @@ protected:
 	virtual ~CTransform() = default;
 
 public:
+	_float3 Get_Scaled();
 	_vector Get_State(STATE eState) {
 		return XMLoadFloat4x4(&m_WorldMatrix).r[ENUM_CLASS(eState)];
 	}
-
-	_float3 Get_Scaled();
-
 	_matrix Get_WorldMatrix_Inverse() {
 		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
 	}
-
-	void Set_State(STATE eState, _fvector vState)
-	{
+	_matrix Get_WorldMatrix() {
+		return XMLoadFloat4x4(&m_WorldMatrix);
+	}
+	void Set_State(STATE eState, _fvector vState){
 		XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState);
 	}
 

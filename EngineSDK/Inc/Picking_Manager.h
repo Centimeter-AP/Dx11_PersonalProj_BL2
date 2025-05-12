@@ -23,7 +23,7 @@ public:
 
 public:
 	_bool Picking(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
-	_bool Pick_Terrain(const _matrix& WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos);
+	_bool Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos);
 
 private:
 	class CGameInstance* m_pGameInstance = { nullptr };

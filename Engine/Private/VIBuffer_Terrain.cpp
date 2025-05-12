@@ -132,7 +132,7 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _tchar* pHeightMapFilePath
 	_uint* pPixels = new _uint[m_iNumVertices];	
 	bRes = ReadFile(hFile, pPixels, sizeof(_uint) * m_iNumVertices, &dwByte, nullptr);
 
-	
+
 	m_iNumVertexBuffers = 1;
 	m_iVertexStride = sizeof(VTXNORTEX);
 	m_iNumIndices = (m_iNumVerticesX - 1) * (m_iNumVerticesZ - 1) * 2 * 3;
@@ -265,17 +265,31 @@ void CVIBuffer_Terrain::Update_VertexBuffer()
 HRESULT CVIBuffer_Terrain::Update_VertexBuffer_PositionAnd_Normal()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResource;
-	if (FAILED(m_pContext->Map(m_pVB, 0, D3D11_MAP_READ_WRITE, 0, &SubResource)))
+	if (FAILED(m_pContext->Map(m_pVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource)))
 		return E_FAIL;
 
 	VTXNORTEX* pVertices = static_cast<VTXNORTEX*>(SubResource.pData);
 
 	// 1. 정점 위치 업데이트
-	for (_uint i = 0; i < m_iNumVertices; ++i)
+	//for (_uint i = 0; i < m_iNumVertices; ++i)
+	//{
+	//	pVertices[i].vPosition = m_pVertexPositions[i];
+	//}
+
+	for (_uint i = 0; i < m_iNumVerticesZ; ++i)
 	{
-		// 위치를 업데이트 할 수 있는 로직
-		// 예: pVertices[i].vPosition = new_position;
+		for (_uint j = 0; j < m_iNumVerticesX; ++j)
+		{
+			_uint index = i * m_iNumVerticesX + j;
+			pVertices[index].vPosition = m_pVertexPositions[index];
+			pVertices[index].vTexcoord = _float2(
+				j / (_float)(m_iNumVerticesX - 1),
+				i / (_float)(m_iNumVerticesZ - 1)
+			);
+		}
 	}
+
+
 
 	// 2. 노멀 재계산을 위한 벡터 초기화
 	std::vector<XMVECTOR> vecNormals(m_iNumVertices, XMVectorZero());
@@ -348,11 +362,12 @@ void CVIBuffer_Terrain::Apply_Brush(const _float3& vPickedPos, float fRadius, fl
 		}
 	}
 
-	Update_VertexBuffer_PositionAnd_Normal();
+	if (FAILED(Update_VertexBuffer_PositionAnd_Normal()))
+	{
+		MSG_BOX("난진짜개멍청이다");
+		return;
+	}
 }
-
-
-
 
 HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
 {
@@ -401,7 +416,8 @@ CComponent* CVIBuffer_Terrain::Clone(void* pArg)
 void CVIBuffer_Terrain::Free()
 {
     __super::Free();
-	Safe_Delete_Array(m_pIndices);
-
+	if (!m_isCloned){
+		Safe_Delete_Array(m_pIndices);
+	}
 
 }

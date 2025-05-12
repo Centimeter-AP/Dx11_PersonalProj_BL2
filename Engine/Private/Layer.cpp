@@ -26,6 +26,19 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 	return S_OK;
 }
 
+CGameObject* CLayer::Find_Object(_uint iIndex)
+{
+	if (iIndex >= m_GameObjects.size())
+		return nullptr;
+
+	auto Iter = m_GameObjects.begin();
+
+	for (_uint i = 0; i < iIndex; ++i)
+		Iter++;
+
+	return *Iter;
+}
+
 void CLayer::Priority_Update(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)

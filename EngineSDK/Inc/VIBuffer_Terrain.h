@@ -34,6 +34,8 @@ public:
 public:
 	int Get_NumVerticesX() const { return m_iNumVerticesX; }
 	int Get_NumVerticesZ() const { return m_iNumVerticesZ; }
+	_uint* Get_Indices() const { return m_pIndices; }
+	_uint  Get_NumIndices() const { return m_iNumIndices; }
 
 private:
 	_uint			m_iNumVerticesX = {};

@@ -167,7 +167,16 @@ HRESULT CGameInstance::Add_GameObject(_uint iPrototypeLevelIndex, const _wstring
 CComponent* CGameInstance::Get_Component(_uint iLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex)
 {
 	return m_pObject_Manager->Get_Component(iLevelIndex, strLayerTag, strComponentTag, iIndex);
+}
 
+CGameObject* CGameInstance::Find_Object(_uint iLevelIndex, const _wstring& strLayerTag, _uint iVectorIndex)
+{
+	return m_pObject_Manager->Find_Object(iLevelIndex, strLayerTag, iVectorIndex);
+}
+
+CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
+{
+	return m_pObject_Manager->Find_Layer(iLevelIndex, strLayerTag);
 }
 
 #pragma endregion
@@ -247,7 +256,7 @@ _bool CGameInstance::Picking(_float3& vPickedPos, const _float3& vPointA, const 
 	return m_pPicking_Manager->Picking(vPickedPos, vPointA, vPointB, vPointC);;
 }
 
-_bool CGameInstance::Pick_Terrain(const _matrix& WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos)
+_bool CGameInstance::Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos)
 {
 	return m_pPicking_Manager->Pick_Terrain(WorldMatrix, pVertices, pIndices, iNumIndices, vOutPickedPos);
 }

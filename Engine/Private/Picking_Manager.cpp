@@ -89,7 +89,7 @@ _bool CPicking_Manager::Picking(_float3& vPickedPos, const _float3& A, const _fl
     return false;
 }
 
-_bool CPicking_Manager::Pick_Terrain( const _matrix& WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices,  _float3& vOutPickedPos)
+_bool CPicking_Manager::Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices,  _float3& vOutPickedPos)
 {
     _float fMinDist = FLT_MAX;
     _bool bHit = false;

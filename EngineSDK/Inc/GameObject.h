@@ -19,6 +19,7 @@ protected:
 
 public:
 	CComponent* Get_Component(const _wstring& strComponentTag);
+	CTransform* Get_Transform() { return m_pTransformCom; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
