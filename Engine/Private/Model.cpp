@@ -66,10 +66,6 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Materials(pModelFilePath)))
 		return E_FAIL;
 
-	
-
-
-
 	return S_OK;
 }
 
@@ -82,7 +78,6 @@ HRESULT CModel::Render(_uint iMeshIndex)
 {	
 	m_Meshes[iMeshIndex]->Bind_Buffers();
 	m_Meshes[iMeshIndex]->Render();	
-
 	return S_OK;
 }
 

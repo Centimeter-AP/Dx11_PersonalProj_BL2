@@ -112,46 +112,6 @@ HRESULT CMesh::Ready_NonAnim_Mesh(const aiMesh* pAIMesh, _fmatrix PreTransformMa
 
 HRESULT CMesh::Ready_Anim_Mesh(const aiMesh* pAIMesh)
 {
-	m_iVertexStride = sizeof(VTXANIMMESH);
-	D3D11_BUFFER_DESC			VBBufferDesc{};
-	VBBufferDesc.ByteWidth = m_iNumVertices * m_iVertexStride;
-	VBBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	VBBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	VBBufferDesc.CPUAccessFlags = /*D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE*/0;
-	VBBufferDesc.StructureByteStride = m_iVertexStride;
-	VBBufferDesc.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA		VBInitialData{};
-
-	VTXANIMMESH* pVertices = new VTXANIMMESH[m_iNumVertices];
-	ZeroMemory(pVertices, sizeof(VTXANIMMESH) * m_iNumVertices);
-
-	m_pVertexPositions = new _float3[m_iNumVertices];
-	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
-
-	for (size_t i = 0; i < m_iNumVertices; i++)
-	{
-		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
-
-		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix));
-
-		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
-		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
-	}
-
-	for (_uint i = 0; i < m_iNumVertices; ++i)
-		m_pVertexPositions[i] = pVertices[i].vPosition;
-
-	VBInitialData.pSysMem = pVertices;
-
-	if (FAILED(m_pDevice->CreateBuffer(&VBBufferDesc, &VBInitialData, &m_pVB)))
-		return E_FAIL;
-
-	Safe_Delete_Array(pVertices);
-
-	return S_OK;
 
 	return S_OK;
 }

@@ -162,6 +162,7 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
+    <ClInclude Include="..\Public\ConvertTool.h" />
     <ClInclude Include="..\public\ImGuiTool.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\public\GameLogo.h" />
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\ObjectTool.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainBrush.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
@@ -196,6 +198,7 @@
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Tool.cpp" />
+    <ClCompile Include="..\Private\ConvertTool.cpp" />
     <ClCompile Include="..\private\ImGuiTool.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
@@ -206,6 +209,7 @@
     <ClCompile Include="..\private\GameLogo.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\ObjectTool.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainBrush.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />

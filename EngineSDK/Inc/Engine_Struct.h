@@ -2,17 +2,15 @@
 
 namespace Engine
 {
-	typedef struct tagEngineDesc
+	typedef struct tagEngineDesc 
 	{
 		HINSTANCE		hInstance;
 		HWND			hWnd;
 		bool			isWindowed;
 		unsigned int	iWinSizeX;
 		unsigned int	iWinSizeY;
-		unsigned int	iNumLevels;
+		unsigned int	iNumLevels;		
 	}ENGINE_DESC;
-
-
 
 
 	typedef struct ENGINE_DLL tagVertexPositionTexcoord
@@ -20,7 +18,7 @@ namespace Engine
 		XMFLOAT3		vPosition;
 		XMFLOAT2		vTexcoord;
 
-		static const unsigned int					iNumElements = { 2 };
+		static const unsigned int					iNumElements = {2};
 
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXPOSTEX;
@@ -45,5 +43,18 @@ namespace Engine
 		static const unsigned int					iNumElements = { 4 };
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXMESH;
+
+	typedef struct ENGINE_DLL tagVertexAnimMesh
+	{
+		XMFLOAT3		vPosition;
+		XMFLOAT3		vNormal;
+		XMFLOAT3		vTangent;
+		XMFLOAT2		vTexcoord;
+		XMUINT4			vBlendIndices;
+		XMFLOAT4		vBlendWeights;
+
+		static const unsigned int					iNumElements = { 6 };
+		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
+	}VTXANIMMESH;
 
 }

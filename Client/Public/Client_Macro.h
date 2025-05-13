@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #pragma region 프로토타입 넣는 매크로들
+#pragma region SR매크로
 
 #define ADD_TEXTURE(Name,Path,Cnt)																					\
 if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_Texture_"))+L###Name ,	\
@@ -52,10 +53,13 @@ if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototy
 C##Name::Create(m_pGraphic_Device, __VA_ARGS__ ))))																	\
 return E_FAIL	
 
-#define CREATE_OBJ_POOL(Name,Num,Arg)																					\
-if(FAILED(m_pGameInstance->Create_Object_Pool(m_eNextLevelID, _wstring(TEXT("Prototype_GameObject_")) + L###Name,	\
-_wstring(TEXT("ObjectPool_")) + L###Name, Num,Arg)))																	\
-return E_FAIL
+#pragma endregion
+
+#define ADD_MODEL_NA(Name, eLevel, fScale, Path)																			\
+{_matrix PreTransMatrix = XMMatrixScaling(fScale, fScale, fScale) * XMMatrixRotationY(XMConvertToRadians(180.f));			\
+if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(eLevel), _wstring(TEXT("Prototype_Component_Model_")) +L###Name,		\
+CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, Path, PreTransMatrix))))												\
+return E_FAIL;}
 
 #pragma endregion
 

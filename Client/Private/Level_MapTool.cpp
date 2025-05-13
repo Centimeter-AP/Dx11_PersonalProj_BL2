@@ -5,6 +5,8 @@
 #include "Terrain.h"
 
 #include "TerrainTool.h"
+#include <ObjectTool.h>
+#include <ConvertTool.h>
 
 
 
@@ -145,8 +147,7 @@ HRESULT CLevel_MapTool::Window_ObjectInspector()
     Text("Mouse Pos Y : %.2f", 0.f);
     Separator();
     Separator();
-    Text("Mouse Pos on Terrain");
-    Text("(%.2f, %.2f, %.2f)", 0.f, 0.f, 0.f);
+
 
     ImGui::End();
     return S_OK;
@@ -211,8 +212,9 @@ HRESULT CLevel_MapTool::Toolbar_Menus()
         }
         if (ImGui::BeginMenu("Tool")) {
             if (ImGui::MenuItem("Anim Model")) {   }
-            if (ImGui::MenuItem("NonAnim Model")) {}
+            ImGui::MenuItem("NonAnim Model", NULL, & m_tWindowData.ShowObjectMenu);
             ImGui::MenuItem("Terrain", NULL, &m_tWindowData.ShowTerrainMenu);
+            ImGui::MenuItem("Binary Convert", NULL, &m_tWindowData.ShowConvertMenu);
             if (ImGui::BeginMenu("Components")) {
                 ImGui::MenuItem("Debug Log", NULL, false, true);
                 if (ImGui::MenuItem("Collider")) {}
@@ -282,7 +284,14 @@ HRESULT CLevel_MapTool::Ready_ImGuiTools()
                 return E_FAIL;
             break;
         case IMGUITOOL::OBJECT:
-            m_ImGuiTools[i] = nullptr;
+            m_ImGuiTools[i] = CObjectTool::Create(m_pDevice, m_pContext, &m_tWindowData);
+            if (nullptr == m_ImGuiTools[i])
+                return E_FAIL;
+            break;
+        case IMGUITOOL::CONVERT:
+            m_ImGuiTools[i] = CConvertTool::Create(m_pDevice, m_pContext, &m_tWindowData);
+            if (nullptr == m_ImGuiTools[i])
+                return E_FAIL;
             break;
         case IMGUITOOL::CAMERA:
             m_ImGuiTools[i] = nullptr;

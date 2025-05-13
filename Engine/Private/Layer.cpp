@@ -28,7 +28,7 @@ HRESULT CLayer::Add_GameObject(CGameObject* pGameObject)
 
 CGameObject* CLayer::Find_Object(_uint iIndex)
 {
-	if (iIndex >= m_GameObjects.size())
+	if (m_GameObjects.empty() || iIndex >= m_GameObjects.size())
 		return nullptr;
 
 	auto Iter = m_GameObjects.begin();

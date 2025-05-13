@@ -85,6 +85,12 @@
     <Filter Include="01.Levels\MapTool\Tools\TerrainTool">
       <UniqueIdentifier>{63dccc74-a1ad-4ea6-b64b-2f21c42edd01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\MapTool\Tools\ObjectTool">
+      <UniqueIdentifier>{46604ac4-c9ef-4ef6-a02d-ac850961d8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\MapTool\Tools\ConvertTool">
+      <UniqueIdentifier>{b1d97b6d-6bd8-434f-a0ef-a124d95d16da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -193,6 +199,12 @@
     <ClInclude Include="imgui\dirent\dirent.h">
       <Filter>98.Default\Imgui_Docking</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ObjectTool.h">
+      <Filter>01.Levels\MapTool\Tools\ObjectTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ConvertTool.h">
+      <Filter>01.Levels\MapTool\Tools\ConvertTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -283,6 +295,12 @@
     <ClCompile Include="..\private\TerrainBrush.cpp" />
     <ClCompile Include="imgui\ImGuiFileDialog.cpp">
       <Filter>98.Default\Imgui_Docking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ObjectTool.cpp">
+      <Filter>01.Levels\MapTool\Tools\ObjectTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ConvertTool.cpp">
+      <Filter>01.Levels\MapTool\Tools\ConvertTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
