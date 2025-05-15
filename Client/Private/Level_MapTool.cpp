@@ -282,11 +282,13 @@ HRESULT CLevel_MapTool::Ready_ImGuiTools()
             m_ImGuiTools[i] = CTerrainTool::Create(m_pDevice, m_pContext, &m_tWindowData);
             if (nullptr == m_ImGuiTools[i])
                 return E_FAIL;
+            m_tWindowData.ShowTerrainMenu = true;
             break;
         case IMGUITOOL::OBJECT:
             m_ImGuiTools[i] = CObjectTool::Create(m_pDevice, m_pContext, &m_tWindowData);
             if (nullptr == m_ImGuiTools[i])
                 return E_FAIL;
+            m_tWindowData.ShowObjectMenu = true;
             break;
         case IMGUITOOL::CONVERT:
             m_ImGuiTools[i] = CConvertTool::Create(m_pDevice, m_pContext, &m_tWindowData);

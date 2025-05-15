@@ -245,6 +245,44 @@ _long CGameInstance::Get_DIMouseMove(DIMM eMouseState)
 	return m_pInput_Device->Get_DIMouseMove(eMouseState);
 }
 
+FORCEINLINE
+_bool CGameInstance::Mouse_Down(_ubyte eKeyID)
+{
+	return m_pInput_Device->Mouse_Down(eKeyID);
+}
+
+FORCEINLINE
+_bool CGameInstance::Mouse_Pressing(_ubyte eKeyID)
+{
+	return m_pInput_Device->Mouse_Pressing(eKeyID);
+}
+
+FORCEINLINE
+_bool CGameInstance::Mouse_Up(_ubyte eKeyID)
+{
+	return m_pInput_Device->Mouse_Up(eKeyID);
+}
+#pragma endregion
+
+FORCEINLINE
+_bool CGameInstance::Key_Pressing(_ubyte eKeyID)
+{
+	return m_pInput_Device->Key_Pressing(eKeyID);
+}
+
+FORCEINLINE
+_bool CGameInstance::Key_Up(_ubyte eKeyID)
+{
+	return m_pInput_Device->Key_Up(eKeyID);
+}
+
+FORCEINLINE
+_bool CGameInstance::Key_Down(_ubyte eKeyID)
+{
+	return m_pInput_Device->Key_Down(eKeyID);
+}
+
+
 
 #pragma endregion
 

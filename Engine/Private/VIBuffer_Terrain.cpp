@@ -374,6 +374,39 @@ HRESULT CVIBuffer_Terrain::Initialize(void* pArg)
     return S_OK;
 }
 
+_float CVIBuffer_Terrain::Get_Height(_float x, _float z)
+{
+	_int iX = static_cast<_int>(x);
+	_int iZ = static_cast<_int>(z);
+
+	if (iX < 0 || iX >= m_iNumVerticesX - 1 || iZ < 0 || iZ >= m_iNumVerticesZ - 1)
+		return 0.f;
+
+	// Á¤Á¡ 4°³
+	_int iIndex = iZ * m_iNumVerticesX + iX;
+
+	_float3 v0 = m_pVertexPositions[iIndex];                       // (iX, iZ)
+	_float3 v1 = m_pVertexPositions[iIndex + 1];                   // (iX+1, iZ)
+	_float3 v2 = m_pVertexPositions[iIndex + m_iNumVerticesX];     // (iX, iZ+1)
+	_float3 v3 = m_pVertexPositions[iIndex + m_iNumVerticesX + 1]; // (iX+1, iZ+1)
+
+	_float fU = x - iX;
+	_float fV = z - iZ;
+
+	_float y;
+	if (fU + fV <= 1.0f)
+	{
+		// »ï°¢Çü v0, v1, v2
+		y = v0.y + (v1.y - v0.y) * fU + (v2.y - v0.y) * fV;
+	}
+	else
+	{
+		// »ï°¢Çü v3, v2, v1
+		y = v3.y + (v2.y - v3.y) * (1.0f - fU) + (v1.y - v3.y) * (1.0f - fV);
+	}
+
+	return y;
+}
 CVIBuffer_Terrain* CVIBuffer_Terrain::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticesX, _uint iNumVerticesZ)
 {
 	CVIBuffer_Terrain* pInstance = new CVIBuffer_Terrain(pDevice, pContext);

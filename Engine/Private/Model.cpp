@@ -12,7 +12,7 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CModel::CModel(const CModel& Prototype)
-	: CComponent { Prototype }	
+	: CComponent ( Prototype )
 	, m_iNumMeshes { Prototype.m_iNumMeshes }
 	, m_Meshes { Prototype.m_Meshes }
 	, m_iNumMaterials { Prototype.m_iNumMaterials }

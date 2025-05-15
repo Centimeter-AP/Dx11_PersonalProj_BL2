@@ -27,7 +27,37 @@ public:
 	{	
 		return *((reinterpret_cast<_int*>(&m_tMouseState)) + static_cast<_uint>(eMouseState));
 	}
-	
+
+	_bool Key_Down(_ubyte eKeyID)
+	{
+		return (m_byKeyState[eKeyID] & 0x80) && !(m_byPrevKeyState[eKeyID] & 0x80);
+	}
+
+	_bool Key_Pressing(_ubyte eKeyID)
+	{
+		return (m_byKeyState[eKeyID] & 0x80);
+	}
+
+	_bool Key_Up(_ubyte eKeyID)
+	{
+		return !(m_byKeyState[eKeyID] & 0x80) && (m_byPrevKeyState[eKeyID] & 0x80);
+	}
+
+	_bool Mouse_Down(_ubyte eKeyID)
+	{
+		return (m_tMouseState.rgbButtons[eKeyID] & 0x80) && !(m_tPrevMouseState.rgbButtons[eKeyID] & 0x80);
+	}
+
+	_bool Mouse_Pressing(_ubyte eKeyID)
+	{
+		return (m_tMouseState.rgbButtons[eKeyID] & 0x80);
+	}
+
+	_bool Mouse_Up(_ubyte eKeyID)
+	{
+		return !(m_tMouseState.rgbButtons[eKeyID] & 0x80) && (m_tPrevMouseState.rgbButtons[eKeyID] & 0x80);
+	}
+
 public:
 	HRESULT Initialize(HINSTANCE hInst, HWND hWnd);
 	void	Update(void);
@@ -45,9 +75,12 @@ private:
 
 private:
 	_byte					m_byKeyState[256] = {};
+	_byte					m_byPrevKeyState[256] = { 0 };
+
 
 	
 	DIMOUSESTATE			m_tMouseState = {};
+	DIMOUSESTATE			m_tPrevMouseState{};
 
 public:
 	static CInput_Device* Create(HINSTANCE hInstance, HWND hWnd);

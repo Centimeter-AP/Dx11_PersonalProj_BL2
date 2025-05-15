@@ -23,6 +23,9 @@ public:
 	virtual HRESULT Initialize_Prototype(const _tchar* pHeightMapFilePath);
 	virtual HRESULT Initialize(void* pArg);
 
+	_float Get_Height(_float x, _float z);
+	
+
 	void Get_Triangle(int iIndex, _float3& outA, _float3& outB, _float3& outC);
 
 	void Update_VertexBuffer();

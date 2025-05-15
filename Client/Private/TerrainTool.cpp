@@ -79,7 +79,10 @@ HRESULT CTerrainTool::Render_TerrainTool()
 			/* 프로토타입 */
 			if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_VIBuffer_Terrain_Toolver"),
 				CVIBuffer_Terrain::Create(m_pDevice, m_pContext, m_iVerticesX, m_iVerticesZ))))
+			{
+				ImGui::End();
 				return E_FAIL;
+			}
 			CTerrain::DESC desc{};
 			desc.eLevelID = LEVEL::MAPTOOL;
 			desc.isToolver = true;
@@ -112,7 +115,7 @@ void CTerrainTool::Terrian_HeightEditor()
 	Separator();
 	Text("Brush Setting");
 	SliderFloat("Radius", &m_fBrushRadius, 1.0f, 50.0f);
-	SliderFloat("Power", &m_fBrushPower, -10.0f, 10.0f);
+	SliderFloat("Power", &m_fBrushPower, -20.0f, 20.0f);
 	Checkbox("Enable Brush", &m_bBrushEnable);
 
 	if (m_bBrushEnable && m_pGameInstance->Get_DIKeyState(DIK_LCONTROL) & 0x80)

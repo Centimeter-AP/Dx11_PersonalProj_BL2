@@ -26,6 +26,14 @@ private:
 	HRESULT Ready_Prototype();
 	HRESULT Ready_Object();
 
+private:
+	_bool	m_isGizmoEnable = { false };
+	_bool	m_isObjectSnapToTerrain = { false };
+	_float  m_fSnapOffset = {};
+
+	ImGuizmo::OPERATION		m_eOperation = {ImGuizmo::TRANSLATE};
+	ImGuizmo::MODE			m_eMode = { ImGuizmo::WORLD };
+
 public:
 	static CObjectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	virtual CGameObject* Clone(void* pArg) override;

@@ -68,6 +68,12 @@ public:
 	_byte	Get_DIKeyState(_ubyte byKeyID);
 	_byte	Get_DIMouseState(DIM eMouse);
 	_long	Get_DIMouseMove(DIMM eMouseState);
+	_bool	Mouse_Down(_ubyte eKeyID);
+	_bool	Mouse_Pressing(_ubyte eKeyID);
+	_bool	Mouse_Up(_ubyte eKeyID);
+	_bool	Key_Pressing(_ubyte eKeyID);
+	_bool	Key_Up(_ubyte eKeyID);
+	_bool	Key_Down(_ubyte eKeyID);
 #pragma endregion
 	//
 	#pragma region PICKING

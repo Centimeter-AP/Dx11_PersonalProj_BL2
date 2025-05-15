@@ -28,12 +28,12 @@ private:
 	void Height_Update(_float fTimeDelta);
 
 private:
-	_int	m_iVerticesX = {};
-	_int	m_iVerticesZ = {};
+	_int	m_iVerticesX = {100};
+	_int	m_iVerticesZ = {100};
 
 	_float3 m_bPickedPos = {};
-	_float	m_fBrushRadius = {};
-	_float	m_fBrushPower = {};
+	_float	m_fBrushRadius = {1.f};
+	_float	m_fBrushPower = {5.f};
 
 	_bool	m_bBrushEnable = {false};
 
