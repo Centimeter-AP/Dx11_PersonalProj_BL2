@@ -54,6 +54,7 @@ private:
 		_uint iMaterialIndex = {};
 		_uint iNumVertices = {};
 		_uint iNumIndices = {};
+		vector<_uint>	vecIndices;
 		vector<VTXMESH> vecVertices;
 	}FBX_MESHDATA;
 
@@ -65,7 +66,6 @@ private:
 		_uint iNumMaterials = {};
 		vector<FBX_MATDATA> vecMaterials;
 	}FBXDATA;
-
 
 
 	FBXDATA* m_pFBXData = { nullptr };
