@@ -100,6 +100,9 @@
     <ClInclude Include="..\Public\Material.h">
       <Filter>01.Utility\04.Components\Model\Material</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bone.h">
+      <Filter>01.Utility\04.Components\Model\Bone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -185,6 +188,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Material.cpp">
       <Filter>01.Utility\04.Components\Model\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bone.cpp">
+      <Filter>01.Utility\04.Components\Model\Bone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +301,9 @@
     </Filter>
     <Filter Include="01.Utility\04.Components\Model\Material">
       <UniqueIdentifier>{0ce22f03-ae2e-4b8b-a201-be9d0df5d140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Model\Bone">
+      <UniqueIdentifier>{c4392cad-132a-409f-9e9c-b15ac08ead19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

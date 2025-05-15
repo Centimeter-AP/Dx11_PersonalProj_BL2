@@ -6,7 +6,7 @@ CMesh::CMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CMesh::CMesh(const CMesh& Prototype)
-	: CVIBuffer{ Prototype }
+	: CVIBuffer (Prototype)
 {
 }
 
@@ -132,19 +132,17 @@ HRESULT CMesh::Ready_Anim_Mesh(const aiMesh* pAIMesh)
 	for (size_t i = 0; i < m_iNumVertices; i++)
 	{
 		memcpy(&pVertices[i].vPosition, &pAIMesh->mVertices[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vPosition, XMVector3TransformCoord(XMLoadFloat3(&pVertices[i].vPosition), PreTransformMatrix));
-
 		memcpy(&pVertices[i].vNormal, &pAIMesh->mNormals[i], sizeof(_float3));
-		XMStoreFloat3(&pVertices[i].vNormal, XMVector3TransformNormal(XMLoadFloat3(&pVertices[i].vNormal), PreTransformMatrix));
-
 		memcpy(&pVertices[i].vTangent, &pAIMesh->mTangents[i], sizeof(_float3));
 		memcpy(&pVertices[i].vTexcoord, &pAIMesh->mTextureCoords[0][i], sizeof(_float2));
 	}
 
 	/* 이 정점이 영향을 받는 뼈의 정보를 저장할 때? */
 	/* 뭔말인지 알지? */
-
-
+	/* 몰름 */
+	/* 정점이 어느 뼈에 영향 받는지를 적는게 아니라 */
+	/* 뼈가 저는 이 정점에 영향을 줍니다 라고 알려주는걸 가져오는 것임 */
+	/* => weight를 제공하는 주체가 정점이 아니라 뼈쪽임 !! */
 
 	m_iNumBones = pAIMesh->mNumBones;
 
