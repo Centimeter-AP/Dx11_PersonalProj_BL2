@@ -24,17 +24,20 @@ using namespace DirectX;
 
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <list>
 #include <vector>
 using namespace std;
 
+#include <fstream>
+#include <filesystem>
+using namespace std::filesystem;
 
+#include "Engine_Typedef.h"
 #include "Engine_Macro.h"
 #include "Engine_Struct.h"
 #include "Engine_Enum.h"
 #include "Engine_Function.h"
-#include "Engine_Typedef.h"
-
 
 namespace Engine
 {

@@ -37,13 +37,8 @@ HRESULT CLevel_MapTool::Initialize()
 
 void CLevel_MapTool::Update(_float fTimeDelta)
 {
-    for (size_t i = 0; i < static_cast<size_t>(IMGUITOOL::END); i++)
-    {
-        if (m_ImGuiTools[i] != nullptr)
-        {
-            m_ImGuiTools[i]->Update(fTimeDelta);
-        }
-    }
+    m_ImGuiTools[ENUM_CLASS(IMGUITOOL::CONVERT)]->Update(fTimeDelta);
+
 }
 
 HRESULT CLevel_MapTool::Render()
@@ -240,11 +235,8 @@ void CLevel_MapTool::Free()
     //ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_ViewportsEnable; // 멀티 뷰포트 비활성화
     //ImGui::GetIO().Fonts->Clear(); // 폰트 캐시 정리
     ImGui::DestroyContext();
-
-	for (_uint i = 0; i < ENUM_CLASS(IMGUITOOL::END); ++i)
-	{
-		Safe_Release(m_ImGuiTools[i]);
-	}
+    
+    Safe_Release(m_ImGuiTools[ENUM_CLASS(IMGUITOOL::CONVERT)]);
 
     __super::Free();
 

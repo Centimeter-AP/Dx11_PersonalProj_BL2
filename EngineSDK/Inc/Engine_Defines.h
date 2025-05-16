@@ -29,17 +29,20 @@ using namespace DirectX;
 #include <vector>
 using namespace std;
 
+#include <fstream>
+#include <filesystem>
+using namespace std::filesystem;
 
+#include "Engine_Typedef.h"
 #include "Engine_Macro.h"
 #include "Engine_Struct.h"
 #include "Engine_Enum.h"
 #include "Engine_Function.h"
-#include "Engine_Typedef.h"
-
 
 namespace Engine
 {
 	const _wstring	g_strTransformTag = TEXT("Com_Transform");
+	const _uint g_iMaxNumBones = 512;
 }
 
 using namespace Engine;

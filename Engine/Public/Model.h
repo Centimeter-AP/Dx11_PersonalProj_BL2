@@ -44,10 +44,16 @@ private:
 	vector<class CBone*>			m_Bones;
 
 
+
+
 public:
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
+	HRESULT Ready_Meshes(FBXDATA& tModelData);
 	HRESULT Ready_Meshes();
+	HRESULT Ready_Materials(const _char* pModelFilePath, FBXDATA& tModelData);
 	HRESULT Ready_Materials(const _char* pModelFilePath);
+	HRESULT Read_BinaryFBX(const string& filepath, FBXDATA& out);
+
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(void* pArg) override;

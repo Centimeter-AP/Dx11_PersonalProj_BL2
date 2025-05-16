@@ -25,6 +25,10 @@
 using namespace ImGui;
 #endif
 
+#include "assimp/scene.h"
+#include "assimp/Importer.hpp"
+#include "assimp/postprocess.h"
+
 namespace Client
 {
 	const unsigned int			g_iWinSizeX = 1280;

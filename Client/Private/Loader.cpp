@@ -226,7 +226,12 @@ HRESULT CLoader::Loading_For_Maptool()
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 
-	ADD_MODEL_NA(Mushroom, LEVEL::MAPTOOL, 0.01f, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx");
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"JunkPile",
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+			R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\JunkPile.bin)", PreTransMatrix))))										
+		return E_FAIL;
+
 
 
 

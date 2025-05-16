@@ -57,4 +57,47 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXANIMMESH;
 
+#pragma region Model_Binary
+
+	typedef struct tagBoneData
+	{
+
+	}FBX_BONEDATA;
+
+	typedef struct tagAnimMeshData
+	{
+		_uint iMaterialIndex = {};
+		_uint iNumVertices = {};
+		_uint iNumIndices = {};
+		vector<VTXANIMMESH> vecVertices;
+	}FBX_ANIMMESHDATA;
+
+	typedef struct tagMaterialData
+	{
+		aiTextureType eTexType;
+		string strTexturePath;
+	}FBX_MATDATA;
+
+	typedef struct tagMeshData
+	{
+		_uint iMaterialIndex = {};
+		_uint iNumVertices = {};
+		_uint iNumIndices = {};
+		//string strName;   ¿¡ÈÄ 
+		vector<_uint>	vecIndices;
+		vector<VTXMESH> vecVertices;
+	}FBX_MESHDATA;
+
+
+	typedef struct tagFBXData
+	{
+		_uint iNumMeshes = {};
+		vector<FBX_MESHDATA> vecMeshes;
+		_uint iNumMaterials = {};
+		vector<vector<FBX_MATDATA>> vecMaterials;
+		string strFBXName;
+	}FBXDATA;
+
+#pragma endregion
+
 }
