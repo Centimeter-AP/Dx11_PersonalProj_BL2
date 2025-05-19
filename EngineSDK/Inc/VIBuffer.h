@@ -18,11 +18,13 @@ public:
 	virtual HRESULT Bind_Buffers();
 	virtual HRESULT Render();
 
-	_float3* Get_VertexPositions() const { return m_pVertexPositions; }
-
+	virtual _float3* Get_VertexPositions() const { return m_pVertexPositions; }
+	virtual _uint*	 Get_Indices() const { return m_pIndices; }
+	virtual _uint	 Get_NumIndices() const { return m_iNumIndices; }
 protected:
-	ID3D11Buffer* m_pVB = { nullptr };
-	ID3D11Buffer* m_pIB = { nullptr };
+	ID3D11Buffer*	m_pVB = { nullptr };
+	ID3D11Buffer*	m_pIB = { nullptr };
+	_uint*			m_pIndices = { nullptr };
 
 protected:
 	_float3*					m_pVertexPositions = {};
@@ -36,6 +38,7 @@ protected:
 	DXGI_FORMAT					m_eIndexFormat = {};
 	D3D11_PRIMITIVE_TOPOLOGY	m_ePrimitiveTopology = {};
 	_bool						m_isCloned = { false };
+
 
 public:
 	virtual CComponent* Clone(void* pArg) = 0;

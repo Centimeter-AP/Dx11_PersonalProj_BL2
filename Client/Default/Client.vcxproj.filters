@@ -91,6 +91,9 @@
     <Filter Include="01.Levels\MapTool\Tools\ConvertTool">
       <UniqueIdentifier>{b1d97b6d-6bd8-434f-a0ef-a124d95d16da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\MapObject">
+      <UniqueIdentifier>{5084ee5d-86be-4275-9085-3cb3d903894d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -205,6 +208,9 @@
     <ClInclude Include="..\Public\ConvertTool.h">
       <Filter>01.Levels\MapTool\Tools\ConvertTool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MapObject.h">
+      <Filter>02.GameObjects\MapObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -301,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ConvertTool.cpp">
       <Filter>01.Levels\MapTool\Tools\ConvertTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapObject.cpp">
+      <Filter>02.GameObjects\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

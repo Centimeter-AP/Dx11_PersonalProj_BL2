@@ -246,21 +246,21 @@ _long CGameInstance::Get_DIMouseMove(DIMM eMouseState)
 }
 
 FORCEINLINE
-_bool CGameInstance::Mouse_Down(_ubyte eKeyID)
+_bool CGameInstance::Mouse_Down(DIM eMouse)
 {
-	return m_pInput_Device->Mouse_Down(eKeyID);
+	return m_pInput_Device->Mouse_Down(eMouse);
 }
 
 FORCEINLINE
-_bool CGameInstance::Mouse_Pressing(_ubyte eKeyID)
+_bool CGameInstance::Mouse_Pressing(DIM eMouse)
 {
-	return m_pInput_Device->Mouse_Pressing(eKeyID);
+	return m_pInput_Device->Mouse_Pressing(eMouse);
 }
 
 FORCEINLINE
-_bool CGameInstance::Mouse_Up(_ubyte eKeyID)
+_bool CGameInstance::Mouse_Up(DIM eMouse)
 {
-	return m_pInput_Device->Mouse_Up(eKeyID);
+	return m_pInput_Device->Mouse_Up(eMouse);
 }
 #pragma endregion
 
@@ -294,9 +294,13 @@ _bool CGameInstance::Picking(_float3& vPickedPos, const _float3& vPointA, const 
 	return m_pPicking_Manager->Picking(vPickedPos, vPointA, vPointB, vPointC);;
 }
 
-_bool CGameInstance::Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos)
+_bool CGameInstance::Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos)
 {
-	return m_pPicking_Manager->Pick_Terrain(WorldMatrix, pVertices, pIndices, iNumIndices, vOutPickedPos);
+	return m_pPicking_Manager->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, vOutPickedPos);
+}
+CGameObject* CGameInstance::Pick_Object_In_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _float3& fPickedPos)
+{
+	return m_pPicking_Manager->Pick_Object_In_Layer(iLevelIndex, strLayerTag, fPickedPos);
 }
 //void CGameInstance::Transform_Picking_ToLocalSpace(const _float4x4& WorldMatrixInverse)
 //{

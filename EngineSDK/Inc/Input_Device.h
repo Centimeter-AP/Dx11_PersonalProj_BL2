@@ -43,19 +43,19 @@ public:
 		return !(m_byKeyState[eKeyID] & 0x80) && (m_byPrevKeyState[eKeyID] & 0x80);
 	}
 
-	_bool Mouse_Down(_ubyte eKeyID)
+	_bool Mouse_Down(DIM eMouse)
 	{
-		return (m_tMouseState.rgbButtons[eKeyID] & 0x80) && !(m_tPrevMouseState.rgbButtons[eKeyID] & 0x80);
+		return (m_tMouseState.rgbButtons[ENUM_CLASS(eMouse)] & 0x80) && !(m_tPrevMouseState.rgbButtons[ENUM_CLASS(eMouse)] & 0x80);
 	}
 
-	_bool Mouse_Pressing(_ubyte eKeyID)
+	_bool Mouse_Pressing(DIM eMouse)
 	{
-		return (m_tMouseState.rgbButtons[eKeyID] & 0x80);
+		return (m_tMouseState.rgbButtons[ENUM_CLASS(eMouse)] & 0x80);
 	}
 
-	_bool Mouse_Up(_ubyte eKeyID)
+	_bool Mouse_Up(DIM eMouse)
 	{
-		return !(m_tMouseState.rgbButtons[eKeyID] & 0x80) && (m_tPrevMouseState.rgbButtons[eKeyID] & 0x80);
+		return !(m_tMouseState.rgbButtons[ENUM_CLASS(eMouse)] & 0x80) && (m_tPrevMouseState.rgbButtons[ENUM_CLASS(eMouse)] & 0x80);
 	}
 
 public:

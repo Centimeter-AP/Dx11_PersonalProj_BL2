@@ -57,15 +57,14 @@ HRESULT CConvertTool::Render()
 
 HRESULT CConvertTool::Render_ConvertTool()
 {
-#define IFILEDIALOG ImGuiFileDialog::Instance()
-
 	SetNextWindowSize(ImVec2(200, 300));
 	Begin("Convert Tools", &m_pWindowData->ShowConvertMenu, NULL);
 	
 	if (Button("Load File"))
 	{
 		IGFD::FileDialogConfig config;
-		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Frost_StaticMesh)";
+		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\Frost_P\StaticMesh3\FBX)";
+		//config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Frost_StaticMesh)";
 		config.countSelectionMax = 0; // 무제한
 
 		IFILEDIALOG->OpenDialog("FBXDialog", "Select FBX Files", ".fbx", config);
@@ -136,46 +135,39 @@ HRESULT CConvertTool::Convert_NonAnimFBX(const _char* pModelFilePath)
 				ofs.write(matdata.strTexturePath.data(), pathLength);							// 문자열 저장해요
 		}							
 	}
-//****본과어쩌구저쩌구는 미래의 내가 뒤졌다고 보면 된다
 
 
 }
 HRESULT CConvertTool::Copy_MaterialTextures()
 {
-	try {
-		for (auto srcPath : materialList)
+	for (auto srcPath : materialList)
+	{
+		try
 		{
-
 			_char       szFileName[MAX_PATH] = {};
 			_char       szExt[MAX_PATH] = {}; // 저장은 이름이랑 확장자만 저장하자
 		
-
 			_splitpath_s(srcPath.string().c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
 
 			string dstPath = savePath + "\\" + szFileName + szExt;
 
-
 			if (false == copy_file(srcPath, dstPath, copy_options::overwrite_existing))
-				return E_FAIL;
-		}
-	}
-	catch (const filesystem_error& e) {
-		// 1) 에러 정보를 하나의 std::string으로 조합
-		std::string msg = "파일 복사 실패:\n";
-		msg += e.what();
-		msg += "\n\n코드 값: " + std::to_string(e.code().value());
-		msg += "\n에러 메시지: " + e.code().message();
-		msg += "\n원본 경로: " + e.path1().string();
-		msg += "\n대상 경로: " + e.path2().string();
+				continue;
+		}	
+		catch (const filesystem_error& e)
+		{
+			// 1) 에러 정보를 하나의 std::string으로 조합
+			std::string msg = "파일 복사 실패:\n";
+			msg += e.what();
+			msg += "\n\n코드 값: " + std::to_string(e.code().value());
+			msg += "\n에러 메시지: " + e.code().message();
+			msg += "\n원본 경로: " + e.path1().string();
+			msg += "\n대상 경로: " + e.path2().string();
 
-		// 2) MessageBoxA로 출력
-		MessageBoxA(
-			nullptr,
-			msg.c_str(),
-			"파일 복사 오류",
-			MB_OK | MB_ICONERROR
-		);
-		return false;
+			// 2) MessageBoxA로 출력
+			MessageBoxA( nullptr, msg.c_str(), "파일 복사 오류", MB_OK | MB_ICONERROR );
+			continue;
+		}          
 	}
 	materialList.clear();
 	return S_OK;
@@ -195,7 +187,6 @@ HRESULT CConvertTool::Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBX
 	}
 
 
-	//if (FAILED(Ready_Meshes()))
 	m_pFBXData.iNumMeshes = m_pAIScene->mNumMeshes;						// 메쉬부터 채워요
 	m_pFBXData.vecMeshes.reserve(m_pFBXData.iNumMeshes);
 	for (size_t i = 0; i < m_pFBXData.iNumMeshes; i++)
@@ -244,21 +235,35 @@ HRESULT CConvertTool::Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBX
 
 				_char       szFullPath[MAX_PATH] = {};
 				_char       szFileName[MAX_PATH] = {};
+				_char       szDriveName[MAX_PATH] = {};
+				_char       szDirName[MAX_PATH] = {};
 				_char       szExt[MAX_PATH] = {}; // 저장은 이름이랑 확장자만 저장하자
 
 				_char		szFBXName[MAX_PATH] = {};
 
-				_splitpath_s(pModelFilePath, nullptr, 0, nullptr, 0, szFBXName, MAX_PATH, nullptr, 0);
+
+				_splitpath_s(pModelFilePath, szDriveName, MAX_PATH, szDirName, MAX_PATH, szFBXName, MAX_PATH, nullptr, 0);
 				m_pFBXData.strFBXName = szFBXName; // 내보낼 파일 이름 저장하게 fbx파일 명 저장해요
 
 				_splitpath_s(strTexturePath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
 
 				path relPath = strTexturePath.data;
-				path basePath = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\)";
-				path absPath = basePath / relPath;
-				absPath = absPath.lexically_normal();
+				path fbxTexturePath = (path)szDriveName / szDirName;
+				fbxTexturePath /= relPath;
+				fbxTexturePath = fbxTexturePath.lexically_normal();
+				//path cleaned;
+				//for (auto& part : fbxTexturePath) {
+				//	if (part == "." || part == "..")
+				//		continue;
+				//	cleaned /= part;
+				//}
+				//
+				//cleaned.lexically_normal();
+				//path basePath = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\)";
+				//path absPath = basePath / cleaned;
+				//absPath = absPath.lexically_normal();
 
-				materialList.push_back(absPath); // 나중에 저장할 때 복사붙여넣기 해줄 텍스쳐들 경로 모아두자 
+				materialList.push_back(fbxTexturePath); // 나중에 저장할 때 복사붙여넣기 해줄 텍스쳐들 경로 모아두자 
 
 				strcat_s(szFullPath, szFileName);
 				strcat_s(szFullPath, szExt);

@@ -68,9 +68,9 @@ public:
 	_byte	Get_DIKeyState(_ubyte byKeyID);
 	_byte	Get_DIMouseState(DIM eMouse);
 	_long	Get_DIMouseMove(DIMM eMouseState);
-	_bool	Mouse_Down(_ubyte eKeyID);
-	_bool	Mouse_Pressing(_ubyte eKeyID);
-	_bool	Mouse_Up(_ubyte eKeyID);
+	_bool	Mouse_Down(DIM eMouse);
+	_bool	Mouse_Pressing(DIM eMouse);
+	_bool	Mouse_Up(DIM eMouse);
 	_bool	Key_Pressing(_ubyte eKeyID);
 	_bool	Key_Up(_ubyte eKeyID);
 	_bool	Key_Down(_ubyte eKeyID);
@@ -81,7 +81,8 @@ public:
 	//	_bool Picking_InWorld(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
 	//	_bool Picking_InLocal(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
 	_bool Picking(_float3& vPickedPos, const _float3& vPointA, const _float3& vPointB, const _float3& vPointC);
-	_bool Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos);
+	_bool Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos);
+	CGameObject* Pick_Object_In_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _float3& fPickedPos);
 	#pragma endregion
 
 private:

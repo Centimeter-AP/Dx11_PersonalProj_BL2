@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Base.h"
+#include "GameObject.h"
 
 /* 객체들을 모아놓는다. */
 
@@ -21,8 +21,11 @@ public:
 	void Priority_Update(_float fTimeDelta);
 	void Update(_float fTimeDelta);
 	void Late_Update(_float fTimeDelta);
+
+	list<CGameObject*>& Get_LayerObjectLists() { return m_GameObjects; }
+
 private:
-	list<class CGameObject*>			m_GameObjects;
+	list<CGameObject*>			m_GameObjects;
 
 public:
 	static CLayer* Create();

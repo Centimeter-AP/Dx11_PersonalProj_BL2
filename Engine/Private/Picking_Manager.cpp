@@ -66,22 +66,19 @@ void CPicking_Manager::Update()
 
 }
 
-
 _bool CPicking_Manager::Picking(_float3& vPickedPos, const _float3& A, const _float3& B, const _float3& C)
 {
-    using namespace DirectX;
-
-    XMVECTOR orig = XMLoadFloat3(&m_tRay.vOrigin);
-    XMVECTOR dir = XMLoadFloat3(&m_tRay.vDirection);
-    XMVECTOR v0 = XMLoadFloat3(&A);
-    XMVECTOR v1 = XMLoadFloat3(&B);
-    XMVECTOR v2 = XMLoadFloat3(&C);
+    _vector orig = XMLoadFloat3(&m_tRay.vOrigin);
+    _vector dir = XMLoadFloat3(&m_tRay.vDirection);
+    _vector v0 = XMLoadFloat3(&A);
+    _vector v1 = XMLoadFloat3(&B);
+    _vector v2 = XMLoadFloat3(&C);
 
     float dist = 0.f;
 
     if (TriangleTests::Intersects(orig, dir, v0, v1, v2, dist))
     {
-        XMVECTOR hitPos = orig + dir * dist;
+        _vector hitPos = orig + dir * dist;
         XMStoreFloat3(&vPickedPos, hitPos);
         return true;
     }
@@ -89,7 +86,7 @@ _bool CPicking_Manager::Picking(_float3& vPickedPos, const _float3& A, const _fl
     return false;
 }
 
-_bool CPicking_Manager::Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices,  _float3& vOutPickedPos)
+_bool CPicking_Manager::Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices,  _float3& vOutPickedPos)
 {
     _float fMinDist = FLT_MAX;
     _bool bHit = false;
@@ -101,21 +98,20 @@ _bool CPicking_Manager::Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVerti
         _float3 C = pVertices[pIndices[i + 2]];
 
         // 월드 변환
-        XMVECTOR vA = XMVector3TransformCoord(XMLoadFloat3(&A), WorldMatrix);
-        XMVECTOR vB = XMVector3TransformCoord(XMLoadFloat3(&B), WorldMatrix);
-        XMVECTOR vC = XMVector3TransformCoord(XMLoadFloat3(&C), WorldMatrix);
+        _vector vA = XMVector3TransformCoord(XMLoadFloat3(&A), WorldMatrix);
+        _vector vB = XMVector3TransformCoord(XMLoadFloat3(&B), WorldMatrix);
+        _vector vC = XMVector3TransformCoord(XMLoadFloat3(&C), WorldMatrix);
 
-        float dist = 0.f;
+        _float dist = 0.f;
         if (TriangleTests::Intersects(
             XMLoadFloat3(&m_tRay.vOrigin),
             XMLoadFloat3(&m_tRay.vDirection),
-            vA, vB, vC,
-            dist))
+            vA, vB, vC, dist))
         {
             if (dist < fMinDist)
             {
                 fMinDist = dist;
-                XMVECTOR hitPos = XMLoadFloat3(&m_tRay.vOrigin) + XMLoadFloat3(&m_tRay.vDirection) * dist;
+                _vector hitPos = XMLoadFloat3(&m_tRay.vOrigin) + XMLoadFloat3(&m_tRay.vDirection) * dist;
                 XMStoreFloat3(&vOutPickedPos, hitPos);
                 bHit = true;
             }
@@ -123,6 +119,44 @@ _bool CPicking_Manager::Pick_Terrain(_fmatrix WorldMatrix, const _float3* pVerti
     }
 
     return bHit;
+}
+
+CGameObject* CPicking_Manager::Pick_Object_In_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _float3& fPickedPos)
+{
+    CLayer* pLayer = m_pGameInstance->Find_Layer(iLevelIndex, strLayerTag);
+    if (nullptr == pLayer)
+        return nullptr;
+
+    list<CGameObject*> ObjectList = pLayer->Get_LayerObjectLists();
+    if (!ObjectList.empty())
+    {
+        for (auto pObject : ObjectList)
+        {
+            // 버텍스와 인덱스 정보 가져오기
+            auto pModel = dynamic_cast<CModel*>(pObject->Get_Component(TEXT("Com_Model")));
+            if (nullptr == pModel)
+                continue;
+            auto pMeshes = pModel->Get_Meshes();
+            if (nullptr == pMeshes)
+                continue;
+            for (auto pMesh : *pMeshes)
+            {
+                const _float3* pVertices = pMesh->Get_VertexPositions();
+                const _uint* pIndices = pMesh->Get_Indices();
+                _uint iNumIndices = pMesh->Get_NumIndices();
+                // 월드 행렬 가져오기
+                _matrix WorldMatrix = pObject->Get_Transform()->Get_WorldMatrix();
+                // 피킹된 위치 저장
+                if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPickedPos))
+                {
+                    return pObject;
+                }
+            }
+
+        }
+    }
+    fPickedPos = { 0.f, 0.f, 0.f };
+    return nullptr;
 }
 
 CPicking_Manager* CPicking_Manager::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, HWND hWnd)

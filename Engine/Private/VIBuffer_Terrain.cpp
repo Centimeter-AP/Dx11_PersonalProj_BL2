@@ -9,7 +9,6 @@ CVIBuffer_Terrain::CVIBuffer_Terrain(const CVIBuffer_Terrain& Prototype)
     : CVIBuffer( Prototype )
 	, m_iNumVerticesX { Prototype.m_iNumVerticesX }
 	, m_iNumVerticesZ { Prototype.m_iNumVerticesZ }
-	, m_pIndices { Prototype. m_pIndices}
 {
 }
 

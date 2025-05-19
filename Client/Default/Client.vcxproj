@@ -172,6 +172,7 @@
     <ClInclude Include="..\public\Logo_Background.h" />
     <ClInclude Include="..\public\GameLogo.h" />
     <ClInclude Include="..\public\MainApp.h" />
+    <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\ObjectTool.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="..\private\Logo_Background.cpp" />
     <ClCompile Include="..\private\GameLogo.cpp" />
     <ClCompile Include="..\private\MainApp.cpp" />
+    <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\ObjectTool.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

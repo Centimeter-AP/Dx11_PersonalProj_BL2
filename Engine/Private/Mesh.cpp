@@ -39,25 +39,25 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 	IBBufferDesc.StructureByteStride = m_iIndexStride;
 	IBBufferDesc.MiscFlags = 0;
 
-	_uint* pIndices = new _uint[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
 
 	_uint	iNumIndices = { 0 };
 
 	for (size_t i = 0; i < pAIMesh->mNumFaces; i++)
 	{
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[0];
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[1];
-		pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[2];
+		m_pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[0];
+		m_pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[1];
+		m_pIndices[iNumIndices++] = pAIMesh->mFaces[i].mIndices[2];
 	}
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
-	IBInitialData.pSysMem = pIndices;
+	IBInitialData.pSysMem = m_pIndices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pIndices);
+	Safe_Delete_Array(m_pIndices);
 
 
 
@@ -91,20 +91,20 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const FBX_MESHDATA& tMeshData, 
 	IBBufferDesc.StructureByteStride = m_iIndexStride;
 	IBBufferDesc.MiscFlags = 0;
 
-	_uint* pIndices = new _uint[m_iNumIndices];
-	ZeroMemory(pIndices, sizeof(_uint) * m_iNumIndices);
+	m_pIndices = new _uint[m_iNumIndices];
+	ZeroMemory(m_pIndices, sizeof(_uint) * m_iNumIndices);
 
 	_uint	iNumIndices = { 0 };
 
-	memcpy(pIndices, tMeshData.vecIndices.data(), sizeof(_uint) * m_iNumIndices);
+	memcpy(m_pIndices, tMeshData.vecIndices.data(), sizeof(_uint) * m_iNumIndices);
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
-	IBInitialData.pSysMem = pIndices;
+	IBInitialData.pSysMem = m_pIndices;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(pIndices);
+	//Safe_Delete_Array(m_pIndices);
 
 
 
@@ -530,6 +530,4 @@ CComponent* CMesh::Clone(void* pArg)
 void CMesh::Free()
 {
 	__super::Free();
-
-
 }

@@ -111,7 +111,7 @@ HRESULT CTerrainTool::Render_TerrainTool()
 void CTerrainTool::Terrian_HeightEditor()
 {
 	Text("Mouse Pos on Terrain");
-	Text("(%.2f, %.2f, %.2f)", m_bPickedPos.x, m_bPickedPos.y, m_bPickedPos.z);
+	Text("(%.2f, %.2f, %.2f)", m_fPickedPos.x, m_fPickedPos.y, m_fPickedPos.z);
 	Separator();
 	Text("Brush Setting");
 	SliderFloat("Radius", &m_fBrushRadius, 1.0f, 50.0f);
@@ -166,12 +166,12 @@ void CTerrainTool::Height_Update(_float fTimeDelta)
 		_matrix WorldMatrix = pTerrain->Get_Transform()->Get_WorldMatrix();
 
 		// 피킹된 위치 저장
-		if (m_pGameInstance->Pick_Terrain(WorldMatrix, pVertices, pIndices, iNumIndices, m_bPickedPos))
+		if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, m_fPickedPos))
 		{
 			// 브러시 적용
 			if (m_pGameInstance->Get_DIMouseState(DIM::LBUTTON) & 0x80 && m_bBrushEnable)
 			{
-				pVIBuffer->Apply_Brush(m_bPickedPos, m_fBrushRadius, m_fBrushPower, fTimeDelta);
+				pVIBuffer->Apply_Brush(m_fPickedPos, m_fBrushRadius, m_fBrushPower, fTimeDelta);
 			}
 		}
 	}

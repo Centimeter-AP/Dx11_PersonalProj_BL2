@@ -227,13 +227,22 @@ HRESULT CLoader::Loading_For_Maptool()
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 
 	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"JunkPile",
-		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
-			R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\JunkPile.bin)", PreTransMatrix))))										
-		return E_FAIL;
-
-
-
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"JunkPile",
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\JunkPile.bin)", PreTransMatrix))))										
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"IcePack",
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\IcePack.bin)", PreTransMatrix))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"Mushroom",
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\Mushroom.bin)", PreTransMatrix))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"SnowDrift",
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\SnowDrift.bin)", PreTransMatrix))))
+	//	return E_FAIL;
 
 	///* For.Prototype_Component_Model_Mushroom */
 	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));

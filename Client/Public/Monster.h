@@ -12,6 +12,12 @@ NS_BEGIN(Client)
 
 class CMonster final : public CGameObject
 {
+public:
+	typedef struct tagMonsterDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+		wstring strModelTag;
+	}DESC;
+
 private:
 	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMonster(const CMonster& Prototype);
@@ -31,7 +37,7 @@ private:
 	CModel*				m_pModelCom = { nullptr };
 
 private:
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 
 public:
 	static CMonster* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

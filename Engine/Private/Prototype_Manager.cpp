@@ -22,7 +22,7 @@ HRESULT CPrototype_Manager::Add_Prototype(_uint iPrototypeLevelIndex, const _wst
 	if (nullptr == m_pPrototypes ||
 		iPrototypeLevelIndex >= m_iNumLevels ||
 		nullptr != Find_Prototype(iPrototypeLevelIndex, strPrototypeTag))
-		return E_FAIL;
+ 		return E_FAIL;
 
 	m_pPrototypes[iPrototypeLevelIndex].emplace(strPrototypeTag, pPrototype);
 

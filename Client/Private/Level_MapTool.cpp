@@ -165,7 +165,7 @@ HRESULT CLevel_MapTool::ImGui_Docking_Settings()
 {
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos(viewport->WorkPos);
-    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
     ImGui::SetNextWindowViewport(viewport->ID);
     ImGuiWindowFlags window_flags =
         ImGuiWindowFlags_NoDocking |

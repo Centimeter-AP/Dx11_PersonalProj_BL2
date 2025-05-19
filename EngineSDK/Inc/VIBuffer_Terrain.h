@@ -37,13 +37,10 @@ public:
 public:
 	int Get_NumVerticesX() const { return m_iNumVerticesX; }
 	int Get_NumVerticesZ() const { return m_iNumVerticesZ; }
-	_uint* Get_Indices() const { return m_pIndices; }
-	_uint  Get_NumIndices() const { return m_iNumIndices; }
 
 private:
 	_uint			m_iNumVerticesX = {};
 	_uint			m_iNumVerticesZ = {};
-	_uint*			m_pIndices = { nullptr };
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticesX, _uint iNumVerticesZ);
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);

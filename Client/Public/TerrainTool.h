@@ -31,7 +31,7 @@ private:
 	_int	m_iVerticesX = {100};
 	_int	m_iVerticesZ = {100};
 
-	_float3 m_bPickedPos = {};
+	_float3 m_fPickedPos = {};
 	_float	m_fBrushRadius = {1.f};
 	_float	m_fBrushPower = {5.f};
 

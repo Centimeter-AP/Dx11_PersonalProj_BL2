@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Mesh.h"
 
 NS_BEGIN(Engine)
 
@@ -43,7 +44,8 @@ private:
 
 	vector<class CBone*>			m_Bones;
 
-
+public:
+	vector<CMesh*>* Get_Meshes(){ return &m_Meshes; };
 
 
 public:

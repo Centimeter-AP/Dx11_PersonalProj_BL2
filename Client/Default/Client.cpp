@@ -142,7 +142,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    g_hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
-
+   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
    RECT     rcWindowed = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
    AdjustWindowRect(&rcWindowed, WS_OVERLAPPEDWINDOW, true);

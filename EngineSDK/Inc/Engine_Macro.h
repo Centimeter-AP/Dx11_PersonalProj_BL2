@@ -3,6 +3,8 @@
 #define NS_BEGIN(NAMESPACE) namespace NAMESPACE { 
 #define NS_END }
 
+#define IFILEDIALOG ImGuiFileDialog::Instance()
+
 #define ENUM_CLASS(ENUM) static_cast<unsigned int>(ENUM)
 
 #define SQUARE(X)   (X)*(X)

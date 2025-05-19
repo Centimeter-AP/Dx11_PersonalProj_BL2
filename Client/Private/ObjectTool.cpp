@@ -1,6 +1,7 @@
 #include "GameInstance.h"
 #include "ObjectTool.h"
-#include <Terrain.h>
+#include "Terrain.h"
+#include "Monster.h"
 
 //ImGuiFileDialog g_ImGuiFileDialog;
 //ImGuiFileDialog::Instance() 이래 싱글톤으로 쓰라고 신이 말하고 감
@@ -59,7 +60,17 @@ void CObjectTool::Update(_float fTimeDelta)
 			m_isGizmoEnable = !m_isGizmoEnable;
 		}
 	}
-
+	if (m_isGizmoEnable)
+	{
+		if (MOUSE_DOWN(DIM::LBUTTON))
+		{
+			CGameObject* pPickedObj = m_pGameInstance->Pick_Object_In_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), m_fMeshPickedPosition);
+			if (nullptr == pPickedObj)
+				return;
+			else
+				m_pSelectedObj = pPickedObj;
+		}
+	}
 }
 
 void CObjectTool::Late_Update(_float fTimeDelta)
@@ -84,10 +95,78 @@ HRESULT CObjectTool::Render_ObjectTool()
 
 	ImGui::SeparatorText("Find Object");
 
+	if (Button("Open Directory"))
+	{
+		IGFD::FileDialogConfig config;
+		config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Binary_Models)";
+		//config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Frost_StaticMesh)";
+		IFILEDIALOG->OpenDialog("BINDialog", "Select BIN Files", nullptr, config);
+	}
+	if (IFILEDIALOG->Display("BINDialog"))
+	{
+		if (IFILEDIALOG->IsOk())
+		{
+			path FDCurPath = IFILEDIALOG->GetCurrentPath();
+			if (FAILED(Open_FileDirectory(FDCurPath)))
+			{
+				return E_FAIL;
+			}
+
+
+
+		}
+		IFILEDIALOG->Close();
+	}
+
+
+	const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
+	static int item_selected_idx = 0; // Here we store our selected data as an index.
+	
+	int item_highlighted_idx = -1; // Here we store our highlighted data as an index.
+
+	if (ImGui::BeginListBox("##listbox 1", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	{
+		for (int n = 0; n < m_ModelNames.size(); n++)
+		{
+			//const char* szModelName = WStringToString(m_ModelNames[n]).c_str();
+			const bool is_selected = (item_selected_idx == n);
+			if (ImGui::Selectable(WStringToString(m_ModelNames[n]).c_str(), is_selected))
+				item_selected_idx = n;
+
+			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+			if (is_selected)
+				ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndListBox();
+	}
+
+	CMonster::DESC mDesc;
 	if (Button("Make Mushroom"))
 	{
+		mDesc.strModelTag = L"Mushroom";
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
-			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"))))
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
+			return E_FAIL;
+	}
+	if (Button("Make JunkPile"))
+	{
+		mDesc.strModelTag = L"JunkPile";
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
+			return E_FAIL;
+	}
+	if (Button("Make IcePack"))
+	{
+		mDesc.strModelTag = L"IcePack";
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
+			return E_FAIL;
+	}
+	if (Button("Make SnowDrift"))
+	{
+		mDesc.strModelTag = L"SnowDrift";
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
 			return E_FAIL;
 	}
 
@@ -99,7 +178,7 @@ HRESULT CObjectTool::Render_ObjectTool()
 
 	ImGui::End();
 
-	if (m_isGizmoEnable)
+	if (m_isGizmoEnable && m_pSelectedObj != nullptr)
 	{
 		// ImGui 프레임 내부에서 호출
 		ImGuizmo::BeginFrame(); // ← 한 번만 호출
@@ -110,8 +189,9 @@ HRESULT CObjectTool::Render_ObjectTool()
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
 
-		auto selectedObject = m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), 0);
-		auto pObjTransformCom = selectedObject->Get_Transform();
+		//auto selectedObject = m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), m_iSelectObjectIndex);
+		
+		auto pObjTransformCom = m_pSelectedObj->Get_Transform();
 
 		_float4x4 matView = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW);
 		_float4x4 matProj = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ);
@@ -146,10 +226,55 @@ HRESULT CObjectTool::Render_ObjectTool()
 
 			_float yOffset = 0.1f;
 			XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
-			selectedObject->Get_Transform()->Set_State(STATE::POSITION, fixedPos);
+			m_pSelectedObj->Get_Transform()->Set_State(STATE::POSITION, fixedPos);
 		}
 	}
 
+	return S_OK;
+}
+
+
+HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
+{
+	if (!exists(CurPath))
+	{
+		MSG_BOX("경로 잘못 들어오기도 쉽지 않은데");
+		return E_FAIL;
+	}
+
+	_matrix PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	for (const auto& entry : directory_iterator(CurPath))
+	{
+		if (entry.is_regular_file() && entry.path().extension() == L".bin")
+		{
+			string filePath = entry.path().string();
+			_wstring stemName = entry.path().stem().wstring();
+			_wstring prototypeTag = L"Prototype_Component_Model_" + stemName;
+			if (stemName == L"IcePack")
+				int a = 0;
+			if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), prototypeTag,
+				CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+					filePath.c_str(), PreTransformMatrix))))
+			{
+				std::string msg = "파일 오픈 실패:\n대상 경로: ";
+				msg += filePath;
+
+				// 2) MessageBoxA로 출력
+				MessageBoxA(nullptr, msg.c_str(), "오류", MB_OK | MB_ICONERROR);
+				continue;
+			}
+
+			string strRelativePath = filesystem::relative(entry.path(), filesystem::current_path()).string();
+			//m_DataPaths[entry.path().stem().string()] = strRelativePath; // map으로 파일 위치 상대경로로 변환해서 저장? 왜했지
+			m_ModelNames.push_back(stemName);
+		}
+	}
+
+	return S_OK;
+}
+
+HRESULT CObjectTool::Ready_Prototype()
+{
 	return S_OK;
 }
 

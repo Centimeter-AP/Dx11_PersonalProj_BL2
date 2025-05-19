@@ -103,6 +103,9 @@
     <ClInclude Include="..\Public\Bone.h">
       <Filter>01.Utility\04.Components\Model\Bone</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_ft.hpp">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">

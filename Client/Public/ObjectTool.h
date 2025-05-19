@@ -23,16 +23,25 @@ private:
 	HRESULT Render_ObjectTool();
 
 private:
+	HRESULT Open_FileDirectory(path& CurPath);
 	HRESULT Ready_Prototype();
 	HRESULT Ready_Object();
 
 private:
-	_bool	m_isGizmoEnable = { false };
 	_bool	m_isObjectSnapToTerrain = { false };
 	_float  m_fSnapOffset = {};
 
+	//_uint	m_iMapObjectCnt = {};
+	_uint   m_iSelectObjectIndex = {};
+	CGameObject* m_pSelectedObj = { nullptr };
+	_float3 m_fMeshPickedPosition = {};
+	_float3 m_fTerrainPickedPosition = {};
+
+	_bool					m_isGizmoEnable = { false };
 	ImGuizmo::OPERATION		m_eOperation = {ImGuizmo::TRANSLATE};
 	ImGuizmo::MODE			m_eMode = { ImGuizmo::WORLD };
+
+	vector<_wstring>		m_ModelNames;
 
 public:
 	static CObjectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
