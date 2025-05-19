@@ -21,6 +21,7 @@ public:
 
 private:
 	HRESULT Render_ObjectTool();
+	HRESULT Guizmo_Tool();
 
 private:
 	HRESULT Open_FileDirectory(path& CurPath);

@@ -64,7 +64,7 @@ void CObjectTool::Update(_float fTimeDelta)
 	{
 		if (MOUSE_DOWN(DIM::LBUTTON))
 		{
-			CGameObject* pPickedObj = m_pGameInstance->Pick_Object_In_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), m_fMeshPickedPosition);
+			CGameObject* pPickedObj = m_pGameInstance->Pick_Object_In_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), m_fMeshPickedPosition);
 			if (nullptr == pPickedObj)
 				return;
 			else
@@ -108,23 +108,17 @@ HRESULT CObjectTool::Render_ObjectTool()
 		{
 			path FDCurPath = IFILEDIALOG->GetCurrentPath();
 			if (FAILED(Open_FileDirectory(FDCurPath)))
-			{
 				return E_FAIL;
-			}
-
-
-
 		}
 		IFILEDIALOG->Close();
 	}
 
 
-	const char* items[] = { "AAAA", "BBBB", "CCCC", "DDDD", "EEEE", "FFFF", "GGGG", "HHHH", "IIII", "JJJJ", "KKKK", "LLLLLLL", "MMMM", "OOOOOOO" };
 	static int item_selected_idx = 0; // Here we store our selected data as an index.
 	
 	int item_highlighted_idx = -1; // Here we store our highlighted data as an index.
 
-	if (ImGui::BeginListBox("##listbox 1", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing())))
+	if (ImGui::BeginListBox("##listbox 1", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
 	{
 		for (int n = 0; n < m_ModelNames.size(); n++)
 		{
@@ -141,43 +135,31 @@ HRESULT CObjectTool::Render_ObjectTool()
 	}
 
 	CMonster::DESC mDesc;
-	if (Button("Make Mushroom"))
+	if (Button("Make Object"))
 	{
-		mDesc.strModelTag = L"Mushroom";
+		mDesc.strModelTag = m_ModelNames[item_selected_idx];
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
-			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
-			return E_FAIL;
-	}
-	if (Button("Make JunkPile"))
-	{
-		mDesc.strModelTag = L"JunkPile";
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
-			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
-			return E_FAIL;
-	}
-	if (Button("Make IcePack"))
-	{
-		mDesc.strModelTag = L"IcePack";
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
-			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
-			return E_FAIL;
-	}
-	if (Button("Make SnowDrift"))
-	{
-		mDesc.strModelTag = L"SnowDrift";
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
-			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), &mDesc)))
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
 			return E_FAIL;
 	}
 
-	Checkbox("Enable Gizmo", &m_isGizmoEnable);
-	Checkbox("Snap to Terrain?", &m_isObjectSnapToTerrain);
 
-	SetNextItemWidth(80);
-	InputFloat("Snap Offset", &m_fSnapOffset, 0.1f, 1.f, "%.1f");
+	ImGui::Checkbox("Enable Gizmo", &m_isGizmoEnable);
+	ImGui::Checkbox("Snap to Terrain?", &m_isObjectSnapToTerrain);
+
+	ImGui::SetNextItemWidth(80);
+	ImGui::InputFloat("Snap Offset", &m_fSnapOffset, 0.1f, 1.f, "%.1f");
 
 	ImGui::End();
 
+	Guizmo_Tool();
+	
+
+	return S_OK;
+}
+
+HRESULT CObjectTool::Guizmo_Tool()
+{
 	if (m_isGizmoEnable && m_pSelectedObj != nullptr)
 	{
 		// ImGui 프레임 내부에서 호출
@@ -190,7 +172,7 @@ HRESULT CObjectTool::Render_ObjectTool()
 		ImGuizmo::SetRect(viewport->Pos.x, viewport->Pos.y, viewport->Size.x, viewport->Size.y);
 
 		//auto selectedObject = m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Monster"), m_iSelectObjectIndex);
-		
+
 		auto pObjTransformCom = m_pSelectedObj->Get_Transform();
 
 		_float4x4 matView = *m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW);
@@ -229,7 +211,6 @@ HRESULT CObjectTool::Render_ObjectTool()
 			m_pSelectedObj->Get_Transform()->Set_State(STATE::POSITION, fixedPos);
 		}
 	}
-
 	return S_OK;
 }
 
@@ -243,6 +224,7 @@ HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
 	}
 
 	_matrix PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	for (const auto& entry : directory_iterator(CurPath))
 	{
 		if (entry.is_regular_file() && entry.path().extension() == L".bin")
@@ -250,11 +232,9 @@ HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
 			string filePath = entry.path().string();
 			_wstring stemName = entry.path().stem().wstring();
 			_wstring prototypeTag = L"Prototype_Component_Model_" + stemName;
-			if (stemName == L"IcePack")
-				int a = 0;
 			if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), prototypeTag,
 				CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
-					filePath.c_str(), PreTransformMatrix))))
+					filePath.c_str(), PreTransMatrix))))
 			{
 				std::string msg = "파일 오픈 실패:\n대상 경로: ";
 				msg += filePath;
