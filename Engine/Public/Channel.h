@@ -18,7 +18,7 @@ public:
 
 private:
 	_char				m_szName[MAX_PATH] = {};
-	_uint				m_iNumKeyFrames;
+	_uint				m_iNumKeyFrames = {}; 
 	vector<KEYFRAME>	m_KeyFrames;
 	_uint				m_iBoneIndex = {};
 	//_uint				m_iCurrentKeyFrameIndex = {};

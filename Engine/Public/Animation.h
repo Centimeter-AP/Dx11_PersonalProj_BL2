@@ -23,7 +23,7 @@ private:
 	vector<_uint>			m_CurrentKeyFrameIndices;
 
 	/* 이 애니메이션을 표현하기위해서 사용하는 뼈의 갯수 */
-	_uint					m_iNumChannels;	
+	_uint					m_iNumChannels = {};
 	vector<class CChannel*>	m_Channels;
 
 public:

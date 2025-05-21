@@ -12,7 +12,7 @@ private:
 
 public:
 	HRESULT Initialize(const _char* pModelFilePath, const aiMaterial* pAIMaterial);
-	HRESULT Initialize(const _char* pModelFilePath, const vector<FBX_MATDATA>& tMatData);
+	HRESULT Initialize(const _char* pModelFilePath, const ifstream& ifs);
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName, aiTextureType eType, _uint iTextureIndex);
 
 private:
@@ -23,7 +23,7 @@ private:
 
 public:
 	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const aiMaterial* pAIMaterial);
-	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const vector<FBX_MATDATA>& tMatData);
+	static CMaterial* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const ifstream& ifs);
 	virtual void Free() override;
 	
 

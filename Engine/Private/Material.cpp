@@ -61,39 +61,39 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const aiMaterial* pAI
     return S_OK;
 }
 
-HRESULT CMaterial::Initialize(const _char* pModelFilePath, const vector<FBX_MATDATA>& tMatData)
+HRESULT CMaterial::Initialize(const _char* pModelFilePath, const ifstream& ifs)
 {
-    _uint       iNumSRVs = tMatData.size();
-    for (size_t i = 0; i < iNumSRVs; i++)
-    {
-        _char       szFullPath[MAX_PATH] = {};
-        _char       szDrive[MAX_PATH] = {};
-        _char       szDir[MAX_PATH] = {};
-        _char       szFileName[MAX_PATH] = {};
+    //_uint       iNumSRVs = tMatData.size();
+    //for (size_t i = 0; i < iNumSRVs; i++)
+    //{
+    //    _char       szFullPath[MAX_PATH] = {};
+    //    _char       szDrive[MAX_PATH] = {};
+    //    _char       szDir[MAX_PATH] = {};
+    //    _char       szFileName[MAX_PATH] = {};
 
-        _splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
-        
-        strcpy_s(szFullPath, szDrive);
-        strcat_s(szFullPath, szDir);
-        strcat_s(szFullPath, tMatData[i].strTexturePath.c_str());
+    //    _splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
+    //    
+    //    strcpy_s(szFullPath, szDrive);
+    //    strcat_s(szFullPath, szDir);
+    //    strcat_s(szFullPath, tMatData[i].strTexturePath.c_str());
 
-        _tchar      szTextureFilePath[MAX_PATH] = {};
+    //    _tchar      szTextureFilePath[MAX_PATH] = {};
 
-        MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szTextureFilePath, MAX_PATH);
+    //    MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szTextureFilePath, MAX_PATH);
 
-        HRESULT         hr = { };
-        ID3D11ShaderResourceView* pSRV = { nullptr };
+    //    HRESULT         hr = { };
+    //    ID3D11ShaderResourceView* pSRV = { nullptr };
 
-        //if (false == strcmp(szExt, ".dds"))
-            hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
-        //else
-            //hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
+    //    //if (false == strcmp(szExt, ".dds"))
+    //        hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
+    //    //else
+    //        //hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
 
-        if (FAILED(hr))
-            return E_FAIL;
+    //    if (FAILED(hr))
+    //        return E_FAIL;
 
-        m_SRVs[static_cast<_uint>(tMatData[i].eTexType)].push_back(pSRV);
-    }
+    //    m_SRVs[static_cast<_uint>(tMatData[i].eTexType)].push_back(pSRV);
+    //}
     return S_OK;
 }
 
@@ -119,11 +119,11 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
     return pInstance;
 }
 
-CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const vector<FBX_MATDATA>& tMatData)
+CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const ifstream& ifs)
 {
     CMaterial* pInstance = new CMaterial(pDevice, pContext);
 
-    if (FAILED(pInstance->Initialize(pModelFilePath, tMatData)))
+    if (FAILED(pInstance->Initialize(pModelFilePath, ifs)))
     {
         MSG_BOX("Failed to Created : CMaterial");
         Safe_Release(pInstance);

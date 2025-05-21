@@ -246,8 +246,8 @@ HRESULT CLevel_MapTool::Terrain_Tools(_bool* p_open)
         
     }
     Separator();
-	static _int iVerticesX = 0.f;
-	static _int iVerticesZ = 0.f;
+	static _int iVerticesX = 0;
+	static _int iVerticesZ = 0;
     SetNextItemWidth(130);
     InputInt("Vertices X", &iVerticesX);
     SetNextItemWidth(130);

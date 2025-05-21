@@ -26,7 +26,8 @@ public:
 
 
 private:
-	_char			m_szName[MAX_PATH] = {};	_uint			m_iMaterialIndex = {};
+	_char			m_szName[MAX_PATH] = {};
+	_uint			m_iMaterialIndex = {};
 
 	/* 모델에 선언된 전체뼈(x) */
 	/* 전체 뼈들 중, 이 메시에 영향을 주는 뼈들만골라서 모아놓은 컨테이너. */
@@ -39,9 +40,9 @@ private:
 
 private:
 	HRESULT Ready_NonAnim_Mesh(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix);
-	HRESULT Ready_NonAnim_Mesh(const FBX_MESHDATA& tMeshData, _fmatrix PreTransformMatrix);
+	HRESULT Ready_NonAnim_Mesh(const ifstream& ifs, _fmatrix PreTransformMatrix);
 	HRESULT Ready_Anim_Mesh(const aiMesh* pAIMesh, const vector<class CBone*>& Bones);
-	HRESULT Ready_Anim_Mesh(const FBX_MESHDATA& tMeshData, const vector<class CBone*>& Bones);
+	HRESULT Ready_Anim_Mesh(const ifstream& ifs, const vector<class CBone*>& Bones);
 
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const aiMesh* pAIMesh, const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix);

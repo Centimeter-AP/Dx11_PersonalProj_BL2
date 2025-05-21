@@ -160,7 +160,7 @@ HRESULT CMesh::Ready_NonAnim_Mesh(const aiMesh* pAIMesh, _fmatrix PreTransformMa
 	return S_OK;
 }
 
-HRESULT CMesh::Ready_NonAnim_Mesh(const FBX_MESHDATA& tMeshData, _fmatrix PreTransformMatrix)
+HRESULT CMesh::Ready_NonAnim_Mesh(const ifstream& tMeshData, _fmatrix PreTransformMatrix)
 {
 	m_iVertexStride = sizeof(VTXMESH);
 	D3D11_BUFFER_DESC			VBBufferDesc{};
@@ -237,7 +237,7 @@ HRESULT CMesh::Ready_Anim_Mesh(const aiMesh* pAIMesh, const vector<class CBone*>
 
 	m_iNumBones = pAIMesh->mNumBones;
 
-	for (size_t i = 0; i < m_iNumBones; i++)
+	for (_uint i = 0; i < m_iNumBones; i++)
 	{
 		/* 부모ㅗ 자식등의 뼈의 관계성을 표현(x) -> aiNode */
 		/* 이 메시에 어떤 정점들게 영향을 줍니다. and 얼마나 영향을 줍니다. */
@@ -269,7 +269,7 @@ HRESULT CMesh::Ready_Anim_Mesh(const aiMesh* pAIMesh, const vector<class CBone*>
 		/* i번째 뼈가 몇개 정점에게 영향을 주는데?*/
 		_uint		iNumWeights = pAIBone->mNumWeights;
 		
-		for (size_t j = 0; j < iNumWeights; j++)
+		for (_uint j = 0; j < iNumWeights; j++)
 		{
 			/* i번째 뼈가 영향ㅇ르 주는 j번째 정점의 정보 */
 			aiVertexWeight	AIWeight = pAIBone->mWeights[j];
@@ -338,7 +338,7 @@ HRESULT CMesh::Ready_Anim_Mesh(const aiMesh* pAIMesh, const vector<class CBone*>
 	return S_OK;
 }
 
-HRESULT CMesh::Ready_Anim_Mesh(const FBX_MESHDATA& tMeshData, const vector<class CBone*>& Bones)
+HRESULT CMesh::Ready_Anim_Mesh(const ifstream& tMeshData, const vector<class CBone*>& Bones)
 {
 
 	//m_iVertexStride = sizeof(VTXANIMMESH);

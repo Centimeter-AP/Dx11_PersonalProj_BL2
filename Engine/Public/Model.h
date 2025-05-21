@@ -57,16 +57,13 @@ private:
 	vector<class CAnimation*>	m_Animations;
 
 public:
-	vector<CMesh*>* Get_Meshes(){ return &m_Meshes; };
+	vector<CMesh*>* Get_Meshes() { return &m_Meshes; };
 
 public:
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
-	HRESULT Ready_Bones(FBXDATA& tModelData);
-	HRESULT Ready_Meshes(FBXDATA& tModelData);
 	HRESULT Ready_Meshes();
-	HRESULT Ready_Materials(const _char* pModelFilePath, FBXDATA& tModelData);
 	HRESULT Ready_Materials(const _char* pModelFilePath);
-	HRESULT Read_BinaryFBX(const string& filepath, FBXDATA& out);
+	HRESULT Read_BinaryFBX(const string& filepath);
 	HRESULT Ready_Animations();
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());

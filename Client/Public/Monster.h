@@ -33,7 +33,6 @@ public:
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
-
 	CModel*				m_pModelCom = { nullptr };
 
 private:
