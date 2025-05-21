@@ -13,19 +13,19 @@ CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CModel::CModel(const CModel& Prototype)
-	: CComponent ( Prototype )
+	: CComponent { Prototype }	
 	, m_iNumMeshes { Prototype.m_iNumMeshes }
 	, m_Meshes { Prototype.m_Meshes }
 	, m_iNumMaterials { Prototype.m_iNumMaterials }
 	, m_Materials { Prototype.m_Materials }
 	, m_eType { Prototype.m_eType }
 	, m_PreTransformMatrix { Prototype.m_PreTransformMatrix }
-	, m_Bones { Prototype.m_Bones }
-	, m_iNumAnimations{ Prototype.m_iNumAnimations }
-	, m_Animations{ Prototype.m_Animations }
+	//, m_Bones { Prototype.m_Bones }
+	, m_iNumAnimations { Prototype.m_iNumAnimations }
+	// , m_Animations { Prototype.m_Animations }
 {
-	for (auto& pBone : m_Bones)
-		Safe_AddRef(pBone);
+	for (auto& pPrototypeBone : Prototype.m_Bones)
+		m_Bones.push_back(pPrototypeBone->Clone());		
 
 	for (auto& pMaterial : m_Materials)
 		Safe_AddRef(pMaterial);
@@ -33,8 +33,9 @@ CModel::CModel(const CModel& Prototype)
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
 
-	for (auto& pAnimation : m_Animations)
-		Safe_AddRef(pAnimation);
+	for (auto& pPrototypeAnim: Prototype.m_Animations)
+		m_Animations.push_back(pPrototypeAnim->Clone());
+
 }
 
 HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex)
@@ -56,16 +57,15 @@ HRESULT CModel::Bind_Bone_Matrices(CShader* pShader, const _char* pConstantName,
 }
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
-{
+{	
+
 	_uint		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 	
 	if (MODEL::NONANIM == eType)
 		iFlag |= aiProcess_PreTransformVertices;
 
 	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
-	FBXDATA tModel = {};
-	if (FAILED(Read_BinaryFBX(pModelFilePath, tModel)))   // 수정해야하는것
-		return E_FAIL;
+
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
@@ -76,10 +76,10 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Meshes(tModel)))
+	if (FAILED(Ready_Meshes()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Materials(pModelFilePath, tModel)))
+	if (FAILED(Ready_Materials(pModelFilePath)))
 		return E_FAIL;
 
 	/* 각 애니메이션 마다 이용하고 있는 뼈대들의 시간에 맞는 상태값들을 미리 읽어서 저장해둔다. */
@@ -102,11 +102,11 @@ HRESULT CModel::Render(_uint iMeshIndex)
 	return S_OK;
 }
 
-HRESULT CModel::Play_Animation(_float fTimeDelta)
+_bool CModel::Play_Animation(_float fTimeDelta)
 {
-	/* 1. ㅎ녀재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
-	m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
-
+	_bool		isFinished = { false };
+	/* 1. 현재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
+	isFinished  = m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
 
 	/* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
 	for (auto& pBone : m_Bones)
@@ -114,18 +114,18 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
 	}
 
-	return S_OK;
+	/*XMMatrixDecompose()*/
+
+	return isFinished;
 }
 
-
-
 HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)
-{	
+{
 	CBone* pBone = CBone::Create(pAINode, iParentBoneIndex);
 	if (nullptr == pBone)
 		return E_FAIL;
 
-	m_Bones.push_back(pBone);	
+	m_Bones.push_back(pBone);
 
 	_int		iParentIndex = m_Bones.size() - 1;
 
@@ -135,6 +135,20 @@ HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)
 	}
 	return S_OK;
 }
+
+HRESULT CModel::Ready_Bones(FBXDATA& tModelData)
+{
+	for (size_t i = 0; i < tModelData.iNumBones; i++)
+	{
+		CBone* pBone = CBone::Create(tModelData.vecBones[i]);
+		if (nullptr == pBone)
+			return E_FAIL;
+
+		m_Bones.push_back(pBone);
+	}
+	return S_OK;
+}
+
 
 HRESULT CModel::Ready_Meshes(FBXDATA& tModelData)
 {
@@ -231,7 +245,7 @@ HRESULT CModel::Read_BinaryFBX(const string& filepath, FBXDATA& out)
 
 		// 2-3) 버텍스 벡터 복원
 		mesh.vecVertices.resize(mesh.iNumVertices);
-		if (mesh.iNumVertices > 0) 
+		if (mesh.iNumVertices > 0)
 		{
 			ifs.read(reinterpret_cast<_char*>(mesh.vecVertices.data()), mesh.iNumVertices * sizeof(VTXMESH));
 		}
@@ -251,7 +265,7 @@ HRESULT CModel::Read_BinaryFBX(const string& filepath, FBXDATA& out)
 		_uint numSRVs = 0;
 		ifs.read(reinterpret_cast<_char*>(&numSRVs), sizeof(numSRVs));
 		for (size_t j = 0; j < numSRVs; j++)
-		{	
+		{
 			FBX_MATDATA tMatData = {};
 			// 4-1) eTexType (enum) 복원
 			_uint rawType = 0;
@@ -328,12 +342,15 @@ void CModel::Free()
 
 	for (auto& pMaterial : m_Materials)
 		Safe_Release(pMaterial);
+	m_Materials.clear();
 
 	for (auto& pMesh : m_Meshes)
-		Safe_Release(pMesh);
-
-	
+		Safe_Release(pMesh);	
 	m_Meshes.clear();
+
+	for (auto& pAnimation : m_Animations)
+		Safe_Release(pAnimation);
+	m_Animations.clear();
 
 	m_Importer.FreeScene();
 }

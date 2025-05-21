@@ -71,8 +71,16 @@ namespace Engine
 
 	typedef struct tagBoneData
 	{
-
+		string		strBoneName;
+		/* XMMatrixTranspose 후 저장할 것 !!! */
+		_float4x4	TransformMatrix = {};
+		_int		iParentBoneIndex = {-2};
 	}FBX_BONEDATA;
+
+	typedef struct tagAnimationData
+	{
+
+	}FBX_ANIMDATA;
 
 	typedef struct tagAnimMeshData
 	{
@@ -90,10 +98,10 @@ namespace Engine
 
 	typedef struct tagMeshData
 	{
+		string strMeshName; 
 		_uint iMaterialIndex = {};
 		_uint iNumVertices = {};
 		_uint iNumIndices = {};
-		//string strName;   에후 
 		vector<_uint>	vecIndices;
 		vector<VTXMESH> vecVertices;
 	}FBX_MESHDATA;
@@ -101,11 +109,15 @@ namespace Engine
 
 	typedef struct tagFBXData
 	{
+		_uint iNumBones = {};
+		vector<FBX_BONEDATA> vecBones;
 		_uint iNumMeshes = {};
 		vector<FBX_MESHDATA> vecMeshes;
 		_uint iNumMaterials = {};
 		vector<vector<FBX_MATDATA>> vecMaterials;
 		string strFBXName;
+		_uint iNumAnimations = {};
+		vector<FBX_ANIMDATA> vecAnimations;
 	}FBXDATA;
 
 #pragma endregion

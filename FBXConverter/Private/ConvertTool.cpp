@@ -97,10 +97,10 @@ HRESULT CConvertTool::Render_ConvertTool()
 
 HRESULT CConvertTool::Convert_NonAnimFBX(const _char* pModelFilePath)
 {
-	FBXDATA m_pFBXData = { };
-	if (FAILED(Ready_FBXData(pModelFilePath, m_pFBXData)))
+	FBXDATA m_tFBXData = { };
+	if (FAILED(Ready_FBXData(pModelFilePath, m_tFBXData)))
 		return E_FAIL;
-	string saveFileName = savePath + "\\" + m_pFBXData.strFBXName + ".bin";
+	string saveFileName = savePath + "\\" + m_tFBXData.strFBXName + ".bin";
 	ofstream ofs(saveFileName, ios::binary);
 	if (!ofs.is_open())
 	{
@@ -110,8 +110,8 @@ HRESULT CConvertTool::Convert_NonAnimFBX(const _char* pModelFilePath)
 
 //	야가다를 해요
 //****메쉬
-	ofs.write(reinterpret_cast<const char*>(&m_pFBXData.iNumMeshes),sizeof(_uint)); // 메쉬 몇개?
-	for (auto meshdata : m_pFBXData.vecMeshes)										// 메쉬 전체 다 돌아요
+	ofs.write(reinterpret_cast<const char*>(&m_tFBXData.iNumMeshes),sizeof(_uint)); // 메쉬 몇개?
+	for (auto meshdata : m_tFBXData.vecMeshes)										// 메쉬 전체 다 돌아요
 	{
 		ofs.write(reinterpret_cast<const char*>(&meshdata.iMaterialIndex), sizeof(_uint));	// 머테리얼 인덱스 저장해요
 		ofs.write(reinterpret_cast<const char*>(&meshdata.iNumVertices), sizeof(_uint));	// 버텍스 몇갠지 저장해요
@@ -120,8 +120,8 @@ HRESULT CConvertTool::Convert_NonAnimFBX(const _char* pModelFilePath)
 		ofs.write(reinterpret_cast<const char*>(meshdata.vecVertices.data()), meshdata.iNumVertices * sizeof(VTXMESH)); // 버텍스 벡터 구조체 배열도 통짜저장해요~ㅋㅋ
 	}
 //****머테리얼
-	ofs.write(reinterpret_cast<const char*>(&m_pFBXData.iNumMaterials),sizeof(_uint));	// 머테리얼 몇개?
-	for (auto material : m_pFBXData.vecMaterials)										// 머테리얼 전체 다 돌아요
+	ofs.write(reinterpret_cast<const char*>(&m_tFBXData.iNumMaterials),sizeof(_uint));	// 머테리얼 몇개?
+	for (auto material : m_tFBXData.vecMaterials)										// 머테리얼 전체 다 돌아요
 	{
 		_uint numSRVs = material.size();
 		ofs.write(reinterpret_cast<const char*>(&numSRVs), sizeof(_uint));						// 머테리얼 안에 srv가 몇개 있는지 저장해요(구조체에없으니까조심!!)			
@@ -185,8 +185,15 @@ HRESULT CConvertTool::Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBX
 		MSG_BOX("어심프가 쓰러졌다 !!! 무슨일이야 !!!");
 		return E_FAIL;
 	}
+	Ready_FBX_BoneData(m_pFBXData);
+	Ready_FBX_MeshData(m_pFBXData);
+	Ready_FBX_MaterialData(pModelFilePath, m_pFBXData);
+	Ready_FBX_AnimationData(m_pFBXData);
+	return S_OK;
+}
 
-
+HRESULT CConvertTool::Ready_FBX_MeshData(FBXDATA& m_pFBXData)
+{
 	m_pFBXData.iNumMeshes = m_pAIScene->mNumMeshes;						// 메쉬부터 채워요
 	m_pFBXData.vecMeshes.reserve(m_pFBXData.iNumMeshes);
 	for (size_t i = 0; i < m_pFBXData.iNumMeshes; i++)
@@ -218,6 +225,11 @@ HRESULT CConvertTool::Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBX
 
 		m_pFBXData.vecMeshes.push_back(tMesh);							// 밥먹어
 	}
+	return S_OK;
+}
+
+HRESULT CConvertTool::Ready_FBX_MaterialData(const _char* pModelFilePath, FBXDATA& m_pFBXData)
+{
 
 	m_pFBXData.iNumMaterials = m_pAIScene->mNumMaterials;				// 머테리얼 채워요
 	for (size_t i = 0; i < m_pFBXData.iNumMaterials; i++)
@@ -275,6 +287,16 @@ HRESULT CConvertTool::Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBX
 		}
 		m_pFBXData.vecMaterials.push_back(tMaterialData);
 	}
+	return S_OK;
+}
+
+HRESULT CConvertTool::Ready_FBX_BoneData(FBXDATA& m_pFBXData)
+{
+	return S_OK;
+}
+
+HRESULT CConvertTool::Ready_FBX_AnimationData(FBXDATA& m_pFBXData)
+{
 	return S_OK;
 }
 

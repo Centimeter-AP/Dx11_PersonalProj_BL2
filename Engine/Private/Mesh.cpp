@@ -67,7 +67,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 
 HRESULT CMesh::Initialize_Prototype(MODEL eType, const FBX_MESHDATA& tMeshData, const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix)
 {
-	//strcpy_s(m_szName, pAIMesh->mName.data);
+	//strcpy_s(m_szName, tMeshData.strMeshName.c_str());
 	m_iMaterialIndex = tMeshData.iMaterialIndex;
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = tMeshData.iNumVertices;

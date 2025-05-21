@@ -34,6 +34,10 @@ private:
 	HRESULT Convert_NonAnimFBX(const _char* pModelFilePath);
 	HRESULT Copy_MaterialTextures();
 	HRESULT Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBXData);
+	HRESULT Ready_FBX_MeshData(FBXDATA& m_pFBXData);
+	HRESULT Ready_FBX_MaterialData(const _char* pModelFilePath, FBXDATA& m_pFBXData);
+	HRESULT Ready_FBX_BoneData(FBXDATA& m_pFBXData);
+	HRESULT Ready_FBX_AnimationData(FBXDATA& m_pFBXData);
 
 public:
 	static CConvertTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
