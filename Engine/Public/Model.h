@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include "Mesh.h"
 
 NS_BEGIN(Engine)
 
@@ -22,6 +21,8 @@ public:
 		m_isLoop = isLoop;
 	}
 
+public:
+
 	HRESULT Bind_Material(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex = 0);
 	HRESULT Bind_Bone_Matrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
 
@@ -31,11 +32,10 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	HRESULT Play_Animation(_float fTimeDelta);
+	_bool Play_Animation(_float fTimeDelta);
 
 private:
-	Assimp::Importer		m_Importer;	
-
+	Assimp::Importer			m_Importer;	
 
 	/* 모델에 대한 모든 정보르,ㄹ 담고 있는 구조체. */
 	const aiScene*				m_pAIScene = { nullptr };
@@ -53,20 +53,13 @@ private:
 	_bool						m_isLoop{};
 	_uint						m_iCurrentAnimIndex = { };
 	_uint						m_iNumAnimations = {};
-	vector<class CAnimation*>	m_Animations;
-
-public:
-	vector<CMesh*>* Get_Meshes(){ return &m_Meshes; };
+	vector<class CAnimation*>	m_Animations;	
 
 public:
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
-	HRESULT Ready_Meshes(FBXDATA& tModelData);
 	HRESULT Ready_Meshes();
-	HRESULT Ready_Materials(const _char* pModelFilePath, FBXDATA& tModelData);
 	HRESULT Ready_Materials(const _char* pModelFilePath);
-	HRESULT Read_BinaryFBX(const string& filepath, FBXDATA& out);
 	HRESULT Ready_Animations();
-
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(void* pArg) override;
