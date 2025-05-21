@@ -1,5 +1,6 @@
 #include "Component.h"
 
+#include "Animation.h"
 #include "Material.h"
 #include "Model.h"
 #include "Mesh.h"
@@ -20,6 +21,8 @@ CModel::CModel(const CModel& Prototype)
 	, m_eType { Prototype.m_eType }
 	, m_PreTransformMatrix { Prototype.m_PreTransformMatrix }
 	, m_Bones { Prototype.m_Bones }
+	, m_iNumAnimations{ Prototype.m_iNumAnimations }
+	, m_Animations{ Prototype.m_Animations }
 {
 	for (auto& pBone : m_Bones)
 		Safe_AddRef(pBone);
@@ -30,6 +33,8 @@ CModel::CModel(const CModel& Prototype)
 	for (auto& pMesh : m_Meshes)
 		Safe_AddRef(pMesh);
 
+	for (auto& pAnimation : m_Animations)
+		Safe_AddRef(pAnimation);
 }
 
 HRESULT CModel::Bind_Material(CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex)
@@ -57,24 +62,28 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 	if (MODEL::NONANIM == eType)
 		iFlag |= aiProcess_PreTransformVertices;
 
-	//m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 	FBXDATA tModel = {};
 	if (FAILED(Read_BinaryFBX(pModelFilePath, tModel)))   // 수정해야하는것
 		return E_FAIL;
-	//if (nullptr == m_pAIScene)
-	//	return E_FAIL;
+	if (nullptr == m_pAIScene)
+		return E_FAIL;
 
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 
 	m_eType = eType;
 
-	//if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
-	//	return E_FAIL;
+	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
+		return E_FAIL;
 
 	if (FAILED(Ready_Meshes(tModel)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Materials(pModelFilePath, tModel)))
+		return E_FAIL;
+
+	/* 각 애니메이션 마다 이용하고 있는 뼈대들의 시간에 맞는 상태값들을 미리 읽어서 저장해둔다. */
+	if (FAILED(Ready_Animations()))
 		return E_FAIL;
 
 	return S_OK;
@@ -96,6 +105,7 @@ HRESULT CModel::Render(_uint iMeshIndex)
 HRESULT CModel::Play_Animation(_float fTimeDelta)
 {
 	/* 1. ㅎ녀재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
+	m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
 
 
 	/* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
@@ -268,6 +278,22 @@ HRESULT CModel::Read_BinaryFBX(const string& filepath, FBXDATA& out)
 		return S_OK;
 	else
 		return E_FAIL;
+}
+
+HRESULT CModel::Ready_Animations()
+{
+	m_iNumAnimations = m_pAIScene->mNumAnimations;
+
+	for (size_t i = 0; i < m_iNumAnimations; i++)
+	{
+		CAnimation* pAnimation = CAnimation::Create(m_pAIScene->mAnimations[i], m_Bones);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+	}
+
+	return S_OK;
 }
 
 CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)

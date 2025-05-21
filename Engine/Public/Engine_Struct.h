@@ -12,6 +12,16 @@ namespace Engine
 		unsigned int	iNumLevels;		
 	}ENGINE_DESC;
 
+	typedef struct tagKeyFrame
+	{
+		/* 행렬이 아닌이유? : 상태와 상태 사이를 보간해주기위해서. */
+		XMFLOAT3		vScale;
+		XMFLOAT4		vRotation;
+		XMFLOAT3		vTranslation;
+
+		/* 이 상태를 취해야하는 재생위치  */
+		float			fTrackPosition;
+	}KEYFRAME;
 
 	typedef struct ENGINE_DLL tagVertexPositionTexcoord
 	{
