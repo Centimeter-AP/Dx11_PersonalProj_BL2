@@ -226,7 +226,6 @@ HRESULT CLoader::Loading_For_Maptool()
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 
-	ADD_MODEL_NA(Mushroom, LEVEL::MAPTOOL, 0.01f, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx");
 
 
 
