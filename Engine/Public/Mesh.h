@@ -18,7 +18,7 @@ public:
 
 public:
 	virtual HRESULT Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const vector<class CBone*>& Bones,  _fmatrix PreTransformMatrix);
-	virtual HRESULT Initialize_Prototype(MODEL eType, const FBX_MESHDATA& tMeshData, const vector<class CBone*>& Bones,  _fmatrix PreTransformMatrix);
+	virtual HRESULT Initialize_Prototype(MODEL eType,  ifstream& ifs, const vector<class CBone*>& Bones,  _fmatrix PreTransformMatrix);
 	virtual HRESULT Initialize(void* pArg);
 
 public:
@@ -40,13 +40,13 @@ private:
 
 private:
 	HRESULT Ready_NonAnim_Mesh(const aiMesh* pAIMesh, _fmatrix PreTransformMatrix);
-	HRESULT Ready_NonAnim_Mesh(const ifstream& ifs, _fmatrix PreTransformMatrix);
+	HRESULT Ready_NonAnim_Mesh( ifstream& ifs, _fmatrix PreTransformMatrix);
 	HRESULT Ready_Anim_Mesh(const aiMesh* pAIMesh, const vector<class CBone*>& Bones);
-	HRESULT Ready_Anim_Mesh(const ifstream& ifs, const vector<class CBone*>& Bones);
+	HRESULT Ready_Anim_Mesh( ifstream& ifs, const vector<class CBone*>& Bones);
 
 public:
 	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const aiMesh* pAIMesh, const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix);
-	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const FBX_MESHDATA& tMeshData, const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix);
+	static CMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType,  ifstream& ifs, const vector<class CBone*>& Bones, _fmatrix PreTransformMatrix);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 

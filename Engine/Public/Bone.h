@@ -24,7 +24,7 @@ public:
 
 public:
 	HRESULT Initialize(const aiNode* pAINode, _int iParentBoneIndex);
-	HRESULT Initialize(const ifstream& ifs);
+	HRESULT Initialize( ifstream& ifs);
 	//void Update_TransformationMatrix(_fmatrix TransformationMatrix);
 	void Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix);
 	_bool Compare_Name(const _char* pName) {
@@ -44,7 +44,7 @@ private:
 
 public:
 	static CBone* Create(const aiNode* pAINode, _int iParentBoneIndex);
-	static CBone* Create(const ifstream& ifs);
+	static CBone* Create( ifstream& ifs);
 	CBone* Clone();
 	virtual void Free() override;
 

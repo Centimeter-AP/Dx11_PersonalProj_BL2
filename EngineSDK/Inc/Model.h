@@ -17,6 +17,13 @@ public:
 		return m_iNumMeshes;
 	}
 
+	void Set_Animation(_uint iIndex, _bool isLoop = true) {
+		m_iCurrentAnimIndex = iIndex;
+		m_isLoop = isLoop;
+	}
+
+public:
+
 	HRESULT Bind_Material(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex = 0);
 	HRESULT Bind_Bone_Matrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
 
@@ -26,35 +33,44 @@ public:
 	virtual HRESULT Render(_uint iMeshIndex);
 
 public:
-	HRESULT Play_Animation(_float fTimeDelta);
+	_bool Play_Animation(_float fTimeDelta);
 
 private:
-	Assimp::Importer		m_Importer;	
+	Assimp::Importer			m_Importer;	
 
 	/* 모델에 대한 모든 정보르,ㄹ 담고 있는 구조체. */
-	const aiScene*			m_pAIScene = { nullptr };
+	const aiScene*				m_pAIScene = { nullptr };
 
-	MODEL					m_eType = {};
-	_float4x4				m_PreTransformMatrix = {};
-	_uint					m_iNumMeshes = {};
-	vector<class CMesh*>	m_Meshes;
+	MODEL						m_eType = {};
+	_float4x4					m_PreTransformMatrix = {};
+	_uint						m_iNumMeshes = {};
+	vector<class CMesh*>		m_Meshes;
 
 	_uint						m_iNumMaterials = {};
 	vector<class CMaterial*>	m_Materials;
 
-	vector<class CBone*>			m_Bones;
+	vector<class CBone*>		m_Bones;
+
+	_bool						m_isLoop{};
+	_uint						m_iCurrentAnimIndex = { };
+	_uint						m_iNumAnimations = {};
+	vector<class CAnimation*>	m_Animations;
 
 public:
-	vector<CMesh*>* Get_Meshes(){ return &m_Meshes; };
+	vector<CMesh*>* Get_Meshes() { return &m_Meshes; };
 
-
-public:
+public: // 어심프로 읽던 방식(근데이거왜퍼블릭임)
+	HRESULT Read_OriginalFBX(const string& filepath);
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
-	HRESULT Ready_Meshes(FBXDATA& tModelData);
 	HRESULT Ready_Meshes();
-	HRESULT Ready_Materials(const _char* pModelFilePath, FBXDATA& tModelData);
 	HRESULT Ready_Materials(const _char* pModelFilePath);
-	HRESULT Read_BinaryFBX(const string& filepath, FBXDATA& out);
+	HRESULT Ready_Animations();
+
+private: // 바이너리 읽는 방식
+	HRESULT Read_BinaryFBX(const string& filepath);
+	HRESULT Ready_Bones( ifstream& ifs);
+	HRESULT Ready_Meshes( ifstream& ifs);
+	HRESULT Ready_Materials( ifstream& ifs, const _char* pModelFilePath);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());

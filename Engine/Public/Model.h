@@ -59,12 +59,19 @@ private:
 public:
 	vector<CMesh*>* Get_Meshes() { return &m_Meshes; };
 
-public:
+public: // 어심프로 읽던 방식(근데이거왜퍼블릭임)
+	HRESULT Read_OriginalFBX(const string& filepath);
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath);
-	HRESULT Read_BinaryFBX(const string& filepath);
 	HRESULT Ready_Animations();
+
+private: // 바이너리 읽는 방식
+	HRESULT Read_BinaryFBX(const string& filepath);
+	HRESULT Ready_Bones( ifstream& ifs);
+	HRESULT Ready_Meshes( ifstream& ifs);
+	HRESULT Ready_Materials( ifstream& ifs, const _char* pModelFilePath);
+
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(void* pArg) override;

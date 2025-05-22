@@ -57,34 +57,25 @@ HRESULT CModel::Bind_Bone_Matrices(CShader* pShader, const _char* pConstantName,
 }
 
 HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix)
-{	
-
+{
 	_uint		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 	
 	if (MODEL::NONANIM == eType)
 		iFlag |= aiProcess_PreTransformVertices;
 
-	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+	//m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
 
-	if (nullptr == m_pAIScene)
-		return E_FAIL;
+	//if (nullptr == m_pAIScene)
+	//	return E_FAIL;
 
 	XMStoreFloat4x4(&m_PreTransformMatrix, PreTransformMatrix);
 
 	m_eType = eType;
 
-	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
-		return E_FAIL;
 
-	if (FAILED(Ready_Meshes()))
-		return E_FAIL;
+	Read_BinaryFBX(pModelFilePath);
 
-	if (FAILED(Ready_Materials(pModelFilePath)))
-		return E_FAIL;
-
-	/* 각 애니메이션 마다 이용하고 있는 뼈대들의 시간에 맞는 상태값들을 미리 읽어서 저장해둔다. */
-	if (FAILED(Ready_Animations()))
-		return E_FAIL;
+	//Read_OriginalFBX(pModelFilePath);
 
 	return S_OK;
 }
@@ -170,11 +161,26 @@ HRESULT CModel::Ready_Materials(const _char* pModelFilePath)
 
 HRESULT CModel::Read_BinaryFBX(const string& filepath)
 {
-	//ifstream ifs(filepath, ios::binary);
-	//if (!ifs.is_open()) {
-	//	MSG_BOX("너는 파일 열기도 못하는구나");
+	ifstream ifs(filepath, ios::binary);
+	if (!ifs.is_open()) {
+		MSG_BOX("너는 파일 열기도 못하는구나");
+		return E_FAIL;
+	}
+
+	if (FAILED(Ready_Bones(ifs)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Meshes(ifs)))
+		return E_FAIL;
+
+	if (FAILED(Ready_Materials(ifs, filepath.c_str())))
+		return E_FAIL;
+
+	/* 각 애니메이션 마다 이용하고 있는 뼈대들의 시간에 맞는 상태값들을 미리 읽어서 저장해둔다. */
+	//if (FAILED(Ready_Animations()))
 	//	return E_FAIL;
-	//}
+
+
 
 	//// 1) 메시 개수 읽기
 	//_uint meshCount = 0;
@@ -247,7 +253,71 @@ HRESULT CModel::Read_BinaryFBX(const string& filepath)
 	//if (ifs.good())
 	//	return S_OK;
 	//else
+		//return E_FAIL;
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Bones(ifstream& ifs)
+{
+	_uint BonesSize = {};
+	ifs.read(reinterpret_cast<_char*>(&BonesSize), sizeof(_uint));
+	m_Bones.reserve(BonesSize);
+	for (size_t i = 0; i < BonesSize; i++)
+	{
+		CBone* pBone = CBone::Create(ifs);
+		if (nullptr == pBone)
+			return E_FAIL;
+		m_Bones.push_back(pBone);
+	}
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Meshes( ifstream& ifs)
+{
+	ifs.read(reinterpret_cast<_char*>(&m_iNumMeshes), sizeof(_uint));  // 메쉬 몇개읨 
+
+	for (size_t i = 0; i < m_iNumMeshes; i++)
+	{
+		CMesh* pMesh = CMesh::Create(m_pDevice, m_pContext, m_eType, ifs, m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+		if (nullptr == pMesh)
+			return E_FAIL;
+
+		m_Meshes.push_back(pMesh);
+	}
+
+	return S_OK;
+}
+
+HRESULT CModel::Ready_Materials( ifstream& ifs, const _char* pModelFilePath)
+{
+	ifs.read(reinterpret_cast<_char*>(&m_iNumMaterials), sizeof(_uint));  // 머테리얼 몇개읨 
+
+	for (size_t i = 0; i < m_iNumMaterials; i++)
+	{
+		CMaterial* pMaterial = CMaterial::Create(m_pDevice, m_pContext, pModelFilePath, ifs);
+		if (nullptr == pMaterial)
+			return E_FAIL;
+
+		m_Materials.push_back(pMaterial);
+	}
+	return S_OK;
+}
+
+HRESULT CModel::Read_OriginalFBX(const string& filepath)
+{
+	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))
 		return E_FAIL;
+
+	if (FAILED(Ready_Meshes()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Materials(filepath.c_str())))
+		return E_FAIL;
+
+	/* 각 애니메이션 마다 이용하고 있는 뼈대들의 시간에 맞는 상태값들을 미리 읽어서 저장해둔다. */
+	if (FAILED(Ready_Animations()))
+		return E_FAIL;
+	return S_OK;
 }
 
 HRESULT CModel::Ready_Animations()

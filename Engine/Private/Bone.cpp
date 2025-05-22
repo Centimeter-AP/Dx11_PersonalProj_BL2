@@ -19,9 +19,13 @@ HRESULT CBone::Initialize(const aiNode* pAINode, _int iParentBoneIndex)
 	return S_OK;
 }
 
-HRESULT CBone::Initialize(const ifstream& ifs)
+HRESULT CBone::Initialize( ifstream& ifs)
 {
-
+	_uint NameLength = {};
+	ifs.read(reinterpret_cast<char*>(&NameLength), sizeof(_uint));					// ª¿ ¿Ã∏ß ±Ê¿Ã 
+	ifs.read(reinterpret_cast<char*>(m_szName), NameLength);						// ª¿ ¿Ã∏ß
+	ifs.read(reinterpret_cast<char*>(&m_TransformationMatrix), sizeof(_float4x4));	// «‡∑ƒ 
+	ifs.read(reinterpret_cast<char*>(&m_iParentBoneIndex), sizeof(_int));			// ∫Œ∏ ª¿ ¿Œµ¶Ω∫ 
 	return S_OK;
 }
 
@@ -50,7 +54,7 @@ CBone* CBone::Create(const aiNode* pAINode, _int iParentBoneIndex)
 	return pInstance;
 }
 
-CBone* CBone::Create(const ifstream& ifs)
+CBone* CBone::Create( ifstream& ifs)
 {
 	CBone* pInstance = new CBone();
 
