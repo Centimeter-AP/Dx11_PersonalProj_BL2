@@ -43,7 +43,7 @@ void CMapObject::Priority_Update(_float fTimeDelta)
 
 void CMapObject::Update(_float fTimeDelta)
 {
-	
+	m_pTransformCom->Go_Straight(fTimeDelta);
 }
 
 void CMapObject::Late_Update(_float fTimeDelta)
@@ -108,7 +108,7 @@ CMapObject* CMapObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMainApp");
+		MSG_BOX("Failed to Created : CMapObject");
 		Safe_Release(pInstance);
 	}
 

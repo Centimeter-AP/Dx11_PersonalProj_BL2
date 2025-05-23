@@ -94,6 +94,9 @@
     <Filter Include="02.GameObjects\MapObject">
       <UniqueIdentifier>{5084ee5d-86be-4275-9085-3cb3d903894d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\04. Player">
+      <UniqueIdentifier>{36f7e6ce-51c9-40d3-a217-0c4dcfcf6d7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -205,11 +208,11 @@
     <ClInclude Include="..\Public\ObjectTool.h">
       <Filter>01.Levels\MapTool\Tools\ObjectTool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ConvertTool.h">
-      <Filter>01.Levels\MapTool\Tools\ConvertTool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\MapObject.h">
       <Filter>02.GameObjects\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02.GameObjects\04. Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -305,11 +308,11 @@
     <ClCompile Include="..\Private\ObjectTool.cpp">
       <Filter>01.Levels\MapTool\Tools\ObjectTool</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ConvertTool.cpp">
-      <Filter>01.Levels\MapTool\Tools\ConvertTool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>02.GameObjects\MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02.GameObjects\04. Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

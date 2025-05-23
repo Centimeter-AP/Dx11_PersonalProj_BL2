@@ -131,11 +131,7 @@ HRESULT CLevel_MapTool::ImGui_Render()
 
 HRESULT CLevel_MapTool::Window_ObjectList()
 {
-    ImGui::Begin("Object Lists");
-
-
-
-    ImGui::End();
+    //deprecated
     return S_OK;
 }
 
@@ -203,6 +199,9 @@ HRESULT CLevel_MapTool::Toolbar_Menus()
         if (ImGui::BeginMenu("File")) {
             if (ImGui::MenuItem("Open", "Ctrl+O")) { /* 파일 열기 로직 */ }
             if (ImGui::MenuItem("Save", "Ctrl+S")) { /* 파일 저장 로직 */ }
+            {
+                
+            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Edit")) {
@@ -289,11 +288,6 @@ HRESULT CLevel_MapTool::Ready_ImGuiTools()
             if (nullptr == m_ImGuiTools[i])
                 return E_FAIL;
             m_tWindowData.ShowObjectMenu = true;
-            break;
-        case IMGUITOOL::CONVERT:
-            m_ImGuiTools[i] = CConvertTool::Create(m_pDevice, m_pContext, &m_tWindowData);
-            if (nullptr == m_ImGuiTools[i])
-                return E_FAIL;
             break;
         case IMGUITOOL::CAMERA:
             m_ImGuiTools[i] = nullptr;

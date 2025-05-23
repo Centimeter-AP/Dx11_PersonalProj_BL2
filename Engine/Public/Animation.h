@@ -13,6 +13,7 @@ private:
 
 public:
 	HRESULT Initialize(const aiAnimation* pAIAnimation, const vector<class CBone*>& Bones);
+	HRESULT Initialize(ifstream& ifs,  const vector<class CBone*>& Bones);
 	_bool Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop);
 
 private:
@@ -28,6 +29,7 @@ private:
 
 public:
 	static CAnimation* Create(const aiAnimation* pAIAnimation, const vector<class CBone*>& Bones);
+	static CAnimation* Create(ifstream& ifs, const vector<class CBone*>& Bones);
 	CAnimation* Clone();
 	virtual void Free() override;
 };

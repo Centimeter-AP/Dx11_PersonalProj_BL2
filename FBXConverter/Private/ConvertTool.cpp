@@ -28,6 +28,7 @@ HRESULT CConvertTool::Initialize(void* pArg)
 	savePath = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing)";
 
 
+
 	return S_OK;
 }
 
@@ -63,7 +64,8 @@ HRESULT CConvertTool::Render_ConvertTool()
 	IGFD::FileDialogConfig config;
 	if (Button("Load NonAnim File"))
 	{
-		m_isAnim = false;
+		m_isAnim = false;	
+		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_NonAnim)";
 		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\Frost_P\StaticMesh3\FBX)";
 		//config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Frost_StaticMesh)";
 		config.countSelectionMax = 0; // 무제한
@@ -74,7 +76,9 @@ HRESULT CConvertTool::Render_ConvertTool()
 	if (Button("Load Anim File"))
 	{
 		m_isAnim = true;
-		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\Frost_P\StaticMesh3\FBX)";
+		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+		//config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Fiona)";
+		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Siren Hand\GD_Siren_Streaming_SF\AnimSet\FBX)";
 		config.countSelectionMax = 0; // 무제한
 
 		IFILEDIALOG->OpenDialog("FBXDialog", "Select Anim Skeletalmesh FBX Files", ".fbx", config);
@@ -93,8 +97,7 @@ HRESULT CConvertTool::Render_ConvertTool()
 				for (auto FilePath : selections)
 				{
 					if (false == m_isAnim)
-						//Convert_NonAnimFBX(FilePath.second.data());
-						int a = 0;
+						Convert_NonAnimFBX(FilePath.second.data());
 					else
 						Convert_AnimFBX(FilePath.second.data());
 				}
@@ -104,55 +107,46 @@ HRESULT CConvertTool::Render_ConvertTool()
 		IFILEDIALOG->Close();
 	}
 
-	SeparatorText("Find Object");
 	End();
 	return S_OK;
 }
 
-//HRESULT CConvertTool::Convert_NonAnimFBX(const _char* pModelFilePath)
-//{
-//	FBXDATA m_tFBXData = { };
-//	if (FAILED(Ready_FBXData(pModelFilePath, m_tFBXData)))
-//		return E_FAIL;
-//	string saveFileName = savePath + "\\" + m_tFBXData.strFBXName + ".bin";
-//	ofstream ofs(saveFileName, ios::binary);
-//	if (!ofs.is_open())
-//	{
-//		MSG_BOX("숏됏어요");
-//		return E_FAIL;
-//	}
-//
-////	야가다를 해요
-////****메쉬
-//	ofs.write(reinterpret_cast<const char*>(&m_tFBXData.iNumMeshes),sizeof(_uint)); // 메쉬 몇개?
-//	for (auto meshdata : m_tFBXData.vecMeshes)										// 메쉬 전체 다 돌아요
-//	{
-//		ofs.write(reinterpret_cast<const char*>(&meshdata.iMaterialIndex), sizeof(_uint));	// 머테리얼 인덱스 저장해요
-//		ofs.write(reinterpret_cast<const char*>(&meshdata.iNumVertices), sizeof(_uint));	// 버텍스 몇갠지 저장해요
-//		ofs.write(reinterpret_cast<const char*>(&meshdata.iNumIndices), sizeof(_uint));		// 인덱스 몇갠지 저장해요
-//		ofs.write(reinterpret_cast<const char*>(meshdata.vecIndices.data()), meshdata.iNumIndices * sizeof(_uint));		// 인덱스 벡터 배열로 통짜저장해요
-//		ofs.write(reinterpret_cast<const char*>(meshdata.vecVertices.data()), meshdata.iNumVertices * sizeof(VTXMESH)); // 버텍스 벡터 구조체 배열도 통짜저장해요~ㅋㅋ
-//	}
-////****머테리얼
-//	ofs.write(reinterpret_cast<const char*>(&m_tFBXData.iNumMaterials),sizeof(_uint));	// 머테리얼 몇개?
-//	for (auto material : m_tFBXData.vecMaterials)										// 머테리얼 전체 다 돌아요
-//	{
-//		_uint numSRVs = material.size();
-//		ofs.write(reinterpret_cast<const char*>(&numSRVs), sizeof(_uint));						// 머테리얼 안에 srv가 몇개 있는지 저장해요(구조체에없으니까조심!!)			
-//		for (auto matdata : material)															// 저장해요	
-//		{
-//			_uint texType = static_cast<_uint>(matdata.eTexType);								// 텍스쳐 타입 uint로 바꺼줘요
-//			ofs.write(reinterpret_cast<const char*>(&texType), sizeof(_uint));					// 저장해요
-//			_uint pathLength = static_cast<_uint>(matdata.strTexturePath.size());				// 문자열 길이 구해요
-//			ofs.write(reinterpret_cast<const char*>(&pathLength), sizeof(_uint));				// 문자열 길이 저장해요
-//			if (pathLength > 0)
-//				ofs.write(matdata.strTexturePath.data(), pathLength);							// 문자열 저장해요
-//		}							
-//	}
-//
-//	return S_OK;
-//
-//}
+HRESULT CConvertTool::Convert_NonAnimFBX(const _char* pModelFilePath)
+{
+	path ModelPath = pModelFilePath;
+	path saveFileName = savePath / ModelPath.stem();
+	saveFileName.replace_extension(".bin");
+	ofstream ofs(saveFileName, ios::binary);
+	if (!ofs.is_open())
+	{
+		MSG_BOX("숏됏어요");
+		return E_FAIL;
+	}
+
+	int		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast | aiProcess_PreTransformVertices;
+
+
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+
+	if (nullptr == m_pAIScene)
+	{
+		MSG_BOX("어심프가 쓰러졌다 !!! 무슨일이야 !!!");
+		return E_FAIL;
+	}
+
+	/********************순서********************/
+	/************** 메쉬 -> 머테리얼**************/
+	/*******************************************/
+
+	/**********메쉬 저장**********/
+	Write_NonAnimMeshData(ofs);
+
+	/**********머테리얼 저장**********/
+	Write_MaterialData(pModelFilePath, ofs);
+
+	return S_OK;
+
+}
 
 HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 {
@@ -165,8 +159,6 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 		MSG_BOX("숏됏어요");
 		return E_FAIL;
 	}
-	if (FAILED(Ready_FBXData(pModelFilePath, ofs)))
-		return E_FAIL;
 
 	int		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
 
@@ -184,6 +176,7 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 /**** 본 -> 메쉬 -> 머테리얼 -> 애니메이션 ****/
 /*******************************************/
 
+
 /**********본 저장**********/
 	vector<FBX_BONEDATA> Bones;
 	Write_BoneData(m_pAIScene->mRootNode, -1, Bones, ofs);
@@ -199,14 +192,135 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 	}
 
 /**********메쉬 저장**********/
+	Write_AnimMeshData(Bones, ofs);
+
+/**********머테리얼 저장**********/
+	Write_MaterialData(pModelFilePath, ofs);
+
+/**********애니메이션 저장**********/
+	Write_AnimationData(Bones, ofs);
+
+
+	return S_OK;
+}
+
+HRESULT CConvertTool::Copy_MaterialTextures()
+{
+	for (auto srcPath : materialList)
+	{
+		try
+		{
+			_char       szFileName[MAX_PATH] = {};
+			_char       szExt[MAX_PATH] = {}; // 저장은 이름이랑 확장자만 저장하자
+		
+			_splitpath_s(srcPath.string().c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
+
+			string dstPath = savePath + "\\" + szFileName + szExt;
+
+			if (false == copy_file(srcPath, dstPath, copy_options::overwrite_existing))
+				continue;
+		}	
+		catch (const filesystem_error& e)
+		{
+			// 1) 에러 정보를 하나의 std::string으로 조합
+			std::string msg = "파일 복사 실패:\n";
+			msg += e.what();
+			msg += "\n\n코드 값: " + std::to_string(e.code().value());
+			msg += "\n에러 메시지: " + e.code().message();
+			msg += "\n원본 경로: " + e.path1().string();
+			msg += "\n대상 경로: " + e.path2().string();
+
+			// 2) MessageBoxA로 출력
+			MessageBoxA( nullptr, msg.c_str(), "파일 복사 오류", MB_OK | MB_ICONERROR );
+			continue;
+		}          
+	}
+	materialList.clear();
+	return S_OK;
+}
+
+HRESULT CConvertTool::Write_BoneData(const aiNode* pAINode, _int iParentBoneIndex, vector<FBX_BONEDATA>& m_Bones, ostream& ofs)
+{
+	{ // 뼈 Create
+		FBX_BONEDATA tBone = {};
+		tBone.strBoneName = pAINode->mName.C_Str();
+
+
+		_float4x4 TransformationMatrix = {};
+		memcpy(&TransformationMatrix, &pAINode->mTransformation, sizeof(_float4x4));
+		XMStoreFloat4x4(&tBone.TransformMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransformationMatrix)));
+		tBone.iParentBoneIndex = iParentBoneIndex;
+		m_Bones.push_back(tBone);
+	}
+
+	++m_iCurNumBones;
+	_int		iParentIndex = m_iCurNumBones - 1;
+
+	for (size_t i = 0; i < pAINode->mNumChildren; i++){
+		Write_BoneData(pAINode->mChildren[i], iParentIndex, m_Bones, ofs);
+	}
+	return S_OK;
+}
+
+HRESULT CConvertTool::Write_NonAnimMeshData(ostream& ofs)
+{
+	/**********메쉬 저장**********/
 	ofs.write(reinterpret_cast<const char*>(&m_pAIScene->mNumMeshes), sizeof(_uint)); // 메쉬 몇개?
 	for (size_t i = 0; i < m_pAIScene->mNumMeshes; i++)
 	{
 		aiMesh* pAIMesh = m_pAIScene->mMeshes[i];
-		
+
+		ofs.write(reinterpret_cast<const char*>(&pAIMesh->mName.length), sizeof(_uint));			// 메쉬 이름 길이 저장해요
+		ofs.write(reinterpret_cast<const char*>(&pAIMesh->mName.data), pAIMesh->mName.length);		// 메쉬 이름 저장해요
+
+		ofs.write(reinterpret_cast<const char*>(&pAIMesh->mMaterialIndex), sizeof(_uint));			// 머테리얼 인덱스 저장해요
+
+		_uint iNumVertices = pAIMesh->mNumVertices;
+		ofs.write(reinterpret_cast<const char*>(&iNumVertices), sizeof(_uint));						// 버텍스 몇갠지 저장해요
+
+		_uint iNumIndices = pAIMesh->mNumFaces * 3;
+		ofs.write(reinterpret_cast<const char*>(&iNumIndices), sizeof(_uint));						// 인덱스 몇갠지 저장해요
+
+		vector<VTXMESH> pVertices;
+		pVertices.reserve(iNumVertices);
+		for (size_t j = 0; j < iNumVertices; j++)
+		{
+			VTXMESH tVertex = {};
+			memcpy(&tVertex.vPosition, &pAIMesh->mVertices[j], sizeof(_float3));
+			memcpy(&tVertex.vNormal, &pAIMesh->mNormals[j], sizeof(_float3));
+			memcpy(&tVertex.vTangent, &pAIMesh->mTangents[j], sizeof(_float3));
+			memcpy(&tVertex.vTexcoord, &pAIMesh->mTextureCoords[0][j], sizeof(_float2));
+			pVertices.push_back(tVertex);
+		}
+
+		ofs.write(reinterpret_cast<const char*>(pVertices.data()), iNumVertices * sizeof(VTXMESH));		// 버텍스 벡터 구조체 배열도 저장해요
+
+		vector<_uint> pIndices;
+		pIndices.reserve(iNumIndices);
+
+		for (size_t j = 0; j < m_pAIScene->mMeshes[i]->mNumFaces; j++)	// 인덱스 채워요
+		{
+			pIndices.push_back(pAIMesh->mFaces[j].mIndices[0]);
+			pIndices.push_back(pAIMesh->mFaces[j].mIndices[1]);
+			pIndices.push_back(pAIMesh->mFaces[j].mIndices[2]);
+		}
+		ofs.write(reinterpret_cast<const char*>(pIndices.data()), iNumIndices * sizeof(_uint));		// 인덱스 벡터 배열로 통짜저장해요
+	}
+
+	return S_OK;
+}
+
+HRESULT CConvertTool::Write_AnimMeshData(const vector<FBX_BONEDATA>& Bones, ostream& ofs)
+{
+	/**********메쉬 저장**********/
+	ofs.write(reinterpret_cast<const char*>(&m_pAIScene->mNumMeshes), sizeof(_uint)); // 메쉬 몇개?
+	for (size_t i = 0; i < m_pAIScene->mNumMeshes; i++)
+	{
+		aiMesh* pAIMesh = m_pAIScene->mMeshes[i];
+
 		ofs.write(reinterpret_cast<const char*>(&pAIMesh->mName.length), sizeof(_uint));	// 메쉬 이름 길이 저장해요
 		ofs.write(reinterpret_cast<const char*>(&pAIMesh->mName.data), pAIMesh->mName.length);		// 메쉬 이름 저장해요
-		
+
 		ofs.write(reinterpret_cast<const char*>(&pAIMesh->mMaterialIndex), sizeof(_uint));	// 머테리얼 인덱스 저장해요
 
 		_uint iNumVertices = pAIMesh->mNumVertices;
@@ -219,10 +333,12 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 		pVertices.reserve(iNumVertices);
 		for (size_t j = 0; j < iNumVertices; j++)
 		{
-			memcpy(&pVertices[j].vPosition, &pAIMesh->mVertices[j], sizeof(_float3));
-			memcpy(&pVertices[j].vNormal, &pAIMesh->mNormals[j], sizeof(_float3));
-			memcpy(&pVertices[j].vTangent, &pAIMesh->mTangents[j], sizeof(_float3));
-			memcpy(&pVertices[j].vTexcoord, &pAIMesh->mTextureCoords[0][j], sizeof(_float2));
+			VTXANIMMESH tVertex = {};
+			memcpy(&tVertex.vPosition, &pAIMesh->mVertices[j], sizeof(_float3));
+			memcpy(&tVertex.vNormal, &pAIMesh->mNormals[j], sizeof(_float3));
+			memcpy(&tVertex.vTangent, &pAIMesh->mTangents[j], sizeof(_float3));
+			memcpy(&tVertex.vTexcoord, &pAIMesh->mTextureCoords[0][j], sizeof(_float2));
+			pVertices.push_back(tVertex);
 		}
 
 		_uint iNumBones = pAIMesh->mNumBones;
@@ -261,25 +377,25 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 				if (0.f == pVertices[AIWeight.mVertexId].vBlendWeights.x)
 				{
 					/* 이 메시에게 영향을 주는 뼈들 중 i번째 뼈가 이 정점에게 영향을 주네. */
-					pVertices[AIWeight.mVertexId].vBlendIndices.x = i;
+					pVertices[AIWeight.mVertexId].vBlendIndices.x = j;
 					pVertices[AIWeight.mVertexId].vBlendWeights.x = AIWeight.mWeight;
 				}
 
 				else if (0.f == pVertices[AIWeight.mVertexId].vBlendWeights.y)
 				{
-					pVertices[AIWeight.mVertexId].vBlendIndices.y = i;
+					pVertices[AIWeight.mVertexId].vBlendIndices.y = j;
 					pVertices[AIWeight.mVertexId].vBlendWeights.y = AIWeight.mWeight;
 				}
 
 				else if (0.f == pVertices[AIWeight.mVertexId].vBlendWeights.z)
 				{
-					pVertices[AIWeight.mVertexId].vBlendIndices.z = i;
+					pVertices[AIWeight.mVertexId].vBlendIndices.z = j;
 					pVertices[AIWeight.mVertexId].vBlendWeights.z = AIWeight.mWeight;
 				}
 
 				else if (0.f == pVertices[AIWeight.mVertexId].vBlendWeights.w)
 				{
-					pVertices[AIWeight.mVertexId].vBlendIndices.w = i;
+					pVertices[AIWeight.mVertexId].vBlendIndices.w = j;
 					pVertices[AIWeight.mVertexId].vBlendWeights.w = AIWeight.mWeight;
 				}
 			}
@@ -311,11 +427,11 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 		ofs.write(reinterpret_cast<const char*>(&offSize), sizeof(_uint));									// 오프셋 행렬 배열 크기 저장해요
 		ofs.write(reinterpret_cast<const char*>(OffsetMatrices.data()), sizeof(_float4x4) * offSize);		// 오프셋 행렬 배열 저장해요
 		_uint BoneIndicesSize = BoneIndices.size();
-		ofs.write(reinterpret_cast<const char*>(BoneIndicesSize), sizeof(_uint));							// 나한테 영향을 미치는 뼈새끼 인덱스가 몇번인지에 대한 배열  크기  저장해요
+		ofs.write(reinterpret_cast<const char*>(&BoneIndicesSize), sizeof(_uint));							// 나한테 영향을 미치는 뼈새끼 인덱스가 몇번인지에 대한 배열  크기  저장해요
 		ofs.write(reinterpret_cast<const char*>(BoneIndices.data()), sizeof(_uint) * BoneIndicesSize);		// 나한테 영향을 미치는 뼈새끼 인덱스가 몇번인지에 대한 배열 저장해요
 
 		ofs.write(reinterpret_cast<const char*>(pVertices.data()), iNumVertices * sizeof(VTXANIMMESH));		// 버텍스 벡터 구조체 배열도 저장해요
-		
+
 		vector<_uint> pIndices;
 		pIndices.reserve(iNumIndices);
 
@@ -329,9 +445,13 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 	}
 	// 아니 말이 안대잖아 이게 다 메쉬라고? 으윽, 
 
+	return S_OK;
+}
 
-/**********머테리얼 저장**********/
-	_uint iNumMaterials = m_pAIScene->mNumMaterials;								
+HRESULT CConvertTool::Write_MaterialData(const _char* pModelFilePath, ostream& ofs)
+{
+	/**********머테리얼 저장**********/
+	_uint iNumMaterials = m_pAIScene->mNumMaterials;
 	ofs.write(reinterpret_cast<const char*>(&iNumMaterials), sizeof(_uint));			// 머테리얼 몇갠지 저장해요
 	for (size_t i = 0; i < iNumMaterials; ++i)											// 머테리얼 전체 다 돌아요
 	{
@@ -378,13 +498,13 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 		}
 		_uint numSRVs = tMaterialData.size();
 		ofs.write(reinterpret_cast<const char*>(&numSRVs), sizeof(_uint));						// 머테리얼 안에 srv가 몇개 있는지 저장해요
-		for (auto matdata : tMaterialData)													
+		for (auto matdata : tMaterialData)
 		{
-			_uint pathLength = static_cast<_uint>(matdata.strTexturePath.size());			
+			_uint pathLength = static_cast<_uint>(matdata.strTexturePath.size());
 			ofs.write(reinterpret_cast<const char*>(&pathLength), sizeof(_uint));				// 문자열 길이 저장해요
 			ofs.write(matdata.strTexturePath.data(), pathLength);								// 문자열 저장해요
 
-			_uint texType = static_cast<_uint>(matdata.eTexType);								
+			_uint texType = static_cast<_uint>(matdata.eTexType);
 			ofs.write(reinterpret_cast<const char*>(&texType), sizeof(_uint));					// 텍스쳐 타입 저장해요
 		}
 	}
@@ -392,85 +512,97 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 	return S_OK;
 }
 
-HRESULT CConvertTool::Copy_MaterialTextures()
+HRESULT CConvertTool::Write_AnimationData(const vector<FBX_BONEDATA>& Bones, ostream& ofs)
 {
-	for (auto srcPath : materialList)
+	/**********애니메이션 저장**********/
+	// Ready_Animations
+	_uint iNumAnimations = m_pAIScene->mNumAnimations;
+	ofs.write(reinterpret_cast<const char*>(&iNumAnimations), sizeof(_uint));			// 애니메이션 몇갠지 저장해요
+	for (size_t i = 0; i < iNumAnimations; i++) 
 	{
-		try
+		//  CAnimation::Create(m_pAIScene->mAnimations[i], m_Bones);
+		aiAnimation* pAIAnimation = m_pAIScene->mAnimations[i];
+
+		_float tickspersec = (double)pAIAnimation->mTicksPerSecond;
+		_float duration = (double)pAIAnimation->mDuration;
+		ofs.write(reinterpret_cast<const char*>(&tickspersec), sizeof(_float));					// 뭐라해야할까 초당틱
+		ofs.write(reinterpret_cast<const char*>(&duration), sizeof(_float));					// 애니메이션 총 길이
+
+		_uint iNumChannels = pAIAnimation->mNumChannels;
+		ofs.write(reinterpret_cast<const char*>(&iNumChannels), sizeof(_uint));			// 이 애니메이션이 컨트롤해야하는 뼈의 갯수
+		for (size_t j = 0; j < iNumChannels; j++)
 		{
-			_char       szFileName[MAX_PATH] = {};
-			_char       szExt[MAX_PATH] = {}; // 저장은 이름이랑 확장자만 저장하자
-		
-			_splitpath_s(srcPath.string().c_str(), nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
-
-			string dstPath = savePath + "\\" + szFileName + szExt;
-
-			if (false == copy_file(srcPath, dstPath, copy_options::overwrite_existing))
-				continue;
-		}	
-		catch (const filesystem_error& e)
-		{
-			// 1) 에러 정보를 하나의 std::string으로 조합
-			std::string msg = "파일 복사 실패:\n";
-			msg += e.what();
-			msg += "\n\n코드 값: " + std::to_string(e.code().value());
-			msg += "\n에러 메시지: " + e.code().message();
-			msg += "\n원본 경로: " + e.path1().string();
-			msg += "\n대상 경로: " + e.path2().string();
-
-			// 2) MessageBoxA로 출력
-			MessageBoxA( nullptr, msg.c_str(), "파일 복사 오류", MB_OK | MB_ICONERROR );
-			continue;
-		}          
-	}
-	materialList.clear();
-	return S_OK;
-}
-
-HRESULT CConvertTool::Ready_FBXData(const _char* pModelFilePath, ofstream& ofs)
-{
-	return E_NOTIMPL;
-}
+			// CChannel::Create(pAIAnimation->mChannels[i], Bones);
+			aiNodeAnim* pAIChannel = pAIAnimation->mChannels[j];
 
 
-//HRESULT CConvertTool::Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBXData)
-//{
-//	int		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast | aiProcess_PreTransformVertices;
-//
-//
-//	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
-//
-//	if (nullptr == m_pAIScene)
-//	{
-//		MSG_BOX("어심프가 쓰러졌다 !!! 무슨일이야 !!!");
-//		return E_FAIL;
-//	}
-//	Ready_FBX_BoneData(m_pFBXData);
-//	Ready_FBX_MeshData(m_pFBXData);
-//	Ready_FBX_MaterialData(pModelFilePath, m_pFBXData);
-//	Ready_FBX_AnimationData(m_pFBXData);
-//	return S_OK;
-//}
 
-HRESULT CConvertTool::Write_BoneData(const aiNode* pAINode, _int iParentBoneIndex, vector<FBX_BONEDATA>& m_Bones, ostream& ofs)
-{
-	{ // 뼈 Create
-		FBX_BONEDATA tBone = {};
-		tBone.strBoneName = pAINode->mName.C_Str();
+			/* 이거만 저장하면 되는거 아님? 아님말고 */
+/**/		_uint m_iNumKeyFrames = {};				// 총 키프레임 수 (밑에 놈 갯수)
+/**/		vector<KEYFRAME> m_KeyFrames;			// 키프레임 쌐쌐 모은 벡터 컨테이너
+/**/		_uint m_iBoneIndex = {};				// 이 채널이 전체 뼈 배열에서 몇번째 인덱스인 친구였는지 게또다제
 
 
-		_float4x4 TransformationMatrix = {};
-		memcpy(&TransformationMatrix, &pAINode->mTransformation, sizeof(_float4x4));
-		XMStoreFloat4x4(&tBone.TransformMatrix, XMMatrixTranspose(XMLoadFloat4x4(&TransformationMatrix)));
-		tBone.iParentBoneIndex = iParentBoneIndex;
-		m_Bones.push_back(tBone);
-	}
 
-	++m_iCurNumBones;
-	_int		iParentIndex = m_iCurNumBones - 1;
+			m_iNumKeyFrames = max(pAIChannel->mNumPositionKeys, pAIChannel->mNumScalingKeys);
+			m_iNumKeyFrames = max(pAIChannel->mNumRotationKeys, m_iNumKeyFrames);
 
-	for (size_t i = 0; i < pAINode->mNumChildren; i++){
-		Write_BoneData(pAINode->mChildren[i], iParentIndex, m_Bones, ofs);
+			m_KeyFrames.reserve(m_iNumKeyFrames);
+
+			_float3		vScale = {};
+			_float4		vRotation = {};
+			_float3		vTranslation = {};
+
+			for (size_t i = 0; i < m_iNumKeyFrames; i++)
+			{
+				KEYFRAME		KeyFrame{};
+
+				if (i < pAIChannel->mNumScalingKeys)
+				{
+					memcpy(&vScale, &pAIChannel->mScalingKeys[i].mValue, sizeof(_float3));
+					KeyFrame.fTrackPosition = (float)pAIChannel->mScalingKeys[i].mTime;
+				}
+
+				if (i < pAIChannel->mNumRotationKeys)
+				{
+					vRotation.x = pAIChannel->mRotationKeys[i].mValue.x;
+					vRotation.y = pAIChannel->mRotationKeys[i].mValue.y;
+					vRotation.z = pAIChannel->mRotationKeys[i].mValue.z;
+					vRotation.w = pAIChannel->mRotationKeys[i].mValue.w;
+					KeyFrame.fTrackPosition = (float)pAIChannel->mRotationKeys[i].mTime;
+				}
+
+				if (i < pAIChannel->mNumPositionKeys)
+				{
+					memcpy(&vTranslation, &pAIChannel->mPositionKeys[i].mValue, sizeof(_float3));
+					KeyFrame.fTrackPosition = (float)pAIChannel->mPositionKeys[i].mTime;
+				}
+
+				KeyFrame.vScale = vScale;
+				KeyFrame.vRotation = vRotation;
+				KeyFrame.vTranslation = vTranslation;
+
+				m_KeyFrames.push_back(KeyFrame);
+			}
+
+			auto	iter = find_if(Bones.begin(), Bones.end(), [&](FBX_BONEDATA Bone)->_bool
+				{
+					if (!strcmp(Bone.strBoneName.c_str(), pAIChannel->mNodeName.data))
+						return true;
+
+					++m_iBoneIndex;
+
+					return false;
+				});
+
+
+			ofs.write(reinterpret_cast<const char*>(&m_iNumKeyFrames), sizeof(_uint));			// 총 키프레임 수 
+			ofs.write(reinterpret_cast<const char*>(m_KeyFrames.data()), sizeof(KEYFRAME) * m_iNumKeyFrames);			// 총 키프레임 (데이터)
+			ofs.write(reinterpret_cast<const char*>(&m_iBoneIndex), sizeof(_uint));				// 이 채널이 전체 뼈 배열에서 몇번째 인덱스인 친구였는지
+
+
+
+		}
 	}
 	return S_OK;
 }

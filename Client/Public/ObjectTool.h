@@ -22,6 +22,7 @@ public:
 private:
 	HRESULT Render_ObjectTool();
 	HRESULT Guizmo_Tool();
+	HRESULT Window_ObjectList();
 
 private:
 	HRESULT Open_FileDirectory(path& CurPath);
@@ -43,6 +44,9 @@ private:
 	ImGuizmo::MODE			m_eMode = { ImGuizmo::WORLD };
 
 	vector<_wstring>		m_ModelNames;
+
+	_bool					m_isAnim = { false };
+	MODEL					m_eModelType = { MODEL::NONANIM };
 
 public:
 	static CObjectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

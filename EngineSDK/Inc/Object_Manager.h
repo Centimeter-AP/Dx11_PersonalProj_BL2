@@ -23,6 +23,7 @@ public:
 	void Update(_float fTimeDelta);
 	void Late_Update(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
+
 private:	
 	_uint								m_iNumLevels = {};
 	typedef unordered_map<_wstring, class CLayer*> LAYERS;
@@ -32,6 +33,7 @@ private:
 public:
 	class CLayer* Find_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
 	class CGameObject* Find_Object(_uint iLevelIndex, const _wstring& strLayerTag, _uint iVectorIndex);
+	
 
 public:
 	static CObject_Manager* Create(_uint iNumLevels);

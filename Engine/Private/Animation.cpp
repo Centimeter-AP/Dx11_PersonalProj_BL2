@@ -42,6 +42,29 @@ HRESULT CAnimation::Initialize(const aiAnimation* pAIAnimation, const vector<cla
     return S_OK;
 }
 
+HRESULT CAnimation::Initialize(ifstream& ifs, const vector<class CBone*>& Bones)
+{
+	ifs.read(reinterpret_cast<_char*>(&m_fTickPerSecond), sizeof(_float));  // 애니메이션 안에 채널 몇개읨 
+	ifs.read(reinterpret_cast<_char*>(&m_fDuration), sizeof(_float));  // 애니메이션 안에 채널 몇개읨 
+	/* 이 애니메이션이 컨트롤해야하는 뼈의 갯수 */
+	ifs.read(reinterpret_cast<_char*>(&m_iNumChannels), sizeof(_uint));  // 애니메이션 안에 채널 몇개읨 
+
+
+	m_CurrentKeyFrameIndices.resize(m_iNumChannels);
+
+	/* 각 뼈의 정보를 생성한다. */
+	for (size_t i = 0; i < m_iNumChannels; i++)
+	{
+		CChannel* pChannel = CChannel::Create(ifs, Bones);
+		if (nullptr == pChannel)
+			return E_FAIL;
+
+		m_Channels.push_back(pChannel);
+	}
+
+	return S_OK;
+}
+
 _bool CAnimation::Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop)
 {
 	_bool			isFinished = { false };
@@ -77,6 +100,19 @@ CAnimation* CAnimation::Create(const aiAnimation* pAIAnimation, const vector<cla
 	CAnimation* pInstance = new CAnimation();
 
 	if (FAILED(pInstance->Initialize(pAIAnimation, Bones)))
+	{
+		MSG_BOX("Failed to Created : CAnimation");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CAnimation* CAnimation::Create(ifstream& ifs, const vector<class CBone*>& Bones)
+{
+	CAnimation* pInstance = new CAnimation();
+
+	if (FAILED(pInstance->Initialize(ifs, Bones)))
 	{
 		MSG_BOX("Failed to Created : CAnimation");
 		Safe_Release(pInstance);

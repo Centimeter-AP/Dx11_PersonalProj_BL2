@@ -98,10 +98,19 @@ HRESULT CObjectTool::Render_ObjectTool()
 	if (Button("Open Directory"))
 	{
 		IGFD::FileDialogConfig config;
-		config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Binary_Models)";
-		//config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Frost_StaticMesh)";
+		if (m_isAnim)
+			config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+		else
+			config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_NonAnim)";
+		//config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing)";
 		IFILEDIALOG->OpenDialog("BINDialog", "Select BIN Files", nullptr, config);
 	}
+	SameLine();
+	Checkbox("Animation", &m_isAnim);
+	if (m_isAnim == true)
+		m_eModelType = MODEL::ANIM;
+	else
+		m_eModelType = MODEL::NONANIM;
 	if (IFILEDIALOG->Display("BINDialog"))
 	{
 		if (IFILEDIALOG->IsOk())
@@ -112,7 +121,6 @@ HRESULT CObjectTool::Render_ObjectTool()
 		}
 		IFILEDIALOG->Close();
 	}
-
 
 	static int item_selected_idx = 0; // Here we store our selected data as an index.
 	
@@ -137,8 +145,13 @@ HRESULT CObjectTool::Render_ObjectTool()
 	CMonster::DESC mDesc;
 	if (Button("Make Object"))
 	{
+		wstring ObjectTag;
+		if (m_isAnim)
+			ObjectTag = L"Monster";
+		else
+			ObjectTag = L"MapObject";
 		mDesc.strModelTag = m_ModelNames[item_selected_idx];
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
 			return E_FAIL;
 	}
@@ -149,6 +162,35 @@ HRESULT CObjectTool::Render_ObjectTool()
 
 	ImGui::SetNextItemWidth(80);
 	ImGui::InputFloat("Snap Offset", &m_fSnapOffset, 0.1f, 1.f, "%.1f");
+	
+
+	static _float test[9] = {};
+	if (m_pSelectedObj != nullptr)
+	{
+		_matrix matObjWorld = m_pSelectedObj->Get_Transform()->Get_WorldMatrix();
+		_vector  vecObjScale, vecObjRot, vecObjPos = {};
+		XMMatrixDecompose(&vecObjScale, &vecObjRot, &vecObjPos, matObjWorld);
+		_float4 ObjScale, ObjRot, ObjPos = {};
+		XMStoreFloat4(&ObjScale, vecObjScale);
+		XMStoreFloat4(&ObjRot, vecObjRot);
+		XMStoreFloat4(&ObjPos, vecObjPos);
+		ImGui::SeparatorText("Manipulate Object");
+		ImGui::DragFloat("Pos X", &ObjPos.x, 0.05f);
+		ImGui::DragFloat("Pos Y", &ObjPos.y, 0.05f);
+		ImGui::DragFloat("Pos Z", &ObjPos.z, 0.05f);
+		ImGui::Separator();
+		ImGui::DragFloat("Rot X", &ObjRot.x, 1.f);
+		ImGui::DragFloat("Rot Y", &ObjRot.y, 1.f);
+		ImGui::DragFloat("Rot Z", &ObjRot.z, 1.f);
+		ImGui::Separator();
+		ImGui::DragFloat("Scale X", &ObjScale.x, 0.05f);
+		ImGui::DragFloat("Scale Y", &ObjScale.y, 0.05f);
+		ImGui::DragFloat("Scale Z", &ObjScale.z, 0.05f);
+		
+		//먼가 이상한디?
+		m_pSelectedObj->Get_Transform()->Set_Matrix(XMMatrixAffineTransformation(XMLoadFloat4(&ObjScale), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat4(&ObjRot), XMLoadFloat4(&ObjPos)));
+	}
+
 
 	ImGui::End();
 
@@ -214,6 +256,33 @@ HRESULT CObjectTool::Guizmo_Tool()
 	return S_OK;
 }
 
+HRESULT CObjectTool::Window_ObjectList()
+{
+	ImGui::Begin("Object Lists");
+	if (ImGui::TreeNode("Basic trees"))
+	{
+
+	}
+	//if (ImGui::BeginListBox("##Current Object List", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
+	//{
+	//	for (int n = 0; n < m_ModelNames.size(); n++)
+	//	{
+	//		//const char* szModelName = WStringToString(m_ModelNames[n]).c_str();
+	//		const bool is_selected = (item_selected_idx == n);
+	//		if (ImGui::Selectable(WStringToString(m_ModelNames[n]).c_str(), is_selected))
+	//			item_selected_idx = n;
+
+	//		// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+	//		if (is_selected)
+	//			ImGui::SetItemDefaultFocus();
+	//	}
+	//	ImGui::EndListBox();
+	//}
+
+	ImGui::End();
+	return S_OK;
+}
+
 
 HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
 {
@@ -224,7 +293,7 @@ HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
 	}
 
 	_matrix PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
 	for (const auto& entry : directory_iterator(CurPath))
 	{
 		if (entry.is_regular_file() && entry.path().extension() == L".bin")
@@ -233,7 +302,7 @@ HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
 			_wstring stemName = entry.path().stem().wstring();
 			_wstring prototypeTag = L"Prototype_Component_Model_" + stemName;
 			if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), prototypeTag,
-				CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+				CModel::Create(m_pDevice, m_pContext, m_eModelType,
 					filePath.c_str(), PreTransMatrix))))
 			{
 				std::string msg = "파일 오픈 실패:\n대상 경로: ";

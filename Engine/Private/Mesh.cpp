@@ -24,12 +24,10 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
 	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-
 	HRESULT hr = eType == MODEL::NONANIM ? Ready_NonAnim_Mesh(pAIMesh, PreTransformMatrix) : Ready_Anim_Mesh(pAIMesh, Bones);
 
 	if (FAILED(hr))
 		return E_FAIL;
-
 
 	D3D11_BUFFER_DESC			IBBufferDesc{};
 	IBBufferDesc.ByteWidth = m_iNumIndices * m_iIndexStride;
@@ -56,11 +54,6 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, const aiMesh* pAIMesh, const ve
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
-
-	Safe_Delete_Array(m_pIndices);
-
-
-
 
 	return S_OK;
 }
@@ -98,7 +91,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, ifstream& ifs, const vector<cla
 
 	_uint	iNumIndices = { 0 };
 
-	ifs.read(reinterpret_cast<char*>(&m_pIndices), sizeof(VTXANIMMESH) * m_iNumIndices);			// 버텍스 구조체 배열
+	ifs.read(reinterpret_cast<char*>(m_pIndices), sizeof(_uint) * m_iNumIndices);			// 버텍스 구조체 배열
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
 	IBInitialData.pSysMem = m_pIndices;
@@ -106,7 +99,7 @@ HRESULT CMesh::Initialize_Prototype(MODEL eType, ifstream& ifs, const vector<cla
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
 
-	Safe_Delete_Array(m_pIndices);
+	//Safe_Delete_Array(m_pIndices);
 
 
 
@@ -376,7 +369,7 @@ HRESULT CMesh::Ready_Anim_Mesh(ifstream& ifs, const vector<class CBone*>& Bones)
 	m_BoneIndices.resize(BoneIndicesSize);															// 나한테 영향을 미치는 뼈새끼 인덱스가 몇번인지에 대한 배열 
 	ifs.read(reinterpret_cast<char*>(m_BoneIndices.data()), sizeof(_uint) * BoneIndicesSize);		// 나한테 영향을 미치는 뼈새끼 인덱스가 몇번인지에 대한 배열 
 
-	ifs.read(reinterpret_cast<char*>(&pVertices), sizeof(VTXANIMMESH) * m_iNumVertices);			// 버텍스 구조체 배열
+	ifs.read(reinterpret_cast<char*>(pVertices), sizeof(VTXANIMMESH) * m_iNumVertices);			// 버텍스 구조체 배열
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 		m_pVertexPositions[i] = pVertices[i].vPosition;

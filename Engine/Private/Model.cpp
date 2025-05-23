@@ -98,7 +98,7 @@ _bool CModel::Play_Animation(_float fTimeDelta)
 	_bool		isFinished = { false };
 	/* 1. 현재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
 	/*******테스트하게 좀 뺍시다*******/
-	//isFinished  = m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
+	isFinished  = m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
 
 	/* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
 	for (auto& pBone : m_Bones)
@@ -167,14 +167,23 @@ HRESULT CModel::Read_BinaryFBX(const string& filepath)
 		return E_FAIL;
 	}
 
-	if (FAILED(Ready_Bones(ifs)))
-		return E_FAIL;
+	if (m_eType == MODEL::ANIM)
+	{
+		if (FAILED(Ready_Bones(ifs)))
+			return E_FAIL;
+	}
 
 	if (FAILED(Ready_Meshes(ifs)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Materials(ifs, filepath.c_str())))
 		return E_FAIL;
+
+	if (m_eType == MODEL::ANIM)
+	{
+		if (FAILED(Ready_Animations(ifs)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -223,6 +232,23 @@ HRESULT CModel::Ready_Materials( ifstream& ifs, const _char* pModelFilePath)
 		m_Materials.push_back(pMaterial);
 	}
 	return S_OK;
+}
+
+HRESULT CModel::Ready_Animations(ifstream& ifs)
+{
+	ifs.read(reinterpret_cast<_char*>(&m_iNumAnimations), sizeof(_uint));  // 애니메이션 몇개읨 
+
+	for (size_t i = 0; i < m_iNumAnimations; i++)
+	{
+		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+	}
+
+
+	return E_NOTIMPL;
 }
 
 HRESULT CModel::Read_OriginalFBX(const string& filepath)

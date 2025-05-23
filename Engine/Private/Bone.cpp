@@ -29,7 +29,6 @@ HRESULT CBone::Initialize( ifstream& ifs)
 	return S_OK;
 }
 
-
 void CBone::Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix)
 {
 	if (-1 == m_iParentBoneIndex)

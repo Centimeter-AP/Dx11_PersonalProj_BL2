@@ -18,7 +18,6 @@ public:
 	enum class IMGUITOOL {
 		TERRAIN,
 		OBJECT,
-		CONVERT,
 		CAMERA,
 		END
 	};

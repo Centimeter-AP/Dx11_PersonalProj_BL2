@@ -85,17 +85,18 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, ifstream& ifs)
         _tchar      szTextureFilePath[MAX_PATH] = {};
 
         MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szTextureFilePath, MAX_PATH);
+        path FileName = szFileName;
 
         HRESULT         hr = { };
         ID3D11ShaderResourceView* pSRV = { nullptr };
 
-        //if (false == strcmp(szExt, ".dds"))
-        hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
-        //else
-            //hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
+        if (FileName.extension() == ".dds")
+            hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
+        else
+            hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
 
         if (FAILED(hr))
-            return E_FAIL;
+             return E_FAIL;
         _uint iTexType = {};
         ifs.read(reinterpret_cast<_char*>(&iTexType), sizeof(_uint));   // 텍스쳐타입 읽어오기(정수형으로)
 

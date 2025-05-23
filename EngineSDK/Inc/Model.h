@@ -71,6 +71,7 @@ private: // 바이너리 읽는 방식
 	HRESULT Ready_Bones( ifstream& ifs);
 	HRESULT Ready_Meshes( ifstream& ifs);
 	HRESULT Ready_Materials( ifstream& ifs, const _char* pModelFilePath);
+	HRESULT Ready_Animations(ifstream& ifs);
 
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());

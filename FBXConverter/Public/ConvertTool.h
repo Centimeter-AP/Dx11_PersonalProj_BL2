@@ -38,18 +38,13 @@ private:
 	HRESULT Convert_NonAnimFBX(const _char* pModelFilePath);
 	HRESULT Convert_AnimFBX(const _char* pModelFilePath);
 	HRESULT Copy_MaterialTextures();
-	HRESULT Ready_FBXData(const _char* pModelFilePath, ofstream& ofs);
-	//HRESULT Ready_FBX_MeshData(FBXDATA& m_pMeshData);
-	//HRESULT Ready_FBX_AnimMeshData(FBXDATA& m_pAnimMeshData);
-	//HRESULT Ready_FBX_MaterialData(const _char* pModelFilePath, FBXDATA& m_pMatData);
-	//HRESULT Ready_FBX_BoneData(FBXDATA& m_pBoneData);
-	//HRESULT Ready_FBX_AnimationData(FBXDATA& m_pAnimData);
-
-	//HRESULT Ready_FBXData(const _char* pModelFilePath, FBXDATA& m_pFBXData);
 
 private: // 멍청해서 다시쓰는중 파일스트림으로
 	HRESULT Write_BoneData(const aiNode* pAINode, _int iParentBoneIndex, vector<FBX_BONEDATA>& m_Bones, ostream& ofs);
-
+	HRESULT Write_NonAnimMeshData(ostream& ofs);
+	HRESULT Write_AnimMeshData(const vector<FBX_BONEDATA>& Bones, ostream& ofs);
+	HRESULT Write_MaterialData(const _char* pModelFilePath, ostream& ofs);
+	HRESULT Write_AnimationData(const vector<FBX_BONEDATA>& Bones, ostream& ofs);
 public:
 	static CConvertTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	virtual CGameObject* Clone(void* pArg) override;
