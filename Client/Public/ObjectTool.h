@@ -15,9 +15,10 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
-	virtual void Update(_float fTimeDelta);
+	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	void	Key_Input();
 
 private:
 	HRESULT Render_ObjectTool();
@@ -25,9 +26,10 @@ private:
 	HRESULT Window_ObjectList();
 
 private:
-	HRESULT Open_FileDirectory(path& CurPath);
-	HRESULT Ready_Prototype();
-	HRESULT Ready_Object();
+	HRESULT Open_ModelDirectory(path& CurPath);
+	HRESULT Open_SaveFile();
+	HRESULT Autosave();
+	HRESULT Save_Objects(path SavePath);
 
 private:
 	_bool	m_isObjectSnapToTerrain = { false };

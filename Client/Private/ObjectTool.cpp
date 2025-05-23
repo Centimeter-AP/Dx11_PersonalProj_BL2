@@ -2,7 +2,8 @@
 #include "ObjectTool.h"
 #include "Terrain.h"
 #include "Monster.h"
-
+#include <sstream>
+#include "Layer.h"
 //ImGuiFileDialog g_ImGuiFileDialog;
 //ImGuiFileDialog::Instance() 이래 싱글톤으로 쓰라고 신이 말하고 감
 
@@ -36,7 +37,28 @@ void CObjectTool::Priority_Update(_float fTimeDelta)
 
 }
 
-void CObjectTool::Update(_float fTimeDelta)
+EVENT CObjectTool::Update(_float fTimeDelta)
+{
+	Key_Input();
+	return EVN_NONE;
+}
+
+void CObjectTool::Late_Update(_float fTimeDelta)
+{
+}
+
+HRESULT CObjectTool::Render()
+{
+	if (m_pWindowData->ShowObjectMenu)
+	{
+		if (FAILED(Render_ObjectTool()))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+void CObjectTool::Key_Input()
 {
 	if (KEY_PRESSING(DIK_LCONTROL))
 	{
@@ -55,9 +77,20 @@ void CObjectTool::Update(_float fTimeDelta)
 				m_eOperation = ImGuizmo::SCALE;
 			}
 		}
+
 		if (KEY_DOWN(DIK_Q))
 		{
 			m_isGizmoEnable = !m_isGizmoEnable;
+		}
+
+		if (KEY_DOWN(DIK_S))
+		{
+			m_pWindowData->ShowSaveMenu = true;
+		}
+
+		if (KEY_DOWN(DIK_S))
+		{
+			m_pWindowData->ShowLoadMenu = true;
 		}
 	}
 	if (m_isGizmoEnable)
@@ -66,26 +99,11 @@ void CObjectTool::Update(_float fTimeDelta)
 		{
 			CGameObject* pPickedObj = m_pGameInstance->Pick_Object_In_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), m_fMeshPickedPosition);
 			if (nullptr == pPickedObj)
-				return;
+				return ;
 			else
 				m_pSelectedObj = pPickedObj;
 		}
 	}
-}
-
-void CObjectTool::Late_Update(_float fTimeDelta)
-{
-}
-
-HRESULT CObjectTool::Render()
-{
-	if (m_pWindowData->ShowObjectMenu)
-	{
-		if (FAILED(Render_ObjectTool()))
-			return E_FAIL;
-	}
-
-	return S_OK;
 }
 
 HRESULT CObjectTool::Render_ObjectTool()
@@ -116,7 +134,7 @@ HRESULT CObjectTool::Render_ObjectTool()
 		if (IFILEDIALOG->IsOk())
 		{
 			path FDCurPath = IFILEDIALOG->GetCurrentPath();
-			if (FAILED(Open_FileDirectory(FDCurPath)))
+			if (FAILED(Open_ModelDirectory(FDCurPath)))
 				return E_FAIL;
 		}
 		IFILEDIALOG->Close();
@@ -150,7 +168,7 @@ HRESULT CObjectTool::Render_ObjectTool()
 			ObjectTag = L"Monster";
 		else
 			ObjectTag = L"MapObject";
-		mDesc.strModelTag = m_ModelNames[item_selected_idx];
+		mDesc.strVIBufferTag = m_ModelNames[item_selected_idx];
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
 			return E_FAIL;
@@ -284,7 +302,7 @@ HRESULT CObjectTool::Window_ObjectList()
 }
 
 
-HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
+HRESULT CObjectTool::Open_ModelDirectory(path& CurPath)
 {
 	if (!exists(CurPath))
 	{
@@ -322,8 +340,78 @@ HRESULT CObjectTool::Open_FileDirectory(path& CurPath)
 	return S_OK;
 }
 
-HRESULT CObjectTool::Ready_Prototype()
+HRESULT CObjectTool::Open_SaveFile()
 {
+	path savePath = R"(..\Bin\Resources\Map\)";
+
+	IGFD::FileDialogConfig config;
+	config.path = R"(..\Bin\Resources\Map\)";
+	config.flags = ImGuiFileDialogFlags_ConfirmOverwrite | ImGuiFileDialogFlags_ReadOnlyFileNameField == false;
+
+	IFILEDIALOG->OpenDialog("SaveMapDialog", "Choose directory to save", ".map", config);
+
+	if (IFILEDIALOG->Display("SaveMapDialog"))
+	{
+		if (IFILEDIALOG->IsOk())
+		{
+			path savePath = IFILEDIALOG->GetFilePathName();
+
+			// 확장자가 없으면 .map 붙이기
+			if (savePath.extension().string() != ".map")
+				savePath += ".map";
+
+			Save_Objects(savePath); // 직접 작성한 저장 함수
+		}
+
+		IFILEDIALOG->Close();
+	}
+
+	return S_OK;
+}
+
+HRESULT CObjectTool::Autosave()
+{
+	path savePath = R"(..\Bin\Resources\Map\Autosave\)";
+	auto now = chrono::system_clock::now();
+	time_t t = chrono::system_clock::to_time_t(now);
+	tm local_tm;
+	localtime_s(&local_tm, &t);  // thread-safe 함수
+
+	ostringstream oss; // 문자열에 출력하는 스트림 변수...
+	oss << savePath
+		<< std::put_time(&local_tm, "%Y-%m-%d-%H-%M")
+		<< ".map";
+
+	Save_Objects(savePath);
+	return S_OK;
+}
+
+HRESULT CObjectTool::Save_Objects(path SavePath)
+{
+	ofstream ofs(SavePath, ios::binary);
+
+	auto pLayer = m_pGameInstance->Find_Layer(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_MapObject");
+
+	auto& Objects = pLayer->Get_LayerObjectLists();
+	
+	size_t iObjectSize = { Objects.size() };
+	ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(size_t)); // 한 레이어에 오브젝트 몇 갠지 저장
+	for (auto Object : Objects)
+	{
+		/*
+			오브젝트 이름(프로토타입_게임오브젝트_이름<-이거)
+			모델 이름(VIBufferTag)
+			모델 파일 경로? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ?
+			Transform->WorldMatrix
+			Anim/Nonanim(이거저장해야함?)해야할거같은데용
+			생성할 레벨
+			pretransformmatrix?
+
+		*/
+	}
+
+	//ofs.write(reinterpret_cast<const char*>(&a), sizeof(_uint));
+
 	return S_OK;
 }
 

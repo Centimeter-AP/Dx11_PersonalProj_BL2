@@ -35,7 +35,7 @@ void CObjectTool::Priority_Update(_float fTimeDelta)
 
 }
 
-void CObjectTool::Update(_float fTimeDelta)
+EVENT CObjectTool::Update(_float fTimeDelta)
 {
 	if (KEY_PRESSING(DIK_LCONTROL))
 	{
@@ -60,6 +60,7 @@ void CObjectTool::Update(_float fTimeDelta)
 		}
 	}
 
+	return EVN_NONE;
 }
 
 void CObjectTool::Late_Update(_float fTimeDelta)

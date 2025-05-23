@@ -54,10 +54,10 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			}
 
 			if (nullptr == pLevel)
-				return;
+				return ;
 
 			if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(m_eNextLevelID), pLevel)))
-				return;
+				return ;
 							
 		}
 	}	

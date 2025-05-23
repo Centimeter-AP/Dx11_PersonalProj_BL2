@@ -28,8 +28,9 @@ void CImGuiTool::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CImGuiTool::Update(_float fTimeDelta)
+EVENT CImGuiTool::Update(_float fTimeDelta)
 {
+	return EVN_NONE;
 }
 
 void CImGuiTool::Late_Update(_float fTimeDelta)

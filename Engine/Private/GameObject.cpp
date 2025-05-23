@@ -64,9 +64,9 @@ void CGameObject::Priority_Update(_float fTimeDelta)
 
 }
 
-void CGameObject::Update(_float fTimeDelta)
+EVENT CGameObject::Update(_float fTimeDelta)
 {
-
+	return EVN_NONE;
 }
 
 void CGameObject::Late_Update(_float fTimeDelta)

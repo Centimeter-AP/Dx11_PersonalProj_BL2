@@ -9,7 +9,7 @@ CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CPlayer::CPlayer(const CPlayer& Prototype)
-	: CGameObject { Prototype }
+	: CGameObject ( Prototype )
 {
 
 }
@@ -53,10 +53,11 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	}
 }
 
-void CPlayer::Update(_float fTimeDelta)
+EVENT CPlayer::Update(_float fTimeDelta)
 {
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
 		int a = 10;
+	return EVN_NONE;
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)

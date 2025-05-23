@@ -57,10 +57,11 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 }
 
-void CMonster::Update(_float fTimeDelta)
+EVENT CMonster::Update(_float fTimeDelta)
 {
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
 		int a = 10;
+	return EVN_NONE;
 }
 
 void CMonster::Late_Update(_float fTimeDelta)
@@ -107,7 +108,7 @@ HRESULT CMonster::Ready_Components(void* pArg)
 	wstring tag = L"Mushroom";
 	if (nullptr != pArg)
 	{
-		tag = static_cast<DESC*>(pArg)->strModelTag;
+		tag = static_cast<DESC*>(pArg)->strVIBufferTag;
 	}
 
 	/* For.Com_Model */

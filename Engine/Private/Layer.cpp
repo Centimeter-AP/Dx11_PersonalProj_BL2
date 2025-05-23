@@ -52,11 +52,18 @@ void CLayer::Priority_Update(_float fTimeDelta)
 
 void CLayer::Update(_float fTimeDelta)
 {
-	for (auto& pGameObject : m_GameObjects)
+	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end(); )
 	{
-		if (nullptr != pGameObject)
-			pGameObject->Update(fTimeDelta);
-
+		EVENT Events;
+		if (nullptr != (*iter))
+			Events = (*iter)->Update(fTimeDelta);
+		if (Events == EVENT::EVN_DEAD)
+		{
+			Safe_Release(*iter);
+			iter = m_GameObjects.erase(iter);
+		}
+		else
+			++iter;
 	}
 }
 

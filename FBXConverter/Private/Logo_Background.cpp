@@ -37,9 +37,10 @@ void CLogo_BackGround::Priority_Update(_float fTimeDelta)
 
 }
 
-void CLogo_BackGround::Update(_float fTimeDelta)
+EVENT CLogo_BackGround::Update(_float fTimeDelta)
 {
 
+	return EVN_NONE;
 }
 
 void CLogo_BackGround::Late_Update(_float fTimeDelta)

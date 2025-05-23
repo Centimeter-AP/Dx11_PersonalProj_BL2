@@ -77,9 +77,10 @@ void CCamera_Free::Priority_Update(_float fTimeDelta)
 	__super::Bind_Matrices();
 }
 
-void CCamera_Free::Update(_float fTimeDelta)
+EVENT CCamera_Free::Update(_float fTimeDelta)
 {
 
+	return EVN_NONE;
 }
 
 void CCamera_Free::Late_Update(_float fTimeDelta)

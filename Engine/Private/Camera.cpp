@@ -44,8 +44,9 @@ void CCamera::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CCamera::Update(_float fTimeDelta)
+EVENT CCamera::Update(_float fTimeDelta)
 {
+	return EVN_NONE;
 }
 
 void CCamera::Late_Update(_float fTimeDelta)

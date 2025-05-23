@@ -37,8 +37,9 @@ void CConvertTool::Priority_Update(_float fTimeDelta)
 
 }
 
-void CConvertTool::Update(_float fTimeDelta)
+EVENT CConvertTool::Update(_float fTimeDelta)
 {
+	return EVN_NONE;
 }
 
 void CConvertTool::Late_Update(_float fTimeDelta)

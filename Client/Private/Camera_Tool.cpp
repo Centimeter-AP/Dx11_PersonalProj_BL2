@@ -91,9 +91,10 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 	__super::Bind_Matrices();
 }
 
-void CCamera_Tool::Update(_float fTimeDelta)
+EVENT CCamera_Tool::Update(_float fTimeDelta)
 {
 
+	return EVN_NONE;
 }
 
 void CCamera_Tool::Late_Update(_float fTimeDelta)
