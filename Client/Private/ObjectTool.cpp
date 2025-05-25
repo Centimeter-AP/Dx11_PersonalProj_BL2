@@ -346,7 +346,7 @@ HRESULT CObjectTool::Open_SaveFile()
 
 	IGFD::FileDialogConfig config;
 	config.path = R"(..\Bin\Resources\Map\)";
-	config.flags = ImGuiFileDialogFlags_ConfirmOverwrite | ImGuiFileDialogFlags_ReadOnlyFileNameField == false;
+	config.flags = ImGuiFileDialogFlags_ConfirmOverwrite | (ImGuiFileDialogFlags_ReadOnlyFileNameField == false);
 
 	IFILEDIALOG->OpenDialog("SaveMapDialog", "Choose directory to save", ".map", config);
 
@@ -398,10 +398,11 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 	ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(size_t)); // 한 레이어에 오브젝트 몇 갠지 저장
 	for (auto Object : Objects)
 	{
-		_uint iNameSize = 
-		ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(_uint)); // 한 레이어에 오브젝트 몇 갠지 저장
+		_tchar* ObjectName = Object->Get_Name();
+		_uint ObjectNameSize = ;
+		ofs.write(reinterpret_cast<const char*>(&ObjectNameSize), sizeof(_uint)); // 한 레이어에 오브젝트 몇 갠지 저장
 		
-		ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(size_t)); // 한 레이어에 오브젝트 몇 갠지 저장
+		//ofs.write(reinterpret_cast<const char*>(ObjectName.data()), sizeof(_tchar) * 10); // 한 레이어에 오브젝트 몇 갠지 저장
 		/*
 			오브젝트 이름(프로토타입_게임오브젝트_이름<-이거)
 			모델 이름(VIBufferTag)

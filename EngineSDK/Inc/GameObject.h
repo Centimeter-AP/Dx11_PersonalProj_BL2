@@ -22,6 +22,8 @@ protected:
 public:
 	CComponent* Get_Component(const _wstring& strComponentTag);
 	CTransform* Get_Transform() { return m_pTransformCom; }
+	_tchar*		Get_Name() { return m_szName; }
+	const _wstring&	Get_VIBufferTag() const { return m_strVIBufferTag; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
