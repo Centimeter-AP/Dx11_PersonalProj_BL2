@@ -91,7 +91,7 @@ HRESULT CMapObject::Ready_Components(void* pArg)
 	wstring tag = L"Mushroom";
 	if (nullptr != pArg)
 	{
-		tag = static_cast<DESC*>(pArg)->strModelTag;
+		tag = static_cast<DESC*>(pArg)->strVIBufferTag;
 	}
 
 	/* For.Com_Model */

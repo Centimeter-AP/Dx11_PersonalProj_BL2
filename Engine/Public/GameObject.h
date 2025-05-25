@@ -22,6 +22,8 @@ protected:
 public:
 	CComponent* Get_Component(const _wstring& strComponentTag);
 	CTransform* Get_Transform() { return m_pTransformCom; }
+	_tchar*		Get_Name() { return m_szName; }
+	const _wstring&	Get_VIBufferTag() const { return m_strVIBufferTag; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -44,8 +46,7 @@ protected:
 	class CTransform*							m_pTransformCom = { nullptr };
 
 protected:
-	_wstring					m_strVIBufferTag;
-
+	_wstring			m_strVIBufferTag;
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);

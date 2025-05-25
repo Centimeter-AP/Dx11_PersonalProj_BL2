@@ -44,8 +44,7 @@ protected:
 	class CTransform*							m_pTransformCom = { nullptr };
 
 protected:
-	_wstring					m_strVIBufferTag;
-
+	_wstring			m_strVIBufferTag;
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);

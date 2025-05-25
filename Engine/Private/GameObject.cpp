@@ -43,6 +43,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 
 	GAMEOBJECT_DESC* pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);	
 	lstrcpy(m_szName, pDesc->szName);
+	m_strVIBufferTag = pDesc->strVIBufferTag;
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)

@@ -117,9 +117,9 @@ HRESULT CObjectTool::Render_ObjectTool()
 	{
 		IGFD::FileDialogConfig config;
 		if (m_isAnim)
-			config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+			config.path = R"(..\Bin\Resources\Models\Bin_Anim)";
 		else
-			config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_NonAnim)";
+			config.path = R"(..\Bin\Resources\Models\Bin_NonAnim)";
 		//config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing)";
 		IFILEDIALOG->OpenDialog("BINDialog", "Select BIN Files", nullptr, config);
 	}
@@ -398,6 +398,7 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 	ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(size_t)); // 한 레이어에 오브젝트 몇 갠지 저장
 	for (auto Object : Objects)
 	{
+
 		/*
 			오브젝트 이름(프로토타입_게임오브젝트_이름<-이거)
 			모델 이름(VIBufferTag)

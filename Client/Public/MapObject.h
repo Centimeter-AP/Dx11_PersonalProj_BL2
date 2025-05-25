@@ -15,7 +15,6 @@ class CMapObject final : public CGameObject
 public:
 	typedef struct tagMapObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		wstring strModelTag;
 	}DESC;
 
 private:
