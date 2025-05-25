@@ -65,7 +65,7 @@ return E_FAIL;}
 
 #pragma region 유틸리티
 
-#define GET_PLAYER m_pGameInstance->Find_Object(LEVEL_STATIC,TEXT("Layer_Pawn"))
+#define GET_PLAYER m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::STATIC),TEXT("Layer_Player"))
 #define GET_PLAYER_TRANSFORM static_cast<CTransform*>(GET_PLAYER->Find_Component(TEXT("Com_Transform")))
 
 #define GET_CAMERA											\

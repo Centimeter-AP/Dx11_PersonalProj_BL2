@@ -24,6 +24,7 @@ private:
 	HRESULT Render_ObjectTool();
 	HRESULT Guizmo_Tool();
 	HRESULT Window_ObjectList();
+	HRESULT Make_Player();
 
 private:
 	HRESULT Open_ModelDirectory(path& CurPath);
@@ -49,6 +50,8 @@ private:
 
 	_bool					m_isAnim = { false };
 	MODEL					m_eModelType = { MODEL::NONANIM };
+
+	_bool	m_isPlayerExists = { false };
 
 public:
 	static CObjectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

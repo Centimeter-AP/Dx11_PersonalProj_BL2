@@ -38,7 +38,9 @@ public:
 	void Set_Matrix(_fmatrix vMatrix) {
 		XMStoreFloat4x4(&m_WorldMatrix, vMatrix);
 	}
-
+	void Set_SpeedPerSec(const _float fSPS) {
+		m_fSpeedPerSec = fSPS;
+	}
 
 public:
 	virtual HRESULT Initialize_Prototype();

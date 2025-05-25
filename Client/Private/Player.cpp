@@ -2,6 +2,9 @@
 
 #include "GameInstance.h"
 
+#define PLAYER_DEFAULTSPEED 10.f
+
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
 {
@@ -23,17 +26,18 @@ HRESULT CPlayer::Initialize(void* pArg)
 {
 	GAMEOBJECT_DESC			Desc{};
 
-	Desc.fRotationPerSec = 0.f;
-	Desc.fSpeedPerSec = 0.f;
-	lstrcpy(Desc.szName, TEXT("Monster"));
+	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
+	Desc.fSpeedPerSec = PLAYER_DEFAULTSPEED;
+	lstrcpy(Desc.szName, TEXT("Player"));
 
+	m_fSensor = 0.1f;
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 	
-	m_pModelCom->Set_Animation(3, true);
+	m_pModelCom->Set_Animation(21, true, 0.2f);
 
 	return S_OK;
 }
@@ -43,20 +47,23 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	static _uint test = {};
 	if (KEY_DOWN(DIK_Z))
 	{
-		test > 10 ? test = 0 : test++;
-		m_pModelCom->Set_Animation(test, true);
+		test > 36 ? test = 0 : test++;
+		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
 	if (KEY_DOWN(DIK_X))
 	{
-		test < 1 ? test = 9 : test--;
-		m_pModelCom->Set_Animation(test, true);
+		test < 1 ? test = 37 : test--;
+		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
+	Key_Input(fTimeDelta);
+
+
 }
 
 EVENT CPlayer::Update(_float fTimeDelta)
 {
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
-		int a = 10;
+		m_pModelCom->Set_Animation(Idle, true, 0.2f);
 	return EVN_NONE;
 }
 
@@ -93,6 +100,86 @@ HRESULT CPlayer::Render()
 
 
 	return S_OK;
+}
+
+void CPlayer::Key_Input(_float fTimeDelta)
+{
+
+
+	if (KEY_PRESSING(DIK_A))
+	{
+		m_pTransformCom->Go_Left(fTimeDelta);
+		m_pModelCom->Set_Animation(Run_L, true, 0.2f);
+	}
+	if (KEY_PRESSING(DIK_D))
+	{
+		m_pTransformCom->Go_Right(fTimeDelta);
+		m_pModelCom->Set_Animation(Run_R, true, 0.2f);
+	}
+	if (KEY_PRESSING(DIK_W))
+	{
+		m_pTransformCom->Go_Straight(fTimeDelta);
+		m_pModelCom->Set_Animation(Run_F, true, 0.2f);
+	}
+	else
+		m_isRunning = false;
+	if (KEY_PRESSING(DIK_S))
+	{
+		m_pTransformCom->Go_Backward(fTimeDelta);
+		m_pModelCom->Set_Animation(Run_F, true, 0.2f);
+	}
+
+	if (KEY_DOWN(DIK_LSHIFT))
+	{
+		m_pTransformCom->Set_SpeedPerSec(PLAYER_DEFAULTSPEED * 1.5f);
+		m_isRunning = true;
+	}
+
+	if (m_isRunning)
+		m_pModelCom->Set_Animation(Sprint, true, 0.2f);
+
+	if (KEY_DOWN(DIK_V)) // 근접공격 인데 잠깐 총 바꾸는 모션으로 함
+	{
+		m_pModelCom->Set_Animation(Holster, false, 0.2f);
+		m_isRunning = false;
+	}
+	if (KEY_DOWN(DIK_G)) // 수류탄
+	{
+		m_pModelCom->Set_Animation(Grenade_throw, false, 0.2f);
+		m_isRunning = false;
+	}
+	if (KEY_DOWN(DIK_R)) // 재장전
+	{
+		m_pModelCom->Set_Animation(R_Vladof, false, 0.2f);
+	}
+
+	//if (KEY_DOWN(DIK_SPACE)) // 잠프
+	//{
+	//	m_pModelCom->Set_Animation(Jump_Start, false);
+	//}
+
+
+
+
+
+
+
+
+
+
+
+	_long			MouseMove = {};
+
+	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
+	{
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
+	}
+
+	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::Y))
+	{
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
+	}
+
 }
 
 HRESULT CPlayer::Ready_Components(void* pArg)

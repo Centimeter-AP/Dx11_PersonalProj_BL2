@@ -31,14 +31,23 @@ HRESULT CBone::Initialize( ifstream& ifs)
 
 void CBone::Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix)
 {
+	if (!strcmp(m_szName, "Camera"))
+		int a = 0;
 	if (-1 == m_iParentBoneIndex)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * PreTransformMatrix);
 
 	else
-		XMStoreFloat4x4(&m_CombinedTransformationMatrix, 
-			XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix));
+	{
+		m_CombinedTransformationMatrix;
+		m_TransformationMatrix;
+		Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix;
 
+		XMStoreFloat4x4(&m_CombinedTransformationMatrix,
+			XMLoadFloat4x4(&m_TransformationMatrix) * XMLoadFloat4x4(&Bones[m_iParentBoneIndex]->m_CombinedTransformationMatrix));
+	}
 }
+
+
 
 CBone* CBone::Create(const aiNode* pAINode, _int iParentBoneIndex)
 {

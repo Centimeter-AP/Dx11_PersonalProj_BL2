@@ -32,8 +32,13 @@ protected:
 	_float				m_fFar = { };
 	_float				m_fAspect = {};	
 
+	_bool				m_isUsing = { false };
+
 protected:
 	void Bind_Matrices();
+
+public:
+	void	Set_Using(_bool isUsing) { m_isUsing = isUsing; }
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;	

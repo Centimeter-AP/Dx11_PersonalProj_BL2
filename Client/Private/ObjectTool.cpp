@@ -4,6 +4,7 @@
 #include "Monster.h"
 #include <sstream>
 #include "Layer.h"
+#include "Camera.h"
 //ImGuiFileDialog g_ImGuiFileDialog;
 //ImGuiFileDialog::Instance() 이래 싱글톤으로 쓰라고 신이 말하고 감
 
@@ -60,6 +61,27 @@ HRESULT CObjectTool::Render()
 
 void CObjectTool::Key_Input()
 {
+	if (KEY_DOWN(DIK_F1))
+	{
+		CCamera* pCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0));
+		pCamera->Set_Using(true); // 이거 다 카메라 매니저에 옮겨두쇼 제발 
+		if (m_isPlayerExists)
+		{
+			CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 1));
+			pPrevCamera->Set_Using(false);
+		}
+	}
+	if (KEY_DOWN(DIK_F2))
+	{
+		if (m_isPlayerExists)
+		{
+			CCamera* pCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 1));
+			pCamera->Set_Using(true); // 이거 다 카메라 매니저에 옮겨두쇼 제발 
+			CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0));
+			pPrevCamera->Set_Using(false);
+		}
+	}
+
 	if (KEY_PRESSING(DIK_LCONTROL))
 	{
 		if (m_isGizmoEnable)
@@ -111,6 +133,14 @@ HRESULT CObjectTool::Render_ObjectTool()
 	ImGui::SetNextWindowSize(ImVec2(200, 300));
 	ImGui::Begin("Object Tools", &m_pWindowData->ShowObjectMenu, NULL);
 
+	if (Button("Make Player"))
+	{
+		if (FAILED(Make_Player()))
+		{
+			ImGui::End();
+			return E_FAIL;
+		}
+	}
 	ImGui::SeparatorText("Find Object");
 
 	if (Button("Open Directory"))
@@ -301,6 +331,26 @@ HRESULT CObjectTool::Window_ObjectList()
 	return S_OK;
 }
 
+HRESULT CObjectTool::Make_Player()
+{
+	if (m_isPlayerExists)
+	{
+		MSG_BOX("이미 플레이어가 있어용");
+		return S_OK;
+	}
+	else
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"), ENUM_CLASS(LEVEL::STATIC), L"Layer_Player")))
+			return E_FAIL;
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"), ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera")))
+			return E_FAIL;
+		CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera"));
+		pPrevCamera->Set_Using(false);
+		m_isPlayerExists = true;
+	}
+	return S_OK;
+}
+
 
 HRESULT CObjectTool::Open_ModelDirectory(path& CurPath)
 {
@@ -399,8 +449,8 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 	for (auto Object : Objects)
 	{
 		_tchar* ObjectName = Object->Get_Name();
-		_uint ObjectNameSize = ;
-		ofs.write(reinterpret_cast<const char*>(&ObjectNameSize), sizeof(_uint)); // 한 레이어에 오브젝트 몇 갠지 저장
+		//_uint ObjectNameSize = ;
+		//ofs.write(reinterpret_cast<const char*>(&ObjectNameSize), sizeof(_uint)); // 한 레이어에 오브젝트 몇 갠지 저장
 		
 		//ofs.write(reinterpret_cast<const char*>(ObjectName.data()), sizeof(_tchar) * 10); // 한 레이어에 오브젝트 몇 갠지 저장
 		/*

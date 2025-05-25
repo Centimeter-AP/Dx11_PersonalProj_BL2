@@ -1,5 +1,6 @@
 #include "Component.h"
 
+#include "AnimationManager.h"
 #include "Animation.h"
 #include "Material.h"
 #include "Model.h"
@@ -82,6 +83,7 @@ HRESULT CModel::Initialize_Prototype(MODEL eType, const _char* pModelFilePath, _
 
 HRESULT CModel::Initialize(void* pArg)
 {
+	m_pAnimMgr = CAnimationManager::Create(&m_Bones, &m_Animations);
 	return S_OK;
 }
 
@@ -95,20 +97,35 @@ HRESULT CModel::Render(_uint iMeshIndex)
 
 _bool CModel::Play_Animation(_float fTimeDelta)
 {
-	_bool		isFinished = { false };
-	/* 1. 현재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
-	/*******테스트하게 좀 뺍시다*******/
-	isFinished  = m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
 
-	/* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
-	for (auto& pBone : m_Bones)
-	{
-		pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
-	}
+	
+	//m_pAnimMgr->ApplyToBones(XMLoadFloat4x4(&m_PreTransformMatrix));
+	//_bool		isFinished = { false };
+	///* 1. 현재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
+	//isFinished  = m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
+
+	///* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
+	//for (auto& pBone : m_Bones)
+	//{
+	//	pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
+	//}
 
 	/*XMMatrixDecompose()*/
 
-	return isFinished;
+	return m_pAnimMgr->Update(fTimeDelta, XMLoadFloat4x4(&m_PreTransformMatrix));
+}
+
+void CModel::Set_Animation(_uint iIndex, _bool isLoop, _float fBlendDuration)
+{
+	if (iIndex >= m_Animations.size())
+		return;
+
+	//m_iCurrentAnimIndex = iIndex;
+	//m_isLoop = isLoop;
+
+	m_pAnimMgr->SetAnimation(iIndex, isLoop, fBlendDuration);
+
+
 }
 
 HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)
@@ -240,7 +257,7 @@ HRESULT CModel::Ready_Animations(ifstream& ifs)
 
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones);
+ 		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
@@ -248,7 +265,27 @@ HRESULT CModel::Ready_Animations(ifstream& ifs)
 	}
 
 
-	return E_NOTIMPL;
+	return S_OK;
+}
+
+_uint CModel::Find_BoneIndex(const _char* srcName)
+{
+	_uint iBoneIndex = {};
+	auto	iter = find_if(m_Bones.begin(), m_Bones.end(), [&](CBone* pBone)->_bool
+	{
+		if (true == pBone->Compare_Name(srcName))
+			return true;
+
+		++iBoneIndex;
+
+		return false;
+	});
+	return iBoneIndex;
+}
+
+const _float4x4* CModel::Get_CombinedTransformationMatrix(_uint iBoneIndex)
+{
+	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
 }
 
 HRESULT CModel::Read_OriginalFBX(const string& filepath)
@@ -325,6 +362,8 @@ void CModel::Free()
 	for (auto& pAnimation : m_Animations)
 		Safe_Release(pAnimation);
 	m_Animations.clear();
+
+	Safe_Release(m_pAnimMgr);
 
 	m_Importer.FreeScene();
 }

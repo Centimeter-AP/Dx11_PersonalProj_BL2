@@ -42,15 +42,21 @@ HRESULT CCamera::Initialize(void* pArg)
 
 void CCamera::Priority_Update(_float fTimeDelta)
 {
+	if (!m_isUsing)
+		return;
 }
 
 EVENT CCamera::Update(_float fTimeDelta)
 {
+	if (!m_isUsing)
+		return EVN_NONE;
 	return EVN_NONE;
 }
 
 void CCamera::Late_Update(_float fTimeDelta)
 {
+	if (!m_isUsing)
+		return;
 }
 
 HRESULT CCamera::Render()

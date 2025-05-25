@@ -11,6 +11,12 @@
 #include "Client_Struct.h"
 #include "Client_Macro.h"
 
+#define _CONSOLE
+
+#ifdef _CONSOLE
+#include <iostream>
+#endif // _CONSOLE
+
 
 #ifdef USE_IMGUI
 #pragma push_macro("new")

@@ -187,7 +187,7 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 	{
 		_uint NameLength = Bones[i].strBoneName.length();
 		ofs.write(reinterpret_cast<const char*>(&NameLength), sizeof(_uint));	// 뼈 이름 길이 저장해요
-		ofs.write(reinterpret_cast<const char*>(&Bones[i].strBoneName), NameLength);	// 뼈 이름 저장해요
+		ofs.write(reinterpret_cast<const char*>(Bones[i].strBoneName.c_str()), NameLength);	// 뼈 이름 저장해요
 		ofs.write(reinterpret_cast<const char*>(&Bones[i].TransformMatrix), sizeof(_float4x4));	// 행렬 저장해요
 		ofs.write(reinterpret_cast<const char*>(&Bones[i].iParentBoneIndex), sizeof(_int));			// 부모 뼈 인덱스 저장해요
 	}
@@ -526,6 +526,8 @@ HRESULT CConvertTool::Write_AnimationData(const vector<FBX_BONEDATA>& Bones, ost
 
 		_float tickspersec = (double)pAIAnimation->mTicksPerSecond;
 		_float duration = (double)pAIAnimation->mDuration;
+		string AnimationName = pAIAnimation->mName.data;
+
 		ofs.write(reinterpret_cast<const char*>(&tickspersec), sizeof(_float));					// 뭐라해야할까 초당틱
 		ofs.write(reinterpret_cast<const char*>(&duration), sizeof(_float));					// 애니메이션 총 길이
 

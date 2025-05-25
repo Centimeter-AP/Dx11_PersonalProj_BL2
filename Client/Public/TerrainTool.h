@@ -36,6 +36,7 @@ private:
 	_float	m_fBrushPower = {5.f};
 
 	_bool	m_bBrushEnable = {false};
+	_bool	m_bEnablePicking = { true };
 
 public:
 	static CTerrainTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

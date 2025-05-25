@@ -93,6 +93,10 @@ HRESULT CLevel_MapTool::Ready_Layer_Camera(const _wstring strLayerTag)
         ENUM_CLASS(LEVEL::MAPTOOL), strLayerTag)))
         return E_FAIL;
 
+    //if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"),
+    //    ENUM_CLASS(LEVEL::MAPTOOL), strLayerTag)))
+    //    return E_FAIL;
+
     return S_OK;
 }
 

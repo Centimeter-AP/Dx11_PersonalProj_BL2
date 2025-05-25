@@ -97,6 +97,9 @@
     <Filter Include="02.GameObjects\04. Player">
       <UniqueIdentifier>{36f7e6ce-51c9-40d3-a217-0c4dcfcf6d7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\02. Camera\FirstPerson">
+      <UniqueIdentifier>{877cf41f-d3e0-49bf-a0e7-a6dcc614de64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -214,6 +217,9 @@
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\04. Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Camera_FPS.h">
+      <Filter>02.GameObjects\02. Camera\FirstPerson</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -313,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\04. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Camera_FPS.cpp">
+      <Filter>02.GameObjects\02. Camera\FirstPerson</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
