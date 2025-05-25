@@ -398,7 +398,10 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 	ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(size_t)); // 한 레이어에 오브젝트 몇 갠지 저장
 	for (auto Object : Objects)
 	{
-
+		_uint iNameSize = 
+		ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(_uint)); // 한 레이어에 오브젝트 몇 갠지 저장
+		
+		ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(size_t)); // 한 레이어에 오브젝트 몇 갠지 저장
 		/*
 			오브젝트 이름(프로토타입_게임오브젝트_이름<-이거)
 			모델 이름(VIBufferTag)
