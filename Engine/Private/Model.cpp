@@ -128,6 +128,19 @@ void CModel::Set_Animation(_uint iIndex, _bool isLoop, _float fBlendDuration)
 
 }
 
+void CModel::Set_Animation_TickPerSecond(_uint iIndex, _float fTickPerSecond)
+{
+	if (iIndex >= m_iNumAnimations)
+		return;
+	m_Animations[iIndex]->Set_TickPerSecond(fTickPerSecond);
+}
+
+void CModel::Set_Animation_TickPerSecond_All(_float fTickPerSecond)
+{
+	for (auto& pAnim : m_Animations)
+		pAnim->Set_TickPerSecond(fTickPerSecond);
+}
+
 HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)
 {
 	CBone* pBone = CBone::Create(pAINode, iParentBoneIndex);

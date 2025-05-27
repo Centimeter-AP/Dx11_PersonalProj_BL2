@@ -46,8 +46,10 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 	// 본 인덱스 얻기
 	_int iWeaponBoneIndex = m_pPlayerModel->Find_BoneIndex(m_szPlayerCameraBoneName.c_str());
 	if (iWeaponBoneIndex < 0) return ;
+	// 플레이어 손의 weapon 뼈 인덱스 갖고옴 
 
 	_matrix WeaponBoneMatrix = XMLoadFloat4x4(m_pPlayerModel->Get_CombinedTransformationMatrix(iWeaponBoneIndex));
+	// weapon 뼈의 combinedtransformationmatrix갖고옴
 	_matrix matWorld = m_pPlayerTransform->Get_WorldMatrix();
 	
 	//for (size_t i = 0; i < 3; i++)
@@ -58,14 +60,16 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 	// 월드 행렬 적용 (원래 셰이더에서 월드 곱해주기때문에 지금은 로컬상태임)
 	_matrix matFinal = WeaponBoneMatrix * matWorld;
 
-
 	m_pTransformCom->Set_Matrix(matFinal);
-
+	m_pTransformCom->Go_Backward(fTimeDelta*10.f);
 }
 
 EVENT CWeapon::Update(_float fTimeDelta)
 {
-
+	if (KEY_DOWN(DIK_R)) // 재장전
+	{
+		m_pModelCom->Set_Animation(14, false, 0.1f);
+	}
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
 		int a = 10;
 

@@ -253,11 +253,18 @@ HRESULT CLoader::Loading_For_Maptool()
 		return E_FAIL;
 
 	//PreTransMatrix = XMMatrixIdentity();
-	PreTransMatrix = XMMatrixRotationZ(XMConvertToRadians(90.f)) * XMMatrixRotationY(XMConvertToRadians(-90.f));
+	//PreTransMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_AR"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+	//		"../Bin/Resources/Models/Bin_Anim/AssaultRifle.bin", PreTransMatrix))))
+	//	return E_FAIL;
+
+	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_AR"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
-			"../Bin/Resources/Models/Bin_Anim/AssaultRifle.bin", PreTransMatrix))))
+			"../Bin/Resources/Models/Bin_Anim/Test_Pistol.bin", PreTransMatrix))))
 		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 	/* For.Prototype_GameObject_Terrain */

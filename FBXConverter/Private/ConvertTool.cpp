@@ -79,7 +79,18 @@ HRESULT CConvertTool::Render_ConvertTool()
 		m_isAnim = true;
 		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
 		//config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Fiona)";
-		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Siren Hand\GD_Siren_Streaming_SF\AnimSet\FBX)";
+		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\)";
+		config.countSelectionMax = 0; // 무제한
+
+		IFILEDIALOG->OpenDialog("FBXDialog", "Select Anim Skeletalmesh FBX Files", ".fbx", config);
+	}
+	
+	if (Button("Load Anim File (Anim Only)"))
+	{
+		m_isAnimOnly = true;
+		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+		//config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Fiona)";
+		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\GD_Siren_Streaming_SF\AnimSet\FBX)";
 		config.countSelectionMax = 0; // 무제한
 
 		IFILEDIALOG->OpenDialog("FBXDialog", "Select Anim Skeletalmesh FBX Files", ".fbx", config);
@@ -97,10 +108,18 @@ HRESULT CConvertTool::Render_ConvertTool()
 			{
 				for (auto FilePath : selections)
 				{
-					if (false == m_isAnim)
-						Convert_NonAnimFBX(FilePath.second.data());
+					if (m_isAnimOnly)
+					{
+						Convert_AnimOnly(FilePath.second.data());
+						continue;
+					}
 					else
-						Convert_AnimFBX(FilePath.second.data());
+					{
+						if (false == m_isAnim)
+							Convert_NonAnimFBX(FilePath.second.data());
+						else
+							Convert_AnimFBX(FilePath.second.data());
+					}
 				}
 			}
 			Copy_MaterialTextures();
@@ -201,6 +220,37 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 /**********애니메이션 저장**********/
 	Write_AnimationData(Bones, ofs);
 
+
+	return S_OK;
+}
+
+HRESULT CConvertTool::Convert_AnimOnly(const _char* pModelFilePath)
+{
+	path ModelPath = pModelFilePath;
+	path saveFileName = savePath / ModelPath.stem();
+	saveFileName.replace_extension(".anim");
+	ofstream ofs(saveFileName, ios::binary);
+	if (!ofs.is_open())
+	{
+		MSG_BOX("숏됏어요");
+		return E_FAIL;
+	}
+
+	int		iFlag = aiProcess_ConvertToLeftHanded | aiProcessPreset_TargetRealtime_Fast;
+
+
+	m_pAIScene = m_Importer.ReadFile(pModelFilePath, iFlag);
+
+	if (nullptr == m_pAIScene)
+	{
+		MSG_BOX("어심프가 쓰러졌다 !!! 무슨일이야 !!!");
+		return E_FAIL;
+	}
+
+	vector<FBX_BONEDATA> Bones;
+	Write_BoneData(m_pAIScene->mRootNode, -1, Bones, ofs);
+
+	Write_AnimationData(Bones, ofs);
 
 	return S_OK;
 }

@@ -30,6 +30,7 @@ private:
 	string		savePath;
 
 	_bool		m_isAnim = { false };
+	_bool		m_isAnimOnly = { false };
 	_int		m_iCurNumBones = { };
 	vector<string> m_BoneNames;
 
@@ -37,6 +38,7 @@ private:
 	HRESULT Render_ConvertTool();
 	HRESULT Convert_NonAnimFBX(const _char* pModelFilePath);
 	HRESULT Convert_AnimFBX(const _char* pModelFilePath);
+	HRESULT Convert_AnimOnly(const _char* pModelFilePath);
 	HRESULT Copy_MaterialTextures();
 
 private: // 멍청해서 다시쓰는중 파일스트림으로

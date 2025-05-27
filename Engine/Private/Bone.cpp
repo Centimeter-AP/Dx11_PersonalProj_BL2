@@ -31,8 +31,6 @@ HRESULT CBone::Initialize( ifstream& ifs)
 
 void CBone::Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fmatrix PreTransformMatrix)
 {
-	if (!strcmp(m_szName, "Camera"))
-		int a = 0;
 	if (-1 == m_iParentBoneIndex)
 		XMStoreFloat4x4(&m_CombinedTransformationMatrix, XMLoadFloat4x4(&m_TransformationMatrix) * PreTransformMatrix);
 

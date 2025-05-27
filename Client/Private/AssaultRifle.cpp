@@ -33,8 +33,8 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_pModelCom->Set_Animation(3, true);
-
+	m_pModelCom->Set_Animation(3, false);
+	m_pModelCom->Set_Animation_TickPerSecond_All(30.f);
 	return S_OK;
 }
 
@@ -43,19 +43,17 @@ void CAssaultRifle::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 #pragma region AnimationTests
 	static _uint test = {};
-	if (KEY_DOWN(DIK_LBRACKET))
+	if (KEY_DOWN(DIK_RBRACKET))
 	{
-		test > 73 ? test = 0 : test++;
+		++test == AR_ANIMATION_END ? test = 0 : test;
 		m_pModelCom->Set_Animation(test, true);
 	}
-	if (KEY_DOWN(DIK_RBRACKET))
+	if (KEY_DOWN(DIK_LBRACKET))
 	{
 		test < 1 ? test = 74 : test--;
 		m_pModelCom->Set_Animation(test, true);
 	}
 #pragma endregion
-
-
 }
 
 EVENT CAssaultRifle::Update(_float fTimeDelta)

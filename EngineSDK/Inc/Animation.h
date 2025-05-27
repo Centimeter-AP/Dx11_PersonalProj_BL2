@@ -19,6 +19,9 @@ public:
 	const _matrix& Get_TransformMatrix(_uint iBoneIndex) const {
 		return m_TransformMatrices[iBoneIndex];
 	}
+	void Set_TickPerSecond(_float fTickPerSecond) {
+		m_fTickPerSecond = fTickPerSecond;
+	}
 
 
 private:

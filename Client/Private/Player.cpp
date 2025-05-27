@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "GameInstance.h"
+#include <Camera.h>
 
 #define PLAYER_DEFAULTSPEED 10.f
 
@@ -107,6 +108,8 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Key_Input(_float fTimeDelta)
 {
+	if (!static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0))->Is_Using())
+	{
 	if (!m_isPlayingNonLoopAnim)
 		m_pModelCom->Set_Animation(Idle, true, 0.1f);
 	if (KEY_PRESSING(DIK_A))
@@ -141,6 +144,22 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	if (m_isRunning)
 		m_pModelCom->Set_Animation(Sprint, true, 0.1f);
 
+
+
+
+
+		_long			MouseMove = {};
+
+		if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
+		{
+			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
+		}
+
+		if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::Y))
+		{
+			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
+		}
+	}
 	if (KEY_DOWN(DIK_V)) // 근접공격 인데 잠깐 총 바꾸는 모션으로 함
 	{
 		m_pModelCom->Set_Animation(Holster, false, 0.1f);
@@ -155,7 +174,7 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	}
 	if (KEY_DOWN(DIK_R)) // 재장전
 	{
-		m_pModelCom->Set_Animation(R_Vladof, false, 0.1f);
+		m_pModelCom->Set_Animation(R_Jakobs, false, 0.1f);
 		m_isPlayingNonLoopAnim = true;
 	}
 
@@ -166,20 +185,6 @@ void CPlayer::Key_Input(_float fTimeDelta)
 		m_isPlayingNonLoopAnim = true;
 	}
 
-
-
-
-	_long			MouseMove = {};
-
-	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
-	{
-		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
-	}
-
-	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::Y))
-	{
-		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
-	}
 
 }
 

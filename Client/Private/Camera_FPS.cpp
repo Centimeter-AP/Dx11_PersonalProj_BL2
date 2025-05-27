@@ -92,7 +92,6 @@ void CCamera_FPS::Priority_Update(_float fTimeDelta)
 
 EVENT CCamera_FPS::Update(_float fTimeDelta)
 {
-
 	if (!m_isUsing)
 		return EVN_NONE;
 

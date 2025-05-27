@@ -39,6 +39,7 @@ protected:
 
 public:
 	void	Set_Using(_bool isUsing) { m_isUsing = isUsing; }
+	_bool	Is_Using() const { return m_isUsing; }
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;	
