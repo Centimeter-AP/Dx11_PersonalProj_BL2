@@ -1,0 +1,61 @@
+#pragma once
+
+#include "Client_Defines.h"
+#include "GameObject.h"
+
+NS_BEGIN(Engine)
+class CShader;
+class CModel;
+NS_END
+
+NS_BEGIN(Client)
+
+class CPlayer final : public CGameObject
+{
+public:
+	typedef struct tagPlayerDesc : public CGameObject::GAMEOBJECT_DESC
+	{
+	}DESC;
+	enum PLA_AR {
+		Crouch, Draw, Grenade_throw, Holster, Idle, Jump_End, Jump_Idle, Jump_Start, R_Banditmade, R_Dahl,
+		R_Jakobs, R_Torgue, R_Vladof, Run_F, Run_L, Run_R, Sight_Idle, Sight_Jump_End, Sight_Jump_Idle, Sight_Jump_Start,
+		Sight_Walk_F, Sprint, Sprint_DualWield, R_Dahl_Fast, R_Jakobs_Var2, R_Jakobs_Fast, R_Banditmade_Fast, R_Torgue_Fast, R_Vladof_Fast, R_Jakobs_Fast_Var2,
+		R_DualWield, Bladed_Melee, Holster_Fast, Incap_F, ADD_Fire_Recoil, PickUp_Equip, R_Banditmade_Var2, R_Banditmade_Fast_Var2 = 37, PLA_AR_END
+	};
+
+private:
+	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CPlayer(const CPlayer& Prototype);
+	virtual ~CPlayer() = default;
+
+public:
+	virtual HRESULT Initialize_Prototype();
+	virtual HRESULT Initialize(void* pArg);
+	virtual void Priority_Update(_float fTimeDelta);
+	virtual EVENT Update(_float fTimeDelta);
+	virtual void Late_Update(_float fTimeDelta);
+	virtual HRESULT Render();
+	void	Key_Input(_float fTimeDelta);
+
+private:
+	HRESULT Ready_Components(void* pArg);
+
+private:
+	CShader*			m_pShaderCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	_float				m_fSensor = {};
+	
+
+private:
+	_bool				m_isRunning = { false };
+	_bool				m_isJumping = { false };
+	_bool				m_isPlayingNonLoopAnim = { false };	
+
+public:
+	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg) override;
+	virtual void Free() override;
+
+};
+
+NS_END

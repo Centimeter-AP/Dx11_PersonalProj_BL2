@@ -2,12 +2,15 @@
 
 #include "GameInstance.h"
 
+#include "AssaultRifle.h"
 #include "Camera_Free.h"
 #include "Camera_Tool.h"
+#include "Camera_FPS.h"
 #include "BackGround.h"
+#include "MapObject.h"
 #include "Terrain.h"
 #include "Monster.h"
-//#include "player.h"
+#include "player.h"
 //#include "Effect.h"
 //#include "Sky.h"
 
@@ -170,9 +173,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Mushroom"),
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx", PreTransformMatrix))))
 	//	return E_FAIL;
-	ADD_MODEL_NA(ForkLift, LEVEL::GAMEPLAY, 0.01f, "../Bin/Resources/Models/ForkLift/ForkLift.fbx");
-	ADD_MODEL_NA(Mushroom, LEVEL::GAMEPLAY, 0.01f, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx");
+	//ADD_MODEL_NA(ForkLift, LEVEL::GAMEPLAY, 0.01f, "../Bin/Resources/Models/ForkLift/ForkLift.fbx");
+	//ADD_MODEL_NA(Mushroom, LEVEL::GAMEPLAY, 0.01f, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx");
 
+	PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Mushroom"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx", PreTransformMatrix))))
+		return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
@@ -226,29 +233,38 @@ HRESULT CLoader::Loading_For_Maptool()
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 
-	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"JunkPile",
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
-	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\JunkPile.bin)", PreTransMatrix))))										
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"IcePack",
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
-	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\IcePack.bin)", PreTransMatrix))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"Mushroom",
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
-	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\Mushroom.bin)", PreTransMatrix))))
-	//	return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(TEXT("Prototype_Component_Model_")) + L"SnowDrift",
-	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
-	//		R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing\SnowDrift.bin)", PreTransMatrix))))
-	//	return E_FAIL;
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
+	//PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	//PreTransMatrix = XMMatrixIdentity();
 
 	///* For.Prototype_Component_Model_Mushroom */
 	//PreTransformMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
 	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Mushroom"),
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx", PreTransformMatrix))))
 	//	return E_FAIL;
+	/* For.Prototype_Component_Model_Mushroom */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Mushroom"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx", PreTransformMatrix))))
+	//	return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Siren_Hand"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/Siren_Hand_AllAnim.bin", PreTransMatrix))))
+		return E_FAIL;
+
+	//PreTransMatrix = XMMatrixIdentity();
+	//PreTransMatrix = XMMatrixRotationZ(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_AR"),
+	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+	//		"../Bin/Resources/Models/Bin_Anim/AssaultRifle.bin", PreTransMatrix))))
+	//	return E_FAIL;
+
+	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_AR"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/Test_Pistol.bin", PreTransMatrix))))
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 	/* For.Prototype_GameObject_Terrain */
@@ -260,12 +276,30 @@ HRESULT CLoader::Loading_For_Maptool()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_Tool"),
 		CCamera_Tool::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+	/* For.Prototype_GameObject_Camera_FPS */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"),
+		CCamera_FPS::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Monster */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Monster"),
 		CMonster::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_MapObject */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_MapObject"),
+		CMapObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
+		CPlayer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_AssaultRifle */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"),
+		CAssaultRifle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 

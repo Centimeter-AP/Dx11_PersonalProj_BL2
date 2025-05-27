@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Mesh.h"
 
 NS_BEGIN(Engine)
 
@@ -16,13 +17,11 @@ public:
 		return m_iNumMeshes;
 	}
 
-	void Set_Animation(_uint iIndex, _bool isLoop = true) {
-		m_iCurrentAnimIndex = iIndex;
-		m_isLoop = isLoop;
-	}
+	void Set_Animation(_uint iIndex, _bool isLoop = true, _float fBlendDuration = 0.2f);
+	void Set_Animation_TickPerSecond(_uint iIndex, _float fTickPerSecond);
+	void Set_Animation_TickPerSecond_All(_float fTickPerSecond);
 
 public:
-
 	HRESULT Bind_Material(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex = 0);
 	HRESULT Bind_Bone_Matrices(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex);
 
@@ -53,13 +52,32 @@ private:
 	_bool						m_isLoop{};
 	_uint						m_iCurrentAnimIndex = { };
 	_uint						m_iNumAnimations = {};
-	vector<class CAnimation*>	m_Animations;	
+	vector<class CAnimation*>	m_Animations;
+
+	/** 보간 살려 **/
+	class CAnimationManager*	m_pAnimMgr = { nullptr };
 
 public:
+	vector<CMesh*>* Get_Meshes() { return &m_Meshes; };
+
+public: // 어심프로 읽던 방식(근데이거왜퍼블릭임)
+	HRESULT Read_OriginalFBX(const string& filepath);
 	HRESULT Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex);
 	HRESULT Ready_Meshes();
 	HRESULT Ready_Materials(const _char* pModelFilePath);
 	HRESULT Ready_Animations();
+
+private: // 바이너리 읽는 방식
+	HRESULT Read_BinaryFBX(const string& filepath);
+	HRESULT Ready_Bones( ifstream& ifs);
+	HRESULT Ready_Meshes( ifstream& ifs);
+	HRESULT Ready_Materials( ifstream& ifs, const _char* pModelFilePath);
+	HRESULT Ready_Animations(ifstream& ifs);
+
+public:
+	_uint Find_BoneIndex(const _char* srcName);
+	const _float4x4* Get_CombinedTransformationMatrix(_uint iBoneIndex);
+
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, MODEL eType, const _char* pModelFilePath, _fmatrix PreTransformMatrix = XMMatrixIdentity());
 	virtual CComponent* Clone(void* pArg) override;

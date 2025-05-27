@@ -43,6 +43,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 
 	GAMEOBJECT_DESC* pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);	
 	lstrcpy(m_szName, pDesc->szName);
+	m_strVIBufferTag = pDesc->strVIBufferTag;
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)
@@ -64,9 +65,9 @@ void CGameObject::Priority_Update(_float fTimeDelta)
 
 }
 
-void CGameObject::Update(_float fTimeDelta)
+EVENT CGameObject::Update(_float fTimeDelta)
 {
-
+	return EVN_NONE;
 }
 
 void CGameObject::Late_Update(_float fTimeDelta)

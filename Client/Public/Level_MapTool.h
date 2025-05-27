@@ -18,7 +18,6 @@ public:
 	enum class IMGUITOOL {
 		TERRAIN,
 		OBJECT,
-		CONVERT,
 		CAMERA,
 		END
 	};
@@ -47,11 +46,11 @@ private: /* 상단 툴 바 */
 	HRESULT Show_ExternWindows();
 
 private:
-	CGameObject*		m_pCurSelectedObj;
+	CGameObject* m_pCurSelectedObj = { nullptr };
 	IMGUIWINDATA		m_tWindowData;
 
 private:
-	class CImGuiTool* m_ImGuiTools[ENUM_CLASS(IMGUITOOL::END)];
+	class CImGuiTool* m_ImGuiTools[ENUM_CLASS(IMGUITOOL::END)] = { nullptr };
 
 public:
 	HRESULT Ready_Lights();

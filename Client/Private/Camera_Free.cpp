@@ -32,6 +32,7 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 	lstrcpy(Desc.szName, TEXT("Camera"));
 
 	m_fSensor = 0.1f;
+	m_isUsing = true;
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
@@ -41,6 +42,8 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 
 void CCamera_Free::Priority_Update(_float fTimeDelta)
 {
+	if (!m_isUsing)
+		return;
 	// if (GetKeyState('A') & 0x8000)
 	if(m_pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
 	{
@@ -77,19 +80,19 @@ void CCamera_Free::Priority_Update(_float fTimeDelta)
 	__super::Bind_Matrices();
 }
 
-void CCamera_Free::Update(_float fTimeDelta)
+EVENT CCamera_Free::Update(_float fTimeDelta)
 {
-
+	if (!m_isUsing)
+		return EVN_NONE;
+	return EVN_NONE;
 }
 
 void CCamera_Free::Late_Update(_float fTimeDelta)
 {
-
 }
 
 HRESULT CCamera_Free::Render()
 {
-	
 	return S_OK;
 }
 

@@ -31,8 +31,8 @@ HRESULT CCamera_Tool::Initialize(void* pArg)
 	Desc.fSpeedPerSec = 10.0f;
 	lstrcpy(Desc.szName, TEXT("Camera"));
 
-	m_fSensor = 0.1f;
-
+	m_fSensor = 0.01f;
+	m_isUsing = true;
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
@@ -43,6 +43,8 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 {
 	// if (GetKeyState('A') & 0x8000)
 
+	if (!m_isUsing)
+		return;
 
 	if (m_pGameInstance->Get_DIMouseState(DIM::RBUTTON) & 0x80)
 	{
@@ -91,14 +93,19 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 	__super::Bind_Matrices();
 }
 
-void CCamera_Tool::Update(_float fTimeDelta)
+EVENT CCamera_Tool::Update(_float fTimeDelta)
 {
 
+	if (!m_isUsing)
+		return EVN_NONE;
+	return EVN_NONE;
 }
 
 void CCamera_Tool::Late_Update(_float fTimeDelta)
 {
 
+	if (!m_isUsing)
+		return;
 }
 
 HRESULT CCamera_Tool::Render()

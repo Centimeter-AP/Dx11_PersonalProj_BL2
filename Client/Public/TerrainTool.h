@@ -15,7 +15,7 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
-	virtual void Update(_float fTimeDelta);
+	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
@@ -36,6 +36,7 @@ private:
 	_float	m_fBrushPower = {5.f};
 
 	_bool	m_bBrushEnable = {false};
+	_bool	m_bEnablePicking = { true };
 
 public:
 	static CTerrainTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
@@ -55,7 +56,7 @@ public:
 //	virtual HRESULT Initialize_Prototype();
 //	virtual HRESULT Initialize(void* pArg);
 //	virtual void Priority_Update(_float fTimeDelta);
-//	virtual void Update(_float fTimeDelta);
+//	virtual EVENT Update(_float fTimeDelta);
 //	virtual void Late_Update(_float fTimeDelta);
 //	virtual HRESULT Render();
 //

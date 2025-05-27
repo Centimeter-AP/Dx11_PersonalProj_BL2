@@ -35,8 +35,12 @@ public:
 	void Set_State(STATE eState, _fvector vState){
 		XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState);
 	}
-
-
+	void Set_Matrix(_fmatrix vMatrix) {
+		XMStoreFloat4x4(&m_WorldMatrix, vMatrix);
+	}
+	void Set_SpeedPerSec(const _float fSPS) {
+		m_fSpeedPerSec = fSPS;
+	}
 
 public:
 	virtual HRESULT Initialize_Prototype();

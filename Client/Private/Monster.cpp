@@ -32,18 +32,36 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
+	
+	m_pModelCom->Set_Animation(3, true);
 
 	return S_OK;
 }
 
 void CMonster::Priority_Update(_float fTimeDelta)
 {
+#pragma region AnimationTests
+	static _uint test = {};
+	if (KEY_DOWN(DIK_LBRACKET))
+	{
+		test > 73 ? test = 0 : test++;
+		m_pModelCom->Set_Animation(test, true);
+	}
+	if (KEY_DOWN(DIK_RBRACKET))
+	{
+		test < 1 ? test = 74 : test--;
+		m_pModelCom->Set_Animation(test, true);
+	}
+#pragma endregion
+
 
 }
 
-void CMonster::Update(_float fTimeDelta)
+EVENT CMonster::Update(_float fTimeDelta)
 {
-	
+	if (true == m_pModelCom->Play_Animation(fTimeDelta))
+		int a = 10;
+	return EVN_NONE;
 }
 
 void CMonster::Late_Update(_float fTimeDelta)
@@ -68,6 +86,7 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
 			continue;
 		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
 
@@ -83,13 +102,13 @@ HRESULT CMonster::Render()
 HRESULT CMonster::Ready_Components(void* pArg)
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 	wstring tag = L"Mushroom";
 	if (nullptr != pArg)
 	{
-		tag = static_cast<DESC*>(pArg)->strModelTag;
+		tag = static_cast<DESC*>(pArg)->strVIBufferTag;
 	}
 
 	/* For.Com_Model */

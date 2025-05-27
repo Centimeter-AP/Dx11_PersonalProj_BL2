@@ -22,7 +22,7 @@ public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
 	virtual void Priority_Update(_float fTimeDelta) override;
-	virtual void Update(_float fTimeDelta) override;
+	virtual EVENT Update(_float fTimeDelta) override;
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
@@ -32,8 +32,14 @@ protected:
 	_float				m_fFar = { };
 	_float				m_fAspect = {};	
 
+	_bool				m_isUsing = { false };
+
 protected:
 	void Bind_Matrices();
+
+public:
+	void	Set_Using(_bool isUsing) { m_isUsing = isUsing; }
+	_bool	Is_Using() const { return m_isUsing; }
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;	

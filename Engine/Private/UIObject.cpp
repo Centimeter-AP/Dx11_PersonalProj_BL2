@@ -50,8 +50,9 @@ void CUIObject::Priority_Update(_float fTimeDelta)
 {
 }
 
-void CUIObject::Update(_float fTimeDelta)
+EVENT CUIObject::Update(_float fTimeDelta)
 {
+	return EVN_NONE;
 }
 
 void CUIObject::Late_Update(_float fTimeDelta)

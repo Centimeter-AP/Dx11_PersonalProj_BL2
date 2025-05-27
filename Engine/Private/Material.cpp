@@ -61,9 +61,11 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const aiMaterial* pAI
     return S_OK;
 }
 
-HRESULT CMaterial::Initialize(const _char* pModelFilePath, const vector<FBX_MATDATA>& tMatData)
+HRESULT CMaterial::Initialize(const _char* pModelFilePath, ifstream& ifs)
 {
-    _uint       iNumSRVs = tMatData.size();
+    _uint       iNumSRVs = {};
+    ifs.read(reinterpret_cast<_char*>(&iNumSRVs), sizeof(_uint));  // SRV 몇개읨 
+
     for (size_t i = 0; i < iNumSRVs; i++)
     {
         _char       szFullPath[MAX_PATH] = {};
@@ -72,27 +74,33 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, const vector<FBX_MATD
         _char       szFileName[MAX_PATH] = {};
 
         _splitpath_s(pModelFilePath, szDrive, MAX_PATH, szDir, MAX_PATH, nullptr, 0, nullptr, 0);
-        
+        _uint filenameLength = {};
+        ifs.read(reinterpret_cast<_char*>(&filenameLength), sizeof(_uint));   // 이름 길이 머임
+        ifs.read(reinterpret_cast<_char*>(szFileName), filenameLength);               // 이름이 머임
+
         strcpy_s(szFullPath, szDrive);
         strcat_s(szFullPath, szDir);
-        strcat_s(szFullPath, tMatData[i].strTexturePath.c_str());
+        strcat_s(szFullPath, szFileName);
 
         _tchar      szTextureFilePath[MAX_PATH] = {};
 
         MultiByteToWideChar(CP_ACP, 0, szFullPath, strlen(szFullPath), szTextureFilePath, MAX_PATH);
+        path FileName = szFileName;
 
         HRESULT         hr = { };
         ID3D11ShaderResourceView* pSRV = { nullptr };
 
-        //if (false == strcmp(szExt, ".dds"))
+        if (FileName.extension() == ".dds")
             hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
-        //else
-            //hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
+        else
+            hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
 
         if (FAILED(hr))
-            return E_FAIL;
+             return E_FAIL;
+        _uint iTexType = {};
+        ifs.read(reinterpret_cast<_char*>(&iTexType), sizeof(_uint));   // 텍스쳐타입 읽어오기(정수형으로)
 
-        m_SRVs[static_cast<_uint>(tMatData[i].eTexType)].push_back(pSRV);
+        m_SRVs[iTexType].push_back(pSRV);
     }
     return S_OK;
 }
@@ -119,11 +127,11 @@ CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
     return pInstance;
 }
 
-CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, const vector<FBX_MATDATA>& tMatData)
+CMaterial* CMaterial::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _char* pModelFilePath, ifstream& ifs)
 {
     CMaterial* pInstance = new CMaterial(pDevice, pContext);
 
-    if (FAILED(pInstance->Initialize(pModelFilePath, tMatData)))
+    if (FAILED(pInstance->Initialize(pModelFilePath, ifs)))
     {
         MSG_BOX("Failed to Created : CMaterial");
         Safe_Release(pInstance);

@@ -36,9 +36,10 @@ void CGameLogo::Priority_Update(_float fTimeDelta)
 
 }
 
-void CGameLogo::Update(_float fTimeDelta)
+EVENT CGameLogo::Update(_float fTimeDelta)
 {
 
+	return EVN_NONE;
 }
 
 void CGameLogo::Late_Update(_float fTimeDelta)

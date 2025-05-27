@@ -15,7 +15,6 @@ class CMapObject final : public CGameObject
 public:
 	typedef struct tagMapObjectDesc : public CGameObject::GAMEOBJECT_DESC
 	{
-		wstring strModelTag;
 	}DESC;
 
 private:
@@ -27,7 +26,7 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
-	virtual void Update(_float fTimeDelta);
+	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 

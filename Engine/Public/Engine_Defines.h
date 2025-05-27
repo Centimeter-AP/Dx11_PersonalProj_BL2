@@ -59,8 +59,5 @@ using namespace Engine;
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ ) 
 #define new DBG_NEW 
 
-#endif
-#endif
-
-
-
+#endif // DBG_NEW
+#endif // _DEBUG

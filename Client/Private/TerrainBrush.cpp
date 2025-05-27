@@ -39,8 +39,9 @@ void CTerrainBrush::Priority_Update(_float fTimeDelta)
 
 }
 
-void CTerrainBrush::Update(_float fTimeDelta)
+EVENT CTerrainBrush::Update(_float fTimeDelta)
 {
+	return EVN_NONE;
 
 }
 

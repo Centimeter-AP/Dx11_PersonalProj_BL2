@@ -71,16 +71,26 @@ namespace Engine
 
 	typedef struct tagBoneData
 	{
-
+		string		strBoneName;
+		/* XMMatrixTranspose 후 저장할 것 !!! */
+		_float4x4	TransformMatrix = {};
+		_int		iParentBoneIndex = {-2};
 	}FBX_BONEDATA;
 
-	typedef struct tagAnimMeshData
+	typedef struct tagChannelData
 	{
-		_uint iMaterialIndex = {};
-		_uint iNumVertices = {};
-		_uint iNumIndices = {};
-		vector<VTXANIMMESH> vecVertices;
-	}FBX_ANIMMESHDATA;
+		_uint iNumKeyFrames = {};
+		vector<KEYFRAME> vecKeyFrames;
+		_uint iBoneIndex = {};
+	}FBX_CHANNELDATA;
+
+	typedef struct tagAnimationData
+	{
+		_uint	iNumChannels = {};
+		_float	fDuration = {};
+		_float	fTicksPerSecond = {};
+		vector<FBX_CHANNELDATA> vecChannels;
+	}FBX_ANIMDATA;
 
 	typedef struct tagMaterialData
 	{
@@ -88,25 +98,37 @@ namespace Engine
 		string strTexturePath;
 	}FBX_MATDATA;
 
-	typedef struct tagMeshData
+	typedef struct tagAnimMeshData
 	{
 		_uint iMaterialIndex = {};
 		_uint iNumVertices = {};
 		_uint iNumIndices = {};
-		//string strName;   에후 
+		_uint iNumBones = {};
+		
+		vector<_uint> vecBoneIndices;
+		vector<VTXANIMMESH> vecVertices;
+	}FBX_ANIMMESHDATA;
+
+
+	typedef struct tagMeshData
+	{
+		string strMeshName; 
+		_uint iMaterialIndex = {};
+		_uint iNumVertices = {};
+		_uint iNumIndices = {};
 		vector<_uint>	vecIndices;
 		vector<VTXMESH> vecVertices;
 	}FBX_MESHDATA;
 
-
 	typedef struct tagFBXData
 	{
 		_uint iNumMeshes = {};
-		vector<FBX_MESHDATA> vecMeshes;
 		_uint iNumMaterials = {};
-		vector<vector<FBX_MATDATA>> vecMaterials;
+		_uint iNumAnimations = {};
 		string strFBXName;
-	}FBXDATA;
+	}FBX_MODELDATA;
+
+
 
 #pragma endregion
 

@@ -11,6 +11,17 @@
 #include "Client_Struct.h"
 #include "Client_Macro.h"
 
+#define _CONSOLE
+
+#ifdef _CONSOLE
+#include <iostream>
+#endif // _CONSOLE
+
+#pragma push_macro("new")
+#undef new
+#include "json.hpp"
+using json = nlohmann::json;
+#pragma pop_macro("new")
 
 #ifdef USE_IMGUI
 #pragma push_macro("new")

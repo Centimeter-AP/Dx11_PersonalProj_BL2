@@ -35,9 +35,10 @@ void CTerrainTool::Priority_Update(_float fTimeDelta)
 
 }
 
-void CTerrainTool::Update(_float fTimeDelta)
+EVENT CTerrainTool::Update(_float fTimeDelta)
 {
 	Height_Update(fTimeDelta);
+	return EVN_NONE;
 }
 
 void CTerrainTool::Late_Update(_float fTimeDelta)

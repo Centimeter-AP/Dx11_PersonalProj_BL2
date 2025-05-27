@@ -9,7 +9,7 @@ CMapObject::CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CMapObject::CMapObject(const CMapObject& Prototype)
-	: CGameObject { Prototype }
+	: CGameObject ( Prototype )
 {
 
 }
@@ -41,9 +41,10 @@ void CMapObject::Priority_Update(_float fTimeDelta)
 
 }
 
-void CMapObject::Update(_float fTimeDelta)
+EVENT CMapObject::Update(_float fTimeDelta)
 {
-	
+	m_pTransformCom->Go_Straight(fTimeDelta);
+	return EVN_NONE;
 }
 
 void CMapObject::Late_Update(_float fTimeDelta)
@@ -90,7 +91,7 @@ HRESULT CMapObject::Ready_Components(void* pArg)
 	wstring tag = L"Mushroom";
 	if (nullptr != pArg)
 	{
-		tag = static_cast<DESC*>(pArg)->strModelTag;
+		tag = static_cast<DESC*>(pArg)->strVIBufferTag;
 	}
 
 	/* For.Com_Model */
@@ -108,7 +109,7 @@ CMapObject* CMapObject::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMainApp");
+		MSG_BOX("Failed to Created : CMapObject");
 		Safe_Release(pInstance);
 	}
 

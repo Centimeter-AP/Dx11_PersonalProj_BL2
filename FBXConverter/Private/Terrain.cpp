@@ -48,9 +48,10 @@ void CTerrain::Priority_Update(_float fTimeDelta)
 
 }
 
-void CTerrain::Update(_float fTimeDelta)
+EVENT CTerrain::Update(_float fTimeDelta)
 {
 	
+	return EVN_NONE;
 }
 
 void CTerrain::Late_Update(_float fTimeDelta)

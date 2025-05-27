@@ -93,6 +93,10 @@ HRESULT CLevel_MapTool::Ready_Layer_Camera(const _wstring strLayerTag)
         ENUM_CLASS(LEVEL::MAPTOOL), strLayerTag)))
         return E_FAIL;
 
+    //if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"),
+    //    ENUM_CLASS(LEVEL::MAPTOOL), strLayerTag)))
+    //    return E_FAIL;
+
     return S_OK;
 }
 
@@ -131,11 +135,7 @@ HRESULT CLevel_MapTool::ImGui_Render()
 
 HRESULT CLevel_MapTool::Window_ObjectList()
 {
-    ImGui::Begin("Object Lists");
-
-
-
-    ImGui::End();
+    //deprecated
     return S_OK;
 }
 
@@ -201,18 +201,12 @@ HRESULT CLevel_MapTool::Toolbar_Menus()
 {
     if (ImGui::BeginMenuBar()) {
         if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Open", "Ctrl+O")) { /* 파일 열기 로직 */ }
-            if (ImGui::MenuItem("Save", "Ctrl+S")) { /* 파일 저장 로직 */ }
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Edit")) {
-            if (ImGui::MenuItem("Undo", "Ctrl+Z")) { /* 실행 취소 로직 */ }
-            if (ImGui::MenuItem("Redo", "Ctrl+Y")) { /* 다시 실행 로직 */ }
+            if (ImGui::MenuItem("Open", "Ctrl+O", &m_tWindowData.ShowLoadMenu)) { /* 파일 열기 로직 */ }
+            if (ImGui::MenuItem("Save", "Ctrl+S", &m_tWindowData.ShowSaveMenu)) { /* 파일 저장 로직 */ }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Tool")) {
-            if (ImGui::MenuItem("Anim Model")) {   }
-            ImGui::MenuItem("NonAnim Model", NULL, & m_tWindowData.ShowObjectMenu);
+            ImGui::MenuItem("Map Objects", NULL, & m_tWindowData.ShowObjectMenu);
             ImGui::MenuItem("Terrain", NULL, &m_tWindowData.ShowTerrainMenu);
             ImGui::MenuItem("Binary Convert", NULL, &m_tWindowData.ShowConvertMenu);
             if (ImGui::BeginMenu("Components")) {
@@ -246,8 +240,8 @@ HRESULT CLevel_MapTool::Terrain_Tools(_bool* p_open)
         
     }
     Separator();
-	static _int iVerticesX = 0.f;
-	static _int iVerticesZ = 0.f;
+	static _int iVerticesX = 0;
+	static _int iVerticesZ = 0;
     SetNextItemWidth(130);
     InputInt("Vertices X", &iVerticesX);
     SetNextItemWidth(130);
@@ -289,11 +283,6 @@ HRESULT CLevel_MapTool::Ready_ImGuiTools()
             if (nullptr == m_ImGuiTools[i])
                 return E_FAIL;
             m_tWindowData.ShowObjectMenu = true;
-            break;
-        case IMGUITOOL::CONVERT:
-            m_ImGuiTools[i] = CConvertTool::Create(m_pDevice, m_pContext, &m_tWindowData);
-            if (nullptr == m_ImGuiTools[i])
-                return E_FAIL;
             break;
         case IMGUITOOL::CAMERA:
             m_ImGuiTools[i] = nullptr;

@@ -16,6 +16,20 @@ CMainApp::CMainApp()
 
 HRESULT CMainApp::Initialize()
 {
+
+#ifdef _CONSOLE
+
+	if (::AllocConsole() == TRUE)
+	{
+		FILE* nfp[3];
+		freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
+		freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
+		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
+		std::ios::sync_with_stdio();
+	}
+
+#endif
+
 	ENGINE_DESC			EngineDesc{};
 
 	EngineDesc.hInstance = g_hInst;
@@ -109,6 +123,12 @@ CMainApp* CMainApp::Create()
 void CMainApp::Free()
 {
     __super::Free();
+
+#ifdef _CONSOLE
+
+	FreeConsole();
+
+#endif
 
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
