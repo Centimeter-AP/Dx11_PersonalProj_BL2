@@ -44,11 +44,12 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	_float				m_fSensor = {};
+	
 
 private:
 	_bool				m_isRunning = { false };
-
-
+	_bool				m_isJumping = { false };
+	_bool				m_isPlayingNonLoopAnim = { false };	
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

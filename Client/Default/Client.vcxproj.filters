@@ -100,6 +100,15 @@
     <Filter Include="02.GameObjects\02. Camera\FirstPerson">
       <UniqueIdentifier>{877cf41f-d3e0-49bf-a0e7-a6dcc614de64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Weapon">
+      <UniqueIdentifier>{3903e7e4-9ebc-4921-be1d-cf894008e05c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Weapon\Pistol">
+      <UniqueIdentifier>{26eefe95-ef52-4b8a-b60b-ea4cf08a4d19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\Weapon\AssaultRifle">
+      <UniqueIdentifier>{55ae432a-413a-41c1-a76d-4767b1ed20a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -220,6 +229,18 @@
     <ClInclude Include="..\Public\Camera_FPS.h">
       <Filter>02.GameObjects\02. Camera\FirstPerson</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Weapon.h">
+      <Filter>02.GameObjects\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\json.hpp">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Pistol.h">
+      <Filter>02.GameObjects\Weapon\Pistol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\AssaultRifle.h">
+      <Filter>02.GameObjects\Weapon\AssaultRifle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -322,6 +343,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Camera_FPS.cpp">
       <Filter>02.GameObjects\02. Camera\FirstPerson</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Weapon.cpp">
+      <Filter>02.GameObjects\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Pistol.cpp">
+      <Filter>02.GameObjects\Weapon\Pistol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\AssaultRifle.cpp">
+      <Filter>02.GameObjects\Weapon\AssaultRifle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

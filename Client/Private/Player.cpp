@@ -63,7 +63,10 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 EVENT CPlayer::Update(_float fTimeDelta)
 {
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
+	{
+		m_isPlayingNonLoopAnim = false;
 		m_pModelCom->Set_Animation(Idle, true, 0.2f);
+	}
 	return EVN_NONE;
 }
 
@@ -104,29 +107,29 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Key_Input(_float fTimeDelta)
 {
-
-
+	if (!m_isPlayingNonLoopAnim)
+		m_pModelCom->Set_Animation(Idle, true, 0.1f);
 	if (KEY_PRESSING(DIK_A))
 	{
 		m_pTransformCom->Go_Left(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_L, true, 0.2f);
+		m_pModelCom->Set_Animation(Run_L, true, 0.1f);
 	}
 	if (KEY_PRESSING(DIK_D))
 	{
 		m_pTransformCom->Go_Right(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_R, true, 0.2f);
+		m_pModelCom->Set_Animation(Run_R, true, 0.1f);
 	}
 	if (KEY_PRESSING(DIK_W))
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_F, true, 0.2f);
+		m_pModelCom->Set_Animation(Run_F, true, 0.1f);
 	}
 	else
 		m_isRunning = false;
 	if (KEY_PRESSING(DIK_S))
 	{
 		m_pTransformCom->Go_Backward(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_F, true, 0.2f);
+		m_pModelCom->Set_Animation(Run_F, true, 0.1f);
 	}
 
 	if (KEY_DOWN(DIK_LSHIFT))
@@ -136,34 +139,32 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	}
 
 	if (m_isRunning)
-		m_pModelCom->Set_Animation(Sprint, true, 0.2f);
+		m_pModelCom->Set_Animation(Sprint, true, 0.1f);
 
 	if (KEY_DOWN(DIK_V)) // 근접공격 인데 잠깐 총 바꾸는 모션으로 함
 	{
-		m_pModelCom->Set_Animation(Holster, false, 0.2f);
+		m_pModelCom->Set_Animation(Holster, false, 0.1f);
+		m_isPlayingNonLoopAnim = true;
 		m_isRunning = false;
 	}
 	if (KEY_DOWN(DIK_G)) // 수류탄
 	{
-		m_pModelCom->Set_Animation(Grenade_throw, false, 0.2f);
+		m_pModelCom->Set_Animation(Grenade_throw, false, 0.1f);
+		m_isPlayingNonLoopAnim = true;
 		m_isRunning = false;
 	}
 	if (KEY_DOWN(DIK_R)) // 재장전
 	{
-		m_pModelCom->Set_Animation(R_Vladof, false, 0.2f);
+		m_pModelCom->Set_Animation(R_Vladof, false, 0.1f);
+		m_isPlayingNonLoopAnim = true;
 	}
 
-	//if (KEY_DOWN(DIK_SPACE)) // 잠프
-	//{
-	//	m_pModelCom->Set_Animation(Jump_Start, false);
-	//}
-
-
-
-
-
-
-
+	if (KEY_DOWN(DIK_SPACE)) // 잠프z
+	{
+		m_pModelCom->Set_Animation(Jump_Start, false);
+		m_isJumping = true;
+		m_isPlayingNonLoopAnim = true;
+	}
 
 
 
@@ -229,7 +230,7 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
-
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 }
+//홍동완 신승훈 왔다감

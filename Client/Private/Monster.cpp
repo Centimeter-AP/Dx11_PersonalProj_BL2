@@ -42,14 +42,14 @@ void CMonster::Priority_Update(_float fTimeDelta)
 {
 #pragma region AnimationTests
 	static _uint test = {};
-	if (KEY_DOWN(DIK_Z))
+	if (KEY_DOWN(DIK_LBRACKET))
 	{
-		test > 10 ? test = 0 : test++;
+		test > 73 ? test = 0 : test++;
 		m_pModelCom->Set_Animation(test, true);
 	}
-	if (KEY_DOWN(DIK_X))
+	if (KEY_DOWN(DIK_RBRACKET))
 	{
-		test < 1 ? test = 9 : test--;
+		test < 1 ? test = 74 : test--;
 		m_pModelCom->Set_Animation(test, true);
 	}
 #pragma endregion

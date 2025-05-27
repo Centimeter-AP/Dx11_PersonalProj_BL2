@@ -155,6 +155,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\public\AssaultRifle.h" />
     <ClInclude Include="..\public\BackGround.h" />
     <ClInclude Include="..\Public\Camera_FPS.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
@@ -164,6 +165,7 @@
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\public\ImGuiTool.h" />
+    <ClInclude Include="..\Public\json.hpp" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Logo.h" />
@@ -175,10 +177,12 @@
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Monster.h" />
     <ClInclude Include="..\Public\ObjectTool.h" />
+    <ClInclude Include="..\public\Pistol.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainBrush.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
+    <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="imgui\backends\imgui_impl_dx11.h" />
@@ -197,6 +201,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\private\AssaultRifle.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
     <ClCompile Include="..\Private\Camera_FPS.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
@@ -213,10 +218,12 @@
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
     <ClCompile Include="..\Private\ObjectTool.cpp" />
+    <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainBrush.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />
+    <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui\backends\imgui_impl_win32.cpp" />

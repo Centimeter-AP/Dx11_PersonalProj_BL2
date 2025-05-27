@@ -32,7 +32,7 @@ HRESULT CCamera_FPS::Initialize(void* pArg)
 
 	Desc.vEye = _float3(0.f, 20.f, -15.f);
 	Desc.vAt = _float3(0.f, 0.f, 0.f);
-	Desc.fFov = XMConvertToRadians(60.0f); // 
+	Desc.fFov = XMConvertToRadians(45.0f); // 
 	Desc.fNear = 0.25f;
 	Desc.fFar = 500.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);

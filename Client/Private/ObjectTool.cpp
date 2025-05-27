@@ -4,7 +4,8 @@
 #include "Monster.h"
 #include <sstream>
 #include "Layer.h"
-#include "Camera.h"
+#include "Camera_Tool.h"
+#include "Camera_FPS.h"
 //ImGuiFileDialog g_ImGuiFileDialog;
 //ImGuiFileDialog::Instance() 이래 싱글톤으로 쓰라고 신이 말하고 감
 
@@ -63,11 +64,11 @@ void CObjectTool::Key_Input()
 {
 	if (KEY_DOWN(DIK_F1))
 	{
-		CCamera* pCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0));
+		CCamera_Tool* pCamera = static_cast<CCamera_Tool*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0));
 		pCamera->Set_Using(true); // 이거 다 카메라 매니저에 옮겨두쇼 제발 
 		if (m_isPlayerExists)
 		{
-			CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 1));
+			CCamera_FPS* pPrevCamera = static_cast<CCamera_FPS*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 1));
 			pPrevCamera->Set_Using(false);
 		}
 	}
@@ -75,9 +76,9 @@ void CObjectTool::Key_Input()
 	{
 		if (m_isPlayerExists)
 		{
-			CCamera* pCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 1));
+			CCamera_FPS* pCamera = static_cast<CCamera_FPS*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 1));
 			pCamera->Set_Using(true); // 이거 다 카메라 매니저에 옮겨두쇼 제발 
-			CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0));
+			CCamera_Tool* pPrevCamera = static_cast<CCamera_Tool*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0));
 			pPrevCamera->Set_Using(false);
 		}
 	}
@@ -343,6 +344,8 @@ HRESULT CObjectTool::Make_Player()
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"), ENUM_CLASS(LEVEL::STATIC), L"Layer_Player")))
 			return E_FAIL;
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"), ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera")))
+			return E_FAIL;
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"), ENUM_CLASS(LEVEL::STATIC), L"Layer_Weapon")))
 			return E_FAIL;
 		CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera"));
 		pPrevCamera->Set_Using(false);
