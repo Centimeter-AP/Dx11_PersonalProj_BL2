@@ -44,6 +44,11 @@ protected:
 	_tchar										m_szName[MAX_PATH] = {};
 	map<const _wstring, class CComponent*>		m_Components;
 	class CTransform*							m_pTransformCom = { nullptr };
+	
+	// 컨테이너-파트 쓸건지 게임오브젝트 하나로 관리할 건지 생각 해보기
+	map<const _wstring, CGameObject*>			m_PartObjects;
+	CGameObject*								m_pParentObject = { nullptr };
+	// 파트 오브젝트 부모가 관리할 때: 부모 포인터가 있는 경우는 파츠로 판단 예외처리 
 
 protected:
 	_wstring			m_strVIBufferTag;
@@ -57,3 +62,5 @@ public:
 };
 
 NS_END
+
+

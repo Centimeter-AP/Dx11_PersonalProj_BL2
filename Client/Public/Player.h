@@ -2,8 +2,9 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "PlayerState.h"
 
-NS_BEGIN(Engine)
+NS_BEGIN(Engine)	
 class CShader;
 class CModel;
 NS_END
@@ -22,6 +23,18 @@ public:
 		Sight_Walk_F, Sprint, Sprint_DualWield, R_Dahl_Fast, R_Jakobs_Var2, R_Jakobs_Fast, R_Banditmade_Fast, R_Torgue_Fast, R_Vladof_Fast, R_Jakobs_Fast_Var2,
 		R_DualWield, Bladed_Melee, Holster_Fast, Incap_F, ADD_Fire_Recoil, PickUp_Equip, R_Banditmade_Var2, R_Banditmade_Fast_Var2 = 37, PLA_AR_END
 	};
+
+	friend class CPlayerState_Idle;
+	friend class CPlayerState_Run;
+	friend class CPlayerState_Sprint;
+	friend class CPlayerState_Jump;
+	friend class CPlayerState_Fire;
+	friend class CPlayerState_Reload;
+	friend class CPlayerState_ChangeWeapon;
+	friend class CPlayerState_ThrowGrenade;
+	friend class CPlayerState_Skill_PhaseLock;
+
+
 
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -43,24 +43,6 @@
     <Filter Include="02.GameObjects\00.BackGround\ClassCode">
       <UniqueIdentifier>{504db603-5210-4ff9-ba4e-88a43f997efa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\UI">
-      <UniqueIdentifier>{147fd8f1-c03c-496d-abe4-ef7fd31b3909}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Level_Logo">
-      <UniqueIdentifier>{ccbf66b7-e022-4ecb-95e6-1765d9a08954}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\StaticUI">
-      <UniqueIdentifier>{c4cb7a60-3ab0-49ed-8030-24896353daea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\StaticUI\NewFilter1">
-      <UniqueIdentifier>{c11db0ff-a100-4d4d-9910-0b2c6bc36259}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\Inventory">
-      <UniqueIdentifier>{1b101d00-b404-4920-a495-1d291e8d14f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\UI\NewFilter1">
-      <UniqueIdentifier>{e7652dd2-9df2-40a8-a8eb-687d8d276cd8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98.Default\Imgui_Docking">
       <UniqueIdentifier>{bc98f8ba-3648-49e9-b6aa-7cb1a4a12500}</UniqueIdentifier>
     </Filter>
@@ -91,23 +73,59 @@
     <Filter Include="01.Levels\MapTool\Tools\ConvertTool">
       <UniqueIdentifier>{b1d97b6d-6bd8-434f-a0ef-a124d95d16da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\MapObject">
-      <UniqueIdentifier>{5084ee5d-86be-4275-9085-3cb3d903894d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Player">
       <UniqueIdentifier>{36f7e6ce-51c9-40d3-a217-0c4dcfcf6d7b}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.GameObjects\02. Camera\FirstPerson">
       <UniqueIdentifier>{877cf41f-d3e0-49bf-a0e7-a6dcc614de64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Weapon">
+    <Filter Include="02.GameObjects\06. MapObject">
+      <UniqueIdentifier>{5084ee5d-86be-4275-9085-3cb3d903894d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05. Weapon">
       <UniqueIdentifier>{3903e7e4-9ebc-4921-be1d-cf894008e05c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Weapon\Pistol">
+    <Filter Include="02.GameObjects\05. Weapon\Pistol">
       <UniqueIdentifier>{26eefe95-ef52-4b8a-b60b-ea4cf08a4d19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Weapon\AssaultRifle">
+    <Filter Include="02.GameObjects\05. Weapon\AssaultRifle">
       <UniqueIdentifier>{55ae432a-413a-41c1-a76d-4767b1ed20a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI">
+      <UniqueIdentifier>{147fd8f1-c03c-496d-abe4-ef7fd31b3909}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\Level_Logo">
+      <UniqueIdentifier>{ccbf66b7-e022-4ecb-95e6-1765d9a08954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\StaticUI">
+      <UniqueIdentifier>{c4cb7a60-3ab0-49ed-8030-24896353daea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\StaticUI\NewFilter1">
+      <UniqueIdentifier>{c11db0ff-a100-4d4d-9910-0b2c6bc36259}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\Inventory">
+      <UniqueIdentifier>{1b101d00-b404-4920-a495-1d291e8d14f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\NewFilter1">
+      <UniqueIdentifier>{e7652dd2-9df2-40a8-a8eb-687d8d276cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State">
+      <UniqueIdentifier>{4659da7a-19de-4c18-824a-f31ed2216459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\00. PlayerState">
+      <UniqueIdentifier>{2c1e5ced-8b82-45ad-ba0a-220f190f6842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04. Player\PlayerWeapon">
+      <UniqueIdentifier>{dd64e3dd-6298-405f-b733-e670ec5c22fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04. Player\PlayerBody">
+      <UniqueIdentifier>{34d8dd0b-0cf1-41a3-b93d-b396d9375003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04. Player\PlayerHand">
+      <UniqueIdentifier>{8d1426e4-f201-4c73-a214-b624960a56e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04. Player\PlayerParticle">
+      <UniqueIdentifier>{d383d512-f944-456b-8ef8-cdbde32fa38a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -154,10 +172,10 @@
       <Filter>02.GameObjects\00.BackGround\ClassCode</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Logo_Background.h">
-      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+      <Filter>02.GameObjects\07. UI\Level_Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\public\GameLogo.h">
-      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+      <Filter>02.GameObjects\07. UI\Level_Logo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Macro.h">
       <Filter>99.Defines</Filter>
@@ -221,7 +239,7 @@
       <Filter>01.Levels\MapTool\Tools\ObjectTool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\MapObject.h">
-      <Filter>02.GameObjects\MapObject</Filter>
+      <Filter>02.GameObjects\06. MapObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02.GameObjects\04. Player</Filter>
@@ -230,16 +248,25 @@
       <Filter>02.GameObjects\02. Camera\FirstPerson</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Weapon.h">
-      <Filter>02.GameObjects\Weapon</Filter>
+      <Filter>02.GameObjects\05. Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\json.hpp">
       <Filter>99.Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Pistol.h">
-      <Filter>02.GameObjects\Weapon\Pistol</Filter>
+      <Filter>02.GameObjects\05. Weapon\Pistol</Filter>
     </ClInclude>
     <ClInclude Include="..\public\AssaultRifle.h">
-      <Filter>02.GameObjects\Weapon\AssaultRifle</Filter>
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\State.h">
+      <Filter>03. State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerState.h">
+      <Filter>03. State\00. PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\PlayerWeapon.h">
+      <Filter>02.GameObjects\04. Player\PlayerWeapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,10 +311,10 @@
       <Filter>02.GameObjects\00.BackGround\ClassCode</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Logo_Background.cpp">
-      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+      <Filter>02.GameObjects\07. UI\Level_Logo</Filter>
     </ClCompile>
     <ClCompile Include="..\private\GameLogo.cpp">
-      <Filter>02.GameObjects\UI\Level_Logo</Filter>
+      <Filter>02.GameObjects\07. UI\Level_Logo</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>98.Default\Imgui_Docking</Filter>
@@ -336,7 +363,7 @@
       <Filter>01.Levels\MapTool\Tools\ObjectTool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MapObject.cpp">
-      <Filter>02.GameObjects\MapObject</Filter>
+      <Filter>02.GameObjects\06. MapObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02.GameObjects\04. Player</Filter>
@@ -345,13 +372,19 @@
       <Filter>02.GameObjects\02. Camera\FirstPerson</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Weapon.cpp">
-      <Filter>02.GameObjects\Weapon</Filter>
+      <Filter>02.GameObjects\05. Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Pistol.cpp">
-      <Filter>02.GameObjects\Weapon\Pistol</Filter>
+      <Filter>02.GameObjects\05. Weapon\Pistol</Filter>
     </ClCompile>
     <ClCompile Include="..\private\AssaultRifle.cpp">
-      <Filter>02.GameObjects\Weapon\AssaultRifle</Filter>
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Idle.cpp">
+      <Filter>03. State\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\PlayerWeapon.cpp">
+      <Filter>02.GameObjects\04. Player\PlayerWeapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
