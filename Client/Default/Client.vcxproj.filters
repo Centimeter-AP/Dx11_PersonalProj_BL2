@@ -112,9 +112,6 @@
     <Filter Include="03. State">
       <UniqueIdentifier>{4659da7a-19de-4c18-824a-f31ed2216459}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. State\00. PlayerState">
-      <UniqueIdentifier>{2c1e5ced-8b82-45ad-ba0a-220f190f6842}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Player\PlayerWeapon">
       <UniqueIdentifier>{dd64e3dd-6298-405f-b733-e670ec5c22fe}</UniqueIdentifier>
     </Filter>
@@ -126,6 +123,9 @@
     </Filter>
     <Filter Include="02.GameObjects\04. Player\PlayerParticle">
       <UniqueIdentifier>{d383d512-f944-456b-8ef8-cdbde32fa38a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\04. Player\00. PlayerState">
+      <UniqueIdentifier>{2c1e5ced-8b82-45ad-ba0a-220f190f6842}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -263,7 +263,7 @@
       <Filter>03. State</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerState.h">
-      <Filter>03. State\00. PlayerState</Filter>
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
     </ClInclude>
     <ClInclude Include="..\public\PlayerWeapon.h">
       <Filter>02.GameObjects\04. Player\PlayerWeapon</Filter>
@@ -381,10 +381,25 @@
       <Filter>02.GameObjects\05. Weapon\AssaultRifle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Idle.cpp">
-      <Filter>03. State\00. PlayerState</Filter>
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="..\private\PlayerWeapon.cpp">
       <Filter>02.GameObjects\04. Player\PlayerWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Run.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Sprint.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Jump.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Run_L.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Run_R.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

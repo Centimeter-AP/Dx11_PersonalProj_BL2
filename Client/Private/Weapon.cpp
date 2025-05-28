@@ -21,13 +21,13 @@ HRESULT CWeapon::Initialize_Prototype()
 
 HRESULT CWeapon::Initialize(void* pArg)
 {
-	GAMEOBJECT_DESC			Desc{};
+	//DESC			Desc{};
 
-	Desc.fRotationPerSec = 0.f;
-	Desc.fSpeedPerSec = 0.f;
-	lstrcpy(Desc.szName, TEXT("Weapon"));
+	//Desc.fRotationPerSec = 0.f;
+	//Desc.fSpeedPerSec = 0.f;
+	//lstrcpy(Desc.szName, TEXT("Weapon"));
 
-	if (FAILED(__super::Initialize(&Desc)))
+	if (FAILED(__super::Initialize(&pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
@@ -38,27 +38,23 @@ HRESULT CWeapon::Initialize(void* pArg)
 	m_pPlayerTransform = m_pPlayer->Get_Transform();
 	m_szPlayerCameraBoneName = "R_Weapon_Bone";
 
+	_int iWeaponBoneIndex = m_pPlayerModel->Find_BoneIndex(m_szPlayerCameraBoneName.c_str());
+	if (iWeaponBoneIndex < 0) 
+		return E_FAIL;
+	// 플레이어 손의 weapon 뼈 인덱스 갖고옴 
+
+	m_pSocketMatrix = m_pPlayerModel->Get_CombinedTransformationMatrix(iWeaponBoneIndex);
+	// weapon 뼈의 combinedtransformationmatrix갖고옴
+	m_pParentMatrix = m_pPlayerTransform->Get_WorldMatrix4x4Ptr();
+
 	return S_OK;
 }
 
 void CWeapon::Priority_Update(_float fTimeDelta)
 {
-	// 본 인덱스 얻기
-	_int iWeaponBoneIndex = m_pPlayerModel->Find_BoneIndex(m_szPlayerCameraBoneName.c_str());
-	if (iWeaponBoneIndex < 0) return ;
-	// 플레이어 손의 weapon 뼈 인덱스 갖고옴 
-
-	_matrix WeaponBoneMatrix = XMLoadFloat4x4(m_pPlayerModel->Get_CombinedTransformationMatrix(iWeaponBoneIndex));
-	// weapon 뼈의 combinedtransformationmatrix갖고옴
-	_matrix matWorld = m_pPlayerTransform->Get_WorldMatrix();
-	
-	//for (size_t i = 0; i < 3; i++)
-	//	WeaponBoneMatrix.r[i] = XMVector3Normalize(WeaponBoneMatrix.r[i]);	
-	//for (size_t i = 0; i < 3; i++)
-	//	matWorld.r[i] = XMVector3Normalize(matWorld.r[i]);
 
 	// 월드 행렬 적용 (원래 셰이더에서 월드 곱해주기때문에 지금은 로컬상태임)
-	_matrix matFinal = WeaponBoneMatrix * matWorld;
+	_matrix matFinal = XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
 
 	m_pTransformCom->Set_Matrix(matFinal);
 	m_pTransformCom->Go_Backward(fTimeDelta*10.f);

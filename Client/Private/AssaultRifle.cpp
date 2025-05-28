@@ -21,13 +21,12 @@ HRESULT CAssaultRifle::Initialize_Prototype()
 
 HRESULT CAssaultRifle::Initialize(void* pArg)
 {
-	GAMEOBJECT_DESC			Desc{};
+	DESC* pDesc = static_cast<DESC*>(pArg);
+	if (pDesc == nullptr)
+		return E_FAIL;
 
-	Desc.fRotationPerSec = 0.f;
-	Desc.fSpeedPerSec = 0.f;
-	lstrcpy(Desc.szName, TEXT("AssaultRifle"));
 
-	if (FAILED(__super::Initialize(&Desc)))
+	if (FAILED(__super::Initialize(&pDesc)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
@@ -40,6 +39,8 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 
 void CAssaultRifle::Priority_Update(_float fTimeDelta)
 {
+	if (nullptr != m_pParentObject)
+		return;
 	__super::Priority_Update(fTimeDelta);
 #pragma region AnimationTests
 	static _uint test = {};
@@ -58,19 +59,22 @@ void CAssaultRifle::Priority_Update(_float fTimeDelta)
 
 EVENT CAssaultRifle::Update(_float fTimeDelta)
 {
+	if (nullptr != m_pParentObject)
+		return EVN_NONE;
 	
 	return __super::Update(fTimeDelta);
 }
 
 void CAssaultRifle::Late_Update(_float fTimeDelta)
 {
+	if (nullptr != m_pParentObject)
+		return;
 	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CAssaultRifle::Render()
 {
 	return __super::Render();
-	return S_OK;
 }
 
 HRESULT CAssaultRifle::Ready_Components(void* pArg)

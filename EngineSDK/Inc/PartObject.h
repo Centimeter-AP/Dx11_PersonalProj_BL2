@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CPartObject abstract : public CGameObject
 {
 public:
-	typedef struct tagPartObjectDesc : CGameObject::GAMEOBJECT_DESC
+	typedef struct tagPartObjectDesc : CGameObject::DESC
 	{
 		const _float4x4* pParentMatrix;
 	}PARTOBJECT_DESC;

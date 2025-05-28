@@ -25,7 +25,7 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	GAMEOBJECT_DESC			Desc{};
+	DESC			Desc{};
 
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fSpeedPerSec = PLAYER_DEFAULTSPEED;
@@ -38,7 +38,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 	
-	m_pModelCom->Set_Animation(21, true, 0.2f);
+	if (FAILED(Ready_PlayerStates()))
+		return E_FAIL;
+
+	
+	
+	m_pModelCom->Set_Animation(Idle, true, 0.2f);
 
 	return S_OK;
 }
@@ -56,17 +61,16 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 		test < 1 ? test = 37 : test--;
 		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
-	Key_Input(fTimeDelta);
-
-
+	//Key_Input(fTimeDelta);
+	Update_State(fTimeDelta);
 }
 
 EVENT CPlayer::Update(_float fTimeDelta)
 {
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
 	{
-		m_isPlayingNonLoopAnim = false;
-		m_pModelCom->Set_Animation(Idle, true, 0.2f);
+		//m_isPlayingNonLoopAnim = false;
+		//m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Idle), true, 0.2f);
 	}
 	return EVN_NONE;
 }
@@ -111,28 +115,28 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	if (!static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0))->Is_Using())
 	{
 	if (!m_isPlayingNonLoopAnim)
-		m_pModelCom->Set_Animation(Idle, true, 0.1f);
+		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Idle), true, 0.1f);
 	if (KEY_PRESSING(DIK_A))
 	{
 		m_pTransformCom->Go_Left(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_L, true, 0.1f);
+		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_L), true, 0.1f);
 	}
 	if (KEY_PRESSING(DIK_D))
 	{
 		m_pTransformCom->Go_Right(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_R, true, 0.1f);
+		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_R), true, 0.1f);
 	}
 	if (KEY_PRESSING(DIK_W))
 	{
 		m_pTransformCom->Go_Straight(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_F, true, 0.1f);
+		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
 	}
 	else
 		m_isRunning = false;
 	if (KEY_PRESSING(DIK_S))
 	{
 		m_pTransformCom->Go_Backward(fTimeDelta);
-		m_pModelCom->Set_Animation(Run_F, true, 0.1f);
+		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
 	}
 
 	if (KEY_DOWN(DIK_LSHIFT))
@@ -142,50 +146,71 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	}
 
 	if (m_isRunning)
-		m_pModelCom->Set_Animation(Sprint, true, 0.1f);
+		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Sprint), true, 0.1f);
 
 
 
 
 
-		_long			MouseMove = {};
+	_long			MouseMove = {};
 
-		if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
-		{
-			m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
-		}
-
-		if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::Y))
-		{
-			m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
-		}
-	}
-	if (KEY_DOWN(DIK_V)) // 근접공격 인데 잠깐 총 바꾸는 모션으로 함
+	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
 	{
-		m_pModelCom->Set_Animation(Holster, false, 0.1f);
-		m_isPlayingNonLoopAnim = true;
-		m_isRunning = false;
-	}
-	if (KEY_DOWN(DIK_G)) // 수류탄
-	{
-		m_pModelCom->Set_Animation(Grenade_throw, false, 0.1f);
-		m_isPlayingNonLoopAnim = true;
-		m_isRunning = false;
-	}
-	if (KEY_DOWN(DIK_R)) // 재장전
-	{
-		m_pModelCom->Set_Animation(R_Jakobs, false, 0.1f);
-		m_isPlayingNonLoopAnim = true;
+		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
 	}
 
-	if (KEY_DOWN(DIK_SPACE)) // 잠프z
+	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::Y))
 	{
-		m_pModelCom->Set_Animation(Jump_Start, false);
-		m_isJumping = true;
-		m_isPlayingNonLoopAnim = true;
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
 	}
 
+	}
+	//if (KEY_DOWN(DIK_V)) // 근접공격 인데 잠깐 총 바꾸는 모션으로 함
+	//{
+	//	m_pModelCom->Set_Animation(Holster, false, 0.1f);
+	//	m_isPlayingNonLoopAnim = true;
+	//	m_isRunning = false;
+	//}
+	//if (KEY_DOWN(DIK_G)) // 수류탄
+	//{
+	//	m_pModelCom->Set_Animation(Grenade_throw, false, 0.1f);
+	//	m_isPlayingNonLoopAnim = true;
+	//	m_isRunning = false;
+	//}
+	//if (KEY_DOWN(DIK_R)) // 재장전
+	//{
+	//	m_pModelCom->Set_Animation(R_Jakobs, false, 0.1f);
+	//	m_isPlayingNonLoopAnim = true;
+	//}
 
+	//if (KEY_DOWN(DIK_SPACE)) // 잠프z
+	//{
+	//	m_pModelCom->Set_Animation(Jump_Start, false);
+	//	m_isJumping = true;
+	//	m_isPlayingNonLoopAnim = true;
+	//}
+
+
+}
+
+void CPlayer::Set_State(PLA_STATE eState)
+{
+	//( Set_State를 불렀을 때 ReEnter를 할 것인지? 이건 나한텐 필요 없을지도,,)
+	m_ePrevState = m_eCurState;
+	m_eCurState = eState;
+
+	m_pCurState->Exit();
+	m_pCurState = m_pStates[eState];
+}
+
+void CPlayer::Update_State(_float fTimeDelta)
+{
+	if (m_ePrevState != m_eCurState)
+	{
+		m_pCurState->Enter();
+		m_ePrevState = m_eCurState;
+	}
+	m_pCurState->Execute(fTimeDelta);
 }
 
 HRESULT CPlayer::Ready_Components(void* pArg)
@@ -206,6 +231,48 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	return S_OK;
 }
 
+HRESULT CPlayer::Ready_PartObjects(void* pArg)
+{
+	CGameObject::DESC Desc = {};
+
+	Desc.fRotationPerSec = XMConvertToRadians(180.f);
+	Desc.fSpeedPerSec = 10.f;
+	Desc.m_pParentMatrix = &m_pTransformCom->Get_WorldMatrix4x4Ref();
+	Desc.m_pParentObject = this;
+
+	/* For.PartObject_Player_Weapon_AssaultRifle */
+	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_AR");
+	lstrcpy(Desc.szName, L"Weapon_AR");
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon_AssaultRifle"), TEXT("Prototype_GameObject_AssaultRifle"), &Desc)))
+		return E_FAIL;
+
+	///* For.PartObject_Player_Weapon_Pistol */
+	//Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Pistol");
+	//lstrcpy(Desc.szName, L"Weapon_Pistol");
+	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon_Pistol"), TEXT("Prototype_GameObject_Pistol"), &Desc)))
+	//	return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_PlayerStates()
+{
+	m_pStates[PLA_STATE::STATE_Idle]				= new CPlayerState_Idle(this);
+	m_pStates[PLA_STATE::STATE_Run]					= new CPlayerState_Run(this);
+	m_pStates[PLA_STATE::STATE_Run_L]				= new CPlayerState_Run_L(this);
+	m_pStates[PLA_STATE::STATE_Run_R]				= new CPlayerState_Run_R(this);
+	m_pStates[PLA_STATE::STATE_Sprint]				= new CPlayerState_Sprint(this);
+	m_pStates[PLA_STATE::STATE_Jump]				= new CPlayerState_Jump(this);
+	//m_pStates[PLA_STATE::STATE_Fire]				= new CPlayerState_Fire(this);
+	//m_pStates[PLA_STATE::STATE_Reload]				= new CPlayerState_Reload(this);
+	//m_pStates[PLA_STATE::STATE_ChangeWeapon]		= new CPlayerState_ChangeWeapon(this);
+	//m_pStates[PLA_STATE::STATE_ThrowGrenade]		= new CPlayerState_ThrowGrenade(this);
+	//m_pStates[PLA_STATE::STATE_Skill_PhaseLock]		= new CPlayerState_Skill_PhaseLock(this);
+
+	m_pCurState = m_pStates[PLA_STATE::STATE_Idle];
+
+	return S_OK;
+}
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -237,5 +304,8 @@ void CPlayer::Free()
 	__super::Free();
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	for (auto State : m_pStates)
+		Safe_Delete(State);
+
 }
 //홍동완 신승훈 왔다감

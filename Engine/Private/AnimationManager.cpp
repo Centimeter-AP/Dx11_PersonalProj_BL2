@@ -32,7 +32,6 @@ void CAnimationManager::SetAnimation(_uint iAnimIndex, _bool isLoop, _float fBle
         m_pCurrentAnim->Reset();
         m_isLoop = isLoop;
     }
-
 }
 //홍동완 왔다감
 //너는잘오다
@@ -61,7 +60,7 @@ _bool CAnimationManager::Update(_float fTimeDelta, const _fmatrix& PreTransformM
         if (ratio >= 1.f)
         {
             m_pCurrentAnim = m_pNextAnim;
-            m_pCurrentAnim->Reset();
+            //m_pCurrentAnim->Reset();
             m_pNextAnim = nullptr;
             m_fBlendTime = m_fBlendDuration = 0.f;
         }

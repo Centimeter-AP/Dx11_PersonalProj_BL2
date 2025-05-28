@@ -13,7 +13,7 @@ NS_BEGIN(Client)
 class CMonster final : public CGameObject
 {
 public:
-	typedef struct tagMonsterDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagMonsterDesc : public CGameObject::DESC
 	{
 
 	}DESC;

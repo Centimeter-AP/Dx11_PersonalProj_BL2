@@ -224,6 +224,11 @@
     <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Jump.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Run.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Run_L.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Run_R.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Sprint.cpp" />
     <ClCompile Include="..\private\PlayerWeapon.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainBrush.cpp" />

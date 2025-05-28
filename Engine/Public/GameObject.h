@@ -11,8 +11,10 @@ public:
 	{
 		_tchar		szName[MAX_PATH];
 		_wstring	strVIBufferTag;
+		CGameObject* m_pParentObject = { nullptr };
+		const _float4x4* m_pParentMatrix = { nullptr };
 
-	}GAMEOBJECT_DESC;
+	}DESC;
 
 protected:
 	CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -48,6 +50,8 @@ protected:
 	// 컨테이너-파트 쓸건지 게임오브젝트 하나로 관리할 건지 생각 해보기
 	map<const _wstring, CGameObject*>			m_PartObjects;
 	CGameObject*								m_pParentObject = { nullptr };
+	const _float4x4*							m_pParentMatrix = { nullptr };
+	_float4x4									m_CombindWorldMatrix{};
 	// 파트 오브젝트 부모가 관리할 때: 부모 포인터가 있는 경우는 파츠로 판단 예외처리 
 
 protected:
@@ -55,6 +59,7 @@ protected:
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
+	HRESULT Add_PartObject(_uint iPrototypeLevelIndex, const _wstring& strPartObjKey, const _wstring& strPrototypeTag, void* pArg);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

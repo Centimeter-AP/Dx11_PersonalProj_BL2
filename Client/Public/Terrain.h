@@ -14,7 +14,7 @@ NS_BEGIN(Client)
 class CTerrain final : public CGameObject
 {
 public:
-	typedef struct tagTerrainDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagTerrainDesc : public CGameObject::DESC
 	{
 		LEVEL		eLevelID = {LEVEL::END};
 		_bool		isToolver = { false };

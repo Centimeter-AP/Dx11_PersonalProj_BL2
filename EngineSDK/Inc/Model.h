@@ -17,9 +17,10 @@ public:
 		return m_iNumMeshes;
 	}
 
-	void Set_Animation(_uint iIndex, _bool isLoop = true, _float fBlendDuration = 0.2f);
+	void Set_Animation(_uint iIndex, _bool isLoop = true, _float fBlendDuration = 0.1f);
 	void Set_Animation_TickPerSecond(_uint iIndex, _float fTickPerSecond);
 	void Set_Animation_TickPerSecond_All(_float fTickPerSecond);
+	void Reset_CurAnimationFrame();
 
 public:
 	HRESULT Bind_Material(class CShader* pShader, const _char* pConstantName, _uint iMeshIndex, aiTextureType eType, _uint iTextureIndex = 0);

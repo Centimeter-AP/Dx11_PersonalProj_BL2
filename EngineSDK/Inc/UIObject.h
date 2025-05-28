@@ -10,7 +10,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CUIObject abstract : public CGameObject
 {
 public:
-	typedef struct tagUIObjectDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagUIObjectDesc : public CGameObject::DESC
 	{
 		_float			fX, fY, fSizeX, fSizeY;
 	}UIOBJECT_DESC;

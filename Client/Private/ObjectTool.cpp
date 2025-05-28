@@ -345,8 +345,8 @@ HRESULT CObjectTool::Make_Player()
 			return E_FAIL;
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"), ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera")))
 			return E_FAIL;
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"), ENUM_CLASS(LEVEL::STATIC), L"Layer_Weapon")))
-			return E_FAIL;
+		//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"), ENUM_CLASS(LEVEL::STATIC), L"Layer_Weapon")))
+		//	return E_FAIL;
 		CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera"));
 		pPrevCamera->Set_Using(false);
 		m_isPlayerExists = true;

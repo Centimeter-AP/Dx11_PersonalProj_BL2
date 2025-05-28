@@ -21,7 +21,7 @@ HRESULT CMonster::Initialize_Prototype()
 
 HRESULT CMonster::Initialize(void* pArg)
 {
-	GAMEOBJECT_DESC			Desc{};
+	DESC			Desc{};
 
 	Desc.fRotationPerSec = 0.f;
 	Desc.fSpeedPerSec = 0.f;

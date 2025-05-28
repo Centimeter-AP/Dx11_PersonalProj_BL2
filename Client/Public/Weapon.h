@@ -13,7 +13,7 @@ NS_BEGIN(Client)
 class CWeapon abstract : public CGameObject
 {
 public:
-	typedef struct tagWeaponDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagWeaponDesc : public CGameObject::DESC
 	{
 
 	}DESC;
@@ -39,6 +39,8 @@ protected:
 	class CTransform*		m_pPlayerTransform = { nullptr };
 	CModel*					m_pPlayerModel = { nullptr };
 	string					m_szPlayerCameraBoneName;
+	const _float4x4*		m_pSocketMatrix = { nullptr };
+	const _float4x4*		m_pPlayerWorldMatrix = { nullptr };
 
 protected:
 	HRESULT Ready_Components(void* pArg);

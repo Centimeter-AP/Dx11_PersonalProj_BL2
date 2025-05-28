@@ -141,6 +141,11 @@ void CModel::Set_Animation_TickPerSecond_All(_float fTickPerSecond)
 		pAnim->Set_TickPerSecond(fTickPerSecond);
 }
 
+void CModel::Reset_CurAnimationFrame()
+{
+	m_pAnimMgr->Reset_CurAnimationFrame();
+}
+
 HRESULT CModel::Ready_Bones(const aiNode* pAINode, _int iParentBoneIndex)
 {
 	CBone* pBone = CBone::Create(pAINode, iParentBoneIndex);

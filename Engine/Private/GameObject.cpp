@@ -41,7 +41,7 @@ HRESULT CGameObject::Initialize(void* pArg)
 	if (nullptr == pArg)
 		return S_OK;
 
-	GAMEOBJECT_DESC* pDesc = static_cast<GAMEOBJECT_DESC*>(pArg);	
+	DESC* pDesc = static_cast<DESC*>(pArg);	
 	lstrcpy(m_szName, pDesc->szName);
 	m_strVIBufferTag = pDesc->strVIBufferTag;
 
@@ -92,6 +92,17 @@ HRESULT CGameObject::Add_Component(_uint iPrototypeLevelIndex, const _wstring& s
 	*ppOut = pComponent;
 
 	Safe_AddRef(pComponent);
+
+	return S_OK;
+}
+
+HRESULT CGameObject::Add_PartObject(_uint iPrototypeLevelIndex, const _wstring& strPartObjKey, const _wstring& strPrototypeTag, void* pArg)
+{
+	CGameObject* pPartObject = dynamic_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::TYPE_GAMEOBJECT, iPrototypeLevelIndex, strPrototypeTag, pArg));
+	if (nullptr == pPartObject)
+		return E_FAIL;
+
+	m_PartObjects.emplace(strPartObjKey, pPartObject);
 
 	return S_OK;
 }

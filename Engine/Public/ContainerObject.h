@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CContainerObject abstract : public CGameObject
 {
 public:
-	typedef struct tagContainerObjectDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagContainerObjectDesc : public CGameObject::DESC
 	{
 		_uint		iNumPartObjects;
 	}CONTAINEROBJECT_DESC;

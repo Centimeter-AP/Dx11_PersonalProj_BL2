@@ -13,7 +13,7 @@ NS_BEGIN(Client)
 class CMapObject final : public CGameObject
 {
 public:
-	typedef struct tagMapObjectDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagMapObjectDesc : public CGameObject::DESC
 	{
 	}DESC;
 

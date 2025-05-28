@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CCamera abstract : public CGameObject
 {
 public:
-	typedef struct tagCameraDesc : public CGameObject::GAMEOBJECT_DESC
+	typedef struct tagCameraDesc : public CGameObject::DESC
 	{
 		_float3			vEye;
 		_float3			vAt;

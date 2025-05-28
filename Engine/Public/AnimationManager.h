@@ -19,6 +19,8 @@ public:
 	_bool Update(_float fTimeDelta, const _fmatrix& PreTransformMatrix);
 	//void ApplyToBones(const _fmatrix& PreTransformMatrix);
 
+	void    Reset_CurAnimationFrame() { m_pCurrentAnim->Reset(); }
+
 protected:
 	vector<CBone*>*			m_pBones = nullptr;
 	vector<CAnimation*>*	m_pAnims = nullptr;
