@@ -42,6 +42,7 @@ private:
 	_tchar						m_szLoadingText[MAX_PATH] = {};
 
 public:
+	HRESULT Loading_For_Loading();
 	HRESULT Loading_For_Logo();
 	HRESULT Loading_For_GamePlay();
 	HRESULT Loading_For_Maptool();

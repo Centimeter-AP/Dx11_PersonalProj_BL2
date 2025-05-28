@@ -37,11 +37,13 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
+
+	if (FAILED(Ready_PartObjects(pArg)))
+		return E_FAIL;
 	
 	if (FAILED(Ready_PlayerStates()))
 		return E_FAIL;
 
-	
 	
 	m_pModelCom->Set_Animation(Idle, true, 0.2f);
 
@@ -50,6 +52,11 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Priority_Update(fTimeDelta);
+	}
 	static _uint test = {};
 	if (KEY_DOWN(DIK_Z))
 	{
@@ -61,22 +68,27 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 		test < 1 ? test = 37 : test--;
 		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
-	//Key_Input(fTimeDelta);
 	Update_State(fTimeDelta);
+
 }
 
 EVENT CPlayer::Update(_float fTimeDelta)
 {
-	if (true == m_pModelCom->Play_Animation(fTimeDelta))
+	for (auto& pPartObject : m_PartObjects)
 	{
-		//m_isPlayingNonLoopAnim = false;
-		//m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Idle), true, 0.2f);
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Update(fTimeDelta);
 	}
 	return EVN_NONE;
 }
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Late_Update(fTimeDelta);
+	}
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
 }
 
@@ -264,7 +276,7 @@ HRESULT CPlayer::Ready_PlayerStates()
 	m_pStates[PLA_STATE::STATE_Sprint]				= new CPlayerState_Sprint(this);
 	m_pStates[PLA_STATE::STATE_Jump]				= new CPlayerState_Jump(this);
 	//m_pStates[PLA_STATE::STATE_Fire]				= new CPlayerState_Fire(this);
-	//m_pStates[PLA_STATE::STATE_Reload]				= new CPlayerState_Reload(this);
+	m_pStates[PLA_STATE::STATE_Reload]				= new CPlayerState_Reload(this);
 	//m_pStates[PLA_STATE::STATE_ChangeWeapon]		= new CPlayerState_ChangeWeapon(this);
 	//m_pStates[PLA_STATE::STATE_ThrowGrenade]		= new CPlayerState_ThrowGrenade(this);
 	//m_pStates[PLA_STATE::STATE_Skill_PhaseLock]		= new CPlayerState_Skill_PhaseLock(this);
@@ -273,6 +285,7 @@ HRESULT CPlayer::Ready_PlayerStates()
 
 	return S_OK;
 }
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);

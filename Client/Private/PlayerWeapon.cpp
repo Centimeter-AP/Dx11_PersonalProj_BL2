@@ -49,11 +49,6 @@ void CPlayerWeapon::Priority_Update(_float fTimeDelta)
 	// weapon 뼈의 combinedtransformationmatrix갖고옴
 	_matrix matWorld = /*m_pPlayerTransform->Get_WorldMatrix()*/{};
 
-	//for (size_t i = 0; i < 3; i++)
-	//	WeaponBoneMatrix.r[i] = XMVector3Normalize(WeaponBoneMatrix.r[i]);	
-	//for (size_t i = 0; i < 3; i++)
-	//	matWorld.r[i] = XMVector3Normalize(matWorld.r[i]);
-
 	// 월드 행렬 적용 (원래 셰이더에서 월드 곱해주기때문에 지금은 로컬상태임)
 	_matrix matFinal = WeaponBoneMatrix * matWorld;
 

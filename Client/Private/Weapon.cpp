@@ -27,15 +27,14 @@ HRESULT CWeapon::Initialize(void* pArg)
 	//Desc.fSpeedPerSec = 0.f;
 	//lstrcpy(Desc.szName, TEXT("Weapon"));
 
-	if (FAILED(__super::Initialize(&pArg)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	m_pPlayer = GET_PLAYER;
-	m_pPlayerModel = dynamic_cast<CModel*>(m_pPlayer->Get_Component(L"Com_Model"));
-	m_pPlayerTransform = m_pPlayer->Get_Transform();
+	m_pPlayerModel = dynamic_cast<CModel*>(m_pParentObject->Get_Component(L"Com_Model"));
+	m_pPlayerTransform = m_pParentObject->Get_Transform();
 	m_szPlayerCameraBoneName = "R_Weapon_Bone";
 
 	_int iWeaponBoneIndex = m_pPlayerModel->Find_BoneIndex(m_szPlayerCameraBoneName.c_str());
@@ -44,7 +43,7 @@ HRESULT CWeapon::Initialize(void* pArg)
 	// 플레이어 손의 weapon 뼈 인덱스 갖고옴 
 
 	m_pSocketMatrix = m_pPlayerModel->Get_CombinedTransformationMatrix(iWeaponBoneIndex);
-	// weapon 뼈의 combinedtransformationmatrix갖고옴
+	// weapon 뼈의 combinedtransformationmatrix갖옴
 	m_pParentMatrix = m_pPlayerTransform->Get_WorldMatrix4x4Ptr();
 
 	return S_OK;
@@ -53,21 +52,20 @@ HRESULT CWeapon::Initialize(void* pArg)
 void CWeapon::Priority_Update(_float fTimeDelta)
 {
 
-	// 월드 행렬 적용 (원래 셰이더에서 월드 곱해주기때문에 지금은 로컬상태임)
-	_matrix matFinal = XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
-
-	m_pTransformCom->Set_Matrix(matFinal);
-	m_pTransformCom->Go_Backward(fTimeDelta*10.f);
 }
 
 EVENT CWeapon::Update(_float fTimeDelta)
 {
-	if (KEY_DOWN(DIK_R)) // 재장전
-	{
-		m_pModelCom->Set_Animation(14, false, 0.1f);
-	}
-	if (true == m_pModelCom->Play_Animation(fTimeDelta))
-		int a = 10;
+	//if (KEY_DOWN(DIK_R)) // 재장전
+	//{
+	//	m_pModelCom->Set_Animation(14, false, 0.1f);
+	//}
+	_matrix matFinal = XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
+
+	m_pTransformCom->Set_Matrix(matFinal);
+	// 이거 잠깐 좀 끕시다 상태에 넣게 
+	//if (true == m_pModelCom->Play_Animation(fTimeDelta))
+	//	int a = 10;
 
 
 	return EVN_NONE;

@@ -9,39 +9,28 @@ void CPlayerState_Run::Enter()
 
 void CPlayerState_Run::Execute(_float fTimeDelta)
 {
-	//m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
-
-	//if (KEY_PRESSING(DIK_W) && KEY_PRESSING(DIK_S))
-	//{
-	//	m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle); return;
-	//}
-
+	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 	if (!KEY_PRESSING(DIK_W))
 	{
 		if (!KEY_PRESSING(DIK_S))
 		{
-			if (KEY_PRESSING(DIK_A))
-			{
+			if (KEY_PRESSING(DIK_A)){
 				m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Run_L); return;
 			}
-			else if (KEY_PRESSING(DIK_D))
-			{
+			else if (KEY_PRESSING(DIK_D)){
 				m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Run_R); return;
 			}
-			else
-			{
+			else{
 				m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle); return;
 			}
 		}
 		else
 		{
 			m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta);
-			if (KEY_PRESSING(DIK_A))
-			{
+			if (KEY_PRESSING(DIK_A)){
 				m_pOwner->m_pTransformCom->Go_Left(fTimeDelta);
 			}
-			if (KEY_PRESSING(DIK_D))
-			{
+			if (KEY_PRESSING(DIK_D)){
 				m_pOwner->m_pTransformCom->Go_Right(fTimeDelta);
 			}
 			return;
@@ -50,27 +39,22 @@ void CPlayerState_Run::Execute(_float fTimeDelta)
 	if (KEY_PRESSING(DIK_W))
 	{
 		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta);
-		if (KEY_PRESSING(DIK_LSHIFT))
-		{
+		if (KEY_PRESSING(DIK_LSHIFT)){
 			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Sprint); return;
 		}
 	}
-	if (KEY_PRESSING(DIK_A))
-	{
+	if (KEY_PRESSING(DIK_A)){
 		m_pOwner->m_pTransformCom->Go_Left(fTimeDelta);
 	}
-	if (KEY_PRESSING(DIK_D))
-	{
+	if (KEY_PRESSING(DIK_D)){
 		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta);
 	}
-	if (KEY_PRESSING(DIK_S))
-	{
+	if (KEY_PRESSING(DIK_S)){
 		m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta);
 	}
 }
 
 void CPlayerState_Run::Exit()
 {
-	//m_pOwner->m_pModelCom->Reset_CurAnimationFrame();
 
 }

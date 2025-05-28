@@ -35,7 +35,6 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 
-	class CGameObject*		m_pPlayer = { nullptr }; //		
 	class CTransform*		m_pPlayerTransform = { nullptr };
 	CModel*					m_pPlayerModel = { nullptr };
 	string					m_szPlayerCameraBoneName;

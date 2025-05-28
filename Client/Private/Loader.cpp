@@ -60,6 +60,7 @@ HRESULT CLoader::Loading()
 
 	switch (m_eNextLevelID)
 	{
+
 	case LEVEL::LOGO:
 		hr = Loading_For_Logo();
 		break;
@@ -81,17 +82,23 @@ HRESULT CLoader::Loading()
 		return S_OK;
 }
 
+HRESULT CLoader::Loading_For_Loading()
+{
+
+	return S_OK;
+}
+
 HRESULT CLoader::Loading_For_Logo()
 {
 	
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
 	/* For.Prototype_Component_Texture_BackGround*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo.dds"), 1))))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Logo_BackGround*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_BackGround"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Default%d.jpg"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo_Background.dds"), 1))))
 		return E_FAIL;
 
 
@@ -249,7 +256,7 @@ HRESULT CLoader::Loading_For_Maptool()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Siren_Hand"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
-			"../Bin/Resources/Models/Bin_Anim/Siren_Hand_AllAnim.bin", PreTransMatrix))))
+			"../Bin/Resources/Models/Bin_Anim/Player_Hand.bin", PreTransMatrix))))
 		return E_FAIL;
 
 	//PreTransMatrix = XMMatrixIdentity();
@@ -262,7 +269,7 @@ HRESULT CLoader::Loading_For_Maptool()
 	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_AR"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
-			"../Bin/Resources/Models/Bin_Anim/Test_Pistol.bin", PreTransMatrix))))
+			"../Bin/Resources/Models/Bin_Anim/AssaultRifle.bin", PreTransMatrix))))
 		return E_FAIL;
 
 

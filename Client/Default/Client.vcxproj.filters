@@ -127,6 +127,9 @@
     <Filter Include="02.GameObjects\04. Player\00. PlayerState">
       <UniqueIdentifier>{2c1e5ced-8b82-45ad-ba0a-220f190f6842}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\05. Weapon\AssaultRifle\ARState">
+      <UniqueIdentifier>{e4e73457-fd25-4138-b899-62119dd6013e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -268,6 +271,9 @@
     <ClInclude Include="..\public\PlayerWeapon.h">
       <Filter>02.GameObjects\04. Player\PlayerWeapon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ARState.h">
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle\ARState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -399,6 +405,24 @@
       <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Run_R.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ARState_Idle.cpp">
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle\ARState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ARState_Reload.cpp">
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle\ARState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ARState_Fire.cpp">
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle\ARState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ARState_Reload_Fast.cpp">
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle\ARState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ARState_Draw.cpp">
+      <Filter>02.GameObjects\05. Weapon\AssaultRifle\ARState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Reload.cpp">
       <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
     </ClCompile>
   </ItemGroup>

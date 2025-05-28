@@ -9,6 +9,7 @@ void CPlayerState_Sprint::Enter()
 
 void CPlayerState_Sprint::Execute(_float fTimeDelta)
 {
+	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 	if (!KEY_PRESSING(DIK_W))
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle);

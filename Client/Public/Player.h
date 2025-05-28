@@ -29,6 +29,8 @@ public:
 		STATE_Idle, STATE_Run, STATE_Run_L, STATE_Run_R, STATE_Sprint, STATE_Jump, STATE_Fire, STATE_Reload, STATE_ChangeWeapon, STATE_ThrowGrenade, STATE_Skill_PhaseLock, STATE_END
 	};
 
+#pragma region MyFriendMyState
+
 	friend class CPlayerState_Idle;
 	friend class CPlayerState_Run;
 	friend class CPlayerState_Run_L;
@@ -41,6 +43,7 @@ public:
 	friend class CPlayerState_ThrowGrenade;
 	friend class CPlayerState_Skill_PhaseLock;
 
+#pragma endregion
 
 
 private:
@@ -56,9 +59,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 	void	Key_Input(_float fTimeDelta);
+	void	Set_State(PLA_STATE eState);
 
 private:
-	void	Set_State(PLA_STATE eState);
 	void	Update_State(_float fTimeDelta);
 
 private:
@@ -70,8 +73,8 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	_float				m_fSensor = {};
-	class CState*		m_pCurState = { nullptr };
-	class CState*		m_pStates[STATE_END] = { nullptr };
+	class CPlayerState*	m_pCurState = { nullptr };
+	class CPlayerState*	m_pStates[STATE_END] = { nullptr };
 	PLA_STATE			m_eCurState = { PLA_STATE::STATE_END };
 	PLA_STATE			m_ePrevState = { PLA_STATE::STATE_END };
 

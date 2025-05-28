@@ -9,6 +9,7 @@ void CPlayerState_Run_L::Enter()
 
 void CPlayerState_Run_L::Execute(_float fTimeDelta)
 {
+	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 	if (KEY_PRESSING(DIK_A))
 	{
 		m_pOwner->m_pTransformCom->Go_Left(fTimeDelta);

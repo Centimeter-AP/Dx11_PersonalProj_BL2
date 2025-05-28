@@ -7,6 +7,7 @@
 
 #include "GameInstance.h"
 #include <Level_MapTool.h>
+#include <BackGround.h>
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -69,6 +70,24 @@ HRESULT CLevel_Loading::Render()
 
 	return S_OK;
 }
+
+HRESULT CLevel_Loading::Ready_Layer_BackGround(const _wstring strLayerTag)
+{
+	//CBackGround::BACKGROUND_DESC				BackGroundDesc{};
+
+	//BackGroundDesc.fX = g_iWinSizeX * 0.5f;
+	//BackGroundDesc.fY = g_iWinSizeY * 0.5f;
+
+	//BackGroundDesc.fSizeX = g_iWinSizeX;
+	//BackGroundDesc.fSizeY = g_iWinSizeY;
+
+	//if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_LoadingBackground"),
+	//	static_cast<_uint>(LEVEL::STATIC), strLayerTag, &BackGroundDesc)))
+	//	return E_FAIL;
+
+	return S_OK;
+}
+
 
 CLevel_Loading* CLevel_Loading::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
 {

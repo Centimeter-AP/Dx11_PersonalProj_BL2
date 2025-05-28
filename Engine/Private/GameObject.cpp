@@ -41,9 +41,12 @@ HRESULT CGameObject::Initialize(void* pArg)
 	if (nullptr == pArg)
 		return S_OK;
 
-	DESC* pDesc = static_cast<DESC*>(pArg);	
+	CGameObject::DESC* pDesc = static_cast<CGameObject::DESC*>(pArg);
 	lstrcpy(m_szName, pDesc->szName);
 	m_strVIBufferTag = pDesc->strVIBufferTag;
+	m_pParentObject = pDesc->m_pParentObject;
+	m_pParentMatrix = pDesc->m_pParentMatrix;
+
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)

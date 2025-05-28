@@ -4,6 +4,8 @@
 
 #include "Level_Loading.h"
 
+#include "BackGround.h"
+
 CMainApp::CMainApp()
 	: m_pGameInstance { CGameInstance::Get_Instance() }
 {
@@ -43,6 +45,9 @@ HRESULT CMainApp::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Prototype_Component()))
+		return E_FAIL;
+	
+	if (FAILED(Ready_Prototype_GameObject()))
 		return E_FAIL;
 
 	if (FAILED(Start_Level(LEVEL::LOGO)))
@@ -95,6 +100,23 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnimMesh.hlsl"), VTXANIMMESH::Elements, VTXANIMMESH::iNumElements))))
 		return E_FAIL;
+
+	/*** Texture ***/
+	/* For.Prototype_Component_Texture_Logo_BackGround*/
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Logo_BackGround"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo_Background.dds"), 1))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Prototype_GameObject()
+{
+
+	///* For.Prototype_GameObject_BackGround */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Logo_BackGround"),
+	//	CBackGround::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

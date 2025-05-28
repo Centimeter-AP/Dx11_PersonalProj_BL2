@@ -1,5 +1,5 @@
 #include "AssaultRifle.h"
-
+#include "ARState.h"
 #include "GameInstance.h"
 
 CAssaultRifle::CAssaultRifle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -25,11 +25,13 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 	if (pDesc == nullptr)
 		return E_FAIL;
 
-
-	if (FAILED(__super::Initialize(&pDesc)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_ARStates()))
 		return E_FAIL;
 
 	m_pModelCom->Set_Animation(3, false);
@@ -39,8 +41,7 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 
 void CAssaultRifle::Priority_Update(_float fTimeDelta)
 {
-	if (nullptr != m_pParentObject)
-		return;
+	Update_State(fTimeDelta);
 	__super::Priority_Update(fTimeDelta);
 #pragma region AnimationTests
 	static _uint test = {};
@@ -59,16 +60,12 @@ void CAssaultRifle::Priority_Update(_float fTimeDelta)
 
 EVENT CAssaultRifle::Update(_float fTimeDelta)
 {
-	if (nullptr != m_pParentObject)
-		return EVN_NONE;
 	
 	return __super::Update(fTimeDelta);
 }
 
 void CAssaultRifle::Late_Update(_float fTimeDelta)
 {
-	if (nullptr != m_pParentObject)
-		return;
 	__super::Late_Update(fTimeDelta);
 }
 
@@ -77,6 +74,26 @@ HRESULT CAssaultRifle::Render()
 	return __super::Render();
 }
 
+void CAssaultRifle::Set_State(AR_STATE eState)
+{
+	m_ePrevState = m_eCurState;
+	m_eCurState = eState;
+
+	m_pCurState->Exit();
+	m_pCurState = m_pStates[eState];
+}
+
+void CAssaultRifle::Update_State(_float fTimeDelta)
+{
+	if (m_ePrevState != m_eCurState)
+	{
+		m_pCurState->Enter();
+		m_ePrevState = m_eCurState;
+	}
+	m_pCurState->Execute(fTimeDelta);
+}
+
+
 HRESULT CAssaultRifle::Ready_Components(void* pArg)
 {
 	/* For.Com_Model */
@@ -84,6 +101,17 @@ HRESULT CAssaultRifle::Ready_Components(void* pArg)
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CAssaultRifle::Ready_ARStates()
+{
+	m_pStates[AR_STATE::STATE_Idle] = new CARState_Idle(this);
+	m_pStates[AR_STATE::STATE_Draw] = new CARState_Draw(this);
+	m_pStates[AR_STATE::STATE_Fire] = new CARState_Fire(this);
+	m_pStates[AR_STATE::STATE_Reload] = new CARState_Reload(this);
+	m_pStates[AR_STATE::STATE_Reload_Fast] = new CARState_Reload_Fast(this);
+	m_pCurState = m_pStates[AR_STATE::STATE_Idle];
 
 	return S_OK;
 }
@@ -120,4 +148,6 @@ void CAssaultRifle::Free()
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	for (auto State : m_pStates)
+		Safe_Delete(State);
 }
