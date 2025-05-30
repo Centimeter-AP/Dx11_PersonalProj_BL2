@@ -1,4 +1,4 @@
-
+#include "Engine_Shader_Defines.hlsli"
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D g_DiffuseTexture;
@@ -13,13 +13,7 @@ float4 g_vCamPosition;
 float4 g_vMtrlAmibient = float4(0.4f, 0.4f, 0.4f, 1.f);
 float4 g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
 
-sampler DefaultSampler = sampler_state
-{
-    filter = min_mag_mip_linear;
-    AddressU = wrap;
-    AddressV = wrap;
 
-};
 
 struct VS_IN
 {
@@ -29,10 +23,10 @@ struct VS_IN
 };
 
 struct VS_OUT
-{
+{      
     float4 vPosition : SV_POSITION;
     float4 vNormal : NORMAL;
-    float2 vTexcoord : TEXCOORD0;
+    float2 vTexcoord : TEXCOORD0;    
     float4 vWorldPos : TEXCOORD1;
 };
 
@@ -69,28 +63,24 @@ struct PS_OUT
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out;    
     
-    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 3.f);
+    vector      vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord * 50.f);
     
-    float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
+    float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) + 
         (g_vLightAmbient * g_vMtrlAmibient);
     
-    float4 vLook = In.vWorldPos - g_vCamPosition;
-    float4 I = normalize(g_vLightDir);
-    float4 N = In.vNormal;
-    
-    
-    //float4 vReflect = normalize(g_vLightDir) - 2.f * dot(g_vLightDir, N) * N;
+    float4 vLook = In.vWorldPos - g_vCamPosition;    
     
     float4 vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    
     
     float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
         
     
     Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade + (g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
     
-    return Out;
+    return Out;    
 }
 
 
@@ -100,8 +90,12 @@ technique11 DefaultTechnique
    
     pass Default
     {
-        VertexShader = compile vs_5_0 VS_MAIN();
-        PixelShader = compile ps_5_0 PS_MAIN();
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();        
+        PixelShader = compile ps_5_0 PS_MAIN();      
     }
    
 }
