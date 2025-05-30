@@ -42,6 +42,7 @@ void CObjectTool::Priority_Update(_float fTimeDelta)
 EVENT CObjectTool::Update(_float fTimeDelta)
 {
 	Key_Input();
+	Autosave(fTimeDelta);
 	return EVN_NONE;
 }
 
@@ -51,6 +52,8 @@ void CObjectTool::Late_Update(_float fTimeDelta)
 
 HRESULT CObjectTool::Render()
 {
+	ImGuizmo::BeginFrame(); // ← 한 번만 호출
+
 	if (m_pWindowData->ShowObjectMenu)
 	{
 		if (FAILED(Render_ObjectTool()))
@@ -60,6 +63,12 @@ HRESULT CObjectTool::Render()
 	if (m_pWindowData->ShowSaveMenu)
 	{
 		if (FAILED(Open_SaveFile()))
+			return E_FAIL;
+	}
+
+	if (m_pWindowData->ShowLoadMenu)
+	{
+		if (FAILED(Open_LoadFile()))
 			return E_FAIL;
 	}
 
@@ -197,14 +206,19 @@ HRESULT CObjectTool::Render_ObjectTool()
 		ImGui::EndListBox();
 	}
 
-	CMonster::DESC mDesc;
 	if (Button("Make Object"))
 	{
+		CGameObject::DESC mDesc;
 		wstring ObjectTag;
 		if (m_isAnim)
 			ObjectTag = L"Monster";
 		else
 			ObjectTag = L"MapObject";
+		mDesc.fRotationPerSec = 0.f;
+		mDesc.fSpeedPerSec = 0.f;
+		mDesc.m_pParentMatrix = {};
+		mDesc.m_pParentObject = nullptr;
+		lstrcpy(mDesc.szName, ObjectTag.data());
 		mDesc.strVIBufferTag = m_ModelNames[item_selected_idx];
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
@@ -234,9 +248,9 @@ HRESULT CObjectTool::Render_ObjectTool()
 		ImGui::DragFloat("Pos Y", &ObjPos.y, 0.05f);
 		ImGui::DragFloat("Pos Z", &ObjPos.z, 0.05f);
 		ImGui::Separator();
-		ImGui::DragFloat("Rot X", &ObjRot.x, 1.f);
-		ImGui::DragFloat("Rot Y", &ObjRot.y, 1.f);
-		ImGui::DragFloat("Rot Z", &ObjRot.z, 1.f);
+		ImGui::DragFloat("Rot X", &ObjRot.x, 0.01f);
+		ImGui::DragFloat("Rot Y", &ObjRot.y, 0.01f);
+		ImGui::DragFloat("Rot Z", &ObjRot.z, 0.01f);
 		ImGui::Separator();
 		ImGui::DragFloat("Scale X", &ObjScale.x, 0.05f);
 		ImGui::DragFloat("Scale Y", &ObjScale.y, 0.05f);
@@ -260,7 +274,6 @@ HRESULT CObjectTool::Guizmo_Tool()
 	if (m_isGizmoEnable && m_pSelectedObj != nullptr)
 	{
 		// ImGui 프레임 내부에서 호출
-		ImGuizmo::BeginFrame(); // ← 한 번만 호출
 
 		ImGuizmo::SetOrthographic(false); // 투영 방식 설정 (false = Perspective)
 		ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList()); // 기본 ImGui drawlist 사용
@@ -369,7 +382,7 @@ HRESULT CObjectTool::Open_ModelDirectory(path& CurPath)
 		return E_FAIL;
 	}
 
-	_matrix PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
+	//_matrix PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
 	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
 	for (const auto& entry : directory_iterator(CurPath))
 	{
@@ -388,7 +401,7 @@ HRESULT CObjectTool::Open_ModelDirectory(path& CurPath)
 				// 2) MessageBoxA로 출력
 				MessageBoxA(nullptr, msg.c_str(), "오류", MB_OK | MB_ICONERROR);
 				continue;
-			}
+			}//모델태그를 게임오브젝트에 뒀냐 모델에 뒀냐..?
 
 			string strRelativePath = filesystem::relative(entry.path(), filesystem::current_path()).string();
 			//m_DataPaths[entry.path().stem().string()] = strRelativePath; // map으로 파일 위치 상대경로로 변환해서 저장? 왜했지
@@ -407,7 +420,7 @@ HRESULT CObjectTool::Open_SaveFile()
 	config.path = R"(..\Bin\Resources\Map\)";
 	//config.flags = ImGuiFileDialogFlags_ConfirmOverwrite;
 
-	IFILEDIALOG->OpenDialog("SaveMapDialog", "Choose directory to save", ".map", config);
+	IFILEDIALOG->OpenDialog("SaveMapDialog", "Choose directory to save", ".json", config);
 
 	if (IFILEDIALOG->Display("SaveMapDialog"))
 	{
@@ -415,9 +428,9 @@ HRESULT CObjectTool::Open_SaveFile()
 		{
 			path savePath = IFILEDIALOG->GetFilePathName();
 
-			// 확장자가 없으면 .map 붙이기
-			if (savePath.extension().string() != ".map")
-				savePath += ".map";
+			// 확장자가 없으면 .json 붙이기
+			if (savePath.extension().string() != ".json")
+				savePath += ".json";
 
 			Save_Objects(savePath); // 직접 작성한 저장 함수
 		}
@@ -428,7 +441,134 @@ HRESULT CObjectTool::Open_SaveFile()
 	return S_OK;
 }
 
-HRESULT CObjectTool::Autosave()
+HRESULT CObjectTool::Open_LoadFile()
+{
+	path savePath = R"(..\Bin\Resources\Map\)";
+
+	IGFD::FileDialogConfig config;
+	config.path = R"(..\Bin\Resources\Map\)";
+	config.countSelectionMax = 1; // 무제한
+
+	IFILEDIALOG->OpenDialog("LoadMapDialog", "Choose directory to load", ".json", config);
+
+	if (IFILEDIALOG->Display("LoadMapDialog"))
+	{
+		if (IFILEDIALOG->IsOk())
+		{
+			auto selections = IFILEDIALOG->GetSelection();
+
+			if (!selections.empty())
+			{
+				for (auto FilePath : selections)
+				{
+					Load_Objects(FilePath.second.data());
+				}
+			}
+		}
+		m_pWindowData->ShowLoadMenu = false;
+		IFILEDIALOG->Close();
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CObjectTool::Load_Objects(path SavePath)
+{
+
+	json jLoad;
+
+	ifstream ifs(SavePath);
+
+	if (!ifs.is_open())
+	{
+		MSG_BOX("안열렸떠염");
+		return E_FAIL;
+	}
+
+	ifs >> jLoad;
+
+	// "MapObject" 키가 존재하고 배열인지 확인
+	if (!jLoad.contains("MapObject") || !jLoad["MapObject"].is_array())
+	{
+		return E_FAIL;
+	}
+	m_pGameInstance->Clear_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"));
+
+	for (const auto& Object : jLoad["MapObject"])
+	{
+		// 오브젝트 이름
+		_wstring ObjectName = L"";
+		if (Object.contains("Name") && Object["Name"].is_string())
+		{
+			string tempName = Object["Name"];
+			ObjectName = wstring(tempName.begin(), tempName.end());
+		}
+
+		// 모델 이름
+		_wstring ObjectModelName = L"";
+		if (Object.contains("ModelName") && Object["ModelName"].is_string())
+		{
+			string tempModelName = Object["ModelName"];
+			ObjectModelName = wstring(tempModelName.begin(), tempModelName.end());
+		}
+
+		// Position 읽기
+		_float4 vTranslation = { 0.f, 0.f, 0.f, 1.f };
+		if (Object.contains("Position") && Object["Position"].is_array() && Object["Position"].size() >= 3)
+		{
+			vTranslation.x = Object["Position"][0];
+			vTranslation.y = Object["Position"][1];
+			vTranslation.z = Object["Position"][2];
+		}
+
+		// Rotation 읽기 (쿼터니언)
+		_float4 vRotation = { 0.f, 0.f, 0.f, 1.f };
+		if (Object.contains("Rotation") && Object["Rotation"].is_array() && Object["Rotation"].size() >= 4)
+		{
+			vRotation.x = Object["Rotation"][0];
+			vRotation.y = Object["Rotation"][1];
+			vRotation.z = Object["Rotation"][2];
+			vRotation.w = Object["Rotation"][3];
+		}
+
+		// Scale 읽기
+		_float4 vScale = { 1.f, 1.f, 1.f, 1.f };
+		if (Object.contains("Scale") && Object["Scale"].is_array() && Object["Scale"].size() >= 3)
+		{
+			vScale.x = Object["Scale"][0];
+			vScale.y = Object["Scale"][1];
+			vScale.z = Object["Scale"][2];
+		}
+
+		// DirectX Math 벡터로 변환
+		_vector objScale = XMLoadFloat4(&vScale);
+		_vector objRotation = XMLoadFloat4(&vRotation);
+		_vector objTranslation = XMLoadFloat4(&vTranslation);
+
+		// 월드 매트릭스 재구성
+		_matrix objWorldMat = XMMatrixScalingFromVector(objScale) *
+			XMMatrixRotationQuaternion(objRotation) *
+			XMMatrixTranslationFromVector(objTranslation);
+
+
+		CGameObject::DESC mDesc;
+		mDesc.fRotationPerSec = 0.f;
+		mDesc.fSpeedPerSec = 0.f;
+		mDesc.m_pParentMatrix = {};
+		mDesc.m_pParentObject = nullptr;
+		lstrcpy(mDesc.szName, ObjectName.data());
+		mDesc.strVIBufferTag = ObjectModelName;
+		mDesc.strVIBufferTag = true;
+		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectName,
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
+			return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CObjectTool::Autosave(_float fTimeDelta)
 {
 	path savePath = R"(..\Bin\Resources\Map\Autosave\)";
 	auto now = chrono::system_clock::now();
@@ -439,9 +579,16 @@ HRESULT CObjectTool::Autosave()
 	ostringstream oss; // 문자열에 출력하는 스트림 변수...
 	oss << savePath
 		<< std::put_time(&local_tm, "%Y-%m-%d-%H-%M")
-		<< ".map";
+		<< ".json";
 
-	Save_Objects(savePath);
+	m_fAutosaveTimeAcc += fTimeDelta;
+
+	if (m_fAutosaveTimeAcc >= 300.f)
+	{
+		Save_Objects(savePath);
+		m_fAutosaveTimeAcc = 0.f;
+	}
+
 	return S_OK;
 }
 
@@ -450,28 +597,39 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 	ofstream ofs(SavePath);
 	json jSave;
 
-	ofs << setw(4) << jSave;
-	ofs.close();
-
 	auto pLayer = m_pGameInstance->Find_Layer(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_MapObject");
 
 	auto& Objects = pLayer->Get_LayerObjectLists();
 	
-	size_t iObjectSize = { Objects.size() };
-	ofs.write(reinterpret_cast<const char*>(&iObjectSize), sizeof(size_t)); // 한 레이어에 오브젝트 몇 갠지 저장
 	for (auto Object : Objects)
 	{
-		_tchar* ObjectName = Object->Get_Name();
+		_wstring ObjectName = Object->Get_Name();
 		_wstring ObjectModelName = Object->Get_VIBufferTag();
 		_matrix objWorldMat = Object->Get_Transform()->Get_WorldMatrix();
 		_vector objScale = {};
 		_vector objRotation = {};
 		_vector objTranslation = {};
 		XMMatrixDecompose(&objScale, &objRotation, &objTranslation, objWorldMat);
-		//_uint ObjectNameSize = ;
-		//ofs.write(reinterpret_cast<const char*>(&ObjectNameSize), sizeof(_uint)); // 한 레이어에 오브젝트 몇 갠지 저장
-		
-		//ofs.write(reinterpret_cast<const char*>(ObjectName.data()), sizeof(_tchar) * 10); // 한 레이어에 오브젝트 몇 갠지 저장
+
+		_float4 vScale, vRotation, vTranslation = {};
+		XMStoreFloat4(&vScale, objScale);
+		XMStoreFloat4(&vRotation, objRotation);
+		XMStoreFloat4(&vTranslation, objTranslation);
+
+		json Object;
+
+		Object["Name"] = ObjectName.data();
+		Object["ModelName"] = ObjectModelName.data();
+		Object["Position"] = { vTranslation.x, vTranslation.y, vTranslation.z };
+		Object["Rotation"] = { vRotation.x, vRotation.y, vRotation.z, vRotation.w };
+		Object["Scale"] = { vScale.x, vScale.y, vScale.z }; 
+
+		jSave["MapObject"].push_back(Object);
+	}
+
+	ofs << setw(4) << jSave;
+	ofs.close();
+
 		/*
 			오브젝트 이름(프로토타입_게임오브젝트_이름<-이거)
 			모델 이름(VIBufferTag)
@@ -479,13 +637,9 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 			Transform->WorldMatrix
 			Anim/Nonanim(이거저장해야함?)해야할거같은데용
 			생성할 레벨
-			pretransformmatrix?
+			pretransformmatrix? <- 필요한가
 
 		*/
-	}
-
-	//ofs.write(reinterpret_cast<const char*>(&a), sizeof(_uint));
-
 	return S_OK;
 }
 

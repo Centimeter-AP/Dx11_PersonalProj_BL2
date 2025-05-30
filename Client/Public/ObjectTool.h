@@ -28,9 +28,14 @@ private:
 
 private:
 	HRESULT Open_ModelDirectory(path& CurPath);
+
+	HRESULT Autosave(_float fTimeDelta);
+
 	HRESULT Open_SaveFile();
-	HRESULT Autosave();
 	HRESULT Save_Objects(path SavePath);
+
+	HRESULT Open_LoadFile();
+	HRESULT Load_Objects(path SavePath);
 
 private:
 	_bool	m_isObjectSnapToTerrain = { false };
@@ -51,7 +56,9 @@ private:
 	_bool					m_isAnim = { false };
 	MODEL					m_eModelType = { MODEL::NONANIM };
 
-	_bool	m_isPlayerExists = { false };
+	_bool					m_isPlayerExists = { false };
+
+	_float					m_fAutosaveTimeAcc = {};
 
 public:
 	static CObjectTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

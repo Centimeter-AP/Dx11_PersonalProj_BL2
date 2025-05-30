@@ -55,5 +55,4 @@ namespace Engine
 		WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), (int)wstr.size(), &result[0], sizeNeeded, nullptr, nullptr);
 		return result;
 	}
-
 }

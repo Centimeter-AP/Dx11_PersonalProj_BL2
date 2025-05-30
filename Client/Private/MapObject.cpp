@@ -21,13 +21,8 @@ HRESULT CMapObject::Initialize_Prototype()
 
 HRESULT CMapObject::Initialize(void* pArg)
 {
-	DESC			Desc{};
 
-	Desc.fRotationPerSec = 0.f;
-	Desc.fSpeedPerSec = 0.f;
-	lstrcpy(Desc.szName, TEXT("MapObject"));
-
-	if (FAILED(__super::Initialize(&Desc)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
