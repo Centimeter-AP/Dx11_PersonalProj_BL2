@@ -42,11 +42,11 @@ HRESULT CGameObject::Initialize(void* pArg)
 		return S_OK;
 
 	CGameObject::DESC* pDesc = static_cast<CGameObject::DESC*>(pArg);
-	lstrcpy(m_szName, pDesc->szName);
+	m_szName = pDesc->szName;
 	m_strVIBufferTag = pDesc->strVIBufferTag;
-	m_pParentObject = pDesc->m_pParentObject;
-	m_pParentMatrix = pDesc->m_pParentMatrix;
-
+	m_pParentObject = pDesc->pParentObject;
+	m_pParentMatrix = pDesc->pParentMatrix;
+	m_iLevelID = pDesc->iLevelID;
 
 	m_pTransformCom = CTransform::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pTransformCom)
@@ -70,6 +70,8 @@ void CGameObject::Priority_Update(_float fTimeDelta)
 
 EVENT CGameObject::Update(_float fTimeDelta)
 {
+	if (m_bDead)
+		return EVN_DEAD;
 	return EVN_NONE;
 }
 

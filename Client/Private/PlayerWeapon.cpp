@@ -22,7 +22,7 @@ HRESULT CPlayerWeapon::Initialize_Prototype()
 HRESULT CPlayerWeapon::Initialize(void* pArg)
 {
 	DESC* Desc = static_cast<DESC*>(pArg);
-	lstrcpy(Desc->szName, TEXT("Weapon"));
+	Desc->szName =  TEXT("Weapon");
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;

@@ -114,6 +114,10 @@ void CObjectTool::Key_Input()
 			{
 				m_eOperation = ImGuizmo::SCALE;
 			}
+			if (KEY_DOWN(DIK_B)) // ㅋㅋ 돚
+			{
+				m_bGizmoLock = !m_bGizmoLock;
+			}
 		}
 
 		if (KEY_DOWN(DIK_Q))
@@ -131,7 +135,7 @@ void CObjectTool::Key_Input()
 			m_pWindowData->ShowLoadMenu = true;
 		}
 	}
-	if (m_isGizmoEnable)
+	if (m_isGizmoEnable && false == m_bGizmoLock)
 	{
 		if (MOUSE_DOWN(DIM::LBUTTON))
 		{
@@ -140,6 +144,15 @@ void CObjectTool::Key_Input()
 				return ;
 			else
 				m_pSelectedObj = pPickedObj;
+		}
+	}
+
+	if (m_pSelectedObj != nullptr)
+	{
+		if (KEY_DOWN(DIK_DELETE))
+		{
+			m_pSelectedObj->Set_Dead();
+			m_pSelectedObj = nullptr;
 		}
 	}
 }
@@ -218,7 +231,7 @@ HRESULT CObjectTool::Render_ObjectTool()
 		mDesc.fSpeedPerSec = 0.f;
 		mDesc.m_pParentMatrix = {};
 		mDesc.m_pParentObject = nullptr;
-		lstrcpy(mDesc.szName, ObjectTag.data());
+		mDesc.szName = ObjectTag.data();
 		mDesc.strVIBufferTag = m_ModelNames[item_selected_idx];
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
@@ -230,7 +243,8 @@ HRESULT CObjectTool::Render_ObjectTool()
 	ImGui::Checkbox("Snap to Terrain?", &m_isObjectSnapToTerrain);
 
 	ImGui::SetNextItemWidth(80);
-	ImGui::InputFloat("Snap Offset", &m_fSnapOffset, 0.1f, 1.f, "%.1f");
+	ImGui::Checkbox("Gizmo Lock On", &m_bGizmoLock);
+	//ImGui::InputFloat("Snap Offset", &m_fSnapOffset, 0.1f, 1.f, "%.1f");
 	
 
 	static _float test[9] = {};
@@ -502,7 +516,7 @@ HRESULT CObjectTool::Load_Objects(path SavePath)
 		if (Object.contains("Name") && Object["Name"].is_string())
 		{
 			string tempName = Object["Name"];
-			ObjectName = wstring(tempName.begin(), tempName.end());
+			ObjectName = _wstring(tempName.begin(), tempName.end());
 		}
 
 		// 모델 이름
@@ -510,7 +524,7 @@ HRESULT CObjectTool::Load_Objects(path SavePath)
 		if (Object.contains("ModelName") && Object["ModelName"].is_string())
 		{
 			string tempModelName = Object["ModelName"];
-			ObjectModelName = wstring(tempModelName.begin(), tempModelName.end());
+			ObjectModelName = _wstring(tempModelName.begin(), tempModelName.end());
 		}
 
 		// Position 읽기
@@ -557,9 +571,9 @@ HRESULT CObjectTool::Load_Objects(path SavePath)
 		mDesc.fSpeedPerSec = 0.f;
 		mDesc.m_pParentMatrix = {};
 		mDesc.m_pParentObject = nullptr;
-		lstrcpy(mDesc.szName, ObjectName.data());
+		mDesc.szName = ObjectName;
 		mDesc.strVIBufferTag = ObjectModelName;
-		mDesc.strVIBufferTag = true;
+		mDesc.bHasPreset = true;
 		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectName,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
@@ -570,21 +584,21 @@ HRESULT CObjectTool::Load_Objects(path SavePath)
 
 HRESULT CObjectTool::Autosave(_float fTimeDelta)
 {
-	path savePath = R"(..\Bin\Resources\Map\Autosave\)";
-	auto now = chrono::system_clock::now();
-	time_t t = chrono::system_clock::to_time_t(now);
-	tm local_tm;
-	localtime_s(&local_tm, &t);  // thread-safe 함수
-
-	ostringstream oss; // 문자열에 출력하는 스트림 변수...
-	oss << savePath
-		<< std::put_time(&local_tm, "%Y-%m-%d-%H-%M")
-		<< ".json";
-
 	m_fAutosaveTimeAcc += fTimeDelta;
 
 	if (m_fAutosaveTimeAcc >= 300.f)
 	{
+		path savePath = R"(..\Bin\Resources\Map\Autosave\)";
+		auto now = chrono::system_clock::now();
+		time_t t = chrono::system_clock::to_time_t(now);
+		tm local_tm;
+		localtime_s(&local_tm, &t);  // thread-safe 함수
+
+		ostringstream oss; // 문자열에 출력하는 스트림 변수...
+		oss << savePath.string()
+			<< std::put_time(&local_tm, "%Y-%m-%d-%H-%M")
+			<< ".json";
+		savePath = oss.str();
 		Save_Objects(savePath);
 		m_fAutosaveTimeAcc = 0.f;
 	}

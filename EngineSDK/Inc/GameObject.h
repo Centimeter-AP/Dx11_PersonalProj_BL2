@@ -9,10 +9,11 @@ class ENGINE_DLL CGameObject abstract : public CBase
 public:
 	typedef struct tagGameObjectDesc : public CTransform::TRANSFORM_DESC
 	{
-		_tchar		szName[MAX_PATH];
+		_uint		iLevelID = 0;
+		_wstring	szName;
 		_wstring	strVIBufferTag;
-		CGameObject* m_pParentObject = { nullptr };
-		const _float4x4* m_pParentMatrix = { nullptr };
+		CGameObject* pParentObject = { nullptr };
+		const _float4x4* pParentMatrix = { nullptr };
 
 	}DESC;
 
@@ -24,8 +25,9 @@ protected:
 public:
 	CComponent* Get_Component(const _wstring& strComponentTag);
 	CTransform* Get_Transform() { return m_pTransformCom; }
-	_tchar*		Get_Name() { return m_szName; }
+	const _wstring& Get_Name() { return m_szName; }
 	const _wstring&	Get_VIBufferTag() const { return m_strVIBufferTag; }
+	void	Set_Dead() { m_bDead = true; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -35,15 +37,13 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	
-
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 	class CGameInstance*		m_pGameInstance = { nullptr };
 
 protected:
-	_tchar										m_szName[MAX_PATH] = {};
+	_wstring										m_szName = {};
 	map<const _wstring, class CComponent*>		m_Components;
 	class CTransform*							m_pTransformCom = { nullptr };
 	
@@ -56,6 +56,9 @@ protected:
 
 protected:
 	_wstring			m_strVIBufferTag;
+	//m_bDead는 신이야
+	_bool				m_bDead = { false };
+	_uint				m_iLevelID = UINT_MAX;
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);

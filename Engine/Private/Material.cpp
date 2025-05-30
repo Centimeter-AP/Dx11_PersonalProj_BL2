@@ -90,7 +90,7 @@ HRESULT CMaterial::Initialize(const _char* pModelFilePath, ifstream& ifs)
         HRESULT         hr = { };
         ID3D11ShaderResourceView* pSRV = { nullptr };
 
-        if (FileName.extension() == ".dds")
+        if (FileName.extension() == ".dds") 
             hr = DirectX::CreateDDSTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);
         else
             hr = DirectX::CreateWICTextureFromFile(m_pDevice, szTextureFilePath, nullptr, &pSRV);

@@ -25,7 +25,6 @@ HRESULT CTerrain::Initialize(void* pArg)
 
 	Desc.fRotationPerSec = 0.f;
 	Desc.fSpeedPerSec = 0.f;
-	lstrcpy(Desc.szName, TEXT("Terrain"));	
 	m_eLevelID = LEVEL::GAMEPLAY;
 	if (pArg != nullptr)
 	{

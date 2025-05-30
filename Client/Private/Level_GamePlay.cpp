@@ -13,6 +13,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
 
+
+	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
@@ -22,12 +26,14 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_MapObject(TEXT("Layer_MapObject"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	int a = 10;
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -39,9 +45,16 @@ HRESULT CLevel_GamePlay::Render()
 
 HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring strLayerTag)
 {
-	CTerrain::DESC desc{};
-	desc.eLevelID = LEVEL::GAMEPLAY;
+	CTerrain::DESC desc;
+	desc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	desc.isToolver = false;
+	desc.fRotationPerSec = 0.f;
+	desc.fSpeedPerSec = 0.f;
+	desc.bHasPreset = false;
+	desc.pParentMatrix = nullptr;
+	desc.pParentObject = nullptr;
+	desc.strVIBufferTag = L"";
+	desc.szName = L"";
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Terrain"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &desc)))
 		return E_FAIL;
@@ -51,7 +64,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring strLayerTag)
 {
-	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
+//	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
+//		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
+//		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_FPS"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
 
@@ -64,14 +81,123 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
 	//	return E_FAIL;
 
+
+
+
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
+{
+
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
-		ENUM_CLASS(LEVEL::STATIC), L"Layer_Player")))
+		ENUM_CLASS(LEVEL::STATIC), strLayerTag)))
 		return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"),
-	//	ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera")))
-	//	return E_FAIL;
+	return S_OK;
+}
+
+HRESULT CLevel_GamePlay::Ready_Layer_MapObject(const _wstring strLayerTag)
+{
+	json jLoad;
+
+	ifstream ifs(R"(../Bin/Resources/Map/GamePlay.json)");
+
+	if (!ifs.is_open())
+	{
+		MSG_BOX("안열렸떠염");
+		return E_FAIL;
+	}
+
+	ifs >> jLoad;
+
+	// "MapObject" 키가 존재하고 배열인지 확인
+	if (!jLoad.contains("MapObject") || !jLoad["MapObject"].is_array())
+	{
+		return E_FAIL;
+	}
+
+	m_pGameInstance->Clear_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"));
+
+	for (const auto& Object : jLoad["MapObject"])
+	{
+		// 오브젝트 이름
+		_wstring ObjectName = L"";
+		if (Object.contains("Name") && Object["Name"].is_string())
+		{
+			string tempName = Object["Name"];
+			ObjectName = _wstring(tempName.begin(), tempName.end());
+		}
+
+		// 모델 이름
+		_wstring ObjectModelName = L"";
+		if (Object.contains("ModelName") && Object["ModelName"].is_string())
+		{
+			string tempModelName = Object["ModelName"];
+			ObjectModelName = _wstring(tempModelName.begin(), tempModelName.end());
+		}
+
+		// Position 읽기
+		_float4 vTranslation = { 0.f, 0.f, 0.f, 1.f };
+		if (Object.contains("Position") && Object["Position"].is_array() && Object["Position"].size() >= 3)
+		{
+			vTranslation.x = Object["Position"][0];
+			vTranslation.y = Object["Position"][1];
+			vTranslation.z = Object["Position"][2];
+		}
+
+		// Rotation 읽기 (쿼터니언)
+		_float4 vRotation = { 0.f, 0.f, 0.f, 1.f };
+		if (Object.contains("Rotation") && Object["Rotation"].is_array() && Object["Rotation"].size() >= 4)
+		{
+			vRotation.x = Object["Rotation"][0];
+			vRotation.y = Object["Rotation"][1];
+			vRotation.z = Object["Rotation"][2];
+			vRotation.w = Object["Rotation"][3];
+		}
+
+		// Scale 읽기
+		_float4 vScale = { 1.f, 1.f, 1.f, 1.f };
+		if (Object.contains("Scale") && Object["Scale"].is_array() && Object["Scale"].size() >= 3)
+		{
+			vScale.x = Object["Scale"][0];
+			vScale.y = Object["Scale"][1];
+			vScale.z = Object["Scale"][2];
+		}
+
+		// DirectX Math 벡터로 변환
+		_vector objScale = XMLoadFloat4(&vScale);
+		_vector objRotation = XMLoadFloat4(&vRotation);
+		_vector objTranslation = XMLoadFloat4(&vTranslation);
+
+		// 월드 매트릭스 재구성
+		_matrix objWorldMat = XMMatrixScalingFromVector(objScale) *
+			XMMatrixRotationQuaternion(objRotation) *
+			XMMatrixTranslationFromVector(objTranslation);
 
 
+		CGameObject::DESC mDesc;
+		mDesc.fRotationPerSec = 0.f;
+		mDesc.fSpeedPerSec = 0.f;
+		mDesc.pParentMatrix = {};
+		mDesc.pParentObject = nullptr;
+		mDesc.szName = ObjectName.data();
+		mDesc.strVIBufferTag = ObjectModelName;
+		mDesc.bHasPreset = true;
+		mDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
+		_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
+		_wstring wstrModelPath = L"../Bin/Resources/Models/Bin_NonAnim/" + ObjectModelName + L".bin";
+		string strModelPath = WStringToString(wstrModelPath);
+
+		if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), _wstring(L"Prototype_Component_Model_") + ObjectModelName,
+			CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+				strModelPath.c_str(), PreTransMatrix))))
+			return E_FAIL;
+
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), _wstring(L"Prototype_GameObject_") + ObjectName,
+			ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_MapObject"), &mDesc)))
+			return E_FAIL;
+	}
 	return S_OK;
 }
 

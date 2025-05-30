@@ -29,7 +29,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fSpeedPerSec = PLAYER_DEFAULTSPEED;
-	lstrcpy(Desc.szName, TEXT("Player"));
+	Desc.szName  = TEXT("Player");
 
 	m_fSensor = 0.1f;
 	if (FAILED(__super::Initialize(&Desc)))
@@ -249,12 +249,12 @@ HRESULT CPlayer::Ready_PartObjects(void* pArg)
 
 	Desc.fRotationPerSec = XMConvertToRadians(180.f);
 	Desc.fSpeedPerSec = 10.f;
-	Desc.m_pParentMatrix = &m_pTransformCom->Get_WorldMatrix4x4Ref();
-	Desc.m_pParentObject = this;
+	Desc.pParentMatrix = &m_pTransformCom->Get_WorldMatrix4x4Ref();
+	Desc.pParentObject = this;
 
 	/* For.PartObject_Player_Weapon_AssaultRifle */
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_AR");
-	lstrcpy(Desc.szName, L"Weapon_AR");
+	Desc.szName = L"Weapon_AR";
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon_AssaultRifle"), TEXT("Prototype_GameObject_AssaultRifle"), &Desc)))
 		return E_FAIL;
 

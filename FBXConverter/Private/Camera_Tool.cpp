@@ -29,7 +29,6 @@ HRESULT CCamera_Tool::Initialize(void* pArg)
 	Desc.fFar = 500.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fSpeedPerSec = 10.0f;
-	lstrcpy(Desc.szName, TEXT("Camera"));
 
 	m_fSensor = 0.1f;
 

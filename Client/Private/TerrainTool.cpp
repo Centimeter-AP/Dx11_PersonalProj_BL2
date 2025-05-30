@@ -77,15 +77,16 @@ HRESULT CTerrainTool::Render_TerrainTool()
 		}
 		else
 		{
+			m_pGameInstance->Clear_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"));
 			/* 프로토타입 */
-			if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_VIBuffer_Terrain_Toolver"),
+			if (FAILED(m_pGameInstance->Replace_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_VIBuffer_Terrain_Toolver"),
 				CVIBuffer_Terrain::Create(m_pDevice, m_pContext, m_iVerticesX, m_iVerticesZ))))
 			{
 				ImGui::End();
 				return E_FAIL;
 			}
 			CTerrain::DESC desc{};
-			desc.eLevelID = LEVEL::MAPTOOL;
+			desc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
 			desc.isToolver = true;
 			/* 생성 */
 			if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Terrain"),
@@ -213,7 +214,7 @@ void CTerrainTool::Terrain_Load()
 			}
 			m_pGameInstance->Clear_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"));
 			CTerrain::DESC desc{};
-			desc.eLevelID = LEVEL::MAPTOOL;
+			desc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
 			desc.isToolver = true;
 			/* 생성 */
 			if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Terrain"),

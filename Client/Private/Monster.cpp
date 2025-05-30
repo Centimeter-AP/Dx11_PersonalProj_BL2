@@ -25,7 +25,7 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	Desc.fRotationPerSec = 0.f;
 	Desc.fSpeedPerSec = 0.f;
-	lstrcpy(Desc.szName, TEXT("Monster"));
+	Desc.szName = TEXT("Monster");
 
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;

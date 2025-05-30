@@ -230,7 +230,7 @@ HRESULT CLevel_MapTool::Terrain_Tools(_bool* p_open)
     if (ImGui::Button("Create Terrain (Default)"))
     {
         CTerrain::DESC desc{};
-        desc.eLevelID = LEVEL::MAPTOOL;
+        desc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
         if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Terrain"),
             ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), &desc)))
         {

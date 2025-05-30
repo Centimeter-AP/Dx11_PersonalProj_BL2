@@ -38,6 +38,8 @@ void CMapObject::Priority_Update(_float fTimeDelta)
 
 EVENT CMapObject::Update(_float fTimeDelta)
 {
+	if (m_bDead)
+		return EVN_DEAD;
 	m_pTransformCom->Go_Straight(fTimeDelta);
 	return EVN_NONE;
 }
@@ -90,7 +92,7 @@ HRESULT CMapObject::Ready_Components(void* pArg)
 	}
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_Model_") + tag,
+	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_") + tag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 

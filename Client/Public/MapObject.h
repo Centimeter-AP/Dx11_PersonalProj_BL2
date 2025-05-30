@@ -15,6 +15,7 @@ class CMapObject final : public CGameObject
 public:
 	typedef struct tagMapObjectDesc : public CGameObject::DESC
 	{
+		LEVEL		eLevelID = { LEVEL::END };
 	}DESC;
 
 private:
@@ -33,6 +34,7 @@ public:
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
+	LEVEL				m_eLevelID = { LEVEL::END };
 
 private:
 	HRESULT Ready_Components(void* pArg);

@@ -48,6 +48,7 @@ private:
 	_float3 m_fTerrainPickedPosition = {};
 
 	_bool					m_isGizmoEnable = { false };
+	_bool					m_bGizmoLock = { false };
 	ImGuizmo::OPERATION		m_eOperation = {ImGuizmo::TRANSLATE};
 	ImGuizmo::MODE			m_eMode = { ImGuizmo::WORLD };
 

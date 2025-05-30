@@ -164,8 +164,6 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _wstring& BinaryFilePath, 
 
 	VBInitialData.pSysMem = pVertices;
 
-	if (FAILED(m_pDevice->CreateBuffer(&VBBufferDesc, &VBInitialData, &m_pVB)))
-		return E_FAIL;
 
 
 	D3D11_BUFFER_DESC			IBBufferDesc{};
@@ -231,6 +229,9 @@ HRESULT CVIBuffer_Terrain::Initialize_Prototype(const _wstring& BinaryFilePath, 
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
 	IBInitialData.pSysMem = m_pIndices;
+
+	if (FAILED(m_pDevice->CreateBuffer(&VBBufferDesc, &VBInitialData, &m_pVB)))
+		return E_FAIL;
 
 	if (FAILED(m_pDevice->CreateBuffer(&IBBufferDesc, &IBInitialData, &m_pIB)))
 		return E_FAIL;
