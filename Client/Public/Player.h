@@ -68,6 +68,7 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_PartObjects(void* pArg);
 	HRESULT Ready_PlayerStates();
+	HRESULT Bind_ShaderResources();
 
 private:
 	CShader*			m_pShaderCom = { nullptr };

@@ -1,17 +1,21 @@
 
+#include "Engine_Shader_Defines.hlsli"
+
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 matrix g_BoneMatrices[512];
 
 texture2D g_DiffuseTexture;
 
-sampler DefaultSampler = sampler_state
-{
-    filter = min_mag_mip_linear;
-    AddressU = wrap;
-    AddressV = wrap;
+float4 g_vLightDir;
+float4 g_vLightDiffuse;
+float4 g_vLightAmbient;
+float4 g_vLightSpecular;
 
-};
+float4 g_vCamPosition;
+
+float4 g_vMtrlAmibient = float4(0.4f, 0.4f, 0.4f, 1.f);
+float4 g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
 
 struct VS_IN
 {
@@ -26,7 +30,9 @@ struct VS_IN
 struct VS_OUT
 {      
     float4 vPosition : SV_POSITION;
-    float2 vTexcoord : TEXCOORD0;    
+    float4 vNormal : NORMAL;
+    float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -41,6 +47,7 @@ VS_OUT VS_MAIN(VS_IN In)
         g_BoneMatrices[In.vBlendIndices.w] * fWeightW;
     
     vector vPosition = mul(vector(In.vPosition, 1.f), BoneMatrix);    
+    vector vNormal = mul(vector(In.vNormal, 0.f), BoneMatrix);
     
     matrix matWV, matWVP;
     
@@ -49,7 +56,9 @@ VS_OUT VS_MAIN(VS_IN In)
     matWVP = mul(matWV, g_ProjMatrix);
     
     Out.vPosition = mul(vPosition, matWVP);
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix));
     Out.vTexcoord = In.vTexcoord;    
+    Out.vWorldPos = mul(vPosition, g_WorldMatrix);
     
     return Out;
 }
@@ -57,7 +66,9 @@ VS_OUT VS_MAIN(VS_IN In)
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
+    float4 vNormal : NORMAL;
     float2 vTexcoord : TEXCOORD0;
+    float4 vWorldPos : TEXCOORD1;
 };
 
 struct PS_OUT
@@ -69,21 +80,36 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out;    
     
-    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
-    
-    if(Out.vColor.a < 0.3f)
+    vector  vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.3f)
         discard;
     
-    return Out;    
+    float4 vShade = max(dot(normalize(g_vLightDir) * -1.f, In.vNormal), 0.f) +
+        (g_vLightAmbient * g_vMtrlAmibient);
+    float4 vLook = In.vWorldPos - g_vCamPosition;
+    
+    float4 vReflect = reflect(normalize(g_vLightDir), normalize(In.vNormal));
+    
+    
+    float4 vSpecular = pow(max(dot(normalize(vLook) * -1.f, vReflect), 0.f), 50.f);
+        
+    
+    Out.vColor = g_vLightDiffuse * vMtrlDiffuse * vShade + (g_vLightSpecular * g_vMtrlSpecular) * vSpecular;
+    
+    return Out;
 }
 
 
 
+
 technique11 DefaultTechnique
-{
-   
+{   
     pass Default
     {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
         VertexShader = compile vs_5_0 VS_MAIN();        
         PixelShader = compile ps_5_0 PS_MAIN();      
     }

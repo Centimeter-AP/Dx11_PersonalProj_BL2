@@ -5,23 +5,18 @@
 
 NS_BEGIN(Engine)
 class CShader;
-class CModel;
+class CTexture;
+class CVIBuffer_Cube;
 NS_END
 
 NS_BEGIN(Client)
 
-class CMapObject final : public CGameObject
+class CSky final : public CGameObject
 {
-public:
-	typedef struct tagMapObjectDesc : public CGameObject::DESC
-	{
-		//LEVEL		eLevelID = { LEVEL::END };
-	}DESC;
-
 private:
-	CMapObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMapObject(const CMapObject& Prototype);
-	virtual ~CMapObject() = default;
+	CSky(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CSky(const CSky& Prototype);
+	virtual ~CSky() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -33,15 +28,15 @@ public:
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
-	CModel*				m_pModelCom = { nullptr };
-	//LEVEL				m_eLevelID = { LEVEL::END };
+	CTexture*			m_pTextureCom = { nullptr };
+	CVIBuffer_Cube*		m_pVIBufferCom = { nullptr };
 
 private:
-	HRESULT Ready_Components(void* pArg);
+	HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 public:
-	static CMapObject* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CSky* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 
