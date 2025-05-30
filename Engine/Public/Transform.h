@@ -22,10 +22,12 @@ protected:
 	virtual ~CTransform() = default;
 
 public:
-	_float3 Get_Scaled();
 	_vector Get_State(STATE eState) {
 		return XMLoadFloat4x4(&m_WorldMatrix).r[ENUM_CLASS(eState)];
 	}
+
+	_float3 Get_Scaled();
+
 	_matrix Get_WorldMatrix_Inverse() {
 		return XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix));
 	}
@@ -38,7 +40,9 @@ public:
 	const _float4x4* Get_WorldMatrix4x4Ptr() {
 		return &m_WorldMatrix;
 	}
-	void Set_State(STATE eState, _fvector vState){
+
+	void Set_State(STATE eState, _fvector vState)
+	{
 		XMStoreFloat4(reinterpret_cast<_float4*>(&m_WorldMatrix.m[ENUM_CLASS(eState)]), vState);
 	}
 	void Set_Matrix(_fmatrix vMatrix) {
@@ -65,10 +69,13 @@ public:
 	void Go_Backward_Hover(_float fTimeDelta);
 	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
 	void Turn(_fvector vAxis, _float fTimeDelta);
+	void Rotation(_fvector vAxis, _float fRadian);
+	void Rotation(_float fX, _float fY, _float fZ);
+
 
 public:
 	void LookAt(_fvector vAt);
-
+	
 
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);

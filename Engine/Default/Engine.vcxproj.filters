@@ -130,6 +130,24 @@
     <ClInclude Include="..\Public\Light_Manager.h">
       <Filter>01.Utility\08.Lights\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Collider.h">
+      <Filter>01.Utility\04.Components\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding.h">
+      <Filter>01.Utility\04.Components\Collider\Bounding</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_AABB.h">
+      <Filter>01.Utility\04.Components\Collider\Bounding\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cube.h">
+      <Filter>01.Utility\04.Components\VIBuffer\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\CustomFont.h">
+      <Filter>01.Utility\09.Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Font_Manager.h">
+      <Filter>01.Utility\09.Fonts\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -242,6 +260,24 @@
     </ClCompile>
     <ClCompile Include="..\Private\Light_Manager.cpp">
       <Filter>01.Utility\08.Lights\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding.cpp">
+      <Filter>01.Utility\04.Components\Collider\Bounding</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider.cpp">
+      <Filter>01.Utility\04.Components\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_AABB.cpp">
+      <Filter>01.Utility\04.Components\Collider\Bounding\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cube.cpp">
+      <Filter>01.Utility\04.Components\VIBuffer\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Font_Manager.cpp">
+      <Filter>01.Utility\09.Fonts\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomFont.cpp">
+      <Filter>01.Utility\09.Fonts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +409,30 @@
     </Filter>
     <Filter Include="01.Utility\08.Lights\Manager">
       <UniqueIdentifier>{6fa2e639-a6e8-453b-b0c5-f2cbe4315304}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Collider">
+      <UniqueIdentifier>{1bdb67f7-0c91-4e0c-9d01-9cf48974386f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Collider\Bounding">
+      <UniqueIdentifier>{30f66555-7406-42f6-97a9-77ec4de37ffd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Collider\Bounding\AABB">
+      <UniqueIdentifier>{f5fbde61-d464-4e0a-8fa3-38c297537a9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Collider\Bounding\OBB">
+      <UniqueIdentifier>{6827e8b2-51f2-465d-bd37-8f3364bdd92e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Collider\Bounding\Sphere">
+      <UniqueIdentifier>{ebc440ff-bcf1-4681-b16f-016f0aa51065}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\VIBuffer\Cube">
+      <UniqueIdentifier>{f4ad1e6e-a758-4c3e-941f-6eced46e5f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.Fonts">
+      <UniqueIdentifier>{3b5eb137-65de-4500-91e4-746db94b9f91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\09.Fonts\Manager">
+      <UniqueIdentifier>{25a57a93-07c9-4ad5-8d0c-fcba56e79178}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

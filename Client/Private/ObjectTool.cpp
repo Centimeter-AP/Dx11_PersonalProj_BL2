@@ -229,8 +229,8 @@ HRESULT CObjectTool::Render_ObjectTool()
 			ObjectTag = L"MapObject";
 		mDesc.fRotationPerSec = 0.f;
 		mDesc.fSpeedPerSec = 0.f;
-		mDesc.m_pParentMatrix = {};
-		mDesc.m_pParentObject = nullptr;
+		mDesc.pParentMatrix = {};
+		mDesc.pParentObject = nullptr;
 		mDesc.szName = ObjectTag.data();
 		mDesc.strVIBufferTag = m_ModelNames[item_selected_idx];
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
@@ -569,8 +569,8 @@ HRESULT CObjectTool::Load_Objects(path SavePath)
 		CGameObject::DESC mDesc;
 		mDesc.fRotationPerSec = 0.f;
 		mDesc.fSpeedPerSec = 0.f;
-		mDesc.m_pParentMatrix = {};
-		mDesc.m_pParentObject = nullptr;
+		mDesc.pParentMatrix = {};
+		mDesc.pParentObject = nullptr;
 		mDesc.szName = ObjectName;
 		mDesc.strVIBufferTag = ObjectModelName;
 		mDesc.bHasPreset = true;
