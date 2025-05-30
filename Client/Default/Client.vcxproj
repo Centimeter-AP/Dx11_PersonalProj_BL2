@@ -184,7 +184,6 @@
     <ClInclude Include="..\public\PlayerWeapon.h" />
     <ClInclude Include="..\public\State.h" />
     <ClInclude Include="..\Public\Terrain.h" />
-    <ClInclude Include="..\public\TerrainBrush.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
     <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="Client.h" />
@@ -238,7 +237,6 @@
     <ClCompile Include="..\Private\PlayerState_Sprint.cpp" />
     <ClCompile Include="..\private\PlayerWeapon.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
-    <ClCompile Include="..\private\TerrainBrush.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />

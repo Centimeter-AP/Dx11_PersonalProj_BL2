@@ -50,6 +50,14 @@ void CLayer::Priority_Update(_float fTimeDelta)
 		
 }
 
+void CLayer::Clear()
+{
+	for (auto& pGameObject : m_GameObjects)
+		Safe_Release(pGameObject);
+
+	m_GameObjects.clear();
+}
+
 void CLayer::Update(_float fTimeDelta)
 {
 	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end(); )

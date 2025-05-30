@@ -31,7 +31,7 @@ HRESULT CCamera_Tool::Initialize(void* pArg)
 	Desc.fSpeedPerSec = 10.0f;
 	lstrcpy(Desc.szName, TEXT("Camera"));
 
-	m_fSensor = 0.01f;
+	m_fSensor = 0.1f;
 	m_isUsing = true;
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;

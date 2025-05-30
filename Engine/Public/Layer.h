@@ -17,15 +17,18 @@ public:
 
 public:
 	HRESULT Add_GameObject(class CGameObject* pGameObject);
-	CGameObject* Find_Object(_uint iVectorIndex);
 	void Priority_Update(_float fTimeDelta);
 	void Update(_float fTimeDelta);
 	void Late_Update(_float fTimeDelta);
 
+	CGameObject* Find_Object(_uint iVectorIndex);
 	list<CGameObject*>& Get_LayerObjectLists() { return m_GameObjects; }
 
 private:
 	list<CGameObject*>			m_GameObjects;
+
+public:
+	void Clear();
 
 public:
 	static CLayer* Create();

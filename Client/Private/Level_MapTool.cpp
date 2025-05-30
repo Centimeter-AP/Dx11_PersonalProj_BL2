@@ -17,8 +17,8 @@ CLevel_MapTool::CLevel_MapTool(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 HRESULT CLevel_MapTool::Initialize()
 {
-    //if (FAILED(Ready_Lights()))
-        //return E_FAIL;
+    if (FAILED(Ready_Lights()))
+        return E_FAIL;
 
     if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
         return E_FAIL;
@@ -263,6 +263,17 @@ HRESULT CLevel_MapTool::Show_ExternWindows()
 
 HRESULT CLevel_MapTool::Ready_Lights()
 {
+    LIGHT_DESC			LightDesc{};
+
+    LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+    LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+    LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+    LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
+    LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+
+    if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+        return E_FAIL;
+
     return S_OK;
 }
     

@@ -21,8 +21,10 @@ public:
 
 private:
 	HRESULT Render_TerrainTool();
-	void Terrian_HeightEditor();
-	void Terrian_ObjectEditor();
+	void Terrain_HeightEditor();
+
+	void Terrain_Save();
+	void Terrain_Load();
 
 private:
 	void Height_Update(_float fTimeDelta);
@@ -37,6 +39,9 @@ private:
 
 	_bool	m_bBrushEnable = {false};
 	_bool	m_bEnablePicking = { true };
+
+	_bool	m_bSave = { false };
+	_bool	m_bLoad = { false };
 
 public:
 	static CTerrainTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

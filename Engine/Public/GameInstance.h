@@ -35,6 +35,10 @@ public:
 #pragma region PROTOTYPE_MANAGER
 	HRESULT Add_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, class CBase* pPrototype);
 	CBase* Clone_Prototype(PROTOTYPE ePrototypeType, _uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, void* pArg = nullptr);
+	// 프로토타입 삭제
+	HRESULT Delete_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag);
+	// 프로토타입 이미 있었다면 삭제 후 재생성
+	HRESULT Replace_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, class CBase* pPrototype);
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
@@ -44,6 +48,8 @@ public:
 	class CGameObject* Find_Object(_uint iLevelIndex, const _wstring& strLayerTag, _uint iVectorIndex = 0);
 	/* 매개변수에 맞는 레이어를 찾아서 반환. */
 	class CLayer* Find_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
+	// 레이어 내 오브젝트 강제 철거 
+	void Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
 #pragma endregion
 
 #pragma region RENDERER
@@ -85,6 +91,11 @@ public:
 	CGameObject* Pick_Object_In_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _float3& fPickedPos);
 	#pragma endregion
 
+#pragma region LIGHT_MANAGER
+	const LIGHT_DESC* Get_Light(_uint iIndex);
+	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+#pragma endregion
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
@@ -95,6 +106,7 @@ private:
 	class CInput_Device*		m_pInput_Device = { nullptr };
 	class CPicking_Manager*		m_pPicking_Manager = { nullptr };
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
+	class CLight_Manager* m_pLight_Manager = { nullptr };
 
 public:
 	void Release_Engine();

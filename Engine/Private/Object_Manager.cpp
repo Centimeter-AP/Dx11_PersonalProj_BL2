@@ -108,6 +108,14 @@ CGameObject* CObject_Manager::Find_Object(_uint iLevelIndex, const _wstring& str
 	return Layer->Find_Object(iVectorIndex);
 }
 
+void CObject_Manager::Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
+{
+	auto Layer = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == Layer)
+		return ;
+	Layer->Clear();
+}
+
 
 CObject_Manager* CObject_Manager::Create(_uint iNumLevels)
 {

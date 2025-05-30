@@ -57,6 +57,12 @@ HRESULT CObjectTool::Render()
 			return E_FAIL;
 	}
 
+	if (m_pWindowData->ShowSaveMenu)
+	{
+		if (FAILED(Open_SaveFile()))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -111,7 +117,7 @@ void CObjectTool::Key_Input()
 			m_pWindowData->ShowSaveMenu = true;
 		}
 
-		if (KEY_DOWN(DIK_S))
+		if (KEY_DOWN(DIK_O))
 		{
 			m_pWindowData->ShowLoadMenu = true;
 		}
@@ -399,7 +405,7 @@ HRESULT CObjectTool::Open_SaveFile()
 
 	IGFD::FileDialogConfig config;
 	config.path = R"(..\Bin\Resources\Map\)";
-	config.flags = ImGuiFileDialogFlags_ConfirmOverwrite | (ImGuiFileDialogFlags_ReadOnlyFileNameField == false);
+	//config.flags = ImGuiFileDialogFlags_ConfirmOverwrite;
 
 	IFILEDIALOG->OpenDialog("SaveMapDialog", "Choose directory to save", ".map", config);
 
@@ -415,7 +421,7 @@ HRESULT CObjectTool::Open_SaveFile()
 
 			Save_Objects(savePath); // 직접 작성한 저장 함수
 		}
-
+		m_pWindowData->ShowSaveMenu = false;
 		IFILEDIALOG->Close();
 	}
 
@@ -441,7 +447,11 @@ HRESULT CObjectTool::Autosave()
 
 HRESULT CObjectTool::Save_Objects(path SavePath)
 {
-	ofstream ofs(SavePath, ios::binary);
+	ofstream ofs(SavePath);
+	json jSave;
+
+	ofs << setw(4) << jSave;
+	ofs.close();
 
 	auto pLayer = m_pGameInstance->Find_Layer(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_MapObject");
 
@@ -452,6 +462,12 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 	for (auto Object : Objects)
 	{
 		_tchar* ObjectName = Object->Get_Name();
+		_wstring ObjectModelName = Object->Get_VIBufferTag();
+		_matrix objWorldMat = Object->Get_Transform()->Get_WorldMatrix();
+		_vector objScale = {};
+		_vector objRotation = {};
+		_vector objTranslation = {};
+		XMMatrixDecompose(&objScale, &objRotation, &objTranslation, objWorldMat);
 		//_uint ObjectNameSize = ;
 		//ofs.write(reinterpret_cast<const char*>(&ObjectNameSize), sizeof(_uint)); // 한 레이어에 오브젝트 몇 갠지 저장
 		

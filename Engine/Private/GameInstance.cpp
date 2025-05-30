@@ -5,6 +5,7 @@
 #include "PipeLine.h"
 #include "Input_Device.h"
 #include "Level_Manager.h"
+#include "Light_Manager.h"
 #include "Timer_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
@@ -61,6 +62,11 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	m_pPicking_Manager = CPicking_Manager::Create(*ppDeviceOut, *ppContextOut, EngineDesc.hWnd);
 	if (nullptr == m_pPicking_Manager)
 		return E_FAIL;
+
+	m_pLight_Manager = CLight_Manager::Create();
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
 
 
 
@@ -156,6 +162,14 @@ CBase* CGameInstance::Clone_Prototype(PROTOTYPE ePrototypeType, _uint iPrototype
 {
 	return m_pPrototype_Manager->Clone_Prototype(ePrototypeType, iPrototypeLevelIndex, strPrototypeTag, pArg);
 }
+HRESULT CGameInstance::Delete_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag)
+{
+	return m_pPrototype_Manager->Delete_Prototype(iPrototypeLevelIndex, strPrototypeTag);
+}
+HRESULT CGameInstance::Replace_Prototype(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, CBase* pPrototype)
+{
+	return m_pPrototype_Manager->Replace_Prototype(iPrototypeLevelIndex, strPrototypeTag, pPrototype);
+}
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
@@ -177,6 +191,11 @@ CGameObject* CGameInstance::Find_Object(_uint iLevelIndex, const _wstring& strLa
 CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
 {
 	return m_pObject_Manager->Find_Layer(iLevelIndex, strLayerTag);
+}
+
+void CGameInstance::Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
+{
+	m_pObject_Manager->Clear_Layer(iLevelIndex, strLayerTag);
 }
 
 #pragma endregion
@@ -317,6 +336,21 @@ CGameObject* CGameInstance::Pick_Object_In_Layer(_uint iLevelIndex, const _wstri
 //
 #pragma endregion
 
+#pragma region LIGHT_MANAGER
+
+const LIGHT_DESC* CGameInstance::Get_Light(_uint iIndex)
+{
+	return m_pLight_Manager->Get_Light(iIndex);
+}
+
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+{
+	return m_pLight_Manager->Add_Light(LightDesc);
+}
+
+#pragma endregion
+
+
 void CGameInstance::Release_Engine()
 {
 	Safe_Release(m_pPicking_Manager);
@@ -337,6 +371,7 @@ void CGameInstance::Release_Engine()
 
 	Safe_Release(m_pGraphic_Device);
 
+	Safe_Release(m_pLight_Manager);
 	//Destroy_Instance();
 }
 

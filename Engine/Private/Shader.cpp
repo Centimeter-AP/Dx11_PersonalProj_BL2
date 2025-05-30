@@ -6,7 +6,7 @@ CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CShader::CShader(const CShader& Prototype)
-	: CComponent{ Prototype }
+	: CComponent( Prototype )
 	, m_pEffect { Prototype.m_pEffect }
 	, m_InputLayouts { Prototype.m_InputLayouts }
 {
@@ -79,6 +79,16 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	/* Apply() 이전에 쉐이더에 전달해야할 모든 데이터들을 다 전달해놔야한다. */
 	return pPass->Apply(0, m_pContext);
 }
+
+HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _uint iLength)
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+	return pVariable->SetRawValue(pData, 0, iLength);
+}
+
 
 HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix)
 {

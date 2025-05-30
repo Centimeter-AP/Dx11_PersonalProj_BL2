@@ -99,17 +99,17 @@ HRESULT CTerrainTool::Render_TerrainTool()
 
 	/************************Terrain Height Edit************************/
 	SeparatorText("Terrain Height Edit");
-	Terrian_HeightEditor();
+	Terrain_HeightEditor();
 
 	SeparatorText("Terrain Object Edit");
-	Terrian_ObjectEditor();
+	Terrain_Save();
 
 
 	End();
 	return S_OK;
 }
 
-void CTerrainTool::Terrian_HeightEditor()
+void CTerrainTool::Terrain_HeightEditor()
 {
 	Text("Mouse Pos on Terrain");
 	Text("(%.2f, %.2f, %.2f)", m_fPickedPos.x, m_fPickedPos.y, m_fPickedPos.z);
@@ -137,7 +137,7 @@ void CTerrainTool::Terrian_HeightEditor()
 	}
 }
 
-void CTerrainTool::Terrian_ObjectEditor()
+void CTerrainTool::Terrain_Save()
 {
 
 

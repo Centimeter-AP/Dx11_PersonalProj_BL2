@@ -67,6 +67,24 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC		Elements[iNumElements];
 	}VTXANIMMESH;
 
+
+	typedef struct tagLightDesc
+	{
+		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_END };
+
+		TYPE				eType;
+		XMFLOAT4			vDirection;
+		XMFLOAT4			vPosition;
+		float				fRange;
+
+		XMFLOAT4			vDiffuse;
+		XMFLOAT4			vAmbient;
+		XMFLOAT4			vSpecular;
+	}LIGHT_DESC;
+
+	/* 화면에 그려야하는 최종적인 색 = Light.Diffuse * 재질.Diffuse */
+
+
 #pragma region Model_Binary
 
 	typedef struct tagBoneData

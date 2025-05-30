@@ -99,17 +99,24 @@ HRESULT CTerrainTool::Render_TerrainTool()
 
 	/************************Terrain Height Edit************************/
 	SeparatorText("Terrain Height Edit");
-	Terrian_HeightEditor();
+	Terrain_HeightEditor();
 
-	SeparatorText("Terrain Object Edit");
-	Terrian_ObjectEditor();
-
+	/************************Terrain Save************************/
+	SeparatorText("Save Terrain");
+	if (Button("Save Terrain"))
+		m_bSave = true;
+	if (Button("Load Terrain"))
+		m_bLoad = true;
+	if (m_bSave)
+		Terrain_Save();
+	if (m_bLoad)
+		Terrain_Load();
 
 	End();
 	return S_OK;
 }
 
-void CTerrainTool::Terrian_HeightEditor()
+void CTerrainTool::Terrain_HeightEditor()
 {
 	Checkbox("Enable_Picking", &m_bEnablePicking);
 	Text("Mouse Pos on Terrain");
@@ -138,11 +145,91 @@ void CTerrainTool::Terrian_HeightEditor()
 	}
 }
 
-void CTerrainTool::Terrian_ObjectEditor()
+void CTerrainTool::Terrain_Save()
 {
+	path savePath = R"(..\Bin\Resources\Map\)";
+
+	IGFD::FileDialogConfig config;
+	config.path = R"(..\Bin\Resources\Map\)";
+	config.flags = ImGuiFileDialogFlags_ConfirmOverwrite;
+
+	IFILEDIALOG->OpenDialog("SaveMapDialog", "Choose directory to save", ".ter", config);
+
+	if (IFILEDIALOG->Display("SaveMapDialog"))
+	{
+		if (IFILEDIALOG->IsOk())
+		{
+			// Terrain 찾기
+			auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), 0));
+			if (nullptr == pTerrain)
+				return;
+
+			// 버텍스와 인덱스 정보 가져오기
+			auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
+			if (nullptr == pVIBuffer)
+				return;
+
+			path savePath = IFILEDIALOG->GetFilePathName();
+
+			// 확장자가 없으면 .map 붙이기
+			if (savePath.extension().string() != ".ter")
+				savePath += ".ter";
 
 
+			pVIBuffer->Save_Terrain(_wstring(savePath)); // 직접 작성한 저장 함수
+		}
+		m_bSave = false;
+		IFILEDIALOG->Close();
+	}
+
+	return ;
 }
+
+void CTerrainTool::Terrain_Load()
+{
+	path savePath = R"(..\Bin\Resources\Map\)";
+
+	IGFD::FileDialogConfig config;
+	config.path = R"(..\Bin\Resources\Map\)";
+
+	IFILEDIALOG->OpenDialog("SaveMapDialog", "Choose File to Load", ".ter", config);
+
+	if (IFILEDIALOG->Display("SaveMapDialog"))
+	{
+		if (IFILEDIALOG->IsOk())
+		{
+			path savePath = IFILEDIALOG->GetFilePathName();
+
+			// 확장자가 없으면 .map 붙이기
+			if (savePath.extension().string() != ".ter")
+				savePath += ".ter";
+
+			/* 프로토타입 */
+			if (FAILED(m_pGameInstance->Replace_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_VIBuffer_Terrain_Toolver"),
+				CVIBuffer_Terrain::Create(m_pDevice, m_pContext, savePath, true))))
+			{
+				ImGui::End();
+				return ;
+			}
+			m_pGameInstance->Clear_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"));
+			CTerrain::DESC desc{};
+			desc.eLevelID = LEVEL::MAPTOOL;
+			desc.isToolver = true;
+			/* 생성 */
+			if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Terrain"),
+				ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), &desc)))
+			{
+				ImGui::End();
+				return ;
+			}
+		}
+		m_bLoad = false;
+		IFILEDIALOG->Close();
+	}
+
+	return;
+}
+
 
 void CTerrainTool::Height_Update(_float fTimeDelta)
 {

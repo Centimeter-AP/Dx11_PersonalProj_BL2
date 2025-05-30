@@ -95,7 +95,7 @@
       <Filter>01.Utility\04.Components\Model\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Picking_Manager.h">
-      <Filter>01.Utility\07. Picking</Filter>
+      <Filter>01.Utility\07.Picking</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Material.h">
       <Filter>01.Utility\04.Components\Model\Material</Filter>
@@ -123,6 +123,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\PartObject.h">
       <Filter>01.Utility\03.GameObject\ContainerObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light.h">
+      <Filter>01.Utility\08.Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Light_Manager.h">
+      <Filter>01.Utility\08.Lights\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -205,7 +211,7 @@
       <Filter>01.Utility\04.Components\Model\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Picking_Manager.cpp">
-      <Filter>01.Utility\07. Picking</Filter>
+      <Filter>01.Utility\07.Picking</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Material.cpp">
       <Filter>01.Utility\04.Components\Model\Material</Filter>
@@ -230,6 +236,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\PartObject.cpp">
       <Filter>01.Utility\03.GameObject\ContainerObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light.cpp">
+      <Filter>01.Utility\08.Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Light_Manager.cpp">
+      <Filter>01.Utility\08.Lights\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -335,9 +347,6 @@
     <Filter Include="01.Utility\04.Components\Model\Mesh">
       <UniqueIdentifier>{233b9d61-cc20-48a6-b2dd-37fae0752e20}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\07. Picking">
-      <UniqueIdentifier>{20cf2035-6bd3-4ccb-879e-a108376bf629}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\04.Components\Model\Material">
       <UniqueIdentifier>{0ce22f03-ae2e-4b8b-a201-be9d0df5d140}</UniqueIdentifier>
     </Filter>
@@ -355,6 +364,15 @@
     </Filter>
     <Filter Include="01.Utility\04.Components\Model\Animation\Manager">
       <UniqueIdentifier>{dd1b4392-2c0f-4596-95d6-d5cc91ec59dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\08.Lights">
+      <UniqueIdentifier>{4b822794-ea1c-4b63-a62f-123cf00a880a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\07.Picking">
+      <UniqueIdentifier>{20cf2035-6bd3-4ccb-879e-a108376bf629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\08.Lights\Manager">
+      <UniqueIdentifier>{6fa2e639-a6e8-453b-b0c5-f2cbe4315304}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

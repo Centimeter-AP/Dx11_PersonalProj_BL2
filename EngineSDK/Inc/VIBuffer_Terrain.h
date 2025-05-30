@@ -20,8 +20,10 @@ private:
 
 public:
 	virtual HRESULT Initialize_Prototype(_uint iNumVerticesX, _uint iNumVerticesZ);
-	virtual HRESULT Initialize_Prototype(const _tchar* pHeightMapFilePath);
+	virtual HRESULT Initialize_Prototype(const _wstring& BinaryFilePath, _bool isParsing);
 	virtual HRESULT Initialize(void* pArg);
+
+	HRESULT Save_Terrain(const _wstring& filePath);
 
 	_float Get_Height(_float x, _float z);
 	
@@ -31,7 +33,6 @@ public:
 	void Update_VertexBuffer();
 
 	HRESULT Update_VertexBuffer_PositionAnd_Normal();
-
 	void Apply_Brush(const _float3& vPickedPos, float fRadius, float fPower, float fDeltaTime);
 
 public:
@@ -43,7 +44,7 @@ private:
 	_uint			m_iNumVerticesZ = {};
 public:
 	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, _uint iNumVerticesX, _uint iNumVerticesZ);
-	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pHeightMapFilePath);
+	static CVIBuffer_Terrain* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _wstring& BinaryFilePath, _bool isParsing = true);
 	virtual CComponent* Clone(void* pArg) override;
 	virtual void Free() override;
 

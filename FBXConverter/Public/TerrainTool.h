@@ -21,8 +21,8 @@ public:
 
 private:
 	HRESULT Render_TerrainTool();
-	void Terrian_HeightEditor();
-	void Terrian_ObjectEditor();
+	void Terrain_HeightEditor();
+	void Terrain_Save();
 
 private:
 	void Height_Update(_float fTimeDelta);
