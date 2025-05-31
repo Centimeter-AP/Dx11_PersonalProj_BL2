@@ -28,6 +28,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_MapObject(TEXT("Layer_MapObject"))))
 		return E_FAIL;
+	ShowCursor(FALSE);
 
 	return S_OK;
 }

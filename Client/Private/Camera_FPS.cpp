@@ -56,6 +56,7 @@ void CCamera_FPS::Priority_Update(_float fTimeDelta)
 	if (!m_isUsing)
 		return;
 
+	Mouse_Fix();
 	// 월드 행렬 적용 (원래 셰이더에서 월드 곱해주기때문에 지금은 로컬상태임)
 	_matrix matWorld = m_pPlayerTransform->Get_WorldMatrix();
 	_matrix matFinal = XMLoadFloat4x4(m_pPlayerModel->Get_CombinedTransformationMatrix(m_iBoneIndex)) * matWorld;
@@ -72,8 +73,10 @@ void CCamera_FPS::Priority_Update(_float fTimeDelta)
 
 	m_pTransformCom->Set_State(STATE::POSITION, vEye);
 	m_pTransformCom->LookAt(XMVectorSetW(vAtVec, 1.f));
-	static _float consoleTicker = {};
+
+
 #ifdef _CONSOLE
+	static _float consoleTicker = {};
 	consoleTicker += fTimeDelta;
 	if (consoleTicker >= 1.f)
 	{
@@ -83,8 +86,6 @@ void CCamera_FPS::Priority_Update(_float fTimeDelta)
 		consoleTicker = 0.f;
 	}
 #endif // _CONSOLE
-
-
 
 	__super::Bind_Matrices();
 }
@@ -165,6 +166,14 @@ HRESULT CCamera_FPS::Set_PlayerBone()
 	m_iBoneIndex = m_pPlayerModel->Find_BoneIndex(m_szPlayerCameraBoneName.c_str());
 	if (m_iBoneIndex <= 0) return E_FAIL;
 	return S_OK;
+}
+
+void CCamera_FPS::Mouse_Fix()
+{
+	POINT		ptMouse{ g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
+
+	ClientToScreen(g_hWnd, &ptMouse);
+	SetCursorPos(ptMouse.x, ptMouse.y);
 }
 
 CCamera_FPS* CCamera_FPS::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

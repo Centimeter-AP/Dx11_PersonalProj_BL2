@@ -191,8 +191,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	//	CModel::Create(m_pDevice, m_pContext, MODEL::ANIM, "../Bin/Resources/Textures_BL2/Terrain/Frost/Mushroom.fbx", PreTransformMatrix))))
 	//	return E_FAIL;
 
-	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(-90.f))*
-							XMMatrixTranslation(0.f, -50.f, 0.f);
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Siren_Hand"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,

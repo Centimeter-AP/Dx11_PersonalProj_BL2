@@ -44,7 +44,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PlayerStates()))
 		return E_FAIL;
 
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 20.f, 0.f, 1.f));
 	
 	m_pModelCom->Set_Animation(Idle, true, 0.2f);
 
