@@ -13,6 +13,12 @@ void CPlayerState_Jump::Execute(_float fTimeDelta)
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle);
 	}
+	if (KEY_DOWN(DIK_R))
+	{
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);
+		static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AssaultRifle"))->second)->Set_State(CAssaultRifle::STATE_Reload);
+		return;
+	}
 }
 
 void CPlayerState_Jump::Exit()

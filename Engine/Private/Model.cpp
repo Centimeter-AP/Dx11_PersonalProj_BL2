@@ -97,21 +97,6 @@ HRESULT CModel::Render(_uint iMeshIndex)
 
 _bool CModel::Play_Animation(_float fTimeDelta)
 {
-
-	
-	//m_pAnimMgr->ApplyToBones(XMLoadFloat4x4(&m_PreTransformMatrix));
-	//_bool		isFinished = { false };
-	///* 1. 현재 애니메이션에 맞는 뼈의 상태를 읽어와서 뼈의 TrnasformationMatrix를 갱신해준다. */
-	//isFinished  = m_Animations[m_iCurrentAnimIndex]->Update_Bones(fTimeDelta, m_Bones, m_isLoop);
-
-	///* 2. 전체 뼐르 순회하면서 뼈들의 ColmbinedTransformationMatixf를 부모에서부터 자식으로 갱신해주낟. */
-	//for (auto& pBone : m_Bones)
-	//{
-	//	pBone->Update_CombinedTransformationMatrix(m_Bones, XMLoadFloat4x4(&m_PreTransformMatrix));
-	//}
-
-	/*XMMatrixDecompose()*/
-
 	return m_pAnimMgr->Update(fTimeDelta, XMLoadFloat4x4(&m_PreTransformMatrix));
 }
 

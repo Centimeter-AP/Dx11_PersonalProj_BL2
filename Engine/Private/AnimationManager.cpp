@@ -15,6 +15,7 @@ void CAnimationManager::SetAnimation(_uint iAnimIndex, _bool isLoop, _float fBle
     if (iAnimIndex >= m_pAnims->size())
         return;
 
+
     if (fBlendDuration > 0.f && m_pCurrentAnim)
     {
         m_pNextAnim = (*m_pAnims)[iAnimIndex];

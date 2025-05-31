@@ -294,11 +294,12 @@ HRESULT CPlayer::Ready_PlayerStates()
 	m_pStates[PLA_STATE::STATE_Run_R]				= new CPlayerState_Run_R(this);
 	m_pStates[PLA_STATE::STATE_Sprint]				= new CPlayerState_Sprint(this);
 	m_pStates[PLA_STATE::STATE_Jump]				= new CPlayerState_Jump(this);
-	//m_pStates[PLA_STATE::STATE_Fire]				= new CPlayerState_Fire(this);
+	m_pStates[PLA_STATE::STATE_Fire]				= new CPlayerState_Fire(this);
 	m_pStates[PLA_STATE::STATE_Reload]				= new CPlayerState_Reload(this);
-	//m_pStates[PLA_STATE::STATE_ChangeWeapon]		= new CPlayerState_ChangeWeapon(this);
-	//m_pStates[PLA_STATE::STATE_ThrowGrenade]		= new CPlayerState_ThrowGrenade(this);
-	//m_pStates[PLA_STATE::STATE_Skill_PhaseLock]		= new CPlayerState_Skill_PhaseLock(this);
+	m_pStates[PLA_STATE::STATE_CloseAttack]			= new CPlayerState_CloseAttack(this);
+	m_pStates[PLA_STATE::STATE_ChangeWeapon]		= new CPlayerState_ChangeWeapon(this);
+	m_pStates[PLA_STATE::STATE_ThrowGrenade]		= new CPlayerState_ThrowGrenade(this);
+	m_pStates[PLA_STATE::STATE_Skill_PhaseLock]		= new CPlayerState_Skill_PhaseLock(this);
 
 	m_pCurState = m_pStates[PLA_STATE::STATE_Idle];
 

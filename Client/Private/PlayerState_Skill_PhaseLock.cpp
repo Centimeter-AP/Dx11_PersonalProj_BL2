@@ -1,15 +1,12 @@
 #include "PlayerState.h"
 #include "Model.h"
 
-
-
-void CPlayerState_Reload::Enter()
+void CPlayerState_Skill_PhaseLock::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::R_Jakobs, false);
-	static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AssaultRifle"))->second)->Set_State(CAssaultRifle::STATE_Reload);
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::Idle, false); // 애니메이션을 추가해야돼!! 
 }
 
-void CPlayerState_Reload::Execute(_float fTimeDelta)
+void CPlayerState_Skill_PhaseLock::Execute(_float fTimeDelta)
 {
 	if (KEY_PRESSING(DIK_W))
 	{
@@ -33,6 +30,6 @@ void CPlayerState_Reload::Execute(_float fTimeDelta)
 	}
 }
 
-void CPlayerState_Reload::Exit()
+void CPlayerState_Skill_PhaseLock::Exit()
 {
 }

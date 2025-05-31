@@ -28,11 +28,18 @@ void CPlayerState_Idle::Execute(_float fTimeDelta)
 
 	if (KEY_DOWN(DIK_R))
 	{
-		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload); 
-		static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AssaultRifle"))->second)->Set_State(CAssaultRifle::STATE_Reload);
-		return;
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload); return;
+	}
+	if (KEY_DOWN(DIK_G))
+	{
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_ThrowGrenade); return;
 	}
 
+	/* 총 쏘는 애니메이션 쓸 수 있게 만들어 보던가 수동 반동 만들던가.. */
+	//if (KEY_DOWN(DIK_F))
+	//{
+	//	m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Fire); return;
+	//}
 }
 
 void CPlayerState_Idle::Exit()

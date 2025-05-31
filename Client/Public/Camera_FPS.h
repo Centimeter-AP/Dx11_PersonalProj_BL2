@@ -33,7 +33,7 @@ public:
 private:
 	HRESULT Set_PlayerBone();
 	void Mouse_Fix();
-
+	void Update_Camera();
 
 private:
 	_float				m_fSensor{};

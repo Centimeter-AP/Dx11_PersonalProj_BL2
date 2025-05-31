@@ -432,6 +432,21 @@
     <ClCompile Include="..\Private\Sky.cpp">
       <Filter>02.GameObjects\08. Sky</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Fire.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_ThronwGrenade.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Skill_PhaseLock.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_ChangeWeapon.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_CloseAttack.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

@@ -52,6 +52,12 @@ void CPlayerState_Run::Execute(_float fTimeDelta)
 	if (KEY_PRESSING(DIK_S)){
 		m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta);
 	}
+
+	if (KEY_DOWN(DIK_R))
+	{
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);
+		return;
+	}
 }
 
 void CPlayerState_Run::Exit()

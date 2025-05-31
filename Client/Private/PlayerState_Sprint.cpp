@@ -31,6 +31,11 @@ void CPlayerState_Sprint::Execute(_float fTimeDelta)
 			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle);
 		}
 	}
+	if (KEY_DOWN(DIK_R))
+	{
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);
+		return;
+	}
 }
 
 void CPlayerState_Sprint::Exit()

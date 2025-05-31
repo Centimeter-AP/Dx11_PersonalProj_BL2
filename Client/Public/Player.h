@@ -26,7 +26,8 @@ public:
 	};
 
 	enum PLA_STATE {
-		STATE_Idle, STATE_Run, STATE_Run_L, STATE_Run_R, STATE_Sprint, STATE_Jump, STATE_Fire, STATE_Reload, STATE_ChangeWeapon, STATE_ThrowGrenade, STATE_Skill_PhaseLock, STATE_END
+		STATE_Idle, STATE_Run, STATE_Run_L, STATE_Run_R, STATE_Sprint, STATE_Jump, STATE_Fire, STATE_Reload, STATE_ChangeWeapon, STATE_ThrowGrenade, STATE_Skill_PhaseLock,
+		STATE_CloseAttack, STATE_END
 	};
 
 #pragma region MyFriendMyState
@@ -39,6 +40,7 @@ public:
 	friend class CPlayerState_Jump;
 	friend class CPlayerState_Fire;
 	friend class CPlayerState_Reload;
+	friend class CPlayerState_CloseAttack;
 	friend class CPlayerState_ChangeWeapon;
 	friend class CPlayerState_ThrowGrenade;
 	friend class CPlayerState_Skill_PhaseLock;

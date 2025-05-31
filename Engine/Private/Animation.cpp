@@ -83,7 +83,7 @@ _bool CAnimation::Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _
 	{
 		if (false == isLoop)
 		{
-			m_fCurrentTrackPosition = m_fDuration;
+			Reset();
 			return true;
 		}		
 		

@@ -3,13 +3,12 @@
 
 
 
-void CPlayerState_Reload::Enter()
+void CPlayerState_ThrowGrenade::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::R_Jakobs, false);
-	static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AssaultRifle"))->second)->Set_State(CAssaultRifle::STATE_Reload);
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::Grenade_throw, false);
 }
 
-void CPlayerState_Reload::Execute(_float fTimeDelta)
+void CPlayerState_ThrowGrenade::Execute(_float fTimeDelta)
 {
 	if (KEY_PRESSING(DIK_W))
 	{
@@ -33,6 +32,6 @@ void CPlayerState_Reload::Execute(_float fTimeDelta)
 	}
 }
 
-void CPlayerState_Reload::Exit()
+void CPlayerState_ThrowGrenade::Exit()
 {
 }

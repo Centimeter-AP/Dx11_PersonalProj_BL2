@@ -109,7 +109,7 @@ public:
 	virtual void Exit() override;
 	virtual void Free() override { __super::Free(); }
 private:
-	const _float m_fSpeedMultiplier = { 1.3f };
+	const _float m_fSpeedMultiplier = { 2.f };
 };
 
 class CPlayerState_Jump final : public CPlayerState
@@ -129,21 +129,21 @@ private:
 	_bool	m_isJumping = { false };
 };
 
-//class CPlayerState_Fire final : public CPlayerState
-//{
-//public:
-//	CPlayerState_Fire(class CPlayer* pOwner)
-//		: CPlayerState(pOwner) {
-//	}
-//	virtual ~CPlayerState_Fire() = default;
-//
-//public:
-//	virtual void Enter() override;
-//	virtual void Execute(_float fTimeDelta) override;
-//	virtual void Exit() override;
-//	virtual void Free() override { __super::Free(); }
-//};
-//
+class CPlayerState_Fire final : public CPlayerState
+{
+public:
+	CPlayerState_Fire(class CPlayer* pOwner)
+		: CPlayerState(pOwner) {
+	}
+	virtual ~CPlayerState_Fire() = default;
+
+public:
+	virtual void Enter() override;
+	virtual void Execute(_float fTimeDelta) override;
+	virtual void Exit() override;
+	virtual void Free() override { __super::Free(); }
+};
+
 class CPlayerState_Reload final : public CPlayerState
 {
 public:
@@ -159,50 +159,65 @@ public:
 	virtual void Free() override { __super::Free(); }
 };
 
-//class CPlayerState_ChangeWeapon final : public CPlayerState
-//{
-//public:
-//	CPlayerState_ChangeWeapon(class CPlayer* pOwner)
-//		: CPlayerState(pOwner) {
-//	}
-//	virtual ~CPlayerState_ChangeWeapon() = default;
-//
-//public:
-//	virtual void Enter() override;
-//	virtual void Execute(_float fTimeDelta) override;
-//	virtual void Exit() override;
-//	virtual void Free() override { __super::Free(); }
-//};
-//
-//class CPlayerState_ThrowGrenade final : public CPlayerState
-//{
-//public:
-//	CPlayerState_ThrowGrenade(class CPlayer* pOwner)
-//		: CPlayerState(pOwner) {
-//	}
-//	virtual ~CPlayerState_ThrowGrenade() = default;
-//
-//public:
-//	virtual void Enter() override;
-//	virtual void Execute(_float fTimeDelta) override;
-//	virtual void Exit() override;
-//	virtual void Free() override { __super::Free(); }
-//};
-//
-//class CPlayerState_Skill_PhaseLock final : public CPlayerState
-//{
-//public:
-//	CPlayerState_Skill_PhaseLock(class CPlayer* pOwner)
-//		: CPlayerState(pOwner) {
-//	}
-//	virtual ~CPlayerState_Skill_PhaseLock() = default;
-//
-//public:
-//	virtual void Enter() override;
-//	virtual void Execute(_float fTimeDelta) override;
-//	virtual void Exit() override;
-//	virtual void Free() override { __super::Free(); }
-//};
+class CPlayerState_ChangeWeapon final : public CPlayerState
+{
+public:
+	CPlayerState_ChangeWeapon(class CPlayer* pOwner)
+		: CPlayerState(pOwner) {
+	}
+	virtual ~CPlayerState_ChangeWeapon() = default;
+
+public:
+	virtual void Enter() override;
+	virtual void Execute(_float fTimeDelta) override;
+	virtual void Exit() override;
+	virtual void Free() override { __super::Free(); }
+};
+
+class CPlayerState_ThrowGrenade final : public CPlayerState
+{
+public:
+	CPlayerState_ThrowGrenade(class CPlayer* pOwner)
+		: CPlayerState(pOwner) {
+	}
+	virtual ~CPlayerState_ThrowGrenade() = default;
+
+public:
+	virtual void Enter() override;
+	virtual void Execute(_float fTimeDelta) override;
+	virtual void Exit() override;
+	virtual void Free() override { __super::Free(); }
+};
+
+class CPlayerState_Skill_PhaseLock final : public CPlayerState
+{
+public:
+	CPlayerState_Skill_PhaseLock(class CPlayer* pOwner)
+		: CPlayerState(pOwner) {
+	}
+	virtual ~CPlayerState_Skill_PhaseLock() = default;
+
+public:
+	virtual void Enter() override;
+	virtual void Execute(_float fTimeDelta) override;
+	virtual void Exit() override;
+	virtual void Free() override { __super::Free(); }
+};
+
+class CPlayerState_CloseAttack final : public CPlayerState
+{
+public:
+	CPlayerState_CloseAttack(class CPlayer* pOwner)
+		: CPlayerState(pOwner) {
+	}
+	virtual ~CPlayerState_CloseAttack() = default;
+
+public:
+	virtual void Enter() override;
+	virtual void Execute(_float fTimeDelta) override;
+	virtual void Exit() override;
+	virtual void Free() override { __super::Free(); }
+};
 
 
 
