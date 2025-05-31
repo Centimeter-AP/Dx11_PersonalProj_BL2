@@ -27,6 +27,7 @@ public:
 
 private:
 	_float				m_fSensor{};
+	_float				m_fSpeedMultiplier = { 1.f };
 
 public:
 	static CCamera_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

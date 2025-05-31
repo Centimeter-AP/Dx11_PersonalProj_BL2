@@ -45,24 +45,28 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 
 	if (!m_isUsing)
 		return;
+	if (KEY_PRESSING(DIK_LSHIFT))
+		m_fSpeedMultiplier = 2.f;
+	else
+		m_fSpeedMultiplier = 1.f;
 
-	if (m_pGameInstance->Get_DIMouseState(DIM::RBUTTON) & 0x80)
+	if (MOUSE_DOWN(DIM::RBUTTON))
 	{
-		if (m_pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
+		if (KEY_PRESSING(DIK_A))
 		{
-			m_pTransformCom->Go_Left(fTimeDelta);
+			m_pTransformCom->Go_Left(fTimeDelta * m_fSpeedMultiplier);
 		}
-		if (m_pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
+		if (KEY_PRESSING(DIK_D))
 		{
-			m_pTransformCom->Go_Right(fTimeDelta);
+			m_pTransformCom->Go_Right(fTimeDelta * m_fSpeedMultiplier);
 		}
-		if (m_pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
+		if (KEY_PRESSING(DIK_W))
 		{
-			m_pTransformCom->Go_Straight_Hover(fTimeDelta);
+			m_pTransformCom->Go_Straight_Hover(fTimeDelta * m_fSpeedMultiplier);
 		}
-		if (m_pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
+		if (KEY_PRESSING(DIK_S))
 		{
-			m_pTransformCom->Go_Backward_Hover(fTimeDelta);
+			m_pTransformCom->Go_Backward_Hover(fTimeDelta * m_fSpeedMultiplier);
 		}
 
 		_long		MouseMove = {};

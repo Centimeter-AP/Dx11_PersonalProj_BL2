@@ -32,7 +32,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Desc.szName  = TEXT("Player");
 
 	m_fSensor = 0.1f;
-	if (FAILED(__super::Initialize(&Desc)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
@@ -340,6 +340,8 @@ void CPlayer::Free()
 	__super::Free();
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+
+
 	for (auto State : m_pStates)
 		Safe_Delete(State);
 

@@ -58,7 +58,6 @@ HRESULT CTerrainTool::Render()
 
 HRESULT CTerrainTool::Render_TerrainTool()
 {
-	ImGui::SetNextWindowSize(ImVec2(600, 400));
 	ImGui::Begin("Terrain Tools", &m_pWindowData->ShowTerrainMenu, NULL);
 
 	ImGui::SeparatorText("Terrain Create");

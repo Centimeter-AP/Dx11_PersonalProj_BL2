@@ -51,8 +51,18 @@ HRESULT CLevel_MapTool::Render()
 #ifdef _DEBUG
     SetWindowText(g_hWnd, TEXT("맵툴 레벨입니다."));
 #endif
+
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    POINT pt;
+    GetCursorPos(&pt);
+    ScreenToClient(g_hWnd, &pt); // hWnd는 윈도우 핸들
+
+    io.MousePos = ImVec2((float)pt.x, (float)pt.y);
+
     ImGui::NewFrame();
 
     ImGui_Render();

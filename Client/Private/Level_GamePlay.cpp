@@ -1,7 +1,7 @@
 #include "Level_GamePlay.h"
 #include "GameInstance.h"
 #include "Terrain.h"
-
+#include "Player.h"
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
 {
@@ -81,17 +81,21 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
 	//	return E_FAIL;
 
-
-
-
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
 {
-
+	CPlayer::DESC PlayerDesc;
+	PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	PlayerDesc.fSpeedPerSec = 10.f;
+	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	PlayerDesc.bHasPreset = true;
+	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixTranslation(39.f, 0.f, 33.26f));
+	PlayerDesc.szName = TEXT("Player");
+	PlayerDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Siren_Hand");
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
-		ENUM_CLASS(LEVEL::STATIC), strLayerTag)))
+		ENUM_CLASS(LEVEL::STATIC), strLayerTag, &PlayerDesc)))
 		return E_FAIL;
 	return S_OK;
 }

@@ -221,6 +221,11 @@ HRESULT CObjectTool::Render_ObjectTool()
 
 	if (Button("Make Object"))
 	{
+		if (m_ModelNames.empty())
+		{
+			MSG_BOX("먼저 오브젝트를 불러와주삼요 ");
+			return E_FAIL;
+		}
 		CGameObject::DESC mDesc;
 		wstring ObjectTag;
 		if (m_isAnim)
@@ -233,11 +238,11 @@ HRESULT CObjectTool::Render_ObjectTool()
 		mDesc.pParentObject = nullptr;
 		mDesc.szName = ObjectTag.data();
 		mDesc.strVIBufferTag = m_ModelNames[item_selected_idx];
+		mDesc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
 			return E_FAIL;
 	}
-
 
 	ImGui::Checkbox("Enable Gizmo", &m_isGizmoEnable);
 	ImGui::Checkbox("Snap to Terrain?", &m_isObjectSnapToTerrain);
@@ -574,7 +579,18 @@ HRESULT CObjectTool::Load_Objects(path SavePath)
 		mDesc.szName = ObjectName;
 		mDesc.strVIBufferTag = ObjectModelName;
 		mDesc.bHasPreset = true;
+		mDesc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
 		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
+
+		_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
+		_wstring wstrModelPath = L"../Bin/Resources/Models/Bin_NonAnim/" + ObjectModelName + L".bin";
+		string strModelPath = WStringToString(wstrModelPath);
+
+		if (FAILED(m_pGameInstance->Replace_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_Component_Model_") + ObjectModelName,
+			CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+				strModelPath.c_str(), PreTransMatrix))))
+			return E_FAIL;
+
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectName,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
 			return E_FAIL;
