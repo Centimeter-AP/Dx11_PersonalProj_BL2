@@ -31,7 +31,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Desc.fSpeedPerSec = PLAYER_DEFAULTSPEED;
 	Desc.szName  = TEXT("Player");
 
-	m_fSensor = 0.1f;
+	m_fSensor = XMConvertToRadians(4.f);
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -44,6 +44,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PlayerStates()))
 		return E_FAIL;
 
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 10.f, 0.f, 1.f));
 	
 	m_pModelCom->Set_Animation(Idle, true, 0.2f);
 
@@ -69,7 +70,8 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
 	Update_State(fTimeDelta);
-
+	Key_Input(fTimeDelta);
+	//Spine3
 }
 
 EVENT CPlayer::Update(_float fTimeDelta)
@@ -121,45 +123,45 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Key_Input(_float fTimeDelta)
 {
-	if (!static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0))->Is_Using())
+	/*if (!static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0))->Is_Using())
 	{
-	if (!m_isPlayingNonLoopAnim)
-		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Idle), true, 0.1f);
-	if (KEY_PRESSING(DIK_A))
-	{
-		m_pTransformCom->Go_Left(fTimeDelta);
-		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_L), true, 0.1f);
-	}
-	if (KEY_PRESSING(DIK_D))
-	{
-		m_pTransformCom->Go_Right(fTimeDelta);
-		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_R), true, 0.1f);
-	}
-	if (KEY_PRESSING(DIK_W))
-	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
-		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
-	}
-	else
-		m_isRunning = false;
-	if (KEY_PRESSING(DIK_S))
-	{
-		m_pTransformCom->Go_Backward(fTimeDelta);
-		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
-	}
+		if (!m_isPlayingNonLoopAnim)
+			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Idle), true, 0.1f);
+		if (KEY_PRESSING(DIK_A))
+		{
+			m_pTransformCom->Go_Left(fTimeDelta);
+			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_L), true, 0.1f);
+		}
+		if (KEY_PRESSING(DIK_D))
+		{
+			m_pTransformCom->Go_Right(fTimeDelta);
+			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_R), true, 0.1f);
+		}
+		if (KEY_PRESSING(DIK_W))
+		{
+			m_pTransformCom->Go_Straight(fTimeDelta);
+			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
+		}
+		else
+			m_isRunning = false;
+		if (KEY_PRESSING(DIK_S))
+		{
+			m_pTransformCom->Go_Backward(fTimeDelta);
+			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
+		}
 
-	if (KEY_DOWN(DIK_LSHIFT))
-	{
-		m_pTransformCom->Set_SpeedPerSec(PLAYER_DEFAULTSPEED * 1.5f);
-		m_isRunning = true;
-	}
+		if (KEY_DOWN(DIK_LSHIFT))
+		{
+			m_pTransformCom->Set_SpeedPerSec(PLAYER_DEFAULTSPEED * 1.5f);
+			m_isRunning = true;
+		}
 
-	if (m_isRunning)
-		m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Sprint), true, 0.1f);
-
-
+		if (m_isRunning)
+			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Sprint), true, 0.1f);
 
 
+
+	}*/
 
 	_long			MouseMove = {};
 
@@ -168,12 +170,32 @@ void CPlayer::Key_Input(_float fTimeDelta)
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
 	}
 
+		_float fDeltaPitch = {};
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::Y))
 	{
-		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
-	}
+		m_fPitch += MouseMove * fTimeDelta * m_fSensor;
+		m_fPitch = CLAMP(m_fPitch, -XMConvertToRadians(28.f), XMConvertToRadians(28.f));
 
+		fDeltaPitch = m_fPitch - m_fPreviousPitch;
+		m_fPreviousPitch = m_fPitch;
+
+		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fDeltaPitch);
 	}
+#ifdef _CONSOLE
+	static _float consoleTicker = {};
+	consoleTicker += fTimeDelta;
+	if (consoleTicker >= 0.3f)
+	{
+		cout << "m_fPitch : " << m_fPitch << endl;
+		cout << "m_fPreviousPitch : " << m_fPreviousPitch << endl;
+		cout << "fDeltaPitch : " << fDeltaPitch << endl; 
+		cout << endl;
+		consoleTicker = 0.f;
+	}
+#endif // _CONSOLE
+
+
+
 	//if (KEY_DOWN(DIK_V)) // 근접공격 인데 잠깐 총 바꾸는 모션으로 함
 	//{
 	//	m_pModelCom->Set_Animation(Holster, false, 0.1f);

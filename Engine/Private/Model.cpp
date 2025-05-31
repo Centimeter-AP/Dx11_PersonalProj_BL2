@@ -306,6 +306,14 @@ const _float4x4* CModel::Get_CombinedTransformationMatrix(_uint iBoneIndex)
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
 }
 
+HRESULT CModel::Set_BoneMatrix(_uint iBoneIndex, _fmatrix matTransform)
+{
+	if (iBoneIndex > m_Bones.size())
+		return E_FAIL;
+	m_Bones[iBoneIndex]->Set_TransformationMatrix(matTransform);
+	return S_OK;
+}
+
 HRESULT CModel::Read_OriginalFBX(const string& filepath)
 {
 	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))

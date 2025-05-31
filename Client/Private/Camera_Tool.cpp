@@ -50,7 +50,7 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 	else
 		m_fSpeedMultiplier = 1.f;
 
-	if (MOUSE_DOWN(DIM::RBUTTON))
+	if (MOUSE_PRESSING(DIM::RBUTTON))
 	{
 		if (KEY_PRESSING(DIK_A))
 		{

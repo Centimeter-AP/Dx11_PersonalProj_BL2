@@ -29,6 +29,9 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	
+private:
+	HRESULT Set_PlayerBone();
 
 private:
 	_float				m_fSensor{};
@@ -37,6 +40,9 @@ private:
 	class CTransform*		m_pPlayerTransform = { nullptr };
 	CModel*					m_pPlayerModel = { nullptr };
 	string					m_szPlayerCameraBoneName;
+	_float4x4*				m_pPlayerWorldMatrix = { nullptr };
+	_float4x4*				m_pCameraBoneCombinedMatrix = { nullptr };
+	_int					m_iBoneIndex = {};
 
 public:
 	static CCamera_FPS* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

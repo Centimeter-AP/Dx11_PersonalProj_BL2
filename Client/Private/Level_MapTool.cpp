@@ -57,11 +57,14 @@ HRESULT CLevel_MapTool::Render()
 
     ImGuiIO& io = ImGui::GetIO();
 
-    POINT pt;
-    GetCursorPos(&pt);
-    ScreenToClient(g_hWnd, &pt); // hWnd는 윈도우 핸들
 
-    io.MousePos = ImVec2((float)pt.x, (float)pt.y);
+    RECT rect;
+    GetClientRect(g_hWnd, &rect);
+    int width = rect.right - rect.left;
+    int height = rect.bottom - rect.top;
+
+    io.DisplaySize = ImVec2((float)width, (float)height);
+    io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 
     ImGui::NewFrame();
 

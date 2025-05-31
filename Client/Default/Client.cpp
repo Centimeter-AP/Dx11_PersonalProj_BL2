@@ -8,6 +8,9 @@
 #include "MainApp.h"
 #undef USE_IMGUI
 #include "GameInstance.h"
+#include <Windows.h>
+#include <shellscalingapi.h>
+#pragma comment(lib, "Shcore.lib")
 
 #define MAX_LOADSTRING 100
 
@@ -29,9 +32,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
 
+    SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-
     // TODO: 여기에 코드를 입력합니다.
     CMainApp* pMainApp = { nullptr };
     CGameInstance* pGameInstance = CGameInstance::Get_Instance();
@@ -145,10 +148,18 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
    RECT     rcWindowed = { 0, 0, g_iWinSizeX, g_iWinSizeY };
 
-   AdjustWindowRect(&rcWindowed, WS_OVERLAPPEDWINDOW, true);
+   AdjustWindowRect(&rcWindowed, WS_OVERLAPPEDWINDOW, false);
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, rcWindowed.right - rcWindowed.left, rcWindowed.bottom - rcWindowed.top,  nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindowW(
+       szWindowClass,
+       szTitle,
+       WS_OVERLAPPEDWINDOW,
+       CW_USEDEFAULT,
+       0,
+       rcWindowed.right - rcWindowed.left,
+       rcWindowed.bottom - rcWindowed.top,
+       nullptr, nullptr,
+       hInstance, nullptr);
 
    if (!hWnd)
    {

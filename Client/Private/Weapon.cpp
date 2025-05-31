@@ -56,17 +56,9 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 
 EVENT CWeapon::Update(_float fTimeDelta)
 {
-	//if (KEY_DOWN(DIK_R)) // 재장전
-	//{
-	//	m_pModelCom->Set_Animation(14, false, 0.1f);
-	//}
 	_matrix matFinal = XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
 
 	m_pTransformCom->Set_Matrix(matFinal);
-	// 이거 잠깐 좀 끕시다 상태에 넣게 
-	//if (true == m_pModelCom->Play_Animation(fTimeDelta))
-	//	int a = 10;
-
 
 	return EVN_NONE;
 }
@@ -84,7 +76,19 @@ HRESULT CWeapon::Render()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
 		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
 
+	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+		return E_FAIL;
 
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
 

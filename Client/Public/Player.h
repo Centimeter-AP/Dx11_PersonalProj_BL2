@@ -60,6 +60,7 @@ public:
 	virtual HRESULT Render();
 	void	Key_Input(_float fTimeDelta);
 	void	Set_State(PLA_STATE eState);
+	const _float& Get_Pitch() { return m_fPitch; }
 
 private:
 	void	Update_State(_float fTimeDelta);
@@ -80,9 +81,9 @@ private:
 	PLA_STATE			m_ePrevState = { PLA_STATE::STATE_END };
 
 private:
-	_bool				m_isRunning = { false };
-	_bool				m_isJumping = { false };
-	_bool				m_isPlayingNonLoopAnim = { false };	
+	_float				m_fPitch = {};
+	_float				m_fPreviousPitch = {};
+	const _float		m_fPitchLimit = XMConvertToRadians(89.9f); 
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

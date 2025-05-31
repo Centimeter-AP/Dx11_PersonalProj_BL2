@@ -6,6 +6,7 @@
 #include "Layer.h"
 #include "Camera_Tool.h"
 #include "Camera_FPS.h"
+#include "Player.h"
 //ImGuiFileDialog g_ImGuiFileDialog;
 //ImGuiFileDialog::Instance() 이래 싱글톤으로 쓰라고 신이 말하고 감
 
@@ -379,7 +380,15 @@ HRESULT CObjectTool::Make_Player()
 	}
 	else
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"), ENUM_CLASS(LEVEL::STATIC), L"Layer_Player")))
+		CPlayer::DESC PlayerDesc;
+		PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
+		PlayerDesc.fSpeedPerSec = 10.f;
+		PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+		PlayerDesc.bHasPreset = true;
+		XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixTranslation(39.f, 0.f, 33.26f));
+		PlayerDesc.szName = TEXT("Player");
+		PlayerDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Siren_Hand");
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"), ENUM_CLASS(LEVEL::STATIC), L"Layer_Player", &PlayerDesc)))
 			return E_FAIL;
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_Camera_FPS"), ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera")))
 			return E_FAIL;
