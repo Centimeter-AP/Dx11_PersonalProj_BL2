@@ -3,13 +3,12 @@
 
 
 
-void CPlayerState_ChangeWeapon::Enter()
+void CPlayerState_HolsterWeapon::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::Idle, true);
-	static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AssaultRifle"))->second)->Set_State(CAssaultRifle::STATE_Fire);
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Holster, false);
 }
 
-void CPlayerState_ChangeWeapon::Execute(_float fTimeDelta)
+void CPlayerState_HolsterWeapon::Execute(_float fTimeDelta)
 {
 	if (KEY_PRESSING(DIK_W))
 	{
@@ -29,10 +28,10 @@ void CPlayerState_ChangeWeapon::Execute(_float fTimeDelta)
 	}
 	if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 	{
-		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle);
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_DrawWeapon);
 	}
 }
 
-void CPlayerState_ChangeWeapon::Exit()
+void CPlayerState_HolsterWeapon::Exit()
 {
 }

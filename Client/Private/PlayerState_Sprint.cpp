@@ -4,7 +4,7 @@
 
 void CPlayerState_Sprint::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::Sprint, true);
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Sprint, true);
 }
 
 void CPlayerState_Sprint::Execute(_float fTimeDelta)

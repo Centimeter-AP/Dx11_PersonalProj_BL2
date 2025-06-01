@@ -133,6 +133,15 @@
     <Filter Include="02.GameObjects\08. Sky">
       <UniqueIdentifier>{c893d463-36f9-495f-bdd7-a74e770e6ed7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03. Monster\Rakk">
+      <UniqueIdentifier>{cf28702b-637b-4b0d-bd34-7915e6f171ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Monster\Boss_Warrior">
+      <UniqueIdentifier>{1f4141d2-c430-4b7a-b031-2699b930c3aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Monster\SpiderAnt">
+      <UniqueIdentifier>{9052f37b-59f2-4d1a-a926-981e0f3ba4e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -278,6 +287,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\Sky.h">
       <Filter>02.GameObjects\08. Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Rakk.h">
+      <Filter>02.GameObjects\03. Monster\Rakk</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -441,11 +453,17 @@
     <ClCompile Include="..\Private\PlayerState_Skill_PhaseLock.cpp">
       <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_ChangeWeapon.cpp">
-      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PlayerState_CloseAttack.cpp">
       <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_HolsterWeapon.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_DrawWeapon.cpp">
+      <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Rakk.cpp">
+      <Filter>02.GameObjects\03. Monster\Rakk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

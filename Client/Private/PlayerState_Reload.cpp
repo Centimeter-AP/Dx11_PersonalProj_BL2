@@ -5,7 +5,7 @@
 
 void CPlayerState_Reload::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::R_Jakobs, false);
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_R_Jakobs, false);
 	static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AssaultRifle"))->second)->Set_State(CAssaultRifle::STATE_Reload);
 }
 

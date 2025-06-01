@@ -1,25 +1,25 @@
-#include "Monster.h"
+#include "Rakk.h"
 
 #include "GameInstance.h"
 
-CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject { pDevice, pContext }
+CRakk::CRakk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CMonster { pDevice, pContext }
 {
 
 }
 
-CMonster::CMonster(const CMonster& Prototype)
-	: CGameObject { Prototype }
+CRakk::CRakk(const CRakk& Prototype)
+	: CMonster{ Prototype }
 {
 
 }
 
-HRESULT CMonster::Initialize_Prototype()
+HRESULT CRakk::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CMonster::Initialize(void* pArg)
+HRESULT CRakk::Initialize(void* pArg)
 {
 	DESC			Desc{};
 
@@ -38,7 +38,7 @@ HRESULT CMonster::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CMonster::Priority_Update(_float fTimeDelta)
+void CRakk::Priority_Update(_float fTimeDelta)
 {
 #pragma region AnimationTests
 	static _uint test = {};
@@ -57,19 +57,19 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 }
 
-EVENT CMonster::Update(_float fTimeDelta)
+EVENT CRakk::Update(_float fTimeDelta)
 {
 	if (true == m_pModelCom->Play_Animation(fTimeDelta))
 		int a = 10;
 	return EVN_NONE;
 }
 
-void CMonster::Late_Update(_float fTimeDelta)
+void CRakk::Late_Update(_float fTimeDelta)
 {
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
 }
 
-HRESULT CMonster::Render()
+HRESULT CRakk::Render()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -99,7 +99,7 @@ HRESULT CMonster::Render()
 	return S_OK;
 }
 
-HRESULT CMonster::Ready_Components(void* pArg)
+HRESULT CRakk::Ready_Components(void* pArg)
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -120,7 +120,33 @@ HRESULT CMonster::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-void CMonster::Free()
+CRakk* CRakk::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+{
+	CRakk* pInstance = new CRakk(pDevice, pContext);
+
+	if (FAILED(pInstance->Initialize_Prototype()))
+	{
+		MSG_BOX("Failed to Created : CMainApp");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+CGameObject* CRakk::Clone(void* pArg)
+{
+	CRakk* pInstance = new CRakk(*this);
+
+	if (FAILED(pInstance->Initialize(pArg)))
+	{
+		MSG_BOX("Failed to Cloned : CRakk");
+		Safe_Release(pInstance);
+	}
+
+	return pInstance;
+}
+
+void CRakk::Free()
 {
 	__super::Free();
 

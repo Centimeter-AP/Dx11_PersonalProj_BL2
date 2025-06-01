@@ -46,7 +46,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 20.f, 0.f, 1.f));
 	
-	m_pModelCom->Set_Animation(Idle, true, 0.2f);
+	m_pModelCom->Set_Animation(AR_Idle, true, 0.2f);
 
 	return S_OK;
 }
@@ -123,46 +123,6 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Key_Input(_float fTimeDelta)
 {
-	/*if (!static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_Camera", 0))->Is_Using())
-	{
-		if (!m_isPlayingNonLoopAnim)
-			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Idle), true, 0.1f);
-		if (KEY_PRESSING(DIK_A))
-		{
-			m_pTransformCom->Go_Left(fTimeDelta);
-			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_L), true, 0.1f);
-		}
-		if (KEY_PRESSING(DIK_D))
-		{
-			m_pTransformCom->Go_Right(fTimeDelta);
-			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_R), true, 0.1f);
-		}
-		if (KEY_PRESSING(DIK_W))
-		{
-			m_pTransformCom->Go_Straight(fTimeDelta);
-			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
-		}
-		else
-			m_isRunning = false;
-		if (KEY_PRESSING(DIK_S))
-		{
-			m_pTransformCom->Go_Backward(fTimeDelta);
-			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Run_F), true, 0.1f);
-		}
-
-		if (KEY_DOWN(DIK_LSHIFT))
-		{
-			m_pTransformCom->Set_SpeedPerSec(PLAYER_DEFAULTSPEED * 1.5f);
-			m_isRunning = true;
-		}
-
-		if (m_isRunning)
-			m_pModelCom->Set_Animation(ENUM_CLASS(PLA_AR::Sprint), true, 0.1f);
-
-
-
-	}*/
-
 	_long			MouseMove = {};
 
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
@@ -220,8 +180,6 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	//	m_isJumping = true;
 	//	m_isPlayingNonLoopAnim = true;
 	//}
-
-
 }
 
 void CPlayer::Set_State(PLA_STATE eState)
@@ -255,6 +213,12 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Siren_Hand"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
+
+
+	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/1st_Person_Pistol.anim)");
+	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/1st_Person_Unarmed.anim)");
+	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Siren_1st.anim)");
+	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Base_Siren_All.anim)");
 
 	// need: collider, ...
 
@@ -297,7 +261,8 @@ HRESULT CPlayer::Ready_PlayerStates()
 	m_pStates[PLA_STATE::STATE_Fire]				= new CPlayerState_Fire(this);
 	m_pStates[PLA_STATE::STATE_Reload]				= new CPlayerState_Reload(this);
 	m_pStates[PLA_STATE::STATE_CloseAttack]			= new CPlayerState_CloseAttack(this);
-	m_pStates[PLA_STATE::STATE_ChangeWeapon]		= new CPlayerState_ChangeWeapon(this);
+	m_pStates[PLA_STATE::STATE_HolsterWeapon]		= new CPlayerState_HolsterWeapon(this);
+	m_pStates[PLA_STATE::STATE_DrawWeapon]			= new CPlayerState_DrawWeapon(this);
 	m_pStates[PLA_STATE::STATE_ThrowGrenade]		= new CPlayerState_ThrowGrenade(this);
 	m_pStates[PLA_STATE::STATE_Skill_PhaseLock]		= new CPlayerState_Skill_PhaseLock(this);
 

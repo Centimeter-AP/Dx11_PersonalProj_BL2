@@ -19,15 +19,30 @@ public:
 	}DESC;
 
 	enum PLA_AR {
-		Crouch, Draw, Grenade_throw, Holster, Idle, Jump_End, Jump_Idle, Jump_Start, R_Banditmade, R_Dahl,
-		R_Jakobs, R_Torgue, R_Vladof, Run_F, Run_L, Run_R, Sight_Idle, Sight_Jump_End, Sight_Jump_Idle, Sight_Jump_Start,
-		Sight_Walk_F, Sprint, Sprint_DualWield, R_Dahl_Fast, R_Jakobs_Var2, R_Jakobs_Fast, R_Banditmade_Fast, R_Torgue_Fast, R_Vladof_Fast, R_Jakobs_Fast_Var2,
-		R_DualWield, Bladed_Melee, Holster_Fast, Incap_F, ADD_Fire_Recoil, PickUp_Equip, R_Banditmade_Var2, R_Banditmade_Fast_Var2 = 37, PLA_AR_END
+		AR_Crouch, AR_Draw, AR_Grenade_throw, AR_Holster, AR_Idle, AR_Jump_End, AR_Jump_Idle, AR_Jump_Start, AR_NONE8, AR_NONE9,
+		AR_R_Jakobs, AR_NONE11, AR_NONE12, AR_Run_F, AR_Run_L, AR_Run_R, AR_Sight_Idle, AR_Sight_Jump_End, AR_Sight_Jump_Idle, AR_Sight_Jump_Start,
+		AR_Sight_Walk_F, AR_Sprint, AR_Sprint_DualWield, AR_NONE23, AR_R_Jakobs_Var2, AR_R_Jakobs_Fast, AR_NONE26, AR_NONE27, AR_NONE28, AR_R_Jakobs_Fast_Var2,
+		AR_R_DualWield, AR_Bladed_Melee, AR_Holster_Fast, AR_Incap_F, AR_ADD_Fire_Recoil, AR_PickUp_Equip, AR_NONE36, AR_NONE37 = 37, PLA_AR_END
+	};
+	enum PLA_PST {
+		PST_Crouch = PLA_AR_END, PST_Draw, PST_Grenade_throw, PST_Holster, PST_Idle, PST_Jump_End, PST_Jump_Idle, PST_Jump_Start, PST_NONE46, PST_NONE47, PST_NONE48, PST_NONE49,
+		PST_R_Hyperion, PST_R_Hyperion_Fast, PST_NONE52, PST_NONE53, PST_NONE54, PST_NONE55, PST_NONE56, PST_NONE57, PST_NONE58, PST_NONE59, PST_NONE60, PST_Run_F = 61, PST_Run_L, PST_Run_R, PST_Sight_Idle, PST_Sight_Jump_End, PST_Sight_Jump_Idle, PST_Sight_Jump_Start,
+		PST_Sight_Walk_F, PST_Sprint, PST_Sprint_DualWield, PST_NONE71, PST_NONE72, PST_NONE73, PST_Reload_DualWield, PST_Holster_Fast, PST_Incap_F, PST_NONE77, PST_ADD_Fire_Recoil, PST_ADD_Fire_Revolver_Recoil, PST_PickUp_Equip, PST_Fire_Fan_Recoil, PLA_PST_END
+	};
+	enum PLA_UNARMED {
+		UN_Draw = PLA_PST_END, UN_Holster, UN_Idle, UN_Jump_End, UN_Jump_Idle, UN_Jump_Start, UN_Run_F, UN_Sprint, UN_Run_R, UN_Run_L, UN_Walk_F, UN_Incap_F, PLA_UNARMED_END
+	};
+	enum PLA_BASIC {
+		BASIC_PhaseLock_Fail = PLA_UNARMED_END, BASIC_PhaseLock, BASIC_KissOfDeath, BASIC_CloseAttack, BASIC_RollingThunder, PLA_BASIC_END
+	};
+	enum PLA_ALL {
+		ALL_PhaseLock = PLA_BASIC_END, ALL_Respawn = 47 + PLA_BASIC_END, ALL_Ladder_Up = 49 + PLA_BASIC_END, ALL_PhaseLock_Fail = 50 + PLA_BASIC_END, PLA_ALL_END = 58 + PLA_BASIC_END
 	};
 
 	enum PLA_STATE {
-		STATE_Idle, STATE_Run, STATE_Run_L, STATE_Run_R, STATE_Sprint, STATE_Jump, STATE_Fire, STATE_Reload, STATE_ChangeWeapon, STATE_ThrowGrenade, STATE_Skill_PhaseLock,
-		STATE_CloseAttack, STATE_END
+		STATE_Idle, STATE_Run, STATE_Run_L, STATE_Run_R, STATE_Sprint, STATE_Jump,
+		STATE_Fire, STATE_Reload, STATE_HolsterWeapon, STATE_DrawWeapon, STATE_ThrowGrenade, STATE_CloseAttack,
+		STATE_Skill_PhaseLock, STATE_SKill_KissOfDeath, STATE_END
 	};
 
 #pragma region MyFriendMyState
@@ -41,7 +56,8 @@ public:
 	friend class CPlayerState_Fire;
 	friend class CPlayerState_Reload;
 	friend class CPlayerState_CloseAttack;
-	friend class CPlayerState_ChangeWeapon;
+	friend class CPlayerState_HolsterWeapon;
+	friend class CPlayerState_DrawWeapon;
 	friend class CPlayerState_ThrowGrenade;
 	friend class CPlayerState_Skill_PhaseLock;
 
@@ -82,7 +98,7 @@ private:
 	PLA_STATE			m_eCurState = { PLA_STATE::STATE_END };
 	PLA_STATE			m_ePrevState = { PLA_STATE::STATE_END };
 
-private:
+private: // maybe deprecated 
 	_float				m_fPitch = {};
 	_float				m_fPreviousPitch = {};
 	const _float		m_fPitchLimit = XMConvertToRadians(89.9f); 

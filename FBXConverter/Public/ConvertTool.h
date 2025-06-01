@@ -34,12 +34,39 @@ private:
 	_int		m_iCurNumBones = { };
 	vector<string> m_BoneNames;
 
+
+	typedef struct tagChannelData
+	{
+		_uint iNumKeyFrames = {};
+		vector<KEYFRAME> Keyframes;
+		_uint iBoneIndex = {};
+	}TOOLCHANNELDATA;
+
+
+	typedef struct tagAnimData
+	{
+		_float fTicksPerSec = {};
+		_float fDuration = {};
+		_uint iNumChannels = {};
+		vector<TOOLCHANNELDATA> Channels;
+	}TOOLANIMDATA;
+
+	_uint m_iDstNumAnimations = {};
+	_uint m_iSrcNumAnimations = {};
+
+
 private:
 	HRESULT Render_ConvertTool();
 	HRESULT Convert_NonAnimFBX(const _char* pModelFilePath);
 	HRESULT Convert_AnimFBX(const _char* pModelFilePath);
 	HRESULT Convert_AnimOnly(const _char* pModelFilePath);
 	HRESULT Copy_MaterialTextures();
+
+private:
+	HRESULT Render_MergeTool();
+	HRESULT Read_DestinationBinary(const _char* pModelFilePath, vector<char>& rawData, vector<TOOLANIMDATA>& AnimData);
+	HRESULT Read_SourceBinary(const _char* pModelFilePath, vector<char>& rawData, vector<TOOLANIMDATA>& AnimData);
+	HRESULT Merge_Animation(const _char* pModelFilePath, vector<char>& rawData, vector<TOOLANIMDATA>& DstAnimData, vector<TOOLANIMDATA>& SrcAnimData);
 
 private: // 멍청해서 다시쓰는중 파일스트림으로
 	HRESULT Write_BoneData(const aiNode* pAINode, _int iParentBoneIndex, vector<FBX_BONEDATA>& m_Bones, ostream& ofs);

@@ -5,7 +5,7 @@
 
 void CPlayerState_ThrowGrenade::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::Grenade_throw, false);
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Grenade_throw, false);
 }
 
 void CPlayerState_ThrowGrenade::Execute(_float fTimeDelta)

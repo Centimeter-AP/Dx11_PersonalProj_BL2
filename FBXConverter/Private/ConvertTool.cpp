@@ -52,6 +52,9 @@ HRESULT CConvertTool::Render()
 	{
 		if (FAILED(Render_ConvertTool()))
 			return E_FAIL;
+
+		if (FAILED(Render_MergeTool()))
+			return E_FAIL;
 	}
 
 	return S_OK;
@@ -68,7 +71,6 @@ HRESULT CConvertTool::Render_ConvertTool()
 		m_isAnim = false;	
 		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_NonAnim)";
 		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\Frost_P\StaticMesh3\FBX)";
-		//config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Frost_StaticMesh)";
 		config.countSelectionMax = 0; // 무제한
 
 		IFILEDIALOG->OpenDialog("FBXDialog", "Select Non Anim Staticmesh FBX Files", ".fbx", config);
@@ -78,7 +80,6 @@ HRESULT CConvertTool::Render_ConvertTool()
 	{
 		m_isAnim = true;
 		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
-		//config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Fiona)";
 		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\)";
 		config.countSelectionMax = 0; // 무제한
 
@@ -89,7 +90,6 @@ HRESULT CConvertTool::Render_ConvertTool()
 	{
 		m_isAnimOnly = true;
 		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
-		//config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Fiona)";
 		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\GD_Siren_Streaming_SF\AnimSet\FBX)";
 		config.countSelectionMax = 0; // 무제한
 
@@ -127,7 +127,7 @@ HRESULT CConvertTool::Render_ConvertTool()
 		IFILEDIALOG->Close();
 	}
 
-	End();
+	ImGui::End();
 	return S_OK;
 }
 
@@ -289,6 +289,7 @@ HRESULT CConvertTool::Copy_MaterialTextures()
 	materialList.clear();
 	return S_OK;
 }
+
 
 HRESULT CConvertTool::Write_BoneData(const aiNode* pAINode, _int iParentBoneIndex, vector<FBX_BONEDATA>& m_Bones, ostream& ofs)
 {
@@ -652,121 +653,189 @@ HRESULT CConvertTool::Write_AnimationData(const vector<FBX_BONEDATA>& Bones, ost
 			ofs.write(reinterpret_cast<const char*>(&m_iNumKeyFrames), sizeof(_uint));			// 총 키프레임 수 
 			ofs.write(reinterpret_cast<const char*>(m_KeyFrames.data()), sizeof(KEYFRAME) * m_iNumKeyFrames);			// 총 키프레임 (데이터)
 			ofs.write(reinterpret_cast<const char*>(&m_iBoneIndex), sizeof(_uint));				// 이 채널이 전체 뼈 배열에서 몇번째 인덱스인 친구였는지
-
-
-
 		}
 	}
 	return S_OK;
 }
 
-//HRESULT CConvertTool::Ready_FBX_MeshData(FBXDATA& m_pFBXData)
-//{
-//	m_pFBXData.iNumMeshes = m_pAIScene->mNumMeshes;						// 메쉬부터 채워요
-//	m_pFBXData.vecMeshes.reserve(m_pFBXData.iNumMeshes);
-//	for (size_t i = 0; i < m_pFBXData.iNumMeshes; i++)
-//	{
-//		FBX_MESHDATA tMesh = {};
-//
-//		tMesh.iMaterialIndex = m_pAIScene->mMeshes[i]->mMaterialIndex;	// 사용하는 머테리얼 인덱스 번호
-//		tMesh.iNumVertices = m_pAIScene->mMeshes[i]->mNumVertices;		// 버텍스 갯수
-//		tMesh.iNumIndices = m_pAIScene->mMeshes[i]->mNumFaces * 3;		// 인덱스 갯수
-//		tMesh.vecVertices.reserve(tMesh.iNumVertices);					// 벡터 리저브 해줘요
-//		tMesh.vecIndices.reserve(tMesh.iNumIndices);
-//
-//		for (size_t j = 0; j < tMesh.iNumVertices; j++)					// 정점 구조체 채워요
-//		{
-//			VTXMESH tVtxMesh;
-//			memcpy(&tVtxMesh.vPosition, &m_pAIScene->mMeshes[i]->mVertices[j], sizeof(_float3));
-//			memcpy(&tVtxMesh.vNormal, &m_pAIScene->mMeshes[i]->mNormals[j], sizeof(_float3));
-//			memcpy(&tVtxMesh.vTangent, &m_pAIScene->mMeshes[i]->mTangents[j], sizeof(_float3));
-//			memcpy(&tVtxMesh.vTexcoord, &m_pAIScene->mMeshes[i]->mTextureCoords[0][j], sizeof(_float2));
-//			tMesh.vecVertices.push_back(tVtxMesh);
-//		}
-//
-//		for (size_t j = 0; j < m_pAIScene->mMeshes[i]->mNumFaces; j++)	// 인덱스 채워요
-//		{
-//			tMesh.vecIndices.push_back(m_pAIScene->mMeshes[i]->mFaces[j].mIndices[0]);
-//			tMesh.vecIndices.push_back(m_pAIScene->mMeshes[i]->mFaces[j].mIndices[1]);
-//			tMesh.vecIndices.push_back(m_pAIScene->mMeshes[i]->mFaces[j].mIndices[2]);
-//		}
-//
-//		m_pFBXData.vecMeshes.push_back(tMesh);							// 밥먹어
-//	}
-//	return S_OK;
-//}
-//
-//HRESULT CConvertTool::Ready_FBX_MaterialData(const _char* pModelFilePath, FBXDATA& m_pFBXData)
-//{
-//
-//	m_pFBXData.iNumMaterials = m_pAIScene->mNumMaterials;				// 머테리얼 채워요
-//	for (size_t i = 0; i < m_pFBXData.iNumMaterials; i++)
-//	{
-//		vector<FBX_MATDATA> tMaterialData;
-//		for (size_t j = 1; j < AI_TEXTURE_TYPE_MAX; j++)				// 죳뺑이쳐요
-//		{
-//			_uint iNumSRVs = m_pAIScene->mMaterials[i]->GetTextureCount(static_cast<aiTextureType>(j));
-//			for (size_t k = 0; k < iNumSRVs; k++)
-//			{
-//				FBX_MATDATA tMat = {};
-//				aiString     strTexturePath;
-//				if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(static_cast<aiTextureType>(j), k, &strTexturePath)))
-//					return E_FAIL;
-//
-//				_char       szFullPath[MAX_PATH] = {};
-//				_char       szFileName[MAX_PATH] = {};
-//				_char       szDriveName[MAX_PATH] = {};
-//				_char       szDirName[MAX_PATH] = {};
-//				_char       szExt[MAX_PATH] = {}; // 저장은 이름이랑 확장자만 저장하자
-//
-//				_char		szFBXName[MAX_PATH] = {};
-//
-//
-//				_splitpath_s(pModelFilePath, szDriveName, MAX_PATH, szDirName, MAX_PATH, szFBXName, MAX_PATH, nullptr, 0);
-//				m_pFBXData.strFBXName = szFBXName; // 내보낼 파일 이름 저장하게 fbx파일 명 저장해요
-//
-//				_splitpath_s(strTexturePath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
-//
-//				path relPath = strTexturePath.data;
-//				path fbxTexturePath = (path)szDriveName / szDirName;
-//				fbxTexturePath /= relPath;	
-//				fbxTexturePath = fbxTexturePath.lexically_normal();
-//				//path cleaned;
-//				//for (auto& part : fbxTexturePath) {
-//				//	if (part == "." || part == "..")
-//				//		continue;
-//				//	cleaned /= part;
-//				//}
-//				//
-//				//cleaned.lexically_normal();
-//				//path basePath = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\)";
-//				//path absPath = basePath / cleaned;
-//				//absPath = absPath.lexically_normal();
-//
-//				materialList.push_back(fbxTexturePath); // 나중에 저장할 때 복사붙여넣기 해줄 텍스쳐들 경로 모아두자 
-//
-//				strcat_s(szFullPath, szFileName);
-//				strcat_s(szFullPath, szExt);
-//
-//				tMat.strTexturePath = szFullPath;					// 텍스쳐 이름이랑 확장자만 저장
-//				tMat.eTexType = static_cast<aiTextureType>(j);		// 텍스쳐타입 뭐였는지 저장하시고
-//				tMaterialData.push_back(tMat);
-//			}
-//		}
-//		m_pFBXData.vecMaterials.push_back(tMaterialData);
-//	}
-//	return S_OK;
-//}
-//
-//HRESULT CConvertTool::Ready_FBX_BoneData(FBXDATA& m_pFBXData)
-//{
-//	return S_OK;
-//}
-//
-//HRESULT CConvertTool::Ready_FBX_AnimationData(FBXDATA& m_pFBXData)
-//{
-//	return S_OK;
-//}
+HRESULT CConvertTool::Render_MergeTool()
+{
+	SetNextWindowSize(ImVec2(200, 300));
+	ImGui::Begin("Merge Tools", &m_pWindowData->ShowConvertMenu, NULL);
+
+
+	IGFD::FileDialogConfig config;
+	if (Button("Merge Animations"))
+	{
+		m_isAnim = false;
+		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+		config.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+		config.countSelectionMax = 1;
+
+		IFILEDIALOG->OpenDialog("DestDialog", "Select Destination Binary File", ".bin", config);
+	}
+
+	if (IFILEDIALOG->Display("DestDialog"))
+	{
+		if (IFILEDIALOG->IsOk())
+		{
+			auto DstSelections = IFILEDIALOG->GetSelection();
+		
+			if (!DstSelections.empty())
+			{
+				vector<char> DstRawData;
+				vector<TOOLANIMDATA> DstAnimData;
+				path DstFilePath = DstSelections.begin()->second.data();
+				Read_DestinationBinary(DstFilePath.string().data(), DstRawData, DstAnimData);
+
+				IGFD::FileDialogConfig config_2;
+				config_2.path = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+				config_2.countSelectionMax = 1;
+
+				IFILEDIALOG->OpenDialog("SourceDialog", "Select Source Binary File (Animation Only)", ".anim", config_2);
+
+				if (IFILEDIALOG->Display("SourceDialog"))
+				{
+					if (IFILEDIALOG->IsOk())
+					{
+						auto SrcSelections = IFILEDIALOG->GetSelection();
+
+						if (!SrcSelections.empty())
+						{
+							path SrcFilePath = SrcSelections.begin()->second.data();
+							vector<TOOLANIMDATA> SrcAnimData;
+							Read_SourceBinary(SrcFilePath.string().data(), DstRawData, SrcAnimData);
+
+							path saveFileName = savePath / DstFilePath.stem();
+							saveFileName += "_";
+							saveFileName += SrcFilePath.stem();
+							saveFileName.replace_extension(".bin");
+							Merge_Animation(saveFileName.string().data(), DstRawData, DstAnimData, SrcAnimData);
+						}
+					}
+				}
+			}
+		}
+		IFILEDIALOG->Close();
+	}
+
+	ImGui::End();
+	return S_OK;
+}
+
+HRESULT CConvertTool::Read_DestinationBinary(const _char* pModelFilePath, vector<char>& rawData, vector<TOOLANIMDATA>& AnimData)
+{
+	ifstream ifs(pModelFilePath, ios::binary);
+
+	if (!ifs.is_open())
+		return E_FAIL;
+
+	auto WriteRaw = [](vector<char>& raw, const void* pData, size_t size) {
+		raw.insert(raw.end(), (char*)pData, (char*)pData + size);
+		};
+
+
+
+
+
+	ifs.read(reinterpret_cast<char*>(&m_iDstNumAnimations), sizeof(_uint));
+	for (_uint i = 0; i < m_iDstNumAnimations; i++)
+	{
+		TOOLANIMDATA tAnimData;
+		ifs.read(reinterpret_cast<char*>(&tAnimData.fTicksPerSec), sizeof(_float));
+		ifs.read(reinterpret_cast<char*>(&tAnimData.fDuration), sizeof(_float));
+		ifs.read(reinterpret_cast<char*>(&tAnimData.iNumChannels), sizeof(_uint));
+		for (_uint j = 0; j < tAnimData.iNumChannels; j++)
+		{
+			TOOLCHANNELDATA tChannelData;
+			ifs.read(reinterpret_cast<char*>(&tChannelData.iNumKeyFrames), sizeof(_uint));
+			tChannelData.Keyframes.resize(tChannelData.iNumKeyFrames);
+			ifs.read(reinterpret_cast<char*>(tChannelData.Keyframes.data()), sizeof(KEYFRAME) * tChannelData.iNumKeyFrames);
+			ifs.read(reinterpret_cast<char*>(&tChannelData.iBoneIndex), sizeof(_uint));
+			tAnimData.Channels.push_back(tChannelData);
+		}
+		AnimData.push_back(tAnimData);
+	}
+
+
+	return S_OK;
+}
+
+HRESULT CConvertTool::Read_SourceBinary(const _char* pModelFilePath, vector<char>& rawData, vector<TOOLANIMDATA>& AnimData)
+{
+	ifstream ifs(pModelFilePath, ios::binary);
+
+	if (!ifs.is_open())
+		return E_FAIL;
+	ifs.read(reinterpret_cast<char*>(&m_iSrcNumAnimations), sizeof(_uint));
+	for (_uint i = 0; i < m_iSrcNumAnimations; i++)
+	{
+		TOOLANIMDATA tAnimData;
+		ifs.read(reinterpret_cast<char*>(&tAnimData.fTicksPerSec), sizeof(_float));
+		ifs.read(reinterpret_cast<char*>(&tAnimData.fDuration), sizeof(_float));
+		ifs.read(reinterpret_cast<char*>(&tAnimData.iNumChannels), sizeof(_uint));
+		for (_uint j = 0; j < tAnimData.iNumChannels; j++)
+		{
+			TOOLCHANNELDATA tChannelData;
+			ifs.read(reinterpret_cast<char*>(&tChannelData.iNumKeyFrames), sizeof(_uint));
+			tChannelData.Keyframes.resize(tChannelData.iNumKeyFrames);
+			ifs.read(reinterpret_cast<char*>(tChannelData.Keyframes.data()), sizeof(KEYFRAME) * tChannelData.iNumKeyFrames);
+			ifs.read(reinterpret_cast<char*>(&tChannelData.iBoneIndex), sizeof(_uint));
+			tAnimData.Channels.push_back(tChannelData);
+		}
+		AnimData.push_back(tAnimData);
+	}
+
+	return S_OK;
+}
+
+HRESULT CConvertTool::Merge_Animation(const _char* pModelFilePath, vector<char>& rawData, vector<TOOLANIMDATA>& DstAnimData, vector<TOOLANIMDATA>& SrcAnimData)
+{
+	ofstream ofs(pModelFilePath, ios::binary);
+
+	if (!ofs.is_open())
+		return E_FAIL;
+
+	ofs.write(reinterpret_cast<const char*>(rawData.data()), sizeof(char) * rawData.size());
+
+	_uint iTotalNumAnimation = m_iSrcNumAnimations + m_iDstNumAnimations;
+	ofs.write(reinterpret_cast<const char*>(&iTotalNumAnimation), sizeof(_uint));			// 애니메이션 몇갠지 저장해요
+
+	/*원본 애니메이션 먼저 저장*/
+	for (size_t i = 0; i < m_iDstNumAnimations; i++)
+	{
+		ofs.write(reinterpret_cast<const char*>(&DstAnimData[i].fTicksPerSec), sizeof(_float));					// 뭐라해야할까 초당틱
+		ofs.write(reinterpret_cast<const char*>(&DstAnimData[i].fDuration), sizeof(_float));					// 애니메이션 총 길이
+
+		ofs.write(reinterpret_cast<const char*>(&DstAnimData[i].iNumChannels), sizeof(_uint));			// 이 애니메이션이 컨트롤해야하는 뼈의 갯수
+		for (size_t j = 0; j < DstAnimData[i].iNumChannels; j++)
+		{
+			ofs.write(reinterpret_cast<const char*>(&DstAnimData[i].Channels[j].iNumKeyFrames), sizeof(_uint));			// 총 키프레임 수 
+			ofs.write(reinterpret_cast<const char*>(DstAnimData[i].Channels[j].Keyframes.data()), sizeof(KEYFRAME) * DstAnimData[i].Channels[j].iNumKeyFrames);			// 총 키프레임 (데이터)
+			ofs.write(reinterpret_cast<const char*>(&DstAnimData[i].Channels[j].iBoneIndex), sizeof(_uint));				// 이 채널이 전체 뼈 배열에서 몇번째 인덱스인 친구였는지
+		}
+	}
+
+
+	/*추가 애니메이션 저장*/
+	for (size_t i = 0; i < m_iSrcNumAnimations; i++)
+	{
+		ofs.write(reinterpret_cast<const char*>(&SrcAnimData[i].fTicksPerSec), sizeof(_float));					// 뭐라해야할까 초당틱
+		ofs.write(reinterpret_cast<const char*>(&SrcAnimData[i].fDuration), sizeof(_float));					// 애니메이션 총 길이
+
+		ofs.write(reinterpret_cast<const char*>(&SrcAnimData[i].iNumChannels), sizeof(_uint));			// 이 애니메이션이 컨트롤해야하는 뼈의 갯수
+		for (size_t j = 0; j < SrcAnimData[i].iNumChannels; j++)
+		{
+			ofs.write(reinterpret_cast<const char*>(&SrcAnimData[i].Channels[j].iNumKeyFrames), sizeof(_uint));			// 총 키프레임 수 
+			ofs.write(reinterpret_cast<const char*>(SrcAnimData[i].Channels[j].Keyframes.data()), sizeof(KEYFRAME) * SrcAnimData[i].Channels[j].iNumKeyFrames);			// 총 키프레임 (데이터)
+			ofs.write(reinterpret_cast<const char*>(&SrcAnimData[i].Channels[j].iBoneIndex), sizeof(_uint));				// 이 채널이 전체 뼈 배열에서 몇번째 인덱스인 친구였는지
+		}
+	}
+
+	return S_OK;
+}
+
+
 
 
 

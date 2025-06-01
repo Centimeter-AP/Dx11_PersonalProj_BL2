@@ -4,7 +4,7 @@
 
 void CPlayerState_Jump::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::Jump_Start, false);
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Jump_Start, false);
 }
 
 void CPlayerState_Jump::Execute(_float fTimeDelta)

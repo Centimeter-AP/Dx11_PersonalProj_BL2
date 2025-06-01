@@ -4,7 +4,7 @@
 
 void CPlayerState_Run_L::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::PLA_AR::Run_L), true);
+	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::PLA_AR::AR_Run_L), true);
 }
 
 void CPlayerState_Run_L::Execute(_float fTimeDelta)

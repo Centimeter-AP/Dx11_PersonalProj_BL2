@@ -271,6 +271,29 @@ HRESULT CModel::Ready_Animations(ifstream& ifs)
 	return S_OK;
 }
 
+HRESULT CModel::Add_Animations(const string& filepath)
+{
+	ifstream ifs(filepath, ios::binary);
+
+	if (!ifs.is_open())
+		return E_FAIL;
+	
+	_uint iAdditionalNumAnimations = {};
+
+	ifs.read(reinterpret_cast<_char*>(&iAdditionalNumAnimations), sizeof(_uint));  // 애니메이션 몇개읨 
+
+	for (size_t i = 0; i < iAdditionalNumAnimations; i++)
+	{
+		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones);
+		if (nullptr == pAnimation)
+			return E_FAIL;
+
+		m_Animations.push_back(pAnimation);
+	}
+
+	return S_OK;
+}
+
 _uint CModel::Find_BoneIndex(const _char* srcName)
 {
 	_uint iBoneIndex = {};

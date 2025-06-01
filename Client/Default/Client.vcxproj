@@ -182,6 +182,7 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerWeapon.h" />
+    <ClInclude Include="..\Public\Rakk.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\public\State.h" />
     <ClInclude Include="..\Public\Terrain.h" />
@@ -229,9 +230,10 @@
     <ClCompile Include="..\Private\ObjectTool.cpp" />
     <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
-    <ClCompile Include="..\Private\PlayerState_ChangeWeapon.cpp" />
     <ClCompile Include="..\Private\PlayerState_CloseAttack.cpp" />
+    <ClCompile Include="..\Private\PlayerState_DrawWeapon.cpp" />
     <ClCompile Include="..\Private\PlayerState_Fire.cpp" />
+    <ClCompile Include="..\Private\PlayerState_HolsterWeapon.cpp" />
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_Jump.cpp" />
     <ClCompile Include="..\Private\PlayerState_Reload.cpp" />
@@ -242,6 +244,7 @@
     <ClCompile Include="..\Private\PlayerState_Sprint.cpp" />
     <ClCompile Include="..\Private\PlayerState_ThronwGrenade.cpp" />
     <ClCompile Include="..\private\PlayerWeapon.cpp" />
+    <ClCompile Include="..\Private\Rakk.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />

@@ -70,10 +70,13 @@ public: // 어심프로 읽던 방식(근데이거왜퍼블릭임)
 
 private: // 바이너리 읽는 방식
 	HRESULT Read_BinaryFBX(const string& filepath);
-	HRESULT Ready_Bones( ifstream& ifs);
-	HRESULT Ready_Meshes( ifstream& ifs);
+	HRESULT Ready_Bones(ifstream& ifs);
+	HRESULT Ready_Meshes(ifstream& ifs);
 	HRESULT Ready_Materials( ifstream& ifs, const _char* pModelFilePath);
 	HRESULT Ready_Animations(ifstream& ifs);
+
+public:
+	HRESULT Add_Animations(const string& filepath);
 
 public:
 	_uint Find_BoneIndex(const _char* srcName);

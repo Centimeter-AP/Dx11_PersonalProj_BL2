@@ -5,7 +5,7 @@
 
 void CPlayerState_CloseAttack::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::Idle, false); // 아으 이거도 없어
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_CloseAttack, false);
 }
 
 void CPlayerState_CloseAttack::Execute(_float fTimeDelta)

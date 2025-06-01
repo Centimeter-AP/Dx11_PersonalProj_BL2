@@ -1,12 +1,14 @@
 #include "PlayerState.h"
 #include "Model.h"
 
-void CPlayerState_Skill_PhaseLock::Enter()
+
+
+void CPlayerState_DrawWeapon::Enter() // 무슨 무기로 바꿨는지 정보 받아야함 
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock, false); // 애니메이션을 추가해야돼!! 
+	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Draw, false);
 }
 
-void CPlayerState_Skill_PhaseLock::Execute(_float fTimeDelta)
+void CPlayerState_DrawWeapon::Execute(_float fTimeDelta)
 {
 	if (KEY_PRESSING(DIK_W))
 	{
@@ -30,6 +32,6 @@ void CPlayerState_Skill_PhaseLock::Execute(_float fTimeDelta)
 	}
 }
 
-void CPlayerState_Skill_PhaseLock::Exit()
+void CPlayerState_DrawWeapon::Exit()
 {
 }

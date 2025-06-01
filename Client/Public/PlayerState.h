@@ -159,13 +159,28 @@ public:
 	virtual void Free() override { __super::Free(); }
 };
 
-class CPlayerState_ChangeWeapon final : public CPlayerState
+class CPlayerState_DrawWeapon final : public CPlayerState
 {
 public:
-	CPlayerState_ChangeWeapon(class CPlayer* pOwner)
+	CPlayerState_DrawWeapon(class CPlayer* pOwner)
 		: CPlayerState(pOwner) {
 	}
-	virtual ~CPlayerState_ChangeWeapon() = default;
+	virtual ~CPlayerState_DrawWeapon() = default;
+
+public:
+	virtual void Enter() override;
+	virtual void Execute(_float fTimeDelta) override;
+	virtual void Exit() override;
+	virtual void Free() override { __super::Free(); }
+};
+
+class CPlayerState_HolsterWeapon final : public CPlayerState
+{
+public:
+	CPlayerState_HolsterWeapon(class CPlayer* pOwner)
+		: CPlayerState(pOwner) {
+	}
+	virtual ~CPlayerState_HolsterWeapon() = default;
 
 public:
 	virtual void Enter() override;

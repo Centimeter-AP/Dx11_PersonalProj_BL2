@@ -1,16 +1,12 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Monster.h"
 
-NS_BEGIN(Engine)
-class CShader;
-class CModel;
-NS_END
 
 NS_BEGIN(Client)
 
-class CMonster abstract : public CGameObject
+class CRakk final : public CMonster
 {
 public:
 	typedef struct tagMonsterDesc : public CGameObject::DESC
@@ -18,10 +14,10 @@ public:
 
 	}DESC;
 
-protected:
-	CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CMonster(const CMonster& Prototype);
-	virtual ~CMonster() = default;
+private:
+	CRakk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CRakk(const CRakk& Prototype);
+	virtual ~CRakk() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -31,15 +27,16 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
-protected:
+private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 
-protected:
+private:
 	HRESULT Ready_Components(void* pArg);
 
 public:
-	virtual CGameObject* Clone(void* pArg) = 0;
+	static CRakk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 
 };
