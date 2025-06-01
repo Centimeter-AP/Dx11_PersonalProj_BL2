@@ -15,6 +15,8 @@ class CMonster abstract : public CGameObject
 public:
 	typedef struct tagMonsterDesc : public CGameObject::DESC
 	{
+		_float3 vPosition = {};
+		_bool	bActive = { true };
 
 	}DESC;
 
@@ -36,7 +38,21 @@ protected:
 	CModel*				m_pModelCom = { nullptr };
 
 protected:
+	_int				m_iHP = {};
+	_int				m_iMaxHP = {};
+	_uint				m_iAttackPower = {};
+	_int				m_iDefense = {};
+	_float				m_fSpeed = {};
+
+	_bool				m_bActive = { true };
+
+	CGameObject*		m_pTarget = { nullptr };
+	_float				m_fAttackableDistance = {};
+
+
+protected:
 	HRESULT Ready_Components(void* pArg);
+	HRESULT Bind_ShaderResources();
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

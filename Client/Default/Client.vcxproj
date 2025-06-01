@@ -183,6 +183,7 @@
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerWeapon.h" />
     <ClInclude Include="..\Public\Rakk.h" />
+    <ClInclude Include="..\Public\RakkState.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\public\State.h" />
     <ClInclude Include="..\Public\Terrain.h" />

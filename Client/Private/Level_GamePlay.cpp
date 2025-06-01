@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 #include "Terrain.h"
 #include "Player.h"
+#include "Rakk.h"
+
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
 {
@@ -28,6 +30,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 	if (FAILED(Ready_Layer_MapObject(TEXT("Layer_MapObject"))))
 		return E_FAIL;
+
 	ShowCursor(FALSE);
 
 	return S_OK;
@@ -78,9 +81,15 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 {
-	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Monster"),
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
-	//	return E_FAIL;
+	CRakk::DESC RakkDesc;
+	RakkDesc.bActive = true;
+	RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	RakkDesc.fSpeedPerSec = 10.f;
+	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Warrior");
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

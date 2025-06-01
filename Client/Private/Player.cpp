@@ -105,14 +105,14 @@ HRESULT CPlayer::Render()
 
 	for (size_t i = 0; i < iNumMesh; i++)
 	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", static_cast<_uint>(i), aiTextureType_DIFFUSE, 0)))
 			continue;
 		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
-		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
+		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", static_cast<_uint>(i));
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
 
-		if (FAILED(m_pModelCom->Render(i)))
+		if (FAILED(m_pModelCom->Render(static_cast<_uint>(i))))
 			return E_FAIL;
 	}
 	
@@ -220,7 +220,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Siren_1st.anim)");
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Base_Siren_All.anim)");
 
-	// need: collider, ...
+	// need: collider, sound, maybe gravity?
 
 
 	return S_OK;

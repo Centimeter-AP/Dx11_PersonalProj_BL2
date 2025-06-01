@@ -291,6 +291,9 @@
     <ClInclude Include="..\Public\Rakk.h">
       <Filter>02.GameObjects\03. Monster\Rakk</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RakkState.h">
+      <Filter>02.GameObjects\03. Monster\Rakk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

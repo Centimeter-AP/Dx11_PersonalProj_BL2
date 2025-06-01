@@ -200,11 +200,11 @@ HRESULT CConvertTool::Convert_AnimFBX(const _char* pModelFilePath)
 /**********본 저장**********/
 	vector<FBX_BONEDATA> Bones;
 	Write_BoneData(m_pAIScene->mRootNode, -1, Bones, ofs);
-	_uint BonesSize = Bones.size();
+	_uint BonesSize = _uint(Bones.size());
 	ofs.write(reinterpret_cast<const char*>(&BonesSize), sizeof(_uint));	// 뼈 총 갯수 저장해요
 	for (size_t i = 0; i < BonesSize; i++)
 	{
-		_uint NameLength = Bones[i].strBoneName.length();
+		_uint NameLength = _uint(Bones[i].strBoneName.length());
 		ofs.write(reinterpret_cast<const char*>(&NameLength), sizeof(_uint));	// 뼈 이름 길이 저장해요
 		ofs.write(reinterpret_cast<const char*>(Bones[i].strBoneName.c_str()), NameLength);	// 뼈 이름 저장해요
 		ofs.write(reinterpret_cast<const char*>(&Bones[i].TransformMatrix), sizeof(_float4x4));	// 행렬 저장해요
@@ -383,7 +383,7 @@ HRESULT CConvertTool::Write_AnimMeshData(const vector<FBX_BONEDATA>& Bones, ostr
 
 		vector<VTXANIMMESH> pVertices;
 		pVertices.reserve(iNumVertices);
-		for (size_t j = 0; j < iNumVertices; j++)
+		for (_uint j = 0; j < iNumVertices; j++)
 		{
 			VTXANIMMESH tVertex = {};
 			memcpy(&tVertex.vPosition, &pAIMesh->mVertices[j], sizeof(_float3));
@@ -397,7 +397,7 @@ HRESULT CConvertTool::Write_AnimMeshData(const vector<FBX_BONEDATA>& Bones, ostr
 		ofs.write(reinterpret_cast<const char*>(&iNumBones), sizeof(_uint));		// 이 메쉬에 영향을 주는 뼈가 몇갠지 저장해요
 		vector<_float4x4> OffsetMatrices;
 		vector<_uint> BoneIndices;
-		for (size_t j = 0; j < iNumBones; j++)
+		for (_uint j = 0; j < iNumBones; j++)
 		{
 			aiBone* pAIBone = pAIMesh->mBones[j];
 			_float4x4		OffsetMatrix;
@@ -475,10 +475,10 @@ HRESULT CConvertTool::Write_AnimMeshData(const vector<FBX_BONEDATA>& Bones, ostr
 			}
 		}
 
-		_uint offSize = OffsetMatrices.size();
+		_uint offSize = static_cast<_uint>(OffsetMatrices.size());
 		ofs.write(reinterpret_cast<const char*>(&offSize), sizeof(_uint));									// 오프셋 행렬 배열 크기 저장해요
 		ofs.write(reinterpret_cast<const char*>(OffsetMatrices.data()), sizeof(_float4x4) * offSize);		// 오프셋 행렬 배열 저장해요
-		_uint BoneIndicesSize = BoneIndices.size();
+		_uint BoneIndicesSize = static_cast<_uint>(BoneIndices.size());
 		ofs.write(reinterpret_cast<const char*>(&BoneIndicesSize), sizeof(_uint));							// 나한테 영향을 미치는 뼈새끼 인덱스가 몇번인지에 대한 배열  크기  저장해요
 		ofs.write(reinterpret_cast<const char*>(BoneIndices.data()), sizeof(_uint) * BoneIndicesSize);		// 나한테 영향을 미치는 뼈새끼 인덱스가 몇번인지에 대한 배열 저장해요
 
@@ -516,7 +516,7 @@ HRESULT CConvertTool::Write_MaterialData(const _char* pModelFilePath, ostream& o
 			{
 				FBX_MATDATA tMat = {};
 				aiString     strTexturePath;
-				if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(static_cast<aiTextureType>(j), k, &strTexturePath)))
+				if (FAILED(m_pAIScene->mMaterials[i]->GetTexture(static_cast<aiTextureType>(j), static_cast<_uint>(k), &strTexturePath)))
 					return E_FAIL;
 
 				_char       szFullPath[MAX_PATH] = {};
@@ -548,7 +548,7 @@ HRESULT CConvertTool::Write_MaterialData(const _char* pModelFilePath, ostream& o
 
 			}
 		}
-		_uint numSRVs = tMaterialData.size();
+		_uint numSRVs = static_cast<_uint>(tMaterialData.size());
 		ofs.write(reinterpret_cast<const char*>(&numSRVs), sizeof(_uint));						// 머테리얼 안에 srv가 몇개 있는지 저장해요
 		for (auto matdata : tMaterialData)
 		{
@@ -575,8 +575,8 @@ HRESULT CConvertTool::Write_AnimationData(const vector<FBX_BONEDATA>& Bones, ost
 		//  CAnimation::Create(m_pAIScene->mAnimations[i], m_Bones);
 		aiAnimation* pAIAnimation = m_pAIScene->mAnimations[i];
 
-		_float tickspersec = (double)pAIAnimation->mTicksPerSecond;
-		_float duration = (double)pAIAnimation->mDuration;
+		_float tickspersec = (_float)pAIAnimation->mTicksPerSecond;
+		_float duration = (_float)pAIAnimation->mDuration;
 		string AnimationName = pAIAnimation->mName.data;
 
 		ofs.write(reinterpret_cast<const char*>(&tickspersec), sizeof(_float));					// 뭐라해야할까 초당틱

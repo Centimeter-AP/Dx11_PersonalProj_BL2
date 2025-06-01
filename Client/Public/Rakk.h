@@ -9,7 +9,7 @@ NS_BEGIN(Client)
 class CRakk final : public CMonster
 {
 public:
-	typedef struct tagMonsterDesc : public CGameObject::DESC
+	typedef struct tagRakkDesc : public CMonster::DESC
 	{
 
 	}DESC;
@@ -26,10 +26,6 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
-
-private:
-	CShader*			m_pShaderCom = { nullptr };
-	CModel*				m_pModelCom = { nullptr };
 
 private:
 	HRESULT Ready_Components(void* pArg);
