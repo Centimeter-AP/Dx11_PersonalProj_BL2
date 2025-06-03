@@ -294,6 +294,12 @@
     <ClInclude Include="..\Public\RakkState.h">
       <Filter>02.GameObjects\03. Monster\Rakk</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Warrior.h">
+      <Filter>02.GameObjects\03. Monster\Boss_Warrior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WarriorState.h">
+      <Filter>02.GameObjects\03. Monster\Boss_Warrior</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -467,6 +473,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Rakk.cpp">
       <Filter>02.GameObjects\03. Monster\Rakk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Warrior.cpp">
+      <Filter>02.GameObjects\03. Monster\Boss_Warrior</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

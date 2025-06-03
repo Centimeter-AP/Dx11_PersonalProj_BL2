@@ -24,6 +24,8 @@ HRESULT CMonster::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pTarget = GET_PLAYER;
+
 	//if (FAILED(Ready_Components(pArg)))
 	//	return E_FAIL;
 	//

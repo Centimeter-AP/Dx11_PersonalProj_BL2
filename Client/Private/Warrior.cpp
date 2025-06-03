@@ -1,25 +1,25 @@
-#include "Rakk.h"
+#include "Warrior.h"
 #include "RakkState.h"
 #include "GameInstance.h"
 
-CRakk::CRakk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CWarrior::CWarrior(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster { pDevice, pContext }
 {
 
 }
 
-CRakk::CRakk(const CRakk& Prototype)
+CWarrior::CWarrior(const CWarrior& Prototype)
 	: CMonster( Prototype )
 {
 
 }
 
-HRESULT CRakk::Initialize_Prototype()
+HRESULT CWarrior::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CRakk::Initialize(void* pArg)
+HRESULT CWarrior::Initialize(void* pArg)
 {
  	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -38,7 +38,7 @@ HRESULT CRakk::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CRakk::Priority_Update(_float fTimeDelta)
+void CWarrior::Priority_Update(_float fTimeDelta)
 {
 #pragma region AnimationTests
 	static _uint test = {};
@@ -57,18 +57,18 @@ void CRakk::Priority_Update(_float fTimeDelta)
 
 }
 
-EVENT CRakk::Update(_float fTimeDelta)
+EVENT CWarrior::Update(_float fTimeDelta)
 {
 
 	return EVN_NONE;
 }
 
-void CRakk::Late_Update(_float fTimeDelta)
+void CWarrior::Late_Update(_float fTimeDelta)
 {
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
 }
 
-HRESULT CRakk::Render()
+HRESULT CWarrior::Render()
 {
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
@@ -94,7 +94,7 @@ HRESULT CRakk::Render()
 	return S_OK;
 }
 
-HRESULT CRakk::Ready_Components(void* pArg)
+HRESULT CWarrior::Ready_Components(void* pArg)
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -102,7 +102,7 @@ HRESULT CRakk::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_Rakk"),
+	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_Warrior"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -110,23 +110,15 @@ HRESULT CRakk::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CRakk::Ready_RakkStates()
+HRESULT CWarrior::Ready_RakkStates()
 {
-	m_pStates[RAKK_STATE::STATE_Idle] = new CRakkState_Idle(this);
-	m_pStates[RAKK_STATE::STATE_Flying_Idle] = new CRakkState_Flying_Idle(this);
-	m_pStates[RAKK_STATE::STATE_Hover] = new CRakkState_Hover(this);
-	m_pStates[RAKK_STATE::STATE_Ground_Idle] = new CRakkState_Ground_Idle(this);
-	m_pStates[RAKK_STATE::STATE_Flying_Attack] = new CRakkState_Attack(this);
-	m_pStates[RAKK_STATE::STATE_Flying_SuicidalDive] = new CRakkState_SuicideDive(this);
-	m_pStates[RAKK_STATE::STATE_PhaseLocked] = new CRakkState_Phaselocked(this);
-	m_pStates[RAKK_STATE::STATE_Takeoff] = new CRakkState_Takeoff(this);
-	m_pStates[RAKK_STATE::STATE_Landing] = new CRakkState_Landing(this);
+	//m_pStates[RAKK_STATE::STATE_Idle] = new CRakkState_Idle(this);
 
 	m_pCurState = m_pStates[RAKK_STATE::STATE_Flying_Idle];
 	return S_OK;
 }
 
-void CRakk::Set_State(RAKK_STATE eState)
+void CWarrior::Set_State(RAKK_STATE eState)
 {
 	m_ePrevState = m_eCurState;
 	m_eCurState = eState;
@@ -136,7 +128,7 @@ void CRakk::Set_State(RAKK_STATE eState)
 	m_pCurState->Enter();
 }
 
-void CRakk::Update_State(_float fTimeDelta)
+void CWarrior::Update_State(_float fTimeDelta)
 {
 	//if (m_ePrevState != m_eCurState)
 	//{
@@ -146,7 +138,7 @@ void CRakk::Update_State(_float fTimeDelta)
 	m_pCurState->Execute(fTimeDelta);
 }
 
-_bool CRakk::IsOutsideRegion() const
+_bool CWarrior::IsOutsideRegion() const
 {
 	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
 	_vector vCenter = XMLoadFloat3(&m_vRegionCenter);
@@ -156,7 +148,7 @@ _bool CRakk::IsOutsideRegion() const
 	return (distSq > (m_fRegionRadius * m_fRegionRadius));
 }
 
-void CRakk::Enforce_ReturnToRegion(_float fTimeDelta)
+void CWarrior::Enforce_ReturnToRegion(_float fTimeDelta)
 {
 	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
 	_vector vCenter = XMLoadFloat3(&m_vRegionCenter);
@@ -181,9 +173,9 @@ void CRakk::Enforce_ReturnToRegion(_float fTimeDelta)
 }
 
 
-CRakk* CRakk::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CWarrior* CWarrior::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CRakk* pInstance = new CRakk(pDevice, pContext);
+	CWarrior* pInstance = new CWarrior(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -194,20 +186,20 @@ CRakk* CRakk::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	return pInstance;
 }
 
-CGameObject* CRakk::Clone(void* pArg)
+CGameObject* CWarrior::Clone(void* pArg)
 {
-	CRakk* pInstance = new CRakk(*this);
+	CWarrior* pInstance = new CWarrior(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CRakk");
+		MSG_BOX("Failed to Cloned : CWarrior");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CRakk::Free()
+void CWarrior::Free()
 {
 	__super::Free();
 

@@ -181,6 +181,27 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScaled.z);
 }
 
+void CTransform::LookAtLerp(_fvector vAt, _float fTimeDelta, _float fLerpSpeed)
+{
+	_float3        vScaled = Get_Scaled();
+	_vector        vPos = Get_State(STATE::POSITION);
+	_vector        vLook = Get_State(STATE::LOOK);
+
+	_vector        vTargetDir = XMVector3Normalize(vAt - vPos);
+
+	/* Lerp 방식 보간 */
+	_vector vInterpolatedDir = XMVector3Normalize(
+		XMVectorLerp(vLook, vTargetDir, fTimeDelta * fLerpSpeed)
+	);
+
+	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_vector vUp = XMVector3Cross(vLook, vRight);
+
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScaled.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScaled.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vInterpolatedDir) * vScaled.z);
+
+}
 HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstantName)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);	

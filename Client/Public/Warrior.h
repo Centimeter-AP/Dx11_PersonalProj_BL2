@@ -5,7 +5,7 @@
 
 NS_BEGIN(Client)
 
-class CRakk final : public CMonster
+class CWarrior final : public CMonster
 {
 public:
 	typedef struct tagRakkDesc : public CMonster::DESC
@@ -41,9 +41,9 @@ public:
 #pragma endregion
 
 private:
-	CRakk(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CRakk(const CRakk& Prototype);
-	virtual ~CRakk() = default;
+	CWarrior(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CWarrior(const CWarrior& Prototype);
+	virtual ~CWarrior() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -83,7 +83,7 @@ private:
 	RAKK_STATE			m_ePrevState = { RAKK_STATE::STATE_END };
 
 public:
-	static CRakk* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CWarrior* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 

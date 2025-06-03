@@ -33,6 +33,9 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	CGameObject* Get_Target() { return m_pTarget; }
+
 protected:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
@@ -48,6 +51,8 @@ protected:
 
 	CGameObject*		m_pTarget = { nullptr };
 	_float				m_fAttackableDistance = {};
+	_float				m_fDetectiveDistance = {};
+
 
 
 protected:
