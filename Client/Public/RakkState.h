@@ -12,6 +12,7 @@ public:
 		: m_pOwner(pOwner),
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
+		m_pTarget = m_pOwner->m_pTarget;
 		Safe_AddRef(m_pGameInstance);
 	}
 	virtual ~CRakkState() = default;
@@ -21,6 +22,23 @@ public:
 	virtual void Execute(_float fTimeDelta) PURE;
 	virtual void Exit() PURE;
 	virtual void Free() override { __super::Free(); Safe_Release(m_pGameInstance); }
+
+	virtual _bool Is_Target_Found(){
+		return (XMVectorGetX(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTarget->Get_Transform()->Get_State(STATE::POSITION)) < m_pOwner->m_fDetectiveDistance);
+	}
+	virtual void Detect_Target() {
+		if (Is_Target_Found())
+		{
+			/* 뭘 어케 짜야하지 코드를 */
+			/* 무조건 공격 모드로 가야할 것 같은데 */
+			/* 몬스터는 Idle상태랑 Provoked상태 큰 틀로 분류한 다음 전투는 Provoke에서 전부 분기를 나누는 걸로 */
+			/* Provoke에서는 근데..플레이어한테 오는 정도만? */
+			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Provoked);
+		}
+	}
+	virtual void Call_State(CRakk::RAKK_STATE eNextState) {
+		//if (m_)
+	}
 
 protected:
 	CRakk*			m_pOwner;
@@ -260,6 +278,7 @@ public:
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 		m_fPhaselockTime += fTimeDelta;
 		if (m_fPhaselockTime >= 2.f)
 			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Hover);
@@ -285,16 +304,20 @@ public:
 	virtual void Enter() override
 	{
 		vDir = {};
+		_vector vPos = m_pOwner->m_pTransformCom->Get_State(STATE::POSITION);
 		_float3 vTakeoffPos = {};
 
-		XMStoreFloat3(&vTakeoffPos, m_pOwner->m_pTransformCom->Get_State(STATE::POSITION));
-		vTakeoffPos.x += _float(rand() % 3 - 1.f);
-		vTakeoffPos.y += _float(rand() % 3 + 1.f);
-		vTakeoffPos.z += _float(rand() % 3 - 1.f);
-		vDir = XMVector3Normalize(XMLoadFloat3(&vTakeoffPos) - m_pOwner->m_pTransformCom->Get_State(STATE::POSITION));
-		_float3 vScale = m_pOwner->m_pTransformCom->Get_Scaled();
-		vDir *= XMLoadFloat3(&vScale);
-		m_pOwner->m_pTransformCom->Set_State(STATE::LOOK, vDir);
+		vTakeoffPos.x = XMVectorGetX(vPos) + _float(rand() % 3 - 1.f);
+		vTakeoffPos.y = XMVectorGetY(vPos) + _float(rand() % 3 + 1.f);
+		vTakeoffPos.z = XMVectorGetZ(vPos) + _float(rand() % 3 - 1.f);
+		vDir = XMVector3Normalize(XMLoadFloat3(&vTakeoffPos) - vPos);
+
+		_vector vToLook = vPos + vDir * 10.f;
+
+		//_float3 vScale = m_pOwner->m_pTransformCom->Get_Scaled();
+		//vDir *= XMLoadFloat3(&vScale);
+		//m_pOwner->m_pTransformCom->Set_State(STATE::LOOK, vDir);
+		m_pOwner->m_pTransformCom->LookAt(vToLook);
 
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::Takeoff), false);
 	}
@@ -342,5 +365,44 @@ public:
 	}
 	virtual void Free() override { __super::Free(); }
 };
+
+class CRakkState_Provoked final : public CRakkState
+{
+public:
+	CRakkState_Provoked(class CRakk* pOwner)
+		: CRakkState(pOwner) {
+	}
+	virtual ~CRakkState_Provoked() = default;
+
+public:
+	virtual void Enter() override
+	{
+		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::Glide01), false);
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			if (m_bChangeStateCall)
+			{
+				m_bChangeStateCall = false;
+				if (rand()%10 == 0)
+					m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Flying_SuicidalDive);
+				else
+					m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Flying_Attack);
+			}
+		}
+		if (m_pOwner->m_fAttackableDistance)
+		{
+			m_bChangeStateCall = true; // 글라이드 너무길어서 이건 빼고 다른곳에 써야겠다
+		}
+	}
+	virtual void Exit() override
+	{
+
+	}
+	virtual void Free() override { __super::Free(); }
+};
+
 
 NS_END;

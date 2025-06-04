@@ -54,7 +54,6 @@ protected:
 	_float				m_fDetectiveDistance = {};
 
 
-
 protected:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
