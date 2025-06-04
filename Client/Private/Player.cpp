@@ -99,7 +99,7 @@ EVENT CPlayer::Update(_float fTimeDelta)
 	m_pColCam->Update(XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))) * m_pTransformCom->Get_WorldMatrix());
 
 	for (_uint i = 0; i < m_pModelCom->Get_NumBones(); i++)
-	{
+	{ 
 		m_pColBone[i]->Update(XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(i)) * m_pTransformCom->Get_WorldMatrix());
 	}
 
@@ -182,18 +182,6 @@ void CPlayer::Key_Input(_float fTimeDelta)
 
 		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fDeltaPitch);
 	}
-#ifdef _CONSOLE
-	static _float consoleTicker = {};
-	consoleTicker += fTimeDelta;
-	if (consoleTicker >= 0.3f)
-	{
-		cout << "m_fPitch : " << m_fPitch << endl;
-		cout << "m_fPreviousPitch : " << m_fPreviousPitch << endl;
-		cout << "fDeltaPitch : " << fDeltaPitch << endl; 
-		cout << endl;
-		consoleTicker = 0.f;
-	}
-#endif // _CONSOLE
 
 
 
@@ -281,7 +269,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	
 	CBounding_Sphere::SPHERE_DESC SphereDesc = {};
 	SphereDesc.vCenter = _float3(0.0f, 0.f, 0.f);
-	SphereDesc.fRadius = 1.f;
+	SphereDesc.fRadius = 0.6f;
 
 	m_pColBone = new CCollider * [m_pModelCom->Get_NumBones()];
 
@@ -292,6 +280,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColBone[i]), &SphereDesc)))
 			return E_FAIL;
 	}
+
 
 
 

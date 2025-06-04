@@ -84,6 +84,7 @@ public:
 public:
 	_uint Find_BoneIndex(const _char* srcName);
 	const _float4x4* Get_CombinedTransformationMatrix(_uint iBoneIndex);
+	const _float4x4* Get_TransformationMatrix(_uint iBoneIndex);
 	HRESULT Set_BoneMatrix(_uint iBoneIndex, _fmatrix matTransform);
 
 public:

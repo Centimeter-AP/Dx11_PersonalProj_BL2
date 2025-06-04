@@ -46,7 +46,6 @@ void CBone::Update_CombinedTransformationMatrix(const vector<CBone*>& Bones, _fm
 }
 
 
-
 CBone* CBone::Create(const aiNode* pAINode, _int iParentBoneIndex)
 {
 	CBone* pInstance = new CBone();

@@ -314,6 +314,11 @@ const _float4x4* CModel::Get_CombinedTransformationMatrix(_uint iBoneIndex)
 	return m_Bones[iBoneIndex]->Get_CombinedTransformationMatrix();
 }
 
+const _float4x4* CModel::Get_TransformationMatrix(_uint iBoneIndex)
+{
+	return m_Bones[iBoneIndex]->Get_TransformationMatrix();
+}
+
 HRESULT CModel::Set_BoneMatrix(_uint iBoneIndex, _fmatrix matTransform)
 {
 	if (iBoneIndex > m_Bones.size())
