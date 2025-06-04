@@ -73,6 +73,7 @@ public:
 	void Rotation(_float fX, _float fY, _float fZ);
 
 public:
+	void LookWithLook(_fvector vLook);
 	void LookAt(_fvector vAt);
 	void LookAtLerp(_fvector vAt, _float fTimeDelta, _float fLerpSpeed);
 	

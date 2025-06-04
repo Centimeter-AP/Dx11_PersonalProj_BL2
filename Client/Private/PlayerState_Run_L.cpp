@@ -4,7 +4,19 @@
 
 void CPlayerState_Run_L::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::PLA_AR::AR_Run_L), true);
+	switch (m_pOwner->m_eCurWeapon)
+	{
+	case CPlayer::WEAPON_TYPE::WTYPE_AR:
+		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::AR_Run_L), true);
+		break;
+	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
+		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::PST_Run_L), true);
+		break;
+	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:
+		break;
+	default:
+		break;
+	}
 }
 
 void CPlayerState_Run_L::Execute(_float fTimeDelta)

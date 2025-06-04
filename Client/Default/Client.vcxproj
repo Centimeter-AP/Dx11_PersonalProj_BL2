@@ -182,10 +182,10 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\public\PlayerState.h" />
     <ClInclude Include="..\public\PlayerWeapon.h" />
+    <ClInclude Include="..\Public\PSTState.h" />
     <ClInclude Include="..\Public\Rakk.h" />
     <ClInclude Include="..\Public\RakkState.h" />
     <ClInclude Include="..\Public\Sky.h" />
-    <ClInclude Include="..\public\State.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
     <ClInclude Include="..\Public\Warrior.h" />
@@ -247,6 +247,11 @@
     <ClCompile Include="..\Private\PlayerState_Sprint.cpp" />
     <ClCompile Include="..\Private\PlayerState_ThronwGrenade.cpp" />
     <ClCompile Include="..\private\PlayerWeapon.cpp" />
+    <ClCompile Include="..\Private\PSTState_Draw.cpp" />
+    <ClCompile Include="..\Private\PSTState_Fire.cpp" />
+    <ClCompile Include="..\Private\PSTState_Idle.cpp" />
+    <ClCompile Include="..\Private\PSTState_Reload.cpp" />
+    <ClCompile Include="..\Private\PSTState_Reload_Fast.cpp" />
     <ClCompile Include="..\Private\Rakk.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />

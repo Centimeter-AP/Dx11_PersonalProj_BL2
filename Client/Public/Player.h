@@ -2,7 +2,6 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
-#include "PlayerState.h"
 
 NS_BEGIN(Engine)
 class CCollider;
@@ -46,8 +45,11 @@ public:
 		STATE_Skill_PhaseLock, STATE_SKill_KissOfDeath, STATE_END
 	};
 
+	enum WEAPON_TYPE { WTYPE_UNARMED, WTYPE_AR, WTYPE_PISTOL, WTYPE_END };
+
 #pragma region MyFriendMyState
 
+	friend class CPlayerState;
 	friend class CPlayerState_Idle;
 	friend class CPlayerState_Run;
 	friend class CPlayerState_Run_L;
@@ -87,6 +89,7 @@ private:
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_PartObjects(void* pArg);
+	HRESULT Ready_Weapons(void* pArg);
 	HRESULT Ready_PlayerStates();
 	HRESULT Bind_ShaderResources();
 
@@ -94,6 +97,8 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
+	CCollider*			m_pColCam = { nullptr };
+	CCollider**			m_pColBone = { nullptr };
 
 private:
 	_float				m_fSensor = {};
@@ -106,6 +111,12 @@ private: // maybe deprecated
 	_float				m_fPitch = {};
 	_float				m_fPreviousPitch = {};
 	const _float		m_fPitchLimit = XMConvertToRadians(89.9f); 
+
+private:
+	vector<CGameObject*>		m_pWeapons; // 임시 무기 저장 변수, 인벤토리 만들고 꼭 이새끼 날릴 것 !!! 아닌가그냥써야하나??
+	WEAPON_TYPE					m_ePrevWeapon = { WTYPE_END };
+	WEAPON_TYPE					m_eCurWeapon = { WTYPE_END };
+	void Change_Weapon(WEAPON_TYPE eWeaponType);
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -118,12 +118,14 @@ void CCamera_FPS::Update_Camera()
 
 	// Eye / At ÃßÃâ
 	_vector vEye = XMVectorSetW(matFinal.r[3], 1.f);
-	_vector vLook = XMVectorSetW(XMVector4Normalize(m_pPlayerTransform->Get_State(STATE::LOOK)), 0.f);
+	_vector vLook = XMVectorSetW(XMVector4Normalize(matFinal.r[0]), 0.f);
+	//_vector vLook = XMVectorSetW(XMVector4Normalize(m_pPlayerTransform->Get_State(STATE::LOOK)), 0.f);
 
-	_vector vAtVec = vEye + vLook * 10.f;
+	//_vector vAtVec = vEye + vLook * 10.f;
 
 	m_pTransformCom->Set_State(STATE::POSITION, vEye);
-	m_pTransformCom->LookAt(XMVectorSetW(vAtVec, 1.f));
+	m_pTransformCom->LookWithLook(vLook);
+	//m_pTransformCom->LookAt(XMVectorSetW(vAtVec, 1.f));
 }
 
 CCamera_FPS* CCamera_FPS::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

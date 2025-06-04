@@ -65,11 +65,14 @@ HRESULT CGameObject::Initialize(void* pArg)
 
 void CGameObject::Priority_Update(_float fTimeDelta)
 {
-
+	if (!m_isActive)
+		return;
 }
 
 EVENT CGameObject::Update(_float fTimeDelta)
 {
+	if (!m_isActive)
+		return EVN_NONE;
 	if (m_bDead)
 		return EVN_DEAD;
 	return EVN_NONE;
@@ -77,12 +80,14 @@ EVENT CGameObject::Update(_float fTimeDelta)
 
 void CGameObject::Late_Update(_float fTimeDelta)
 {
-
+	if (!m_isActive)
+		return;
 }
 
 HRESULT CGameObject::Render()
 {
-
+	if (!m_isActive)
+		return S_OK;
 	return S_OK;
 }
 
@@ -110,6 +115,58 @@ HRESULT CGameObject::Add_PartObject(_uint iPrototypeLevelIndex, const _wstring& 
 	m_PartObjects.emplace(strPartObjKey, pPartObject);
 
 	return S_OK;
+}
+
+HRESULT CGameObject::Add_PartObject(const _wstring& strPartObjKey, CGameObject* pPartObject)
+{
+	if (nullptr == pPartObject)
+		return E_FAIL;
+
+	m_PartObjects.emplace(strPartObjKey, pPartObject);
+
+	return S_OK;
+}
+
+CGameObject* CGameObject::Replace_PartObject(const _wstring& strPartObjKey, CGameObject* pReplaceObject)
+{
+	if (nullptr == pReplaceObject)
+		return nullptr;
+
+	auto	iter = m_PartObjects.find(strPartObjKey);
+	if (iter == m_PartObjects.end())
+		return nullptr;
+
+	CGameObject* ReplacedPart = iter->second;
+	iter->second = pReplaceObject;
+
+	return ReplacedPart;
+}
+
+CGameObject* CGameObject::Replace_PartObject(_uint iPrototypeLevelIndex, const _wstring& strPartObjKey, const _wstring& strPrototypeTag, void* pArg)
+{
+	auto	iter = m_PartObjects.find(strPartObjKey);
+	if (iter == m_PartObjects.end())
+		return nullptr;
+
+	CGameObject* pPartObject = dynamic_cast<CGameObject*>(m_pGameInstance->Clone_Prototype(PROTOTYPE::TYPE_GAMEOBJECT, iPrototypeLevelIndex, strPrototypeTag, pArg));
+	if (nullptr == pPartObject)
+		return nullptr;
+
+	CGameObject* ReplacedPart = iter->second;
+	iter->second = pPartObject;
+
+	return ReplacedPart;
+}
+
+
+
+CGameObject* CGameObject::Find_PartObject(const _wstring& strPartObjKey)
+{
+	auto	iter = m_PartObjects.find(strPartObjKey);
+	if (iter == m_PartObjects.end())
+		return nullptr;
+
+	return iter->second;
 }
 
 void CGameObject::Free()

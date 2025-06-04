@@ -109,9 +109,6 @@
     <Filter Include="02.GameObjects\07. UI\NewFilter1">
       <UniqueIdentifier>{e7652dd2-9df2-40a8-a8eb-687d8d276cd8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. State">
-      <UniqueIdentifier>{4659da7a-19de-4c18-824a-f31ed2216459}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Player\PlayerWeapon">
       <UniqueIdentifier>{dd64e3dd-6298-405f-b733-e670ec5c22fe}</UniqueIdentifier>
     </Filter>
@@ -135,6 +132,9 @@
     </Filter>
     <Filter Include="02.GameObjects\03. Monster\SpiderAnt">
       <UniqueIdentifier>{9052f37b-59f2-4d1a-a926-981e0f3ba4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\05. Weapon\Pistol\PSTState">
+      <UniqueIdentifier>{d83dbe8e-4680-4237-a4ba-b43c187d04de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -267,9 +267,6 @@
     <ClInclude Include="..\public\AssaultRifle.h">
       <Filter>02.GameObjects\05. Weapon\AssaultRifle</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\State.h">
-      <Filter>03. State</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\PlayerState.h">
       <Filter>02.GameObjects\04. Player\00. PlayerState</Filter>
     </ClInclude>
@@ -293,6 +290,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\WarriorState.h">
       <Filter>02.GameObjects\03. Monster\Boss_Warrior</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PSTState.h">
+      <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -470,6 +470,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Warrior.cpp">
       <Filter>02.GameObjects\03. Monster\Boss_Warrior</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PSTState_Fire.cpp">
+      <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PSTState_Idle.cpp">
+      <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PSTState_Reload.cpp">
+      <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PSTState_Reload_Fast.cpp">
+      <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PSTState_Draw.cpp">
+      <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 #include "Player.h"
-
+#include "PlayerState.h"
 #include "GameInstance.h"
-#include <Camera.h>
+#include "Camera.h"
 
 #define PLAYER_DEFAULTSPEED 10.f
 
@@ -32,6 +32,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Desc.szName  = TEXT("Player");
 
 	m_fSensor = XMConvertToRadians(4.f);
+
+	m_pWeapons.resize(WTYPE_END);
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -47,6 +50,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 20.f, 0.f, 1.f));
 	
 	m_pModelCom->Set_Animation(AR_Idle, true, 0.2f);
+	Set_State(STATE_Idle);
+
+
 
 	return S_OK;
 }
@@ -61,12 +67,18 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	static _uint test = {};
 	if (KEY_DOWN(DIK_Z))
 	{
-		test > 36 ? test = 0 : test++;
+#ifdef _CONSOLE
+		cout << "애니메이션 : " << test << endl;
+#endif
+		test > PLA_ALL_END - 1 ? test = 0 : test++;
 		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
 	if (KEY_DOWN(DIK_X))
 	{
-		test < 1 ? test = 37 : test--;
+#ifdef _CONSOLE
+		cout << "애니메이션 : " << test << endl;
+#endif
+		test < 1 ? test = PLA_ALL_END - 1 : test--;
 		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
 	Update_State(fTimeDelta);
@@ -83,6 +95,17 @@ EVENT CPlayer::Update(_float fTimeDelta)
 	}
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	//auto val = m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))
+	m_pColCam->Update(XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))) * m_pTransformCom->Get_WorldMatrix());
+
+	for (_uint i = 0; i < m_pModelCom->Get_NumBones(); i++)
+	{
+		m_pColBone[i]->Update(XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(i)) * m_pTransformCom->Get_WorldMatrix());
+	}
+
+
+
+
 	return EVN_NONE;
 }
 
@@ -123,6 +146,17 @@ HRESULT CPlayer::Render()
 	m_pColliderCom->Set_ColliderColor(RGBA_WHITE);
 	m_pColliderCom->Render();
 
+
+	m_pColCam->Set_ColliderColor(RGBA_RED);
+	m_pColCam->Render();
+
+	for (size_t i = 0; i < m_pModelCom->Get_NumBones(); i++)
+	{
+		m_pColBone[i]->Set_ColliderColor(RGBA_RED);
+		m_pColBone[i]->Render();
+	}
+
+
 #endif 
 
 	return S_OK;
@@ -137,7 +171,7 @@ void CPlayer::Key_Input(_float fTimeDelta)
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
 	}
 
-		_float fDeltaPitch = {};
+	_float fDeltaPitch = {};
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::Y))
 	{
 		m_fPitch += MouseMove * fTimeDelta * m_fSensor;
@@ -219,6 +253,12 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 		return E_FAIL;
+	AABBDesc.vExtents = _float3(1.f, 1.f, 1.f);
+	AABBDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	/* For.Com_Collider */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColCam), &AABBDesc)))
+		return E_FAIL;
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -238,11 +278,36 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 
 	// need: collider, sound, maybe gravity?
 
+	
+	CBounding_Sphere::SPHERE_DESC SphereDesc = {};
+	SphereDesc.vCenter = _float3(0.0f, 0.f, 0.f);
+	SphereDesc.fRadius = 1.f;
+
+	m_pColBone = new CCollider * [m_pModelCom->Get_NumBones()];
+
+	for (size_t i = 0; i < m_pModelCom->Get_NumBones(); i++)
+	{
+		/* For.Com_Collider */
+		if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
+			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColBone[i]), &SphereDesc)))
+			return E_FAIL;
+	}
+
+
+
 
 	return S_OK;
 }
 
 HRESULT CPlayer::Ready_PartObjects(void* pArg)
+{
+
+
+
+	return Ready_Weapons(pArg);
+}
+
+HRESULT CPlayer::Ready_Weapons(void* pArg)
 {
 	CGameObject::DESC Desc = {};
 
@@ -251,18 +316,34 @@ HRESULT CPlayer::Ready_PartObjects(void* pArg)
 	Desc.pParentMatrix = &m_pTransformCom->Get_WorldMatrix4x4Ref();
 	Desc.pParentObject = this;
 
+	/* For.PartObject_Player_Weapon_Pistol */
+	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Pistol");
+	Desc.szName = L"Weapon_Pistol";
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon"), TEXT("Prototype_GameObject_Pistol"), &Desc)))
+		return E_FAIL;
+
+
+
 	/* For.PartObject_Player_Weapon_AssaultRifle */
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_AR");
 	Desc.szName = L"Weapon_AR";
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon_AssaultRifle"), TEXT("Prototype_GameObject_AssaultRifle"), &Desc)))
+	CGameObject* pPistol = Replace_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon"), TEXT("Prototype_GameObject_AssaultRifle"), &Desc);
+
+	if (nullptr == pPistol)
 		return E_FAIL;
+	m_pWeapons[WTYPE_PISTOL] = pPistol;
 
-	///* For.PartObject_Player_Weapon_Pistol */
-	//Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Pistol");
-	//lstrcpy(Desc.szName, L"Weapon_Pistol");
-	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon_Pistol"), TEXT("Prototype_GameObject_Pistol"), &Desc)))
-	//	return E_FAIL;
+	auto pAR = __super::Find_PartObject(TEXT("PartObject_Player_Weapon"));
+	if (nullptr == pAR)
+		return E_FAIL;
+	m_pWeapons[WTYPE_AR] = pAR;
 
+	m_pWeapons[WTYPE_UNARMED] = nullptr;
+
+	Replace_PartObject(TEXT("PartObject_Player_Weapon"), m_pWeapons[CPlayer::WTYPE_PISTOL]);
+
+
+	m_ePrevWeapon = m_eCurWeapon = WTYPE_PISTOL;
 	return S_OK;
 }
 
@@ -313,6 +394,15 @@ HRESULT CPlayer::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CPlayer::Change_Weapon(WEAPON_TYPE eWeaponType)
+{
+	if (m_eCurWeapon == eWeaponType)
+		return;
+
+	m_eCurWeapon = eWeaponType;
+	Set_State(PLA_STATE::STATE_HolsterWeapon);
+}
+
 CPlayer* CPlayer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CPlayer* pInstance = new CPlayer(pDevice, pContext);
@@ -345,7 +435,7 @@ void CPlayer::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
-
+	delete[] m_pColBone;
 
 	for (auto State : m_pStates)
 		Safe_Delete(State);

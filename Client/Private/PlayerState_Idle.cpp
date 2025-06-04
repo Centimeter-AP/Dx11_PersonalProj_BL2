@@ -3,7 +3,19 @@
 
 void CPlayerState_Idle::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::PLA_AR::AR_Idle), true);
+	switch (m_pOwner->m_eCurWeapon)
+	{
+	case CPlayer::WEAPON_TYPE::WTYPE_AR:
+		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::AR_Idle), true);
+		break;
+	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
+		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPlayer::PST_Idle), true);
+		break;
+	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:
+		break;
+	default:
+		break;
+	}
 }
 
 void CPlayerState_Idle::Execute(_float fTimeDelta)
@@ -46,8 +58,13 @@ void CPlayerState_Idle::Execute(_float fTimeDelta)
 	/*임시단축키*/
 	if (KEY_DOWN(DIK_1))
 	{
-		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_HolsterWeapon); return;
+		m_pOwner->Change_Weapon(CPlayer::WTYPE_AR);
 	}
+	if (KEY_DOWN(DIK_2))
+	{
+		m_pOwner->Change_Weapon(CPlayer::WTYPE_PISTOL);
+	}
+
 	if (MOUSE_DOWN(DIM::LBUTTON))
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Fire); return;

@@ -28,6 +28,7 @@ public:
 	const _wstring& Get_Name() { return m_szName; }
 	const _wstring&	Get_VIBufferTag() const { return m_strVIBufferTag; }
 	void	Set_Dead() { m_bDead = true; }
+	void Set_Active(_bool bActive) { m_isActive = bActive; }
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -59,10 +60,24 @@ protected:
 	//m_bDead는 신이야
 	_bool				m_bDead = { false };
 	_uint				m_iLevelID = UINT_MAX;
+	_bool				m_isActive = { true };
 
 protected:
 	HRESULT Add_Component(_uint iPrototypeLevelIndex, const _wstring& strPrototypeTag, const _wstring& strComponentTag, CComponent** ppOut, void* pArg = nullptr);
+
+	// 내부적으로 생성해서 너어줍니다.
 	HRESULT Add_PartObject(_uint iPrototypeLevelIndex, const _wstring& strPartObjKey, const _wstring& strPrototypeTag, void* pArg);
+	// 생성 된 걸 갖다 넣습니다.
+	HRESULT Add_PartObject(const _wstring& strPartObjKey, CGameObject* pPartObject);
+
+
+	// Replace들은 오브젝트 삭제를 안해주니까 누수 주의할 것!!!!!!!!!!!!!!! 꼭 항상 알아서 지워주기 바람 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 내부적으로 생성해서 넣고 반환값으로 이미 있었던 놈을 뽑아 줍니다.
+	CGameObject* Replace_PartObject(_uint iPrototypeLevelIndex, const _wstring& strPartObjKey, const _wstring& strPrototypeTag, void* pArg);
+	// 생성 된 걸 갖다 넣고 반환값으로 이미 있었던 놈을 뽑아 줍니다.
+	CGameObject* Replace_PartObject(const _wstring& strPartObjKey, CGameObject* pReplaceObject);
+
+	CGameObject* Find_PartObject(const _wstring& strPartObjKey);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

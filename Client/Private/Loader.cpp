@@ -10,6 +10,7 @@
 #include "MapObject.h"
 #include "Terrain.h"
 #include "Monster.h"
+#include "Pistol.h"
 #include "Player.h"
 #include "Rakk.h"
 //#include "Effect.h"
@@ -169,6 +170,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/Bin_Anim/AssaultRifle.bin", PreTransMatrix))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Pistol"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/Pistol.bin", PreTransMatrix))))
+		return E_FAIL;
 
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
@@ -203,6 +208,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_AssaultRifle */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"),
 		CAssaultRifle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Pistol */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Pistol"),
+		CPistol::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Rakk */
@@ -245,6 +255,12 @@ HRESULT CLoader::Loading_For_Maptool()
 			"../Bin/Resources/Models/Bin_Anim/AssaultRifle.bin", PreTransMatrix))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Pistol"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/Pistol.bin", PreTransMatrix))))
+		return E_FAIL;
+
+
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 
@@ -276,6 +292,12 @@ HRESULT CLoader::Loading_For_Maptool()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"),
 		CAssaultRifle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_Pistol */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Pistol"),
+		CPistol::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 

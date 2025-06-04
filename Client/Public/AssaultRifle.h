@@ -6,7 +6,7 @@ NS_BEGIN(Client)
 class CAssaultRifle final : public CWeapon
 {
 public:
-	typedef struct tagMonsterDesc : public CWeapon::DESC
+	typedef struct tagAssaultRifleDesc : public CWeapon::DESC
 	{
 
 	}DESC;

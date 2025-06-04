@@ -1,6 +1,7 @@
 #pragma once
 #include "Player.h"
 #include "AssaultRifle.h"
+#include "Pistol.h"
 
 
 NS_BEGIN(Client) 
@@ -25,6 +26,18 @@ public:
 	//상태 퇴장 시 한 번 호출
 	virtual void Exit() PURE;
 	virtual void Free() override { __super::Free(); Safe_Release(m_pGameInstance); }
+
+protected:
+	void Default_Movements(_float fTimeDelta) {
+		if (KEY_PRESSING(DIK_W))
+			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta);
+		if (KEY_PRESSING(DIK_S))
+			m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta);
+		if (KEY_PRESSING(DIK_A))
+			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta);
+		if (KEY_PRESSING(DIK_D))
+			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta);
+	}
 
 protected:
 	CPlayer*		m_pOwner;
@@ -230,10 +243,6 @@ public:
 	virtual void Exit() override;
 	virtual void Free() override { __super::Free(); }
 };
-
-
-
-
 
 
 

@@ -16,6 +16,9 @@ public:
 	_uint Get_NumMeshes() const {
 		return m_iNumMeshes;
 	}
+	_uint Get_NumBones() const {
+		return m_Bones.size();
+	}
 
 	void Set_Animation(_uint iIndex, _bool isLoop = true, _float fBlendDuration = 0.1f);
 	void Set_Animation_TickPerSecond(_uint iIndex, _float fTickPerSecond);
