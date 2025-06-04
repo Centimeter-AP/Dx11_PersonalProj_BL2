@@ -14,6 +14,9 @@
 #include "DirectXTK/VertexTypes.h"
 #include "DirectXTK/SpriteBatch.h"
 #include "DirectXTK/SpriteFont.h"
+#include "DirectXTK/PrimitiveBatch.h"
+#include "DirectXTK/Effects.h"
+
 
 #include "Fx11/d3dx11effect.h"
 

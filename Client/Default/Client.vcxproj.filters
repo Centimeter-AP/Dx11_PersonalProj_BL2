@@ -115,12 +115,6 @@
     <Filter Include="02.GameObjects\04. Player\PlayerWeapon">
       <UniqueIdentifier>{dd64e3dd-6298-405f-b733-e670ec5c22fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\04. Player\PlayerBody">
-      <UniqueIdentifier>{34d8dd0b-0cf1-41a3-b93d-b396d9375003}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.GameObjects\04. Player\PlayerHand">
-      <UniqueIdentifier>{8d1426e4-f201-4c73-a214-b624960a56e5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Player\PlayerParticle">
       <UniqueIdentifier>{d383d512-f944-456b-8ef8-cdbde32fa38a}</UniqueIdentifier>
     </Filter>

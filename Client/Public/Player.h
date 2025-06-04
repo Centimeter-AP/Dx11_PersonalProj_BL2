@@ -4,7 +4,8 @@
 #include "GameObject.h"
 #include "PlayerState.h"
 
-NS_BEGIN(Engine)	
+NS_BEGIN(Engine)
+class CCollider;
 class CShader;
 class CModel;
 NS_END
@@ -92,6 +93,9 @@ private:
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
+	CCollider*			m_pColliderCom = { nullptr };
+
+private:
 	_float				m_fSensor = {};
 	class CPlayerState*	m_pCurState = { nullptr };
 	class CPlayerState*	m_pStates[STATE_END] = { nullptr };

@@ -13,6 +13,16 @@
 #define LERP(a, b, t) ((a) + ((b) - (a)) * (t))
 #define FLT_EQUAL(a, b) (fabsf((a) - (b)) < FLT_EPSILON)
 
+/* RGBA Color Float4 */
+#define RGBA_WHITE		_float4{1.f, 1.f, 1.f, 1.f}
+#define RGBA_BLACK		_float4{0.f, 0.f, 0.f, 1.f}
+#define RGBA_RED		_float4{1.f, 0.f, 0.f, 1.f}
+#define RGBA_GREEN		_float4{0.f, 1.f, 0.f, 1.f}
+#define RGBA_BLUE		_float4{0.f, 0.f, 1.f, 1.f}
+#define RGBA_YELLOW		_float4{1.f, 1.f, 0.f, 1.f}
+#define RGBA_MAGENTA	_float4{1.f, 0.f, 1.f, 1.f}
+#define RGBA_CYAN		_float4{0.f, 1.f, 1.f, 1.f}
+
 #ifdef ENGINE_EXPORTS
 #define ENGINE_DLL _declspec(dllexport)
 #else

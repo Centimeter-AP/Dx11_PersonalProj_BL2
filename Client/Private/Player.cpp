@@ -81,6 +81,8 @@ EVENT CPlayer::Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Update(fTimeDelta);
 	}
+
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 	return EVN_NONE;
 }
 
@@ -116,7 +118,12 @@ HRESULT CPlayer::Render()
 			return E_FAIL;
 	}
 	
+#ifdef _DEBUG
+	
+	m_pColliderCom->Set_ColliderColor(RGBA_WHITE);
+	m_pColliderCom->Render();
 
+#endif 
 
 	return S_OK;
 }
@@ -204,6 +211,15 @@ void CPlayer::Update_State(_float fTimeDelta)
 
 HRESULT CPlayer::Ready_Components(void* pArg)
 {
+	CBounding_AABB::AABB_DESC AABBDesc = {};
+	AABBDesc.vExtents = _float3(0.3f, 0.8f, 0.3f);
+	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y, 0.f);
+
+	/* For.Com_Collider */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
+		return E_FAIL;
+
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
@@ -326,6 +342,7 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 
@@ -334,4 +351,3 @@ void CPlayer::Free()
 		Safe_Delete(State);
 
 }
-//È«µ¿¿Ï ½Å½ÂÈÆ ¿Ô´Ù°¨

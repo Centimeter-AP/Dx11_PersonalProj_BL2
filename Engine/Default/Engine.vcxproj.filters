@@ -148,6 +148,18 @@
     <ClInclude Include="..\Public\Font_Manager.h">
       <Filter>01.Utility\09.Fonts\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Bounding_OBB.h">
+      <Filter>01.Utility\04.Components\Collider\Bounding\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Bounding_Sphere.h">
+      <Filter>01.Utility\04.Components\Collider\Bounding\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>01.Utility\04.Components\Collider\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\ColliderManager.h">
+      <Filter>01.Utility\04.Components\Collider\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -278,6 +290,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\CustomFont.cpp">
       <Filter>01.Utility\09.Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_OBB.cpp">
+      <Filter>01.Utility\04.Components\Collider\Bounding\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Bounding_Sphere.cpp">
+      <Filter>01.Utility\04.Components\Collider\Bounding\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>01.Utility\04.Components\Collider\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\ColliderManager.cpp">
+      <Filter>01.Utility\04.Components\Collider\Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +457,12 @@
     </Filter>
     <Filter Include="01.Utility\09.Fonts\Manager">
       <UniqueIdentifier>{25a57a93-07c9-4ad5-8d0c-fcba56e79178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Collider\DebugDraw">
+      <UniqueIdentifier>{41c73aa9-0dfc-40d7-b10d-e460743bb7da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Collider\Manager">
+      <UniqueIdentifier>{c1bd046a-0857-4f2f-b2e8-f0f2d0874977}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
