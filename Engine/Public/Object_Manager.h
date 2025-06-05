@@ -15,6 +15,7 @@ private:
 
 public:
 	class CComponent* Get_Component(_uint iLevelIndex, const _wstring& strLayerTag, const _wstring& strComponentTag, _uint iIndex);
+	class CComponent* Get_Component(_uint iLevelIndex, const _wstring& strLayerTag, _uint iPartID, const _wstring& strComponentTag, _uint iIndex);
 
 public:
 	HRESULT Initialize(_uint iNumLevels);
@@ -24,7 +25,7 @@ public:
 	void Late_Update(_float fTimeDelta);
 	void Clear(_uint iLevelIndex);
 
-private:	
+private:
 	_uint								m_iNumLevels = {};
 	typedef unordered_map<_wstring, class CLayer*> LAYERS;
 	LAYERS* m_pLayers = { nullptr };

@@ -14,19 +14,18 @@ private:
 public:
 	virtual HRESULT Initialize_Prototype(COLLIDER eType);
 	virtual HRESULT Initialize(void* pArg) override;
-
 	void Update(_fmatrix WorldMatrix);
 
-#ifdef _DEBUG
-	void Set_ColliderColor(_float4 vColor) { m_vRenderColor = XMVectorSet(vColor.x, vColor.y, vColor.z, vColor.w); }
-	HRESULT Render();
-#endif
+	_bool Intersect(CCollider* pTargetCollider);
+	class CGameObject* Get_Owner() { return m_pOwner; }
+	_uint Get_ColliderID() { return m_iColliderID; }
 
 private:
 	COLLIDER			m_eType = { COLLIDER::END };
 	class CBounding*	m_pBounding = { nullptr };
 
 	class CGameObject*	m_pOwner = { nullptr };
+	_uint				m_iColliderID = {};
 
 	_bool				m_isColl = { false };
 
@@ -36,6 +35,10 @@ private:
 	BasicEffect*						 m_pEffect = { nullptr };
 	ID3D11InputLayout*					 m_pInputLayout = { nullptr };
 	_vector								 m_vRenderColor = {XMVectorSet(0.f, 1.f, 0.f, 1.f)};
+
+public:
+	void Set_ColliderColor(_float4 vColor) { m_vRenderColor = XMVectorSet(vColor.x, vColor.y, vColor.z, vColor.w); }
+	HRESULT Render();
 #endif
 
 public:

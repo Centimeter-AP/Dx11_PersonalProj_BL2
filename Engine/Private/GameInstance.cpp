@@ -8,6 +8,7 @@
 #include "Level_Manager.h"
 #include "Light_Manager.h"
 #include "Timer_Manager.h"
+#include "Collider_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
 #include "Prototype_Manager.h"
@@ -34,7 +35,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pInput_Device)
 		return E_FAIL;
 
-
 	m_pTimer_Manager = CTimer_Manager::Create();
 	if (nullptr == m_pTimer_Manager)
 		return E_FAIL;
@@ -59,7 +59,6 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pPipeLine)
 		return E_FAIL;
 
-
 	m_pPicking_Manager = CPicking_Manager::Create(*ppDeviceOut, *ppContextOut, EngineDesc.hWnd);
 	if (nullptr == m_pPicking_Manager)
 		return E_FAIL;
@@ -70,6 +69,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 
 	m_pFont_Manager = CFont_Manager::Create(*ppDeviceOut, *ppContextOut);
 	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
+	m_pCollider_Manager = CCollider_Manager::Create(EngineDesc.iNumColliderGroups);
+	if (nullptr == m_pCollider_Manager)
 		return E_FAIL;
 
 
@@ -365,6 +368,24 @@ void CGameInstance::Draw_Font(const _wstring& strFontTag, const _tchar* pText, c
 {
 	m_pFont_Manager->Draw(strFontTag, pText, vPosition, vColor, fRotation, vOrigin, fScale);
 }
+#pragma endregion
+
+#pragma region COLLIDER_MANAGER
+
+HRESULT CGameInstance::Add_Collider(_uint iGroupID, CCollider* pCollider)
+{
+	return m_pCollider_Manager->Add_Collider(iGroupID, pCollider);
+}
+
+void CGameInstance::Intersect(CCollider* pDst, CCollider* pSrc)
+{
+	m_pCollider_Manager->Intersect(pDst, pSrc);
+}
+
+void CGameInstance::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
+{
+	m_pCollider_Manager->Intersect_Group(iSrcGroupID, iDstGroupID);
+}
 
 #pragma endregion
 
@@ -391,6 +412,9 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pGraphic_Device);
 
 	Safe_Release(m_pLight_Manager);
+
+	Safe_Release(m_pCollider_Manager);
+
 	//Destroy_Instance();
 }
 

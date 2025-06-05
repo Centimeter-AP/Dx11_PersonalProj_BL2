@@ -10,13 +10,13 @@ CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CCollider::CCollider(const CCollider& Prototype)
-	: CComponent{ Prototype }
+	: CComponent( Prototype )
 	, m_eType { Prototype.m_eType }
 	, m_pBounding { Prototype.m_pBounding }
 	, m_pBatch { Prototype.m_pBatch }
 	, m_pEffect { Prototype.m_pEffect }
 #ifdef _DEBUG
-	, m_pInputLayout { Prototype.m_pInputLayout}
+	, m_pInputLayout { Prototype.m_pInputLayout }
 #endif
 {
 #ifdef _DEBUG
@@ -30,6 +30,7 @@ HRESULT CCollider::Initialize_Prototype(COLLIDER eType)
 
 
 #ifdef _DEBUG
+
 	m_pBatch = new PrimitiveBatch<VertexPositionColor>(m_pContext);
 	m_pEffect = new BasicEffect(m_pDevice);
 
@@ -44,8 +45,6 @@ HRESULT CCollider::Initialize_Prototype(COLLIDER eType)
 		pShaderByteCode, iShaderByteCodeLength, &m_pInputLayout)))
 		return E_FAIL;
 
-
-
 #endif
 
 	return S_OK;
@@ -54,6 +53,8 @@ HRESULT CCollider::Initialize_Prototype(COLLIDER eType)
 HRESULT CCollider::Initialize(void* pArg)
 {
 	CBounding::BOUNDING_DESC* pDesc = static_cast<CBounding::BOUNDING_DESC*>(pArg);
+
+	pDesc->eType = m_eType;
 
 	switch (m_eType)
 	{
@@ -74,6 +75,13 @@ HRESULT CCollider::Initialize(void* pArg)
 void CCollider::Update(_fmatrix WorldMatrix)
 {
 	m_pBounding->Update(WorldMatrix);
+}
+
+_bool CCollider::Intersect(CCollider* pTargetCollider)
+{
+	m_isColl = m_pBounding->Intersect(pTargetCollider->m_pBounding);
+
+	return m_isColl;
 }
 
 #ifdef _DEBUG
@@ -126,8 +134,6 @@ CComponent* CCollider::Clone(void* pArg)
 void CCollider::Free()
 {
 	__super::Free();
-
-
 
 	Safe_Release(m_pBounding);
 

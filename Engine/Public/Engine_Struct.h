@@ -10,6 +10,7 @@ namespace Engine
 		unsigned int	iWinSizeX;
 		unsigned int	iWinSizeY;
 		unsigned int	iNumLevels;		
+		unsigned int	iNumColliderGroups;
 	}ENGINE_DESC;
 
 	typedef struct tagKeyFrame

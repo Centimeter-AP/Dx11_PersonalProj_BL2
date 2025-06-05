@@ -17,6 +17,8 @@ protected:
 	CPartObject(const CPartObject& Prototype);
 	virtual ~CPartObject() = default;
 
+
+
 public:
 	virtual HRESULT Initialize_Prototype() override;
 	virtual HRESULT Initialize(void* pArg) override;
@@ -27,7 +29,7 @@ public:
 
 protected:
 	const _float4x4*		m_pParentMatrix = { nullptr };
-	_float4x4				m_CombindWorldMatrix{};
+	_float4x4				m_CombinedWorldMatrix{};
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

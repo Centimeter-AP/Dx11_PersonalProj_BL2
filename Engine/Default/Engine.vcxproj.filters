@@ -157,7 +157,7 @@
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01.Utility\04.Components\Collider\DebugDraw</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\ColliderManager.h">
+    <ClInclude Include="..\public\Collider_Manager.h">
       <Filter>01.Utility\04.Components\Collider\Manager</Filter>
     </ClInclude>
   </ItemGroup>
@@ -300,7 +300,7 @@
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>01.Utility\04.Components\Collider\DebugDraw</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\ColliderManager.cpp">
+    <ClCompile Include="..\private\Collider_Manager.cpp">
       <Filter>01.Utility\04.Components\Collider\Manager</Filter>
     </ClCompile>
   </ItemGroup>

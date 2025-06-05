@@ -101,6 +101,15 @@ public:
 	void Draw_Font(const _wstring& strFontTag, const _tchar* pText, const _float2& vPosition, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float fRotation = 0.f, const _float2& vOrigin = _float2(0.f, 0.f), _float fScale = 1.f);
 #pragma endregion
 
+
+#pragma region COLLIDER_MANAGER
+	HRESULT Add_Collider(_uint iGroupID, class CCollider* pCollider);
+	void Intersect(class CCollider* pDst, class CCollider* pSrc);
+	void Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID);
+
+#pragma endregion
+
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
@@ -113,6 +122,7 @@ private:
 	class CTimer_Manager*		m_pTimer_Manager = { nullptr };
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
+	class CCollider_Manager*	m_pCollider_Manager = { nullptr };
 
 public:
 	void Release_Engine();
