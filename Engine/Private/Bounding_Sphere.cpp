@@ -46,6 +46,12 @@ _bool CBounding_Sphere::Intersect(CBounding* pTarget)
 	return isColl;
 }
 
+_bool CBounding_Sphere::Raycast(_fvector vRayOrigin, _fvector vRayDir, const _float fRayDist)
+{
+	m_pDesc->Intersects(vRayOrigin, vRayDir, fRayDist);
+	return _bool();
+}
+
 #ifdef _DEBUG
 
 HRESULT CBounding_Sphere::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)

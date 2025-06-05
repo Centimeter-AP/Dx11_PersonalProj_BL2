@@ -40,7 +40,7 @@ HRESULT CMainApp::Initialize()
 	EngineDesc.iWinSizeY = g_iWinSizeY;
 	EngineDesc.isWindowed = true;
 	EngineDesc.iNumLevels = static_cast<_uint>(LEVEL::END);
-	EngineDesc.iNumColliderGroups = static_cast<_uint>(COLLIDERGROUPID::END);
+	EngineDesc.iNumColliderGroups = static_cast<_uint>(COL_GROUP::END);
 
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;

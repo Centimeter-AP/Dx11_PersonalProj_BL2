@@ -59,6 +59,7 @@ void CRakk::Priority_Update(_float fTimeDelta)
 
 EVENT CRakk::Update(_float fTimeDelta)
 {
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 
 	return EVN_NONE;
 }
@@ -89,7 +90,8 @@ HRESULT CRakk::Render()
 			return E_FAIL;
 	}
 	
-
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderCom->Render();
 
 	return S_OK;
 }
@@ -105,6 +107,20 @@ HRESULT CRakk::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_Rakk"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
+
+	CBounding_AABB::AABB_DESC AABBDesc = {};
+	AABBDesc.pOwner = this;
+	AABBDesc.eType = COLLIDER::AABB;
+	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
+
+	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_RAKK);
+	AABBDesc.vExtents = _float3(0.8f, 0.3f, 0.5f);
+	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y, 0.f);
+	/* For.Com_Collider */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
+		return E_FAIL;
+
 
 
 	return S_OK;

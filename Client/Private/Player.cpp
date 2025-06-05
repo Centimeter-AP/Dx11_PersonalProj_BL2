@@ -53,6 +53,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Set_State(STATE_Idle);
 
 
+	m_pModelCom->Play_Animation(0.01f);
 
 	return S_OK;
 }
@@ -64,6 +65,8 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Priority_Update(fTimeDelta);
 	}
+
+#pragma region 애니메이션 테스트
 	static _uint test = {};
 	if (KEY_DOWN(DIK_Z))
 	{
@@ -81,13 +84,15 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 		test < 1 ? test = PLA_ALL_END - 1 : test--;
 		m_pModelCom->Set_Animation(test, true, 0.2f);
 	}
-	Update_State(fTimeDelta);
+#pragma endregion
+
 	Key_Input(fTimeDelta);
 	//Spine3
 }
 
 EVENT CPlayer::Update(_float fTimeDelta)
 {
+	Update_State(fTimeDelta);
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -97,12 +102,6 @@ EVENT CPlayer::Update(_float fTimeDelta)
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 	//auto val = m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))
 	m_pColCam->Update(XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))) * m_pTransformCom->Get_WorldMatrix());
-
-	for (_uint i = 0; i < m_pModelCom->Get_NumBones(); i++)
-	{ 
-		m_pColBone[i]->Update(XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(i)) * m_pTransformCom->Get_WorldMatrix());
-	}
-
 
 
 
@@ -150,11 +149,6 @@ HRESULT CPlayer::Render()
 	m_pColCam->Set_ColliderColor(RGBA_RED);
 	m_pColCam->Render();
 
-	for (size_t i = 0; i < m_pModelCom->Get_NumBones(); i++)
-	{
-		m_pColBone[i]->Set_ColliderColor(RGBA_RED);
-		m_pColBone[i]->Render();
-	}
 
 
 #endif 
@@ -182,33 +176,6 @@ void CPlayer::Key_Input(_float fTimeDelta)
 
 		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fDeltaPitch);
 	}
-
-
-
-	//if (KEY_DOWN(DIK_V)) // 근접공격 인데 잠깐 총 바꾸는 모션으로 함
-	//{
-	//	m_pModelCom->Set_Animation(Holster, false, 0.1f);
-	//	m_isPlayingNonLoopAnim = true;
-	//	m_isRunning = false;
-	//}
-	//if (KEY_DOWN(DIK_G)) // 수류탄
-	//{
-	//	m_pModelCom->Set_Animation(Grenade_throw, false, 0.1f);
-	//	m_isPlayingNonLoopAnim = true;
-	//	m_isRunning = false;
-	//}
-	//if (KEY_DOWN(DIK_R)) // 재장전
-	//{
-	//	m_pModelCom->Set_Animation(R_Jakobs, false, 0.1f);
-	//	m_isPlayingNonLoopAnim = true;
-	//}
-
-	//if (KEY_DOWN(DIK_SPACE)) // 잠프z
-	//{
-	//	m_pModelCom->Set_Animation(Jump_Start, false);
-	//	m_isJumping = true;
-	//	m_isPlayingNonLoopAnim = true;
-	//}
 }
 
 void CPlayer::Set_State(PLA_STATE eState)
@@ -234,13 +201,18 @@ void CPlayer::Update_State(_float fTimeDelta)
 HRESULT CPlayer::Ready_Components(void* pArg)
 {
 	CBounding_AABB::AABB_DESC AABBDesc = {};
+	AABBDesc.pOwner = this;
+	AABBDesc.eType = COLLIDER::AABB;
+	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::PLAYER);
+
+	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::PLAYER_BODY);
 	AABBDesc.vExtents = _float3(0.3f, 0.8f, 0.3f);
 	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y, 0.f);
-
 	/* For.Com_Collider */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 		return E_FAIL;
+	//AABBDesc.iColliderID = ENUM_CLASS(COL_ID::PLAYER_HAND);
 	AABBDesc.vExtents = _float3(1.f, 1.f, 1.f);
 	AABBDesc.vCenter = _float3(0.f, 0.f, 0.f);
 	/* For.Com_Collider */
@@ -265,22 +237,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Base_Siren_All.anim)");
 
 	// need: collider, sound, maybe gravity?
-
-	
-	CBounding_Sphere::SPHERE_DESC SphereDesc = {};
-	SphereDesc.vCenter = _float3(0.0f, 0.f, 0.f);
-	SphereDesc.fRadius = 0.6f;
-
-	m_pColBone = new CCollider * [m_pModelCom->Get_NumBones()];
-
-	for (size_t i = 0; i < m_pModelCom->Get_NumBones(); i++)
-	{
-		/* For.Com_Collider */
-		if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
-			TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColBone[i]), &SphereDesc)))
-			return E_FAIL;
-	}
-
 
 
 
@@ -424,7 +380,6 @@ void CPlayer::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
-	delete[] m_pColBone;
 
 	for (auto State : m_pStates)
 		Safe_Delete(State);

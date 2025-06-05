@@ -17,6 +17,7 @@ public:
 	void Update(_fmatrix WorldMatrix);
 
 	_bool Intersect(CCollider* pTargetCollider);
+	_bool Raycast(_fvector vRayOrigin, _fvector vRayDir, const _float fRayDist);
 	class CGameObject* Get_Owner() { return m_pOwner; }
 	_uint Get_ColliderID() { return m_iColliderID; }
 

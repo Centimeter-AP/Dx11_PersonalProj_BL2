@@ -55,6 +55,7 @@ HRESULT CCollider::Initialize(void* pArg)
 	CBounding::BOUNDING_DESC* pDesc = static_cast<CBounding::BOUNDING_DESC*>(pArg);
 
 	pDesc->eType = m_eType;
+	m_pOwner = pDesc->pOwner;
 
 	switch (m_eType)
 	{
@@ -82,6 +83,12 @@ _bool CCollider::Intersect(CCollider* pTargetCollider)
 	m_isColl = m_pBounding->Intersect(pTargetCollider->m_pBounding);
 
 	return m_isColl;
+}
+
+_bool CCollider::Raycast(_fvector vRayOrigin, _fvector vRayDir, const _float fRayDist)
+{
+	//m_isColl = m_pBounding->
+	return _bool();
 }
 
 #ifdef _DEBUG

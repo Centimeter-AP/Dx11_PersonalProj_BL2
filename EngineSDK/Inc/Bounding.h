@@ -13,6 +13,9 @@ class CBounding abstract : public CBase
 public:
 	typedef struct tagBoundingDesc
 	{
+		class CGameObject* pOwner = { nullptr };
+		_uint				iColliderID = {};
+		_uint				iColliderGroup = {};
 		COLLIDER	eType;
 		_float3		vCenter;
 	}BOUNDING_DESC;
@@ -36,7 +39,7 @@ public:
 public:
 	virtual HRESULT Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor) { return S_OK; }
 #endif
-
+	
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
 	ID3D11DeviceContext*		m_pContext = { nullptr };

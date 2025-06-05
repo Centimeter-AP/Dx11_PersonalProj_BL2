@@ -408,14 +408,14 @@ HRESULT CVIBuffer_Terrain::Save_Terrain(const _wstring& filePath)
 
 _float CVIBuffer_Terrain::Get_Height(_float x, _float z)
 {
-	_int iX = static_cast<_int>(x);
-	_int iZ = static_cast<_int>(z);
+	_uint iX = static_cast<_uint>(x);
+	_uint iZ = static_cast<_uint>(z);
 
 	if (iX < 0 || iX >= m_iNumVerticesX - 1 || iZ < 0 || iZ >= m_iNumVerticesZ - 1)
 		return 0.f;
 
 	// Á¤Á¡ 4°³
-	_int iIndex = iZ * m_iNumVerticesX + iX;
+	_uint iIndex = iZ * m_iNumVerticesX + iX;
 
 	_float3 v0 = m_pVertexPositions[iIndex];                       // (iX, iZ)
 	_float3 v1 = m_pVertexPositions[iIndex + 1];                   // (iX+1, iZ)

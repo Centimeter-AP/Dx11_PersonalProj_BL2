@@ -4,6 +4,7 @@
 #include "GameObject.h"
 
 NS_BEGIN(Engine)
+class CCollider;
 class CShader;
 class CModel;
 NS_END
@@ -39,6 +40,7 @@ public:
 protected:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
+	CCollider*			m_pColliderCom = { nullptr };
 
 protected:
 	_int				m_iHP = {};

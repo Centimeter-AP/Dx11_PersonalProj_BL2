@@ -123,6 +123,7 @@ private:
 	class CLight_Manager*		m_pLight_Manager = { nullptr };
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
 	class CCollider_Manager*	m_pCollider_Manager = { nullptr };
+	class CCamera_Manager*		m_pCamera_Manager = { nullptr };
 
 public:
 	void Release_Engine();

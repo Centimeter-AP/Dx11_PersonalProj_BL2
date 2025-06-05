@@ -11,7 +11,7 @@
 #include "Collider_Manager.h"
 #include "Graphic_Device.h"
 #include "Object_Manager.h"
-#include "Prototype_Manager.h"
+#include "Camera_Manager.h"
 
 CGameInstance* CGameInstance::m_pInstance = nullptr; CGameInstance* CGameInstance::Get_Instance() {
 	if (nullptr == m_pInstance) m_pInstance = new CGameInstance; return m_pInstance;

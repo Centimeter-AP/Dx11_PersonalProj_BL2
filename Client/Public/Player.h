@@ -98,7 +98,6 @@ private:
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
 	CCollider*			m_pColCam = { nullptr };
-	CCollider**			m_pColBone = { nullptr };
 
 private:
 	_float				m_fSensor = {};

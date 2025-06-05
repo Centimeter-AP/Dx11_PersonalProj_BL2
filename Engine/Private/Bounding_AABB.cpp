@@ -47,7 +47,6 @@ _bool CBounding_AABB::Intersect(CBounding* pTarget)
 	case COLLIDER::SPHERE:
 		isColl = m_pDesc->Intersects(*static_cast<CBounding_Sphere*>(pTarget)->Get_Desc());
 		break;
-
 	}
 
 	return isColl;
