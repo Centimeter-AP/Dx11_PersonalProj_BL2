@@ -42,8 +42,8 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 
 void CAssaultRifle::Priority_Update(_float fTimeDelta)
 {
-	Update_State(fTimeDelta);
 	__super::Priority_Update(fTimeDelta);
+	Update_State(fTimeDelta);
 #pragma region AnimationTests
 	static _uint test = {};
 	if (KEY_DOWN(DIK_RBRACKET))

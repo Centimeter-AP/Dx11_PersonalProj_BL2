@@ -185,6 +185,8 @@
     <ClInclude Include="..\Public\PSTState.h" />
     <ClInclude Include="..\Public\Rakk.h" />
     <ClInclude Include="..\Public\RakkState.h" />
+    <ClInclude Include="..\Public\Skag.h" />
+    <ClInclude Include="..\Public\SkagState.h" />
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
@@ -254,6 +256,7 @@
     <ClCompile Include="..\Private\PSTState_Reload.cpp" />
     <ClCompile Include="..\Private\PSTState_Reload_Fast.cpp" />
     <ClCompile Include="..\Private\Rakk.cpp" />
+    <ClCompile Include="..\Private\Skag.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />

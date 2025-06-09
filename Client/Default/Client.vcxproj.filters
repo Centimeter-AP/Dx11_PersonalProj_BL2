@@ -139,6 +139,12 @@
     <Filter Include="02.GameObjects\07. UI\Aim">
       <UniqueIdentifier>{fd323e0f-3929-4a07-b1c1-4d8dd02e81f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03. Monster\Stalker">
+      <UniqueIdentifier>{284a153b-8eaf-4abe-b061-edc88aa52504}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\03. Monster\Skag">
+      <UniqueIdentifier>{421db0d4-97e0-4b8f-acdb-66e94f6686ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -298,6 +304,12 @@
       <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UI_Aim.h" />
+    <ClInclude Include="..\Public\Skag.h">
+      <Filter>02.GameObjects\03. Monster\Skag</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SkagState.h">
+      <Filter>02.GameObjects\03. Monster\Skag</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -491,6 +503,9 @@
       <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UI_Aim.cpp" />
+    <ClCompile Include="..\Private\Skag.cpp">
+      <Filter>02.GameObjects\03. Monster\Skag</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

@@ -164,6 +164,18 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/Bin_Anim/Rakk/Rakk.bin", PreTransMatrix))))
 		return E_FAIL;
 
+	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Stalker"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/Stalker/Stalker.bin", PreTransMatrix))))
+		return E_FAIL;
+
+	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_SpiderAnt"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/SpiderAnt/SpiderAnt.bin", PreTransMatrix))))
+		return E_FAIL;
+
 	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationZ(XMConvertToRadians(-90.f)) * XMMatrixRotationY(XMConvertToRadians(90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_AR"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,

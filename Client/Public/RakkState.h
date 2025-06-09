@@ -23,13 +23,13 @@ public:
 	virtual void Exit() PURE;
 	virtual void Free() override { __super::Free(); Safe_Release(m_pGameInstance); }
 
-	virtual _bool Is_Target_Found(){
+	virtual _bool Is_Target_Found() {
 		auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTarget->Get_Transform()->Get_State(STATE::POSITION))));
 		return (Dist < m_pOwner->m_fDetectiveDistance);
 	}
 	virtual _bool Is_Target_Attackable() {
 		auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTarget->Get_Transform()->Get_State(STATE::POSITION))));
-		return (Dist< m_pOwner->m_fAttackableDistance);
+		return (Dist < m_pOwner->m_fAttackableDistance);
 	}
 	virtual void Detect_Target() {
 		if (Is_Target_Found())
@@ -61,11 +61,11 @@ public:
 #endif // _CONSOLE
 
 protected:
-	CRakk*			m_pOwner;
-	CGameObject*	m_pTarget = { nullptr };
+	CRakk* m_pOwner;
+	CGameObject* m_pTarget = { nullptr };
 
 	_float			m_fElapsedTime = {};
-	CGameInstance*	m_pGameInstance = { nullptr };
+	CGameInstance* m_pGameInstance = { nullptr };
 	_bool			m_bChangeStateCall = { false };
 
 	_float			m_fTestTick = {};
@@ -75,7 +75,8 @@ class CRakkState_Idle final : public CRakkState
 {
 public:
 	CRakkState_Idle(class CRakk* pOwner)
-		: CRakkState(pOwner) {}
+		: CRakkState(pOwner) {
+	}
 	virtual ~CRakkState_Idle() = default;
 
 public:
@@ -141,10 +142,10 @@ public:
 
 		if (KEY_DOWN(DIK_F))
 		{
-			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_PhaseLocked); 
+			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_PhaseLocked);
 			return;
 		}
-		
+
 		if (KEY_DOWN(DIK_0))
 		{
 			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Landing);
@@ -215,7 +216,7 @@ public:
 		{
 			if (rand() % 100 < 20)
 				m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Flying_Idle);
-			else 
+			else
 				m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Hover);
 		}
 
@@ -441,15 +442,15 @@ public:
 		if (m_bChangeStateCall)
 		{
 			m_bChangeStateCall = false;
-			if (rand()%10 == 0)
+			if (rand() % 10 == 0)
 				m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Flying_SuicidalDive);
 			else
 				m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Flying_Attack);
 			return;
 		}
 		Console(fTimeDelta);
-		m_pOwner->m_pTransformCom->LookAtLerp(m_pTarget->Get_Transform()->Get_State(STATE::POSITION),fTimeDelta, 8.f);
-		m_pOwner->m_pTransformCom->Go_Target(m_pOwner->m_pTarget->Get_Transform()->Get_State(STATE::POSITION), fTimeDelta,0.3f);
+		m_pOwner->m_pTransformCom->LookAtLerp(m_pTarget->Get_Transform()->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+		m_pOwner->m_pTransformCom->Go_Target(m_pOwner->m_pTarget->Get_Transform()->Get_State(STATE::POSITION), fTimeDelta, 0.3f);
 
 
 		if (!Is_Target_Found())
