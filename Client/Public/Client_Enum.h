@@ -5,7 +5,7 @@ namespace Client
 {
 	enum class LEVEL { STATIC, LOADING, LOGO, GAMEPLAY, MAPTOOL, END };
 
-	enum class COL_GROUP { PLAYER, MONSTER, BOSS, BULLET, END };
+	enum class COL_GROUP { PLAYER, AR_BULLET, PST_BULLET, MONSTER, BOSS, BULLET, END };
 	enum class COL_ID {
 		PLAYER_BODY,
 		PLAYER_HAND,
@@ -14,7 +14,6 @@ namespace Client
 		BOSS_WARRIOR,
 		BOSS_WARRIOR_HEAD,
 		END
-
 	};
 }
 

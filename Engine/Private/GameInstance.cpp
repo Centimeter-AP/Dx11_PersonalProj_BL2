@@ -387,6 +387,11 @@ void CGameInstance::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
 	m_pCollider_Manager->Intersect_Group(iSrcGroupID, iDstGroupID);
 }
 
+CCollider* CGameInstance::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float fRayLength, _uint iColliderGroupID, _float& fRayDist)
+{
+	return 	m_pCollider_Manager->Raycast(vRayOrigin, vRayDir, fRayLength, iColliderGroupID, fRayDist);
+}
+
 #pragma endregion
 
 void CGameInstance::Release_Engine()

@@ -46,9 +46,9 @@ _bool CBounding_Sphere::Intersect(CBounding* pTarget)
 	return isColl;
 }
 
-_bool CBounding_Sphere::Raycast(_fvector vRayOrigin, _fvector vRayDir, const _float fRayDist)
+_bool CBounding_Sphere::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist)
 {
-	m_pDesc->Intersects(vRayOrigin, vRayDir, fRayDist);
+	//m_pDesc->Intersects(vRayOrigin, vRayDir, fRayDist);
 	return _bool();
 }
 

@@ -55,8 +55,10 @@ void CMonster::Priority_Update(_float fTimeDelta)
 
 EVENT CMonster::Update(_float fTimeDelta)
 {
-	if (true == m_pModelCom->Play_Animation(fTimeDelta))
-		int a = 10;
+	if (m_bDead)
+		return EVN_DEAD;
+	//if (true == m_pModelCom->Play_Animation(fTimeDelta))
+	//	int a = 10;
 	return EVN_NONE;
 }
 

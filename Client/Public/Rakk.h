@@ -22,7 +22,7 @@ public:
 
 	enum RAKK_STATE {
 		STATE_Idle, STATE_Hover, STATE_Ground_Idle, STATE_Flying_Idle, STATE_Flying_Attack,
-		STATE_Flying_SuicidalDive, STATE_PhaseLocked, STATE_Takeoff, STATE_Landing, STATE_Provoked, STATE_END
+		STATE_Flying_SuicidalDive, STATE_PhaseLocked, STATE_Takeoff, STATE_Landing, STATE_Provoked, STATE_Dead, STATE_END
 	};
 
 #pragma region MyFriendMyState
@@ -38,6 +38,7 @@ public:
 	friend class CRakkState_Phaselocked;
 	friend class CRakkState_Takeoff;
 	friend class CRakkState_Landing;
+	friend class CRakkState_Dead;
 	//friend class
 #pragma endregion
 
@@ -60,6 +61,7 @@ private:
 
 	void Set_State(RAKK_STATE eState);
 	void Update_State(_float fTimeDelta);
+	virtual void Set_State_Dead();
 
 private:
 	_bool IsOutsideRegion() const;

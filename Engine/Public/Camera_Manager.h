@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class CCamera_Manager final : public CBase
 {
 private:
-	CCamera_Manager();
+	CCamera_Manager() {};
 	virtual ~CCamera_Manager() = default;
 
 public:
@@ -20,7 +20,6 @@ public:
 	HRESULT Add_Camera(class CCamera* pCamera);
 
 private:
-	_uint										m_iNumLevels = {};
 	class CGameInstance*						m_pGameInstance = { nullptr };
 	unordered_map<_wstring, class CCamera*>		m_Cameras;
 

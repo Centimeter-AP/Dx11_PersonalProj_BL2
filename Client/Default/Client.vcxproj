@@ -188,6 +188,7 @@
     <ClInclude Include="..\Public\Sky.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
+    <ClInclude Include="..\public\UI_Aim.h" />
     <ClInclude Include="..\Public\Warrior.h" />
     <ClInclude Include="..\Public\WarriorState.h" />
     <ClInclude Include="..\public\Weapon.h" />
@@ -256,6 +257,7 @@
     <ClCompile Include="..\Private\Sky.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />
+    <ClCompile Include="..\private\UI_Aim.cpp" />
     <ClCompile Include="..\Private\Warrior.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />

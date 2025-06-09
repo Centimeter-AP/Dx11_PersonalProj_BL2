@@ -35,6 +35,11 @@ HRESULT CRakk::Initialize(void* pArg)
 	//m_pModelCom->Set_Animation(RAKK_ANIM::Flight_BankL, true);
 	m_eCurState = STATE_Flying_Idle;
 	Set_State(m_eCurState);
+
+	m_fAttackableDistance = 5.f;
+	m_fDetectiveDistance = 20.f;
+
+
 	return S_OK;
 }
 
@@ -59,9 +64,10 @@ void CRakk::Priority_Update(_float fTimeDelta)
 
 EVENT CRakk::Update(_float fTimeDelta)
 {
+	
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 
-	return EVN_NONE;
+	return __super::Update(fTimeDelta);
 }
 
 void CRakk::Late_Update(_float fTimeDelta)
@@ -114,8 +120,8 @@ HRESULT CRakk::Ready_Components(void* pArg)
 	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
 
 	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_RAKK);
-	AABBDesc.vExtents = _float3(0.8f, 0.3f, 0.5f);
-	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y, 0.f);
+	AABBDesc.vExtents = _float3(0.4f, 0.3f, 0.3f);
+	AABBDesc.vCenter = _float3(0.0f, -AABBDesc.vExtents.y, 0.f);
 	/* For.Com_Collider */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
@@ -137,6 +143,8 @@ HRESULT CRakk::Ready_RakkStates()
 	m_pStates[RAKK_STATE::STATE_PhaseLocked] = new CRakkState_Phaselocked(this);
 	m_pStates[RAKK_STATE::STATE_Takeoff] = new CRakkState_Takeoff(this);
 	m_pStates[RAKK_STATE::STATE_Landing] = new CRakkState_Landing(this);
+	m_pStates[RAKK_STATE::STATE_Provoked] = new CRakkState_Provoked(this);
+	m_pStates[RAKK_STATE::STATE_Dead] = new CRakkState_Dead(this);
 
 	m_pCurState = m_pStates[RAKK_STATE::STATE_Flying_Idle];
 	return S_OK;
@@ -160,6 +168,11 @@ void CRakk::Update_State(_float fTimeDelta)
 	//	m_ePrevState = m_eCurState;
 	//}
 	m_pCurState->Execute(fTimeDelta);
+}
+
+void CRakk::Set_State_Dead()
+{
+	Set_State(RAKK_STATE::STATE_Dead);
 }
 
 _bool CRakk::IsOutsideRegion() const

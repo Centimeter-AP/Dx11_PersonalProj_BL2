@@ -56,6 +56,11 @@ HRESULT CCollider::Initialize(void* pArg)
 
 	pDesc->eType = m_eType;
 	m_pOwner = pDesc->pOwner;
+	if (m_pOwner == nullptr)
+	{
+		MSG_BOX("이러면안된다니까요");
+		return E_FAIL;
+	}
 
 	switch (m_eType)
 	{
@@ -70,6 +75,7 @@ HRESULT CCollider::Initialize(void* pArg)
 		break;
 	}
 
+	m_pGameInstance->Add_Collider(pDesc->iColliderGroup, this);
 	return S_OK;
 }
 
@@ -85,11 +91,47 @@ _bool CCollider::Intersect(CCollider* pTargetCollider)
 	return m_isColl;
 }
 
-_bool CCollider::Raycast(_fvector vRayOrigin, _fvector vRayDir, const _float fRayDist)
+_bool CCollider::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist)
 {
-	//m_isColl = m_pBounding->
-	return _bool();
+	return m_pBounding->Raycast(vRayOrigin, vRayDir, fRayDist);
 }
+
+const _float3 CCollider::Get_Pos()
+{
+	switch (m_eType)
+	{
+	case COLLIDER::AABB:
+		return static_cast<CBounding_AABB*>(m_pBounding)->Get_Desc()->Center;
+		break;
+	case COLLIDER::OBB:
+		return static_cast<CBounding_OBB*>(m_pBounding)->Get_Desc()->Center;
+		break;
+	case COLLIDER::SPHERE:
+		return static_cast<CBounding_Sphere*>(m_pBounding)->Get_Desc()->Center;
+		break;
+	default:
+		return _float3(0.f, 0.f, 0.f);
+	}
+}
+
+const _float CCollider::Get_MaxLength()
+{
+	switch (m_eType)
+	{
+	case COLLIDER::AABB:
+		return XMVectorGetX(XMVector3Length(XMLoadFloat3(&static_cast<CBounding_AABB*>(m_pBounding)->Get_Desc()->Extents)));
+		break;
+	case COLLIDER::OBB:
+		return XMVectorGetX(XMVector3Length(XMLoadFloat3(&static_cast<CBounding_OBB*>(m_pBounding)->Get_Desc()->Extents)));
+		break;
+	case COLLIDER::SPHERE:
+		return static_cast<CBounding_Sphere*>(m_pBounding)->Get_Desc()->Radius;
+		break;
+	default:
+		return 0.f;
+	}
+}
+
 
 #ifdef _DEBUG
 HRESULT CCollider::Render()

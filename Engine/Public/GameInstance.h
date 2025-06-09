@@ -106,6 +106,7 @@ public:
 	HRESULT Add_Collider(_uint iGroupID, class CCollider* pCollider);
 	void Intersect(class CCollider* pDst, class CCollider* pSrc);
 	void Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID);
+	class CCollider* Raycast(_fvector vRayOrigin, _fvector vRayDir, _float fRayLength, _uint iColliderGroupID, _float& fRayDist);
 
 #pragma endregion
 

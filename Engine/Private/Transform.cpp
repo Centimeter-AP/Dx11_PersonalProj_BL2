@@ -8,7 +8,7 @@ CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CTransform::CTransform(const CTransform& Prototype)
-	: CComponent{ Prototype }
+	: CComponent( Prototype )
 	, m_WorldMatrix { Prototype.m_WorldMatrix }
 {
 }
@@ -125,6 +125,26 @@ void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDista
 
 	if(fMinDistance <= XMVectorGetX(XMVector3Length(vMoveDir)))
 		Set_State(STATE::POSITION, Get_State(STATE::POSITION) + XMVector3Normalize(vMoveDir) * m_fSpeedPerSec * fTimeDelta);
+}
+
+void CTransform::Go_Up(_float fTimeDelta)
+{
+	_vector		vPosition = Get_State(STATE::POSITION);
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	vPosition += XMVector3Normalize(vUp) * m_fSpeedPerSec * fTimeDelta;
+
+	Set_State(STATE::POSITION, vPosition);
+}
+
+void CTransform::Go_Down(_float fTimeDelta)
+{
+	_vector		vPosition = Get_State(STATE::POSITION);
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+
+	vPosition -= XMVector3Normalize(vUp) * m_fSpeedPerSec * fTimeDelta * 1.12f;
+
+	Set_State(STATE::POSITION, vPosition);
 }
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)

@@ -52,6 +52,11 @@ _bool CBounding_OBB::Intersect(CBounding* pTarget)
 	return isColl;
 }
 
+_bool CBounding_OBB::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist)
+{
+	return _bool();
+}
+
 #ifdef _DEBUG
 
 HRESULT CBounding_OBB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fvector vColor)

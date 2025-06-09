@@ -36,6 +36,7 @@ HRESULT CPistol::Initialize(void* pArg)
 
 	m_pModelCom->Set_Animation(3, false);
 	m_pModelCom->Set_Animation_TickPerSecond_All(30.f);
+	m_pModelCom->Play_Animation(0.01f);
 	return S_OK;
 }
 

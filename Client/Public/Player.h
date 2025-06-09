@@ -79,12 +79,16 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+
+	virtual void On_Collision(_uint iColID) override;
+
 	void	Key_Input(_float fTimeDelta);
+
 	void	Set_State(PLA_STATE eState);
-	const _float& Get_Pitch() { return m_fPitch; }
 
 private:
 	void	Update_State(_float fTimeDelta);
+	void	Raycast_Object();
 
 private:
 	HRESULT Ready_Components(void* pArg);
@@ -92,6 +96,9 @@ private:
 	HRESULT Ready_Weapons(void* pArg);
 	HRESULT Ready_PlayerStates();
 	HRESULT Bind_ShaderResources();
+
+public:
+	const _float& Get_Pitch() { return m_fPitch; }
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
@@ -110,6 +117,10 @@ private: // maybe deprecated
 	_float				m_fPitch = {};
 	_float				m_fPreviousPitch = {};
 	const _float		m_fPitchLimit = XMConvertToRadians(89.9f); 
+
+private:
+	CCollider*			m_pCurPickedCollider = { nullptr };
+	_uint				m_iCameraBoneIdx = {};
 
 private:
 	vector<CGameObject*>		m_pWeapons; // 임시 무기 저장 변수, 인벤토리 만들고 꼭 이새끼 날릴 것 !!! 아닌가그냥써야하나??

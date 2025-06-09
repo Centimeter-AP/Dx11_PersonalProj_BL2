@@ -17,8 +17,13 @@ public:
 	void Update(_fmatrix WorldMatrix);
 
 	_bool Intersect(CCollider* pTargetCollider);
+	_bool Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist);
 	class CGameObject* Get_Owner() { return m_pOwner; }
 	_uint Get_ColliderID() { return m_iColliderID; }
+
+	const _float3 Get_Pos();
+
+	const _float Get_MaxLength();
 
 private:
 	COLLIDER			m_eType = { COLLIDER::END };

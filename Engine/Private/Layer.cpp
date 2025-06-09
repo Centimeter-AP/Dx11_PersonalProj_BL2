@@ -72,7 +72,7 @@ void CLayer::Update(_float fTimeDelta)
 {
 	for (auto iter = m_GameObjects.begin(); iter != m_GameObjects.end(); )
 	{
-		EVENT Events;
+		EVENT Events = { EVENT::EVN_NONE };
 		if (nullptr != (*iter))
 			Events = (*iter)->Update(fTimeDelta);
 		if (Events == EVENT::EVN_DEAD)

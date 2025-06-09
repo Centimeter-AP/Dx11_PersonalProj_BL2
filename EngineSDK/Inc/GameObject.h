@@ -27,7 +27,8 @@ public:
 	CTransform* Get_Transform() { return m_pTransformCom; }
 	const _wstring& Get_Name() { return m_szName; }
 	const _wstring&	Get_VIBufferTag() const { return m_strVIBufferTag; }
-	void	Set_Dead() { m_bDead = true; }
+	void Set_Dead() { m_bDead = true; }
+	virtual void Set_State_Dead() { m_bDead = true; }
 	void Set_Active(_bool bActive) { m_isActive = bActive; }
 
 public:
@@ -37,6 +38,8 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+
+	virtual void On_Collision(_uint iColID) {};
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };

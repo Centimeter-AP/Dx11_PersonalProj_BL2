@@ -48,13 +48,14 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 20.f, 0.f, 1.f));
-	
+
 	m_pModelCom->Set_Animation(AR_Idle, true, 0.2f);
 	Set_State(STATE_Idle);
 
 
 	m_pModelCom->Play_Animation(0.01f);
 
+	m_iCameraBoneIdx = m_pModelCom->Find_BoneIndex("Camera");
 	return S_OK;
 }
 
@@ -65,6 +66,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Priority_Update(fTimeDelta);
 	}
+	m_pColCam->Set_ColliderColor(RGBA_GREEN);
 
 #pragma region 애니메이션 테스트
 	static _uint test = {};
@@ -86,13 +88,14 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	}
 #pragma endregion
 
+	Update_State(fTimeDelta);
 	Key_Input(fTimeDelta);
+	Raycast_Object();
 	//Spine3
 }
 
 EVENT CPlayer::Update(_float fTimeDelta)
 {
-	Update_State(fTimeDelta);
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -142,11 +145,9 @@ HRESULT CPlayer::Render()
 	
 #ifdef _DEBUG
 	
-	m_pColliderCom->Set_ColliderColor(RGBA_WHITE);
 	m_pColliderCom->Render();
 
 
-	m_pColCam->Set_ColliderColor(RGBA_RED);
 	m_pColCam->Render();
 
 
@@ -154,6 +155,12 @@ HRESULT CPlayer::Render()
 #endif 
 
 	return S_OK;
+}
+
+void CPlayer::On_Collision(_uint iColID)
+{
+	m_pColCam->Set_ColliderColor(RGBA_RED);
+
 }
 
 void CPlayer::Key_Input(_float fTimeDelta)
@@ -181,21 +188,35 @@ void CPlayer::Key_Input(_float fTimeDelta)
 void CPlayer::Set_State(PLA_STATE eState)
 {
 	//( Set_State를 불렀을 때 ReEnter를 할 것인지? 이건 나한텐 필요 없을지도,,)
+	// 아니 존나 필요해...
 	m_ePrevState = m_eCurState;
 	m_eCurState = eState;
 
 	m_pCurState->Exit();
 	m_pCurState = m_pStates[eState];
+	m_pCurState->Enter();
 }
 
 void CPlayer::Update_State(_float fTimeDelta)
 {
-	if (m_ePrevState != m_eCurState)
-	{
-		m_pCurState->Enter();
-		m_ePrevState = m_eCurState;
-	}
+	//if (m_ePrevState != m_eCurState)
+	//{
+	//	m_pCurState->Enter();
+	//	m_ePrevState = m_eCurState;
+	//}
 	m_pCurState->Execute(fTimeDelta);
+}
+
+void CPlayer::Raycast_Object()
+{
+	_matrix matFinal = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iCameraBoneIdx)) * m_pTransformCom->Get_WorldMatrix();
+
+	_vector vEye = XMVectorSetW(matFinal.r[3], 1.f);
+	_vector vLook = XMVectorSetW(XMVector4Normalize(matFinal.r[0]), 0.f);
+	_float Dist = {};
+	m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::MONSTER), Dist);
+	//if (m_pCurPickedCollider != nullptr)
+	//	int a = 0;
 }
 
 HRESULT CPlayer::Ready_Components(void* pArg)
@@ -238,7 +259,8 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 
 	// need: collider, sound, maybe gravity?
 
-
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColCam->Set_ColliderColor(RGBA_RED);
 
 
 	return S_OK;

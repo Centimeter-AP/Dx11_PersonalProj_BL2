@@ -68,6 +68,8 @@ public:
 	void Go_Straight_Hover(_float fTimeDelta);
 	void Go_Backward_Hover(_float fTimeDelta);
 	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
+	void Go_Up(_float fTimeDelta);
+	void Go_Down(_float fTimeDelta);
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation(_float fX, _float fY, _float fZ);

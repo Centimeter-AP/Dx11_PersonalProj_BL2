@@ -136,6 +136,9 @@
     <Filter Include="02.GameObjects\05. Weapon\Pistol\PSTState">
       <UniqueIdentifier>{d83dbe8e-4680-4237-a4ba-b43c187d04de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07. UI\Aim">
+      <UniqueIdentifier>{fd323e0f-3929-4a07-b1c1-4d8dd02e81f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -294,6 +297,7 @@
     <ClInclude Include="..\Public\PSTState.h">
       <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\UI_Aim.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -486,6 +490,7 @@
     <ClCompile Include="..\Private\PSTState_Draw.cpp">
       <Filter>02.GameObjects\05. Weapon\Pistol\PSTState</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\UI_Aim.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
