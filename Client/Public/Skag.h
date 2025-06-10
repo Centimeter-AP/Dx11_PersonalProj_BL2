@@ -34,6 +34,7 @@ public:
 		Patrol_Turn180_L, Patrol_Turn90_L, Patrol_Walk_F,
 		Perch_Barf_Loop, Perch_Barf_Start, Perch_Barf_Stop,
 		Perch_Pee_End, Perch_Pee_Loop, Perch_Pee_Start,
+		Perch_Rolling_End, Perch_Rolling_Loop, Perch_Rolling_Start,
 		Perch_Sleep_End, Perch_Sleep_Loop, Perch_Sleep_Start,
 		PhaseLock_Fall, PhaseLock_Land, PhaseLock_Lift, PhaseLock_Loop, //2301
 		Provoked_var1, Provoked_var2,
@@ -50,7 +51,7 @@ public:
 		STATE_Attack_Bite, STATE_Attack_Charge, STATE_Attack_Claw, STATE_Attack_ElementBreath, STATE_Attack_Leap,
 		STATE_Attack_Radius, STATE_Attack_Run_Bite, STATE_Attack_Run_Tongue, STATE_Attack_Spit, STATE_Attack_Tongue,
 		STATE_Death, STATE_Dodge, STATE_GetUp, STATE_Hardflinch, STATE_Idle, STATE_Injured_Walk, STATE_Knockback, STATE_Leap,
-		STATE_Patrol, STATE_Perch_DONTUSE, STATE_PhaseLocked, STATE_Provoked, STATE_Retreat, STATE_Roar, STATE_Run,
+		STATE_Patrol, STATE_Perch_DONTUSE, STATE_PhaseLocked, STATE_Provoked, STATE_Provoked_Idle, STATE_Retreat, STATE_Roar, STATE_Run,
 		STATE_Spawn,
 
 		/*STATE_Idle, STATE_Hover, STATE_Ground_Idle, STATE_Flying_Idle, STATE_Flying_Attack,
@@ -64,8 +65,11 @@ public:
 	friend class CSkagState_Patrol;
 	friend class CSkagState_Attack_Bite;
 	friend class CSkagState_Attack_Claw;
+	friend class CSkagState_Attack_Tongue;
 	friend class CSkagState_Attack_Leap;
 	friend class CSkagState_Attack_Charge;
+	friend class CSkagState_Attack_Charge_HitWall;
+	friend class CSkagState_Attack_Charge_Strike;
 	friend class CSkagState_Attack_RunBite;
 	friend class CSkagState_Attack_RunTongue;
 	friend class CSkagState_Provoked;
@@ -96,6 +100,8 @@ private:
 	void Update_State(_float fTimeDelta);
 	virtual void Set_State_Dead();
 
+private:
+	_uint m_iSpineBoneIdx = {};
 
 private:
 	class CSkagState* m_pCurState = { nullptr };

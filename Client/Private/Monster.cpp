@@ -56,7 +56,7 @@ void CMonster::Priority_Update(_float fTimeDelta)
 EVENT CMonster::Update(_float fTimeDelta)
 {
 	if (m_bDead)
-		return EVN_DEAD;
+		return Death_Delay(fTimeDelta);
 	//if (true == m_pModelCom->Play_Animation(fTimeDelta))
 	//	int a = 10;
 	return EVN_NONE;
@@ -141,6 +141,15 @@ HRESULT CMonster::Bind_ShaderResources()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+EVENT CMonster::Death_Delay(_float fTimeDelta)
+{
+	m_fDeathDelay += fTimeDelta;
+	if (m_fDeathDelay > m_fForceDeathDelay)
+		return EVN_DEAD;
+	else
+		return EVN_NONE;
 }
 
 void CMonster::Free()

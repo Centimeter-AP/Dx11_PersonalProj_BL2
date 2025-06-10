@@ -34,10 +34,11 @@ HRESULT CSkag::Initialize(void* pArg)
 	m_eCurState = STATE_Idle;
 	Set_State(m_eCurState);
 
-	m_fAttackableDistance = 5.f;
+	m_fAttackableDistance = 3.f;
 	m_fDetectiveDistance = 20.f;
 
-
+	m_iSpineBoneIdx = m_pModelCom->Find_BoneIndex("Spine1");
+	m_iHeadBoneIdx = m_pModelCom->Find_BoneIndex("Head");
 	return S_OK;
 }
 
@@ -62,9 +63,10 @@ void CSkag::Priority_Update(_float fTimeDelta)
 
 EVENT CSkag::Update(_float fTimeDelta)
 {
-	
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
-
+	auto SpineBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iSpineBoneIdx));
+	auto HeadBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iHeadBoneIdx));
+	m_pColliderCom->Update(SpineBoneMat * m_pTransformCom->Get_WorldMatrix());
+	m_pColliderHeadCom->Update(HeadBoneMat * m_pTransformCom->Get_WorldMatrix());
 	return __super::Update(fTimeDelta);
 }
 
@@ -95,7 +97,9 @@ HRESULT CSkag::Render()
 	}
 	
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderCom->Render();
+	m_pColliderHeadCom->Render();
 
 	return S_OK;
 }
@@ -116,13 +120,27 @@ HRESULT CSkag::Ready_Components(void* pArg)
 	AABBDesc.pOwner = this;
 	AABBDesc.eType = COLLIDER::AABB;
 	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
-
 	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_RAKK);
-	AABBDesc.vExtents = _float3(0.4f, 0.3f, 0.3f);
-	AABBDesc.vCenter = _float3(0.0f, -AABBDesc.vExtents.y, 0.f);
+	AABBDesc.vExtents = _float3(35.f, 43.f, 35.f);
+	AABBDesc.vCenter = _float3(0.f, -17.f, 0.f);
+
+
 	/* For.Com_Collider */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
+		return E_FAIL;
+
+	CBounding_Sphere::SPHERE_DESC SphereDesc = {};
+	SphereDesc.pOwner = this;
+	SphereDesc.eType = COLLIDER::AABB;
+	SphereDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
+	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_RAKK_HEAD);
+	SphereDesc.fRadius = 20.f;
+	SphereDesc.vCenter = _float3(0.f, 0.f, 10.f);
+
+	/* For.Com_HeadCollider */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_ColliderHead"), reinterpret_cast<CComponent**>(&m_pColliderHeadCom), &SphereDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -135,6 +153,7 @@ HRESULT CSkag::Ready_SkagStates()
 	m_pStates[SKAG_STATE::STATE_Patrol] = new CSkagState_Patrol(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Bite] = new CSkagState_Attack_Bite(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Claw] = new CSkagState_Attack_Claw(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Tongue] = new CSkagState_Attack_Tongue(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Leap] = new CSkagState_Attack_Leap(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Charge] = new CSkagState_Attack_Charge(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Run_Bite] = new CSkagState_Attack_RunBite(this);
@@ -175,15 +194,21 @@ void CSkag::Set_State_Dead()
 
 void CSkag::AttackTimer(_float fTimeDelta)
 {
-	m_fLeapCheckTimer += fTimeDelta;
-	if (m_fChargeCheckTimer > 10.f)
-	{
-		m_bChargeCheck = true;
-	}
 	m_fChargeCheckTimer += fTimeDelta;
-	if (m_fLeapCheckTimer > 10.f)
+	if (m_fChargeCheckTimer > 1.f)
 	{
-		m_bLeapCheck = true;
+		if (rand() % 2 == 0)
+			m_bChargeCheck = true;
+		else
+			m_fChargeCheckTimer = 0.f;
+	}
+	m_fLeapCheckTimer += fTimeDelta;
+	if (m_fLeapCheckTimer > 5.f)
+	{
+		if (rand() % 2 == 0)
+			m_bLeapCheck = true;
+		else
+			m_fLeapCheckTimer = 0.f;
 	}
 }
 

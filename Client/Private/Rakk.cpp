@@ -100,7 +100,7 @@ HRESULT CRakk::Render()
 	m_pColliderCom->Render();
 
 	_wstring AnimationFrame = L"TEST";
-	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), AnimationFrame.c_str(), _float2(0.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
+	//m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), AnimationFrame.c_str(), _float2(0.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
 
 
 	return S_OK;

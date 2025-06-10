@@ -49,6 +49,8 @@ protected:
 	_uint				m_iAttackPower = {};
 	_int				m_iDefense = {};
 	_float				m_fSpeed = {};
+	_float				m_fDeathDelay = {};
+	const _float		m_fForceDeathDelay = { 0.f };
 
 	_bool				m_bActive = { true };
 
@@ -57,11 +59,14 @@ protected:
 	_float				m_fDetectiveDistance = {};
 
 	CCollider*			m_LastCollidedCollider = { nullptr };
+	_uint				m_iHeadBoneIdx = {};
 
 
 protected:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
+
+	EVENT Death_Delay(_float fTimeDelta);
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

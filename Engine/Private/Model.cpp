@@ -258,7 +258,7 @@ HRESULT CModel::Ready_Animations(ifstream& ifs)
 {
 	ifs.read(reinterpret_cast<_char*>(&m_iNumAnimations), sizeof(_uint));  // 애니메이션 몇개읨 
 
- 	_uint iRootBoneIdx = Find_BoneIndex("Root_$AssimpFbx$_Translation");
+  	_uint iRootBoneIdx = Find_BoneIndex("Root_$AssimpFbx$_Translation");
 	if (iRootBoneIdx == m_Bones.size())
 	{
 		iRootBoneIdx = Find_BoneIndex("Root");

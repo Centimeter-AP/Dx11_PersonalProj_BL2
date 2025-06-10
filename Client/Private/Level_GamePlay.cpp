@@ -95,7 +95,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	CRakk::DESC RakkDesc;
 	RakkDesc.bActive = true;
 	RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	RakkDesc.fSpeedPerSec = 10.f;
+	RakkDesc.fSpeedPerSec = 9.f;
 	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
 	RakkDesc.bHasPreset = true;
@@ -104,16 +104,16 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
 		return E_FAIL;
 
-	CSkag::DESC RakkDesc;
-	RakkDesc.bActive = true;
-	RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	RakkDesc.fSpeedPerSec = 10.f;
-	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
-	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
-	RakkDesc.bHasPreset = true;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 10 + 40.f, rand() % 3 + 13.f, rand() % 10 + 40.f));
-	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
-		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+	CSkag::DESC	SkagDesc;
+	SkagDesc.bActive = true;
+	SkagDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	SkagDesc.fSpeedPerSec = 7.f;
+	SkagDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	SkagDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Skag");
+	SkagDesc.bHasPreset = true;
+	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
 		return E_FAIL;
 
 
@@ -128,7 +128,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
 	PlayerDesc.fSpeedPerSec = 10.f;
 	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 	PlayerDesc.bHasPreset = true;
-	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixTranslation(39.f, 0.f, 33.26f));
+	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixTranslation(39.f, 2.f, 33.26f));
 	PlayerDesc.szName = TEXT("Player");
 	PlayerDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Siren_Hand");
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),

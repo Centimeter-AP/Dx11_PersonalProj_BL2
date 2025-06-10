@@ -13,7 +13,10 @@ public:
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
 		m_pTarget = m_pOwner->m_pTarget;
+		m_pTargetTransform = m_pTarget->Get_Transform();
 		Safe_AddRef(m_pGameInstance);
+		Safe_AddRef(m_pTarget);
+		Safe_AddRef(m_pTargetTransform);
 	}
 	virtual ~CSkagState() = default;
 
@@ -21,7 +24,12 @@ public:
 	virtual void Enter() PURE;
 	virtual void Execute(_float fTimeDelta) PURE;
 	virtual void Exit() PURE;
-	virtual void Free() override { __super::Free(); Safe_Release(m_pGameInstance); }
+	virtual void Free() override {
+		__super::Free(); 
+		Safe_Release(m_pGameInstance);
+		Safe_Release(m_pTarget);
+		Safe_Release(m_pTargetTransform);
+	}
 
 	virtual _bool Is_Target_Found(){
 		auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTargetTransform->Get_State(STATE::POSITION))));
@@ -56,9 +64,10 @@ public:
 		if (m_fTestTick >= 1.f)
 		{
 			// 쓰고 싶은 것..
-			auto Dist =/* fabs*/(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTarget->Get_Transform()->Get_State(STATE::POSITION))));
+			//auto Dist =/* fabs*/(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTarget->Get_Transform()->Get_State(STATE::POSITION))));
 
-			cout << "Dist : " << Dist << endl;
+			//cout << "Dist : " << Dist << endl;
+
 			m_fTestTick = 0.f;
 		}
 	}
@@ -108,23 +117,18 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "Idle" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Idle, true);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		//Console(fTimeDelta);
+		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 		if (Is_Target_Found())
 		{
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked);
 			return;
 		}
-
-		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
-		{
-			return;
-		}
-
-		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta);
-
 
 	}
 	virtual void Exit() override
@@ -145,6 +149,7 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "patrol" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Patrol_Walk_F, true);
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -169,13 +174,18 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "provoked" << endl;
 		rand() % 2 ?
-			Set_OwnerAnim(CSkag::SKAG_ANIM::Provoked_var1, true) :
-			Set_OwnerAnim(CSkag::SKAG_ANIM::Provoked_var2, true);
+			Set_OwnerAnim(CSkag::SKAG_ANIM::Provoked_var1, false) :
+			Set_OwnerAnim(CSkag::SKAG_ANIM::Provoked_var2, false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-
+		Console(fTimeDelta);
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
 	}
 	virtual void Exit() override
 	{
@@ -195,18 +205,23 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "provoked_idle" << endl;
 		//Set_OwnerAnim(CSkag::SKAG_ANIM::, true);
 		// 바로바로 전환 해주는 용도로 거치기만 해도 될듯?
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		if (Is_Target_Attackable())
+		Console(fTimeDelta);
+		//if (Is_Target_Attackable())
+		//{
+		//	rand() % 2 ?
+		//		m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite) :
+		//		m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite);
+		//		//m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
+		//}
+		//else
 		{
-
-		}
-		else
-		{
-			
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Run);
 		}
 	}
 	virtual void Exit() override
@@ -229,14 +244,18 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "a_bite" << endl;
 		rand() % 2 ?
-			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite1, true) :
-			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite2, true);
+			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite1, false) :
+			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite2, false);
 
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
 	}
 	virtual void Exit() override
 	{
@@ -245,6 +264,38 @@ public:
 	virtual void Free() override { __super::Free(); }
 };
 
+class CSkagState_Attack_Tongue final : public CSkagState
+{
+public:
+	CSkagState_Attack_Tongue(class CSkag* pOwner)
+		: CSkagState(pOwner) {
+	}
+	virtual ~CSkagState_Attack_Tongue() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "a_bite" << endl;
+		rand() % 2 ?
+			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue1, false) :
+			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue2, false);
+
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
+	}
+	virtual void Exit() override
+	{
+
+	}
+	virtual void Free() override { __super::Free(); }
+};
+
+// ChargeStart도 분리하면 좋을 것 같은데요..
 class CSkagState_Attack_Charge final : public CSkagState
 {
 public:
@@ -257,11 +308,119 @@ public:
 public:
 	virtual void Enter() override
 	{
-		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Start, true);
+		cout << "a_charge" << endl;
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Start, false);
+		ChargeStatus[0] = true;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			if (ChargeStatus[2] == true)
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+			else if (ChargeStatus[0] == true)
+			{
+				ChargeStatus[1] = true;
+				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Loop, true);
+				//XMStoreFloat3(&vChargePos, m_pTargetTransform->Get_State(STATE::POSITION));
+			}
+		}
+		if (ChargeStatus[1] == false)
+		{   // 준비 중에 고개 돌리기
+			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+		}
+		if (ChargeStatus[1] == true && ChargeStatus[2] == false)
+		{
+			fChargingTime += fTimeDelta; // 최소 돌진 시간 잡아두기
+			if (fChargingTime > fForceChargingTime)
+			{
+				auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTargetTransform->Get_State(STATE::POSITION))));
+				if (Dist >= 10.f)
+				{
+					ChargeStatus[2] = true;
+					Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Stop, false);
+				}
+			}
+			//m_pOwner->m_pTransformCom->Go_Target(XMVectorSetW(XMLoadFloat3(&vChargePos), 1.f), fTimeDelta * 1.2f, 1.f);
+			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 2.f);
+
+			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * 1.2f);
+		}
+		if (ChargeStatus[2] == true)
+		{
+			//m_pOwner->m_pTransformCom->Go_Target(XMVectorSetW(XMLoadFloat3(&vChargePos), 1.f), fTimeDelta * fDecel, 1.f);
+			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * fDecel);
+			fDecel *= 0.95f;
+		}
+	}
+	virtual void Exit() override
+	{
+		for (size_t i = 0; i < 3; i++)
+		{
+			ChargeStatus[i] = false;
+		}
+		vChargePos = {};
+		fDecel = 0.9f;
+		fChargingTime = {};
+	}
+	virtual void Free() override { __super::Free(); }
+private:
+	_bool ChargeStatus[3] = { false }; // 0 Start, 1 Loop, 2 Stop
+	_float3 vChargePos = {};
+	_float fDecel = {0.9f};
+	_float fChargingTime = {};
+	const _float fForceChargingTime = {1.f};
+};
+
+class CSkagState_Attack_Charge_HitWall final : public CSkagState
+{
+public:
+	CSkagState_Attack_Charge_HitWall(class CSkag* pOwner)
+		: CSkagState(pOwner) {
+	}
+	virtual ~CSkagState_Attack_Charge_HitWall() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "a_Charge_HitWall" << endl;
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Hitwall, false);
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
+	}
+	virtual void Exit() override
+	{
+
+	}
+	virtual void Free() override { __super::Free(); }
+};
+
+class CSkagState_Attack_Charge_Strike final : public CSkagState
+{
+public:
+	CSkagState_Attack_Charge_Strike(class CSkag* pOwner)
+		: CSkagState(pOwner) {
+	}
+	virtual ~CSkagState_Attack_Charge_Strike() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "a_Charge_Strike" << endl;
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Strike, false);
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
 	}
 	virtual void Exit() override
 	{
@@ -281,6 +440,7 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "a_claw" << endl;
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -305,7 +465,8 @@ public:
 public:
 	virtual void Enter() override
 	{
-
+		cout << "a_leap" << endl;
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Leap_Start, true);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -329,6 +490,7 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "a_runbite" << endl;
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -353,6 +515,7 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "a_runtongue" << endl;
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -383,6 +546,7 @@ public:
 public:
 	virtual void Enter() override
 	{
+		cout << "run" << endl;
 		rand() % 2 ?( rand() % 2 ?
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Run_F, true) :
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Run_F3, true)) :
@@ -390,25 +554,44 @@ public:
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		Console(fTimeDelta);
+		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
+
 		auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTargetTransform->Get_State(STATE::POSITION))));
 
 		m_pOwner->AttackTimer(fTimeDelta);
 
-		if (m_pOwner->m_bChargeCheck)
+		if (Dist < m_fChargeDist)
 		{
-			m_pOwner->m_fChargeCheckTimer = 0.f;
-			m_pOwner->m_bChargeCheck = false;
-			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Charge);
-			return;
+			if (m_pOwner->m_bChargeCheck)
+			{
+				m_pOwner->m_fChargeCheckTimer = 0.f;
+				m_pOwner->m_bChargeCheck = false;
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Charge);
+				return;
+			}
 		}
-		if (m_pOwner->m_bLeapCheck)
+		if (Dist < m_fLeapDist)
 		{
-			m_pOwner->m_fLeapCheckTimer = 0.f;
-			m_pOwner->m_bLeapCheck = false;
-			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Leap);
+			if (m_pOwner->m_bLeapCheck)
+			{
+				m_pOwner->m_fLeapCheckTimer = 0.f;
+				m_pOwner->m_bLeapCheck = false;
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Leap);
+				return;
+			}
+		}
+		if (Dist < m_pOwner->m_fAttackableDistance)
+		{
+			rand() % 2 ?
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite) :
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
 			return;
+				//m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
 		}
 
+		m_pOwner->m_pTransformCom->LookAtLerp(m_pTarget->Get_Transform()->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+		m_pOwner->m_pTransformCom->Go_Target(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 1.f);
 		
 	}
 	virtual void Exit() override
@@ -416,6 +599,10 @@ public:
 
 	}
 	virtual void Free() override { __super::Free(); }
+
+private:
+	const _float m_fChargeDist = { 80.f };
+	const _float m_fLeapDist = { 30.f };
 };
 
 class CSkagState_Dead final : public CSkagState
@@ -430,16 +617,19 @@ public:
 	virtual void Enter() override
 	{
 		cout << "[Dead]" << endl;
-		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Loop), false);
+		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CSkag::SKAG_ANIM::Death_var1), false);
+		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::Death_var1), 15.f);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		if (m_pOwner->m_bDead == true)
+			return;
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
 			m_pOwner->Set_Dead();
 			return;
 		}
-		m_pOwner->m_pTransformCom->Go_Down(fTimeDelta);
+		//m_pOwner->m_pTransformCom->Go_Down(fTimeDelta);
 	}
 	virtual void Exit() override
 	{

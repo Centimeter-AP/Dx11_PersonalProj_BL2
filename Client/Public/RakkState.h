@@ -106,7 +106,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Flying_Idle]" << endl;
+		////cout << "[Flying_Idle]" << endl;
 		switch (rand() % 4)
 		{
 		case 0:
@@ -173,7 +173,7 @@ public:
 	virtual void Enter() override
 	{
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::GroundIdle), true);
-		cout << "[idle_G]" << endl;
+		//cout << "[idle_G]" << endl;
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -206,7 +206,7 @@ public:
 	virtual void Enter() override
 	{
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::Hover), false);
-		cout << "[Hover]" << endl;
+		//cout << "[Hover]" << endl;
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -239,7 +239,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Attack]" << endl;
+		//cout << "[Attack]" << endl;
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::Attack), false);
 
 	}
@@ -272,7 +272,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Suicide]" << endl;
+		//cout << "[Suicide]" << endl;
 		rand() % 2 == 0 ?
 			m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::SuicideDive1), false) :
 			m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::SuicideDive2), false);
@@ -308,7 +308,7 @@ private:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Phaselockd]" << endl;
+		//cout << "[Phaselockd]" << endl;
 		m_fPhaselockTime = 0.f;
 		m_fPrePhaseTime = 0.f;
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::Hover), true);
@@ -353,7 +353,7 @@ private:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Takeoff]" << endl;
+		//cout << "[Takeoff]" << endl;
 		//vDir = {};
 		//_vector vPos = m_pOwner->m_pTransformCom->Get_State(STATE::POSITION);
 		//_float3 vTakeoffPos = {};
@@ -427,7 +427,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Provoked]" << endl;
+		//cout << "[Provoked]" << endl;
 
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::Glide01), false);
 	}
@@ -477,7 +477,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Dead]" << endl;
+		//cout << "[Dead]" << endl;
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CRakk::RAKK_ANIM::PhaselockLoop), false);
 	}
 	virtual void Execute(_float fTimeDelta) override
