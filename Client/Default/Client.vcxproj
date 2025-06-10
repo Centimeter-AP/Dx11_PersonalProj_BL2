@@ -188,6 +188,8 @@
     <ClInclude Include="..\Public\Skag.h" />
     <ClInclude Include="..\Public\SkagState.h" />
     <ClInclude Include="..\Public\Sky.h" />
+    <ClInclude Include="..\Public\Stalker.h" />
+    <ClInclude Include="..\Public\StalkerState.h" />
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
     <ClInclude Include="..\public\UI_Aim.h" />
@@ -258,6 +260,7 @@
     <ClCompile Include="..\Private\Rakk.cpp" />
     <ClCompile Include="..\Private\Skag.cpp" />
     <ClCompile Include="..\Private\Sky.cpp" />
+    <ClCompile Include="..\Private\Stalker.cpp" />
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />
     <ClCompile Include="..\private\UI_Aim.cpp" />

@@ -31,7 +31,7 @@ HRESULT CSkag::Initialize(void* pArg)
 		return E_FAIL;
 	
 	//m_pModelCom->Set_Animation(RAKK_ANIM::Flight_BankL, true);
-	m_eCurState = STATE_Flying_Idle;
+	m_eCurState = STATE_Idle;
 	Set_State(m_eCurState);
 
 	m_fAttackableDistance = 5.f;
@@ -108,7 +108,7 @@ HRESULT CSkag::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_Rakk"),
+	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_Skag"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -125,16 +125,24 @@ HRESULT CSkag::Ready_Components(void* pArg)
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 		return E_FAIL;
 
-
-
 	return S_OK;
 }
 
 HRESULT CSkag::Ready_SkagStates()
 {
-	m_pStates[SKAG_STATE::STATE_Idle] = new CSkagState_Idle(this);
-	m_pStates[SKAG_STATE::STATE_Dead] = new CSkagState_Dead(this);
-
+	m_pStates[SKAG_STATE::STATE_Idle] =  new CSkagState_Idle(this);
+	m_pStates[SKAG_STATE::STATE_Death] = new CSkagState_Dead(this);
+	m_pStates[SKAG_STATE::STATE_Patrol] = new CSkagState_Patrol(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Bite] = new CSkagState_Attack_Bite(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Claw] = new CSkagState_Attack_Claw(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Leap] = new CSkagState_Attack_Leap(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Charge] = new CSkagState_Attack_Charge(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Run_Bite] = new CSkagState_Attack_RunBite(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Run_Tongue] = new CSkagState_Attack_RunTongue(this);
+	m_pStates[SKAG_STATE::STATE_Provoked] = new CSkagState_Provoked(this);
+	m_pStates[SKAG_STATE::STATE_Provoked_Idle] = new CSkagState_Provoked_Idle(this);
+	m_pStates[SKAG_STATE::STATE_Run] = new CSkagState_Run(this);
+	m_pStates[SKAG_STATE::STATE_Death] = new CSkagState_Dead(this);
 	m_pCurState = m_pStates[SKAG_STATE::STATE_Idle];
 	return S_OK;
 }
@@ -161,9 +169,23 @@ void CSkag::Update_State(_float fTimeDelta)
 
 void CSkag::Set_State_Dead()
 {
-	Set_State(SKAG_STATE::STATE_Dead);
+	Set_State(SKAG_STATE::STATE_Death);
 }
 
+
+void CSkag::AttackTimer(_float fTimeDelta)
+{
+	m_fLeapCheckTimer += fTimeDelta;
+	if (m_fChargeCheckTimer > 10.f)
+	{
+		m_bChargeCheck = true;
+	}
+	m_fChargeCheckTimer += fTimeDelta;
+	if (m_fLeapCheckTimer > 10.f)
+	{
+		m_bLeapCheck = true;
+	}
+}
 
 CSkag* CSkag::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

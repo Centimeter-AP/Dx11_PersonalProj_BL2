@@ -45,6 +45,9 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(m_pGameInstance->Initialize_Engine(EngineDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Fonts()))
+		return E_FAIL;
+
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 	
@@ -69,10 +72,24 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Draw();
 
+	//m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), TEXT("Help"), _float2(0.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.8f);
+
+
 	m_pGameInstance->End_Draw();
 
 
     return S_OK;
+}
+
+HRESULT CMainApp::Ready_Fonts()
+{
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_Compacta"), TEXT("../Bin/Resources/Fonts/Compacta.spritefont"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Font_WillowBody"), TEXT("../Bin/Resources/Fonts/WillowBody.spritefont"))))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CMainApp::Ready_Prototype_Component()

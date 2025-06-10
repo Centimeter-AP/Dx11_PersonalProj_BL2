@@ -13,7 +13,7 @@ private:
 
 public:
 	HRESULT Initialize(const aiAnimation* pAIAnimation, const vector<class CBone*>& Bones);
-	HRESULT Initialize(ifstream& ifs,  const vector<class CBone*>& Bones);
+	HRESULT Initialize(ifstream& ifs,  const vector<class CBone*>& Bones, _uint iRootBoneIdx);
 	_bool Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop);
 	void Reset();
 	const _matrix& Get_TransformMatrix(_uint iBoneIndex) const {
@@ -39,7 +39,7 @@ private:
 
 public:
 	static CAnimation* Create(const aiAnimation* pAIAnimation, const vector<class CBone*>& Bones);
-	static CAnimation* Create(ifstream& ifs, const vector<class CBone*>& Bones);
+	static CAnimation* Create(ifstream& ifs, const vector<class CBone*>& Bones, _uint iRootBoneIdx);
 	CAnimation* Clone();
 	virtual void Free() override;
 };

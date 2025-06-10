@@ -26,6 +26,7 @@ private:
 	ID3D11DeviceContext*		m_pContext = { nullptr };
 
 public:
+	HRESULT Ready_Fonts();
 	HRESULT Ready_Prototype_Component();
 	HRESULT Ready_Prototype_GameObject();
 

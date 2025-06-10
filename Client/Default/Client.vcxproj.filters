@@ -310,6 +310,12 @@
     <ClInclude Include="..\Public\SkagState.h">
       <Filter>02.GameObjects\03. Monster\Skag</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Stalker.h">
+      <Filter>02.GameObjects\03. Monster\Stalker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\StalkerState.h">
+      <Filter>02.GameObjects\03. Monster\Stalker</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -505,6 +511,9 @@
     <ClCompile Include="..\private\UI_Aim.cpp" />
     <ClCompile Include="..\Private\Skag.cpp">
       <Filter>02.GameObjects\03. Monster\Skag</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Stalker.cpp">
+      <Filter>02.GameObjects\03. Monster\Stalker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

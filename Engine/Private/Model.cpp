@@ -258,9 +258,15 @@ HRESULT CModel::Ready_Animations(ifstream& ifs)
 {
 	ifs.read(reinterpret_cast<_char*>(&m_iNumAnimations), sizeof(_uint));  // 애니메이션 몇개읨 
 
+ 	_uint iRootBoneIdx = Find_BoneIndex("Root_$AssimpFbx$_Translation");
+	if (iRootBoneIdx == m_Bones.size())
+	{
+		iRootBoneIdx = Find_BoneIndex("Root");
+	}
+
 	for (size_t i = 0; i < m_iNumAnimations; i++)
 	{
- 		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones);
+ 		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones, iRootBoneIdx);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
@@ -280,11 +286,13 @@ HRESULT CModel::Add_Animations(const string& filepath)
 	
 	_uint iAdditionalNumAnimations = {};
 
+	_uint iRootBoneIdx = Find_BoneIndex("Root");
+
 	ifs.read(reinterpret_cast<_char*>(&iAdditionalNumAnimations), sizeof(_uint));  // 애니메이션 몇개읨 
 
 	for (size_t i = 0; i < iAdditionalNumAnimations; i++)
 	{
-		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones);
+		CAnimation* pAnimation = CAnimation::Create(ifs, m_Bones, iRootBoneIdx);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 

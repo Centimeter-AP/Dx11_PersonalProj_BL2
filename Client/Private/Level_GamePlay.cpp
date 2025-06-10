@@ -3,6 +3,7 @@
 #include "Terrain.h"
 #include "Player.h"
 #include "Rakk.h"
+#include "Skag.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -16,11 +17,12 @@ HRESULT CLevel_GamePlay::Initialize()
 		return E_FAIL;
 
 
+	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
-		return E_FAIL;
 
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
@@ -97,10 +99,24 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
 	RakkDesc.bHasPreset = true;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 23.f, rand()%10 + 40.f));
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 13.f, rand()%10 + 40.f));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
 		return E_FAIL;
+
+	CSkag::DESC RakkDesc;
+	RakkDesc.bActive = true;
+	RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	RakkDesc.fSpeedPerSec = 10.f;
+	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
+	RakkDesc.bHasPreset = true;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 10 + 40.f, rand() % 3 + 13.f, rand() % 10 + 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+
+
 
 	return S_OK;
 }

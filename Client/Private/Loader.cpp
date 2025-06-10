@@ -2,17 +2,24 @@
 
 #include "GameInstance.h"
 
-#include "AssaultRifle.h"
 #include "Camera_Free.h"
 #include "Camera_Tool.h"
 #include "Camera_FPS.h"
+
 #include "BackGround.h"
-#include "MapObject.h"
+
 #include "Terrain.h"
-#include "Monster.h"
-#include "Pistol.h"
+#include "MapObject.h"
+
 #include "Player.h"
+#include "Pistol.h"
+#include "AssaultRifle.h"
+
 #include "Rakk.h"
+#include "Skag.h"
+#include "Warrior.h"
+//#include "SpiderAnt.h"
+
 //#include "Effect.h"
 //#include "Sky.h"
 
@@ -164,10 +171,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/Bin_Anim/Rakk/Rakk.bin", PreTransMatrix))))
 		return E_FAIL;
 
-	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Stalker"),
+	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_Skag"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
-			"../Bin/Resources/Models/Bin_Anim/Stalker/Stalker.bin", PreTransMatrix))))
+			"../Bin/Resources/Models/Bin_Anim/Skag/Skag.bin", PreTransMatrix))))
 		return E_FAIL;
 
 	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
@@ -232,6 +239,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CRakk::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_Rakk */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		CSkag::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	///* For.Prototype_GameObject_Sky */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Sky"),
 	//	CSky::Create(m_pGraphic_Device))))

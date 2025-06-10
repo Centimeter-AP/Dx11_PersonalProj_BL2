@@ -41,6 +41,7 @@ protected:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
+	CCollider*			m_pColliderHeadCom = { nullptr };
 
 protected:
 	_int				m_iHP = {};
@@ -54,6 +55,8 @@ protected:
 	CGameObject*		m_pTarget = { nullptr };
 	_float				m_fAttackableDistance = {};
 	_float				m_fDetectiveDistance = {};
+
+	CCollider*			m_LastCollidedCollider = { nullptr };
 
 
 protected:

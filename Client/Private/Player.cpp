@@ -66,7 +66,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Priority_Update(fTimeDelta);
 	}
-	m_pColCam->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 
 #pragma region 애니메이션 테스트
 	static _uint test = {};
@@ -159,7 +159,7 @@ HRESULT CPlayer::Render()
 
 void CPlayer::On_Collision(_uint iColID)
 {
-	m_pColCam->Set_ColliderColor(RGBA_RED);
+	m_pColliderCom->Set_ColliderColor(RGBA_RED);
 
 }
 

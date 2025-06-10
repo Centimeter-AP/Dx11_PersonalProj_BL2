@@ -60,14 +60,14 @@ HRESULT CChannel::Initialize(const aiNodeAnim* pAIChannel, const vector<class CB
 	return S_OK;
 }
 
-HRESULT CChannel::Initialize(ifstream& ifs, const vector<class CBone*>& Bones)
+HRESULT CChannel::Initialize(ifstream& ifs, const vector<class CBone*>& Bones, _uint iRootBoneIdx)
 {
 	ifs.read(reinterpret_cast<_char*>(&m_iNumKeyFrames), sizeof(_uint));  // 키프레임 몇개읨 
 
 	m_KeyFrames.resize(m_iNumKeyFrames);
 	ifs.read(reinterpret_cast<_char*>(m_KeyFrames.data()), sizeof(KEYFRAME) * m_iNumKeyFrames);  // 총 키프레임 (데이터)
 	ifs.read(reinterpret_cast<_char*>(&m_iBoneIndex), sizeof(_uint));		// 내가 몇번 뼈임
-
+	m_iRootBoneIndex = iRootBoneIdx;
 	return S_OK;
 }
 
@@ -114,6 +114,11 @@ void CChannel::Update_TransformationMatrix(_uint* pCurrentKeyFrameIndex, _float 
 		vPosition = XMVectorLerp(vSourTranslation, vDestTranslation, fRatio);
 	}
 
+	if (m_iBoneIndex == m_iRootBoneIndex) // Root_Assimp_Translation이었나...
+	{
+		vPosition = XMVectorSetZ(XMVectorSetX(vPosition, 0.f), 0.f);
+	}
+
 	// TransformationMatrix = XMMatrixScaling() * XMMatrixRotationQuaternion() * XMMatrixTranslation();
 	TransformationMatrix = XMMatrixAffineTransformation(vScale, XMVectorSet(0.f, 0.f, 0.f, 1.f), vRotation, vPosition);
 	// 반대는 decompose
@@ -135,11 +140,11 @@ CChannel* CChannel::Create(const aiNodeAnim* pAIChannel, const vector<class CBon
 	return pInstance;
 }
 
-CChannel* CChannel::Create(ifstream& ifs, const vector<class CBone*>& Bones)
+CChannel* CChannel::Create(ifstream& ifs, const vector<class CBone*>& Bones, _uint iRootBoneIdx)
 {
 	CChannel* pInstance = new CChannel();
 
-	if (FAILED(pInstance->Initialize(ifs, Bones)))
+	if (FAILED(pInstance->Initialize(ifs, Bones, iRootBoneIdx)))
 	{
 		MSG_BOX("Failed to Created : CChannel");
 		Safe_Release(pInstance);
