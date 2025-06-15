@@ -3,6 +3,8 @@
 #include "GameInstance.h"
 
 
+_bool CCollider::bColliderDraw = true;
+
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent { pDevice, pContext }
 {
@@ -136,19 +138,22 @@ const _float CCollider::Get_MaxLength()
 #ifdef _DEBUG
 HRESULT CCollider::Render()
 {
-	m_pEffect->SetWorld(XMMatrixIdentity());
-	m_pEffect->SetView(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW));
-	m_pEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ));
+	if (bColliderDraw == true)
+	{
+		m_pEffect->SetWorld(XMMatrixIdentity());
+		m_pEffect->SetView(m_pGameInstance->Get_Transform_Matrix(D3DTS::VIEW));
+		m_pEffect->SetProjection(m_pGameInstance->Get_Transform_Matrix(D3DTS::PROJ));
 
-	m_pContext->IASetInputLayout(m_pInputLayout);
+		m_pContext->IASetInputLayout(m_pInputLayout);
 
-	m_pEffect->Apply(m_pContext);
+		m_pEffect->Apply(m_pContext);
 
-	m_pBatch->Begin();
+		m_pBatch->Begin();
 
-	m_pBounding->Render(m_pBatch, m_vRenderColor);
+		m_pBounding->Render(m_pBatch, m_vRenderColor);
 
-	m_pBatch->End();
+		m_pBatch->End();
+	}
 
 	return S_OK;
 }

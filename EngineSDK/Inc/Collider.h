@@ -25,6 +25,7 @@ public:
 
 	const _float Get_MaxLength();
 
+	static _bool		bColliderDraw;
 private:
 	COLLIDER			m_eType = { COLLIDER::END };
 	class CBounding*	m_pBounding = { nullptr };

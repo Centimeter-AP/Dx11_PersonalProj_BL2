@@ -38,10 +38,6 @@ public:
 	virtual void Detect_Target() {
 		if (Is_Target_Found())
 		{
-			/* 뭘 어케 짜야하지 코드를 */
-			/* 무조건 공격 모드로 가야할 것 같은데 */
-			/* 몬스터는 Idle상태랑 Provoked상태 큰 틀로 분류한 다음 전투는 Provoke에서 전부 분기를 나누는 걸로 */
-			/* Provoke에서는 근데..플레이어한테 오는 정도만? */
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked);
 		}
 	}

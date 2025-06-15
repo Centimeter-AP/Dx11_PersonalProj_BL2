@@ -1,25 +1,25 @@
-#include "Skag.h"
-#include "SkagState.h"
+#include "SpiderAnt.h"
+#include "SpiderAntState.h"
 #include "GameInstance.h"
 
-CSkag::CSkag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpiderAnt::CSpiderAnt(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster { pDevice, pContext }
 {
 
 }
 
-CSkag::CSkag(const CSkag& Prototype)
+CSpiderAnt::CSpiderAnt(const CSpiderAnt& Prototype)
 	: CMonster( Prototype )
 {
 
 }
 
-HRESULT CSkag::Initialize_Prototype()
+HRESULT CSpiderAnt::Initialize_Prototype()
 {
 	return S_OK;
 }
 
-HRESULT CSkag::Initialize(void* pArg)
+HRESULT CSpiderAnt::Initialize(void* pArg)
 {
  	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -42,7 +42,7 @@ HRESULT CSkag::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CSkag::Priority_Update(_float fTimeDelta)
+void CSpiderAnt::Priority_Update(_float fTimeDelta)
 {
 #pragma region AnimationTests
 	static _uint test = {};
@@ -61,7 +61,7 @@ void CSkag::Priority_Update(_float fTimeDelta)
 
 }
 
-EVENT CSkag::Update(_float fTimeDelta)
+EVENT CSpiderAnt::Update(_float fTimeDelta)
 {
 	if (KEY_DOWN(DIK_1))
 	{
@@ -79,12 +79,12 @@ EVENT CSkag::Update(_float fTimeDelta)
 	return __super::Update(fTimeDelta);
 }
 
-void CSkag::Late_Update(_float fTimeDelta)
+void CSpiderAnt::Late_Update(_float fTimeDelta)
 {
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
 }
 
-HRESULT CSkag::Render()
+HRESULT CSpiderAnt::Render()
 {
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
@@ -113,7 +113,7 @@ HRESULT CSkag::Render()
 	return S_OK;
 }
 
-HRESULT CSkag::Ready_Components(void* pArg)
+HRESULT CSpiderAnt::Ready_Components(void* pArg)
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -121,7 +121,7 @@ HRESULT CSkag::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	/* For.Com_Model */
-	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_Skag"),
+	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Model_SpiderAnt"),
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
@@ -129,7 +129,7 @@ HRESULT CSkag::Ready_Components(void* pArg)
 	AABBDesc.pOwner = this;
 	AABBDesc.eType = COLLIDER::AABB;
 	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
-	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_SKAG);
+	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_SPIDERANT);
 	AABBDesc.vExtents = _float3(35.f, 43.f, 35.f);
 	AABBDesc.vCenter = _float3(0.f, -17.f, 0.f);
 
@@ -141,9 +141,9 @@ HRESULT CSkag::Ready_Components(void* pArg)
 
 	CBounding_Sphere::SPHERE_DESC SphereDesc = {};
 	SphereDesc.pOwner = this;
-	SphereDesc.eType = COLLIDER::SPHERE;
+	SphereDesc.eType = COLLIDER::AABB;
 	SphereDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
-	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_SKAG_HEAD);
+	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_SPIDERANT_HEAD);
 	SphereDesc.fRadius = 20.f;
 	SphereDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
@@ -155,26 +155,22 @@ HRESULT CSkag::Ready_Components(void* pArg)
 	return S_OK;
 }
 
-HRESULT CSkag::Ready_SkagStates()
+HRESULT CSpiderAnt::Ready_SkagStates()
 {
-	m_pStates[SKAG_STATE::STATE_Idle] =  new CSkagState_Idle(this);
-	m_pStates[SKAG_STATE::STATE_Death] = new CSkagState_Dead(this);
-	m_pStates[SKAG_STATE::STATE_Patrol] = new CSkagState_Patrol(this);
-	m_pStates[SKAG_STATE::STATE_Attack_Bite] = new CSkagState_Attack_Bite(this);
-	m_pStates[SKAG_STATE::STATE_Attack_Claw] = new CSkagState_Attack_Claw(this);
-	m_pStates[SKAG_STATE::STATE_Attack_Tongue] = new CSkagState_Attack_Tongue(this);
-	m_pStates[SKAG_STATE::STATE_Attack_Leap] = new CSkagState_Attack_Leap(this);
-	m_pStates[SKAG_STATE::STATE_Attack_Charge] = new CSkagState_Attack_Charge(this);
-	m_pStates[SKAG_STATE::STATE_Attack_Run_Bite] = new CSkagState_Attack_RunBite(this);
-	m_pStates[SKAG_STATE::STATE_Attack_Run_Tongue] = new CSkagState_Attack_RunTongue(this);
-	m_pStates[SKAG_STATE::STATE_Provoked] = new CSkagState_Provoked(this);
-	m_pStates[SKAG_STATE::STATE_Provoked_Idle] = new CSkagState_Provoked_Idle(this);
-	m_pStates[SKAG_STATE::STATE_Run] = new CSkagState_Run(this);
-	m_pCurState = m_pStates[SKAG_STATE::STATE_Idle];
+	m_pStates[SPIDERANT_STATE::STATE_Idle] =  new CSpiderAntState_Idle(this);
+	m_pStates[SPIDERANT_STATE::STATE_Death] = new CSpiderAntState_Dead(this);
+	m_pStates[SPIDERANT_STATE::STATE_Patrol] = new CSpiderAntState_Patrol(this);
+	m_pStates[SPIDERANT_STATE::STATE_Attack_Leap] = new CSpiderAntState_Attack_Leap(this);
+	m_pStates[SPIDERANT_STATE::STATE_Attack_Charge] = new CSpiderAntState_Attack_Charge(this);
+	m_pStates[SPIDERANT_STATE::STATE_Provoked_Idle] = new CSpiderAntState_Provoked_Idle(this);
+	m_pStates[SPIDERANT_STATE::STATE_Run] = new CSpiderAntState_Run(this);
+
+
+	m_pCurState = m_pStates[SPIDERANT_STATE::STATE_Idle];
 	return S_OK;
 }
 
-void CSkag::Set_State(SKAG_STATE eState)
+void CSpiderAnt::Set_State(SPIDERANT_STATE eState)
 {
 	m_ePrevState = m_eCurState;
 	m_eCurState = eState;
@@ -184,7 +180,7 @@ void CSkag::Set_State(SKAG_STATE eState)
 	m_pCurState->Enter();
 }
 
-void CSkag::Update_State(_float fTimeDelta)
+void CSpiderAnt::Update_State(_float fTimeDelta)
 {
 	//if (m_ePrevState != m_eCurState)
 	//{
@@ -194,13 +190,13 @@ void CSkag::Update_State(_float fTimeDelta)
 	m_pCurState->Execute(fTimeDelta);
 }
 
-void CSkag::Set_State_Dead()
+void CSpiderAnt::Set_State_Dead()
 {
-	Set_State(SKAG_STATE::STATE_Death);
+	Set_State(SPIDERANT_STATE::STATE_Death);
 }
 
 
-void CSkag::AttackTimer(_float fTimeDelta)
+void CSpiderAnt::AttackTimer(_float fTimeDelta)
 {
 	m_fChargeCheckTimer += fTimeDelta;
 	if (m_fChargeCheckTimer > 6.f)
@@ -220,9 +216,9 @@ void CSkag::AttackTimer(_float fTimeDelta)
 	}
 }
 
-CSkag* CSkag::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CSpiderAnt* CSpiderAnt::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CSkag* pInstance = new CSkag(pDevice, pContext);
+	CSpiderAnt* pInstance = new CSpiderAnt(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
@@ -233,20 +229,20 @@ CSkag* CSkag::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	return pInstance;
 }
 
-CGameObject* CSkag::Clone(void* pArg)
+CGameObject* CSpiderAnt::Clone(void* pArg)
 {
-	CSkag* pInstance = new CSkag(*this);
+	CSpiderAnt* pInstance = new CSpiderAnt(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CSkag");
+		MSG_BOX("Failed to Cloned : CSpiderAnt");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CSkag::Free()
+void CSpiderAnt::Free()
 {
 	__super::Free();
 	for (auto& State : m_pStates)

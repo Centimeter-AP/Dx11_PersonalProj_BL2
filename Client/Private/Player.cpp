@@ -2,6 +2,7 @@
 #include "PlayerState.h"
 #include "GameInstance.h"
 #include "Camera.h"
+#include <Terrain.h>
 
 #define PLAYER_DEFAULTSPEED 10.f
 
@@ -96,6 +97,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 EVENT CPlayer::Update(_float fTimeDelta)
 {
+	Ride_Terrain();
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -213,6 +215,21 @@ void CPlayer::Raycast_Object()
 	m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::MONSTER), Dist);
 	//if (m_pCurPickedCollider != nullptr)
 	//	int a = 0;
+}
+
+void CPlayer::Ride_Terrain()
+{
+	auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_BackGround"), 0));
+
+	auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
+	_float x = m_pTransformCom->Get_WorldMatrix4x4Ref()._41;
+	_float z = m_pTransformCom->Get_WorldMatrix4x4Ref()._43;
+	_float y = pVIBuffer->Get_Height(x, z);
+
+	_float yOffset = 0.3f;
+	XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
+	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
 }
 
 HRESULT CPlayer::Ready_Components(void* pArg)

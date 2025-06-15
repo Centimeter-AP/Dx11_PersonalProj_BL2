@@ -18,7 +18,7 @@
 #include "Rakk.h"
 #include "Skag.h"
 #include "Warrior.h"
-//#include "SpiderAnt.h"
+#include "SpiderAnt.h"
 
 //#include "Effect.h"
 //#include "Sky.h"
@@ -177,7 +177,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 			"../Bin/Resources/Models/Bin_Anim/Skag/Skag.bin", PreTransMatrix))))
 		return E_FAIL;
 
-	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
+	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Model_SpiderAnt"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
 			"../Bin/Resources/Models/Bin_Anim/SpiderAnt/SpiderAnt.bin", PreTransMatrix))))
@@ -243,6 +243,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
 		CSkag::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_SpiderAnt */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
+		CSpiderAnt::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	///* For.Prototype_GameObject_Sky */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_GameObject_Sky"),
 	//	CSky::Create(m_pGraphic_Device))))

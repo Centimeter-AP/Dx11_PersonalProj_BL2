@@ -1,6 +1,7 @@
 #include "Monster.h"
 
 #include "GameInstance.h"
+#include <Terrain.h>
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
@@ -60,6 +61,7 @@ EVENT CMonster::Update(_float fTimeDelta)
 		return Death_Delay(fTimeDelta);
 	//if (true == m_pModelCom->Play_Animation(fTimeDelta))
 	//	int a = 10;
+	Ride_Terrain();
 	return EVN_NONE;
 }
 
@@ -151,6 +153,21 @@ EVENT CMonster::Death_Delay(_float fTimeDelta)
 		return EVN_DEAD;
 	else
 		return EVN_NONE;
+}
+
+void CMonster::Ride_Terrain()
+{
+	auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_BackGround"), 0));
+
+	auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
+	_float x = m_pTransformCom->Get_WorldMatrix4x4Ref()._41;
+	_float z = m_pTransformCom->Get_WorldMatrix4x4Ref()._43;
+	_float y = pVIBuffer->Get_Height(x, z);
+
+	_float yOffset = 0.3f;
+	XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
+	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
 }
 
 void CMonster::Free()

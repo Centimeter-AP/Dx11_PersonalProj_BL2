@@ -68,6 +68,8 @@ protected:
 
 	EVENT Death_Delay(_float fTimeDelta);
 
+	void Ride_Terrain(); //임시지형타기..
+
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

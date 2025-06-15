@@ -64,10 +64,12 @@ void CRakk::Priority_Update(_float fTimeDelta)
 
 EVENT CRakk::Update(_float fTimeDelta)
 {
-	
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	if (m_bDead)
+		return Death_Delay(fTimeDelta);
 
-	return __super::Update(fTimeDelta);
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	
+	return EVN_NONE;
 }
 
 void CRakk::Late_Update(_float fTimeDelta)

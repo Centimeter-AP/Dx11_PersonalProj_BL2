@@ -145,6 +145,9 @@
     <Filter Include="02.GameObjects\03. Monster\Skag">
       <UniqueIdentifier>{421db0d4-97e0-4b8f-acdb-66e94f6686ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\Bullet">
+      <UniqueIdentifier>{76361411-4a36-4e94-8562-1cf250ee0994}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -316,6 +319,16 @@
     <ClInclude Include="..\Public\StalkerState.h">
       <Filter>02.GameObjects\03. Monster\Stalker</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SpiderAnt.h">
+      <Filter>02.GameObjects\03. Monster\SpiderAnt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpiderAntState.h">
+      <Filter>02.GameObjects\03. Monster\SpiderAnt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\SpiderAntSpit.h">
+      <Filter>02.GameObjects\03. Monster\SpiderAnt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -515,6 +528,13 @@
     <ClCompile Include="..\Private\Stalker.cpp">
       <Filter>02.GameObjects\03. Monster\Stalker</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\SpiderAnt.cpp">
+      <Filter>02.GameObjects\03. Monster\SpiderAnt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\SpiderAntSpit.cpp">
+      <Filter>02.GameObjects\03. Monster\SpiderAnt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

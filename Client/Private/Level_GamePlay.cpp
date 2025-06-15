@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Rakk.h"
 #include "Skag.h"
+#include "SpiderAnt.h"
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -46,6 +47,9 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	{
 		Ready_Layer_Monster(TEXT("Layer_Monster"));
 	}
+
+	if (KEY_DOWN(DIK_BACKSLASH))
+		CCollider::bColliderDraw = !CCollider::bColliderDraw;
 
 	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); //이넘클래스 싫네요
 
@@ -107,7 +111,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	CSkag::DESC	SkagDesc;
 	SkagDesc.bActive = true;
 	SkagDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	SkagDesc.fSpeedPerSec = 7.f;
+	SkagDesc.fSpeedPerSec = 8.f;
 	SkagDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SkagDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Skag");
 	SkagDesc.bHasPreset = true;
@@ -116,13 +120,25 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
 		return E_FAIL;
 
-	for (size_t i = 0; i < 10; i++)
-	{
-		XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(rand()%100, 2.f, rand()%100));
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-			ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-			return E_FAIL;
-	}
+	//for (size_t i = 0; i < 10; i++)
+	//{
+	//	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(rand()%100, 2.f, rand()%100));
+	//	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+	//		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+	//		return E_FAIL;
+	//}
+
+	CSpiderAnt::DESC	SpiderAntDesc;
+	SpiderAntDesc.bActive = true;
+	SpiderAntDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	SpiderAntDesc.fSpeedPerSec = 7.f;
+	SpiderAntDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	SpiderAntDesc.strVIBufferTag = TEXT("Prototype_Component_Model_SpiderAnt");
+	SpiderAntDesc.bHasPreset = true;
+	XMStoreFloat4x4(&SpiderAntDesc.PresetMatrix, XMMatrixTranslation(60.f, 2.f, 50.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
+		return E_FAIL;
 
 
 

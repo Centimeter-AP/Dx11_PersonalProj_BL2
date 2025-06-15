@@ -82,13 +82,14 @@ public:
 
 	virtual void On_Collision(_uint iColID) override;
 
-	void	Key_Input(_float fTimeDelta);
-
-	void	Set_State(PLA_STATE eState);
-
-private:
-	void	Update_State(_float fTimeDelta);
-	void	Raycast_Object();
+	void Key_Input(_float fTimeDelta);
+		 
+	void Set_State(PLA_STATE eState);
+		 
+private: 
+	void Update_State(_float fTimeDelta);
+	void Raycast_Object();
+	void Ride_Terrain(); // 임시로 지형이라도 타자 
 
 private:
 	HRESULT Ready_Components(void* pArg);
