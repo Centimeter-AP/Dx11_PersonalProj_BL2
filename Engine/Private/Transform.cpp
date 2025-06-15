@@ -127,6 +127,41 @@ void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDista
 		Set_State(STATE::POSITION, Get_State(STATE::POSITION) + XMVector3Normalize(vMoveDir) * m_fSpeedPerSec * fTimeDelta);
 }
 
+void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta)
+{
+	// 1. 방향 정규화
+    _vector vNormDir = XMVector3Normalize(vDir);
+
+    // 2. 현재 위치 가져오기
+    _vector vPosition = Get_State(STATE::POSITION);
+
+    // 3. 속도 * 시간 계산 후 위치 갱신
+    vPosition += vNormDir * (m_fSpeedPerSec * fTimeDelta);
+
+    // 4. WorldMatrix 에 반영
+    Set_State(STATE::POSITION, vPosition);
+}
+
+void CTransform::Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed)
+{
+	// 1. 현재 LOOK 방향
+	_vector vCurrentLook = XMVector3Normalize(Get_State(STATE::LOOK));
+
+	// 2. 목표 방향 정규화
+	_vector vTargetDir = XMVector3Normalize(vDir);
+
+	// 3. Lerp 로 부드럽게 보간
+	_vector vBlendedDir = XMVector3Normalize(
+		XMVectorLerp(vCurrentLook, vTargetDir, fTimeDelta * fLerpSpeed)
+	);
+
+	// 4. 새로운 LOOK/RIGHT/UP basis 설정
+	LookWithLook(vBlendedDir);
+
+	// 5. 보간된 방향으로 실제 이동
+	Go_Dir(vBlendedDir, fTimeDelta);
+}
+
 void CTransform::Go_Up(_float fTimeDelta)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);

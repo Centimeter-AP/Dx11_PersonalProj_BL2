@@ -410,6 +410,10 @@ void CModel::Free()
 		Safe_Release(pAnimation);
 	m_Animations.clear();
 
+	for (auto& pBone : m_Bones)
+		Safe_Release(pBone);
+	m_Bones.clear();
+
 	Safe_Release(m_pAnimMgr);
 
 	m_Importer.FreeScene();

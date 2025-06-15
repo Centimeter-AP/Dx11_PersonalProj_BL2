@@ -26,6 +26,7 @@ HRESULT CMonster::Initialize(void* pArg)
 
 	m_pTarget = GET_PLAYER;
 
+	Safe_AddRef(m_pTarget);
 	//if (FAILED(Ready_Components(pArg)))
 	//	return E_FAIL;
 	//
@@ -160,4 +161,6 @@ void CMonster::Free()
 	Safe_Release(m_pShaderCom);
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pColliderHeadCom);
+	Safe_Release(m_pTarget);
+
 }

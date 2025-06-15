@@ -1,0 +1,44 @@
+{
+    "MapObject": [
+        {
+            "ModelName": "OfficeBase",
+            "Name": "MapObject",
+            "Position": [
+                75.0,
+                0.10000000149011612,
+                204.0
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "ModelName": "GlacierFlow_Straight",
+            "Name": "MapObject",
+            "Position": [
+                -4.76837158203125e-07,
+                0.0,
+                0.0
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ]
+}

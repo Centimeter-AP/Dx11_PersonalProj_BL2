@@ -1,0 +1,24 @@
+{
+    "MapObject": [
+        {
+            "ModelName": "OfficeBase",
+            "Name": "MapObject",
+            "Position": [
+                75.0,
+                0.10000000149011612,
+                204.0
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        }
+    ]
+}

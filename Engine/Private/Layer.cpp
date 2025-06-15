@@ -1,7 +1,9 @@
 #include "Layer.h"
 #include "ContainerObject.h"
+#include "GameInstance.h"
 
 CLayer::CLayer()
+	: m_pGameInstance(CGameInstance::Get_Instance())
 {
 }
 
@@ -77,6 +79,7 @@ void CLayer::Update(_float fTimeDelta)
 			Events = (*iter)->Update(fTimeDelta);
 		if (Events == EVENT::EVN_DEAD)
 		{
+			m_pGameInstance->Delete_Collider(*iter);
 			Safe_Release(*iter);
 			iter = m_GameObjects.erase(iter);
 		}

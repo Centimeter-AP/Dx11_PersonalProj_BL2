@@ -14,9 +14,7 @@ public:
 	{
 		m_pTarget = m_pOwner->m_pTarget;
 		m_pTargetTransform = m_pTarget->Get_Transform();
-		Safe_AddRef(m_pGameInstance);
-		Safe_AddRef(m_pTarget);
-		Safe_AddRef(m_pTargetTransform);
+		//Safe_AddRef(m_pGameInstance);
 	}
 	virtual ~CSkagState() = default;
 
@@ -26,9 +24,7 @@ public:
 	virtual void Exit() PURE;
 	virtual void Free() override {
 		__super::Free(); 
-		Safe_Release(m_pGameInstance);
-		Safe_Release(m_pTarget);
-		Safe_Release(m_pTargetTransform);
+		//Safe_Release(m_pGameInstance);
 	}
 
 	virtual _bool Is_Target_Found(){
@@ -211,15 +207,13 @@ public:
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		Console(fTimeDelta);
-		//if (Is_Target_Attackable())
-		//{
-		//	rand() % 2 ?
-		//		m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite) :
-		//		m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite);
-		//		//m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
-		//}
-		//else
+		if (Is_Target_Attackable())
+		{
+			rand() % 2 ?
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite) :
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
+		}
+		else
 		{
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Run);
 		}
@@ -336,16 +330,16 @@ public:
 			if (fChargingTime > fForceChargingTime)
 			{
 				auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTargetTransform->Get_State(STATE::POSITION))));
-				if (Dist >= 10.f)
+				if (Dist >= 10.f || fChargingTime > 4.f)
 				{
 					ChargeStatus[2] = true;
 					Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Stop, false);
 				}
 			}
 			//m_pOwner->m_pTransformCom->Go_Target(XMVectorSetW(XMLoadFloat3(&vChargePos), 1.f), fTimeDelta * 1.2f, 1.f);
-			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 2.f);
+			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 2.5f);
 
-			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * 1.2f);
+			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * 2.f);
 		}
 		if (ChargeStatus[2] == true)
 		{
@@ -370,7 +364,7 @@ private:
 	_float3 vChargePos = {};
 	_float fDecel = {0.9f};
 	_float fChargingTime = {};
-	const _float fForceChargingTime = {1.f};
+	const _float fForceChargingTime = {2.f};
 };
 
 class CSkagState_Attack_Charge_HitWall final : public CSkagState
@@ -429,6 +423,8 @@ public:
 	virtual void Free() override { __super::Free(); }
 };
 
+
+// deprecated
 class CSkagState_Attack_Claw final : public CSkagState
 {
 public:
@@ -465,18 +461,61 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << "a_leap" << endl;
-		Set_OwnerAnim(CSkag::SKAG_ANIM::Leap_Start, true);
+		cout << "a_Leap" << endl;
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Leap_Start, false);
+		LeapStatus[0] = true;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			if (LeapStatus[2] == true)
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+			else if (LeapStatus[1] == true)
+			{
+				LeapStatus[2] = true;
+				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Leap_End, false);
+			}
+			else if (LeapStatus[0] == true)
+			{
+				LeapStatus[1] = true;
+				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Leap_Idle, false);
+				//XMStoreFloat3(&vLeapPos, m_pTargetTransform->Get_State(STATE::POSITION));
+			}
+		}
+		if (LeapStatus[2] == true)
+		{
+			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * fDecel);
+			fDecel *= 0.95f;
+		}
+		else if (LeapStatus[1] == true)
+		{
+			m_pOwner->m_pTransformCom->Go_Target(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta * 3.f, 1.f);
+			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+		}
+		//else if (LeapStatus[0] == true)
+		//{
 
+		//}
 	}
 	virtual void Exit() override
 	{
-
+		for (size_t i = 0; i < 3; i++)
+		{
+			LeapStatus[i] = false;
+		}
+		vLeapPos = {};
+		fDecel = 0.9f;
+		fLeapTime = {};
 	}
 	virtual void Free() override { __super::Free(); }
+
+private:
+	_bool LeapStatus[3] = { false }; // 0 Start, 1 Idle, 2 End
+	_float3 vLeapPos = {};
+	_float fDecel = { 0.9f };
+	_float fLeapTime = {};
+	const _float fForceLeapTime = { 1.f };
 };
 
 class CSkagState_Attack_RunBite final : public CSkagState
@@ -491,11 +530,15 @@ public:
 	virtual void Enter() override
 	{
 		cout << "a_runbite" << endl;
-
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Bite, false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
+		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta);
 	}
 	virtual void Exit() override
 	{
@@ -516,10 +559,15 @@ public:
 	virtual void Enter() override
 	{
 		cout << "a_runtongue" << endl;
-
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Tongue, false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
+		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta);
 
 	}
 	virtual void Exit() override
@@ -584,14 +632,14 @@ public:
 		if (Dist < m_pOwner->m_fAttackableDistance)
 		{
 			rand() % 2 ?
-				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite) :
-				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Run_Bite) :
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Run_Tongue);
 			return;
 				//m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
 		}
 
 		m_pOwner->m_pTransformCom->LookAtLerp(m_pTarget->Get_Transform()->Get_State(STATE::POSITION), fTimeDelta, 8.f);
-		m_pOwner->m_pTransformCom->Go_Target(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 1.f);
+		m_pOwner->m_pTransformCom->Go_Straight(/*m_pTargetTransform->Get_State(STATE::POSITION), */fTimeDelta/*, 1.f*/);
 		
 	}
 	virtual void Exit() override
@@ -601,7 +649,7 @@ public:
 	virtual void Free() override { __super::Free(); }
 
 private:
-	const _float m_fChargeDist = { 80.f };
+	const _float m_fChargeDist = { 50.f };
 	const _float m_fLeapDist = { 30.f };
 };
 
@@ -629,7 +677,6 @@ public:
 			m_pOwner->Set_Dead();
 			return;
 		}
-		//m_pOwner->m_pTransformCom->Go_Down(fTimeDelta);
 	}
 	virtual void Exit() override
 	{

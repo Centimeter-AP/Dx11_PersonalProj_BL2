@@ -104,7 +104,6 @@ EVENT CPlayer::Update(_float fTimeDelta)
 
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 	//auto val = m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))
-	m_pColCam->Update(XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))) * m_pTransformCom->Get_WorldMatrix());
 
 
 
@@ -123,10 +122,8 @@ void CPlayer::Late_Update(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
-
 
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
 
@@ -148,7 +145,6 @@ HRESULT CPlayer::Render()
 	m_pColliderCom->Render();
 
 
-	m_pColCam->Render();
 
 
 
@@ -233,13 +229,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 		return E_FAIL;
-	//AABBDesc.iColliderID = ENUM_CLASS(COL_ID::PLAYER_HAND);
-	AABBDesc.vExtents = _float3(1.f, 1.f, 1.f);
-	AABBDesc.vCenter = _float3(0.f, 0.f, 0.f);
-	/* For.Com_Collider */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
-		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColCam), &AABBDesc)))
-		return E_FAIL;
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"),
@@ -260,7 +249,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	// need: collider, sound, maybe gravity?
 
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColCam->Set_ColliderColor(RGBA_RED);
 
 
 	return S_OK;
@@ -286,30 +274,18 @@ HRESULT CPlayer::Ready_Weapons(void* pArg)
 	/* For.PartObject_Player_Weapon_Pistol */
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Pistol");
 	Desc.szName = L"Weapon_Pistol";
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon"), TEXT("Prototype_GameObject_Pistol"), &Desc)))
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon_Pistol"), TEXT("Prototype_GameObject_Pistol"), &Desc)))
 		return E_FAIL;
-
-
 
 	/* For.PartObject_Player_Weapon_AssaultRifle */
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_AR");
 	Desc.szName = L"Weapon_AR";
-	CGameObject* pPistol = Replace_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon"), TEXT("Prototype_GameObject_AssaultRifle"), &Desc);
-
-	if (nullptr == pPistol)
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Weapon_AR"), TEXT("Prototype_GameObject_AssaultRifle"), &Desc)))
 		return E_FAIL;
-	m_pWeapons[WTYPE_PISTOL] = pPistol;
-
-	auto pAR = __super::Find_PartObject(TEXT("PartObject_Player_Weapon"));
-	if (nullptr == pAR)
-		return E_FAIL;
-	m_pWeapons[WTYPE_AR] = pAR;
-
-	m_pWeapons[WTYPE_UNARMED] = nullptr;
-
-	Replace_PartObject(TEXT("PartObject_Player_Weapon"), m_pWeapons[CPlayer::WTYPE_PISTOL]);
 
 
+	Find_PartObject(L"PartObject_Player_Weapon_Pistol")->Set_Active(true);
+	Find_PartObject(L"PartObject_Player_Weapon_AR")->Set_Active(false);
 	m_ePrevWeapon = m_eCurWeapon = WTYPE_PISTOL;
 	return S_OK;
 }
@@ -403,7 +379,13 @@ void CPlayer::Free()
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 
-	for (auto State : m_pStates)
-		Safe_Delete(State);
+
+
+
+	//for (auto& Weapon : m_pWeapons)
+	//	Safe_Release(Weapon);
+
+	for (auto& State : m_pStates)
+		Safe_Release(State);
 
 }

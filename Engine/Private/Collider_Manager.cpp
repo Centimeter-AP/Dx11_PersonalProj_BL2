@@ -13,7 +13,7 @@ CCollider_Manager::CCollider_Manager()
 
 HRESULT CCollider_Manager::Initialize(_uint iNumGroups)
 {
-	m_pColliders = new 	list<class CCollider*>[iNumGroups];
+	m_pColliders = new list<class CCollider*>[iNumGroups];
 	m_iNumGroups = iNumGroups;
 
 	return S_OK;
@@ -24,11 +24,31 @@ HRESULT CCollider_Manager::Add_Collider(_uint iGroupID, CCollider* pCollider)
 	if (iGroupID >= m_iNumGroups)
 		return E_FAIL;
 
+	Safe_AddRef(pCollider);
 	m_pColliders[iGroupID].push_back(pCollider);
 
 
 	return S_OK;
 }
+
+void CCollider_Manager::Delete_Collider(const CGameObject* pOwner)
+{
+	for (_uint i = 0; i < m_iNumGroups; ++i)
+	{
+		for (auto Iter = m_pColliders[i].begin();
+			Iter != m_pColliders[i].end();)
+		{
+			if ((*Iter)->Get_Owner() == pOwner)
+			{
+				Safe_Release(*Iter);
+				Iter = m_pColliders[i].erase(Iter);
+				continue;
+			}
+			Iter++;
+		}
+	}
+}
+
 
 void CCollider_Manager::Intersect(CCollider* pDst, CCollider* pSrc)
 {
@@ -119,7 +139,7 @@ void CCollider_Manager::Free()
 	__super::Free();
 	for (_uint i = 0; i < m_iNumGroups; ++i)
 	{
-		for (auto Collider : m_pColliders[i])
+		for (auto& Collider : m_pColliders[i])
 			Safe_Release(Collider);
 		m_pColliders[i].clear();
 	}

@@ -13,7 +13,7 @@ public:
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
 		m_pTarget = m_pOwner->m_pTarget;
-		Safe_AddRef(m_pGameInstance);
+		//Safe_AddRef(m_pGameInstance);
 	}
 	virtual ~CRakkState() = default;
 
@@ -21,7 +21,7 @@ public:
 	virtual void Enter() PURE;
 	virtual void Execute(_float fTimeDelta) PURE;
 	virtual void Exit() PURE;
-	virtual void Free() override { __super::Free(); Safe_Release(m_pGameInstance); }
+	virtual void Free() override { __super::Free(); /*Safe_Release(m_pGameInstance);*/ }
 
 	virtual _bool Is_Target_Found() {
 		auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTarget->Get_Transform()->Get_State(STATE::POSITION))));

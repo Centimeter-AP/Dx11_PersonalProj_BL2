@@ -411,7 +411,7 @@ HRESULT CObjectTool::Open_ModelDirectory(path& CurPath)
 	}
 
 	//_matrix PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-45.f);
 	for (const auto& entry : directory_iterator(CurPath))
 	{
 		if (entry.is_regular_file() && entry.path().extension() == L".bin")

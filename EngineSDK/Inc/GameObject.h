@@ -52,7 +52,7 @@ protected:
 	class CTransform*							m_pTransformCom = { nullptr };
 	
 	// 컨테이너-파트 쓸건지 게임오브젝트 하나로 관리할 건지 생각 해보기
-	map<const _wstring, CGameObject*>			m_PartObjects;
+	map<const _wstring, CGameObject*>			m_PartObjects;  
 	CGameObject*								m_pParentObject = { nullptr };
 	const _float4x4*							m_pParentMatrix = { nullptr };
 	_float4x4									m_CombindWorldMatrix{};

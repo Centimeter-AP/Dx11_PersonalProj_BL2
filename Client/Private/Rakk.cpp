@@ -243,7 +243,6 @@ CGameObject* CRakk::Clone(void* pArg)
 void CRakk::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pShaderCom);
+	for (auto& State : m_pStates)
+		Safe_Release(State);
 }

@@ -74,6 +74,9 @@ public:
 	friend class CSkagState_Attack_RunTongue;
 	friend class CSkagState_Provoked;
 	friend class CSkagState_Provoked_Idle;
+	friend class CSkagState_Phaselocked;/**/
+	friend class CSkagState_Hardflinch_Head; /* 머리 맞았을 때 넉백만 추가 */
+	friend class CSkagState_Dodge; /* 예정은 없음 */
 	friend class CSkagState_Run;
 	friend class CSkagState_Dead;
 	//friend class

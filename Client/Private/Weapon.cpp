@@ -51,11 +51,14 @@ HRESULT CWeapon::Initialize(void* pArg)
 
 void CWeapon::Priority_Update(_float fTimeDelta)
 {
-
+	if (m_isActive == false)
+		return;
 }
 
 EVENT CWeapon::Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return EVN_NONE;
 	_matrix matFinal = XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
 
 	m_pTransformCom->Set_Matrix(matFinal);
@@ -65,6 +68,8 @@ EVENT CWeapon::Update(_float fTimeDelta)
 
 void CWeapon::Late_Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return ;
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
 }
 

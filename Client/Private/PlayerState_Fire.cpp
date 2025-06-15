@@ -10,12 +10,12 @@ void CPlayerState_Fire::Enter()
 	case CPlayer::WEAPON_TYPE::WTYPE_AR:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Crouch, false);
 		m_pOwner->m_pModelCom->Reset_CurAnimationFrame();
-		static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon"))->second)->Set_State(CAssaultRifle::STATE_Fire);
+		static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AR"))->second)->Set_State(CAssaultRifle::STATE_Fire);
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_PST::PST_Crouch, false);
 		m_pOwner->m_pModelCom->Reset_CurAnimationFrame();
-		static_cast<CPistol*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon"))->second)->Set_State(CPistol::STATE_Fire);
+		static_cast<CPistol*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_Pistol"))->second)->Set_State(CPistol::STATE_Fire);
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:
 		break;

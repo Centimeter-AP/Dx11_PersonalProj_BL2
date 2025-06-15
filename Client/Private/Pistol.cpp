@@ -42,8 +42,10 @@ HRESULT CPistol::Initialize(void* pArg)
 
 void CPistol::Priority_Update(_float fTimeDelta)
 {
-	Update_State(fTimeDelta);
+	if (m_isActive == false)
+		return;
 	__super::Priority_Update(fTimeDelta);
+	Update_State(fTimeDelta);
 #pragma region AnimationTests
 	static _uint test = {};
 	if (KEY_DOWN(DIK_RBRACKET))
@@ -61,12 +63,16 @@ void CPistol::Priority_Update(_float fTimeDelta)
 
 EVENT CPistol::Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return EVN_NONE;
 
 	return __super::Update(fTimeDelta);
 }
 
 void CPistol::Late_Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return;
 	__super::Late_Update(fTimeDelta);
 }
 
@@ -149,6 +155,6 @@ void CPistol::Free()
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
-	for (auto State : m_pStates)
-		Safe_Delete(State);
+	for (auto& State : m_pStates)
+		Safe_Release(State);
 }

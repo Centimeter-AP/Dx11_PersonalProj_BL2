@@ -392,6 +392,11 @@ CCollider* CGameInstance::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float 
 	return 	m_pCollider_Manager->Raycast(vRayOrigin, vRayDir, fRayLength, iColliderGroupID, fRayDist);
 }
 
+void CGameInstance::Delete_Collider(const CGameObject* pOwner)
+{
+	m_pCollider_Manager->Delete_Collider(pOwner);
+}
+
 #pragma endregion
 
 void CGameInstance::Release_Engine()
@@ -420,7 +425,7 @@ void CGameInstance::Release_Engine()
 
 	Safe_Release(m_pCollider_Manager);
 
-	//Destroy_Instance();
+	Destroy_Instance();
 }
 
 void CGameInstance::Free()

@@ -42,8 +42,10 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 
 void CAssaultRifle::Priority_Update(_float fTimeDelta)
 {
-	__super::Priority_Update(fTimeDelta);
+	if (m_isActive == false)
+		return;
 	Update_State(fTimeDelta);
+	__super::Priority_Update(fTimeDelta);
 #pragma region AnimationTests
 	static _uint test = {};
 	if (KEY_DOWN(DIK_RBRACKET))
@@ -61,12 +63,15 @@ void CAssaultRifle::Priority_Update(_float fTimeDelta)
 
 EVENT CAssaultRifle::Update(_float fTimeDelta)
 {
-	
+	if (m_isActive == false)
+		return EVN_NONE;
 	return __super::Update(fTimeDelta);
 }
 
 void CAssaultRifle::Late_Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return;
 	__super::Late_Update(fTimeDelta);
 }
 
@@ -147,8 +152,6 @@ void CAssaultRifle::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pModelCom);
-	Safe_Release(m_pShaderCom);
-	for (auto State : m_pStates)
-		Safe_Delete(State);
+	for (auto& State : m_pStates)
+		Safe_Release(State);
 }

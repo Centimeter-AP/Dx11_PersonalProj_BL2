@@ -27,6 +27,7 @@ public:
 
 private:
 	list<CGameObject*>			m_GameObjects;
+	class CGameInstance*		m_pGameInstance = { nullptr };
 
 public:
 	void Clear();

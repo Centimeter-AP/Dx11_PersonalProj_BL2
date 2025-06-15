@@ -104,7 +104,6 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
-	CCollider*			m_pColCam = { nullptr };
 
 private:
 	_float				m_fSensor = {};

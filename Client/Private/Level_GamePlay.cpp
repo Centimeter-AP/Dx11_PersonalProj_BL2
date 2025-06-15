@@ -92,17 +92,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 {
-	CRakk::DESC RakkDesc;
-	RakkDesc.bActive = true;
-	RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	RakkDesc.fSpeedPerSec = 9.f;
-	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
-	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
-	RakkDesc.bHasPreset = true;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 13.f, rand()%10 + 40.f));
-	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
-		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
-		return E_FAIL;
+	//CRakk::DESC RakkDesc;
+	//RakkDesc.bActive = true;
+	//RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	//RakkDesc.fSpeedPerSec = 9.f;
+	//RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	//RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
+	//RakkDesc.bHasPreset = true;
+	//XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 13.f, rand()%10 + 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+	//	return E_FAIL;
 
 	CSkag::DESC	SkagDesc;
 	SkagDesc.bActive = true;
@@ -115,6 +115,14 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
 		return E_FAIL;
+
+	for (size_t i = 0; i < 10; i++)
+	{
+		XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(rand()%100, 2.f, rand()%100));
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+			ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+			return E_FAIL;
+	}
 
 
 
@@ -226,7 +234,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MapObject(const _wstring strLayerTag)
 		mDesc.bHasPreset = true;
 		mDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
-		_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
+		_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-45.f);
 		_wstring wstrModelPath = L"../Bin/Resources/Models/Bin_NonAnim/" + ObjectModelName + L".bin";
 		string strModelPath = WStringToString(wstrModelPath);
 
