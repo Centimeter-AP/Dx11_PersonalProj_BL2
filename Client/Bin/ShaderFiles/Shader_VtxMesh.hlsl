@@ -87,6 +87,20 @@ PS_OUT PS_MAIN(PS_IN In)
 }
 
 
+PS_OUT PS_SKYDOME(PS_IN In)
+{
+    PS_OUT Out;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+ 
+    Out.vColor = vMtrlDiffuse;
+    
+    return Out;
+}
+
+
 
 
 technique11 DefaultTechnique
@@ -100,6 +114,16 @@ technique11 DefaultTechnique
         
         VertexShader = compile vs_5_0 VS_MAIN();        
         PixelShader = compile ps_5_0 PS_MAIN();      
+    }
+
+    pass Sky_Dome //1
+    {
+        SetRasterizerState(RS_Cull_Back);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();
+        PixelShader = compile ps_5_0 PS_SKYDOME();
     }
    
 }

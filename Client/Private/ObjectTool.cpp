@@ -253,7 +253,7 @@ HRESULT CObjectTool::Render_ObjectTool()
 	//ImGui::InputFloat("Snap Offset", &m_fSnapOffset, 0.1f, 1.f, "%.1f");
 	
 
-	static _float test[9] = {};
+	//static _float test[9] = {};
 	if (m_pSelectedObj != nullptr)
 	{
 		_matrix matObjWorld = m_pSelectedObj->Get_Transform()->Get_WorldMatrix();
@@ -411,7 +411,7 @@ HRESULT CObjectTool::Open_ModelDirectory(path& CurPath)
 	}
 
 	//_matrix PreTransformMatrix = XMMatrixRotationY(XMConvertToRadians(180.f));
-	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-45.f);
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
 	for (const auto& entry : directory_iterator(CurPath))
 	{
 		if (entry.is_regular_file() && entry.path().extension() == L".bin")

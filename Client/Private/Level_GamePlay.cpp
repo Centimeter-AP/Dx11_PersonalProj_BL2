@@ -5,6 +5,11 @@
 #include "Rakk.h"
 #include "Skag.h"
 #include "SpiderAnt.h"
+#include "Camera.h"
+
+#define CAM_FREE 0
+#define CAM_FPS 1
+
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -21,14 +26,14 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Layer_Sky(TEXT("Layer_Sky"))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Layer_Player(TEXT("Layer_Player"))))
 		return E_FAIL;
 
-
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
-
-
 
 	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 		return E_FAIL;
@@ -43,13 +48,7 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	if (KEY_DOWN(DIK_RETURN))
-	{
-		Ready_Layer_Monster(TEXT("Layer_Monster"));
-	}
-
-	if (KEY_DOWN(DIK_BACKSLASH))
-		CCollider::bColliderDraw = !CCollider::bColliderDraw;
+	Key_Input();
 
 	Intersect();
 }
@@ -80,32 +79,44 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Sky(const _wstring strLayerTag)
+{
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Sky"),
+		ENUM_CLASS(LEVEL::STATIC), strLayerTag)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring strLayerTag)
 {
-//	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
-//		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
-//		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_Free"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Camera_FPS"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
 		return E_FAIL;
+
+	CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::GAMEPLAY), L"Layer_Camera", CAM_FREE));
+	pPrevCamera->Set_Using(false);
 
 	return S_OK;
 }
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 {
-	//CRakk::DESC RakkDesc;
-	//RakkDesc.bActive = true;
-	//RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	//RakkDesc.fSpeedPerSec = 9.f;
-	//RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
-	//RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
-	//RakkDesc.bHasPreset = true;
-	//XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 13.f, rand()%10 + 40.f));
-	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
-	//	return E_FAIL;
+	CRakk::DESC RakkDesc;
+	RakkDesc.bActive = true;
+	RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	RakkDesc.fSpeedPerSec = 9.f;
+	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
+	RakkDesc.bHasPreset = true;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 13.f, rand()%10 + 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
 
 	CSkag::DESC	SkagDesc;
 	SkagDesc.bActive = true;
@@ -238,7 +249,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_MapObject(const _wstring strLayerTag)
 			XMMatrixRotationQuaternion(objRotation) *
 			XMMatrixTranslationFromVector(objTranslation);
 
-
+		//if (ObjectModelName == L"MntRange")
+		//	int a = 0;
 		CGameObject::DESC mDesc;
 		mDesc.fRotationPerSec = 0.f;
 		mDesc.fSpeedPerSec = 0.f;
@@ -246,10 +258,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_MapObject(const _wstring strLayerTag)
 		mDesc.pParentObject = nullptr;
 		mDesc.szName = ObjectName.data();
 		mDesc.strVIBufferTag = ObjectModelName;
-		mDesc.bHasPreset = true;
+		mDesc.bHasPreset = true;        
 		mDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
-		_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-45.f);
+		_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);
 		_wstring wstrModelPath = L"../Bin/Resources/Models/Bin_NonAnim/" + ObjectModelName + L".bin";
 		string strModelPath = WStringToString(wstrModelPath);
 
@@ -283,9 +295,36 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 void CLevel_GamePlay::Intersect()
 {
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); //이넘클래스 싫네요
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET)); //이넘클래스 싫네요
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); 
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET)); 
+}
 
+void CLevel_GamePlay::Key_Input()
+{
+	if (KEY_DOWN(DIK_RETURN))
+	{
+		Ready_Layer_Monster(TEXT("Layer_Monster"));
+	}
+
+	if (KEY_DOWN(DIK_BACKSLASH))
+		CCollider::bColliderDraw = !CCollider::bColliderDraw;
+
+	if (KEY_DOWN(DIK_F1)) // using free
+	{
+		CCamera* pCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::GAMEPLAY), L"Layer_Camera", CAM_FREE));
+		pCamera->Set_Using(true); // 이거 다 카메라 매니저에 옮겨두쇼 제발 
+		CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::GAMEPLAY), L"Layer_Camera", CAM_FPS));
+		pPrevCamera->Set_Using(false);
+		GET_PLAYER->Set_Active(false);
+	}
+	if (KEY_DOWN(DIK_F2)) // using fps
+	{
+		CCamera* pCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::GAMEPLAY), L"Layer_Camera", CAM_FPS));
+		pCamera->Set_Using(true); // 이거 다 카메라 매니저에 옮겨두쇼 제발 
+		GET_PLAYER->Set_Active(true);
+		CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::GAMEPLAY), L"Layer_Camera", CAM_FREE));
+		pPrevCamera->Set_Using(false);
+	}
 }
 
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -305,5 +344,4 @@ CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
-
 }

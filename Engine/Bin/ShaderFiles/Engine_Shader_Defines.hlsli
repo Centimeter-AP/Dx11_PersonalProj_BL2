@@ -24,13 +24,20 @@ sampler LinearClampSampler = sampler_state
 RasterizerState RS_Default
 {
     FillMode = Solid;
-    CullMode = back;
+    CullMode = none;
 };
 
 RasterizerState RS_Cull_Front
 {
     FillMode = Solid;
     CullMode = front;
+};
+
+
+RasterizerState RS_Cull_Back
+{
+    FillMode = Solid;
+    CullMode = back;
 };
 
 

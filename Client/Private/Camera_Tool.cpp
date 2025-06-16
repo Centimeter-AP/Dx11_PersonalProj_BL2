@@ -46,7 +46,7 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 	if (!m_isUsing)
 		return;
 	if (KEY_PRESSING(DIK_LSHIFT))
-		m_fSpeedMultiplier = 2.f;
+		m_fSpeedMultiplier = 4.f;
 	else
 		m_fSpeedMultiplier = 1.f;
 

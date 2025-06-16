@@ -176,11 +176,13 @@ public:
 	virtual void Enter() override
 	{
 		cout << "provoked_idle" << endl;
-		//Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::, true);
-		// 바로바로 전환 해주는 용도로 거치기만 해도 될듯?
+		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Idle_Ready, true);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		//Console(fTimeDelta);
+		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
+
 		//if (Is_Target_Attackable())
 		//{
 		//	m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Claw);

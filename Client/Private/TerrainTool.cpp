@@ -239,28 +239,28 @@ void CTerrainTool::Height_Update(_float fTimeDelta)
 		ImGuiIO& io = ImGui::GetIO();
 		if (!io.WantCaptureMouse)
 		{
-			// Terrain 찾기
-			auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), 0));
-			if (nullptr == pTerrain)
-				return;
-
-			// 버텍스와 인덱스 정보 가져오기
-			auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
-			if (nullptr == pVIBuffer)
-				return;
-
-			const _float3* pVertices = pVIBuffer->Get_VertexPositions();
-			const _uint* pIndices = pVIBuffer->Get_Indices();
-			_uint iNumIndices = pVIBuffer->Get_NumIndices();
-
-			// 월드 행렬 가져오기
-			_matrix WorldMatrix = pTerrain->Get_Transform()->Get_WorldMatrix();
-
-			// 피킹된 위치 저장
-			if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, m_fPickedPos))
+			// 브러시 적용
+			if (m_pGameInstance->Get_DIMouseState(DIM::LBUTTON) & 0x80 && m_bBrushEnable)
 			{
-				// 브러시 적용
-				if (m_pGameInstance->Get_DIMouseState(DIM::LBUTTON) & 0x80 && m_bBrushEnable)
+				// Terrain 찾기
+				auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), 0));
+				if (nullptr == pTerrain)
+					return;
+
+				// 버텍스와 인덱스 정보 가져오기
+				auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
+				if (nullptr == pVIBuffer)
+					return;
+
+				const _float3* pVertices = pVIBuffer->Get_VertexPositions();
+				const _uint* pIndices = pVIBuffer->Get_Indices();
+				_uint iNumIndices = pVIBuffer->Get_NumIndices();
+
+				// 월드 행렬 가져오기
+				_matrix WorldMatrix = pTerrain->Get_Transform()->Get_WorldMatrix();
+
+				// 피킹된 위치 저장
+				if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, m_fPickedPos))
 				{
 					pVIBuffer->Apply_Brush(m_fPickedPos, m_fBrushRadius, m_fBrushPower, fTimeDelta);
 				}

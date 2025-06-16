@@ -62,6 +62,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Priority_Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return;
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -90,6 +92,7 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 #pragma endregion
 
 	Update_State(fTimeDelta);
+	Ride_Terrain();
 	Key_Input(fTimeDelta);
 	Raycast_Object();
 	//Spine3
@@ -97,7 +100,8 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 
 EVENT CPlayer::Update(_float fTimeDelta)
 {
-	Ride_Terrain();
+	if (m_isActive == false)
+		return EVN_NONE;
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -114,6 +118,8 @@ EVENT CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
+	/*if (m_isActive == false)
+		return;*/
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -227,8 +233,9 @@ void CPlayer::Ride_Terrain()
 	_float z = m_pTransformCom->Get_WorldMatrix4x4Ref()._43;
 	_float y = pVIBuffer->Get_Height(x, z);
 
-	_float yOffset = 0.3f;
+	_float yOffset = 1.5f;
 	XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
+	//cout << y << endl;
 	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
 }
 
