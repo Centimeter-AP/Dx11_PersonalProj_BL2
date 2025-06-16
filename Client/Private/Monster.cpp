@@ -170,6 +170,21 @@ void CMonster::Ride_Terrain()
 	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
 }
 
+void CMonster::On_Collision(_uint iColID)
+{
+	switch (iColID)
+	{
+	case ENUM_CLASS(COL_ID::PLAYER_WEAPON_AR):
+		Set_State_Dead();
+		break;
+	case ENUM_CLASS(COL_ID::PLAYER_WEAPON_PST):
+		Set_State_Dead();
+		break;
+	default:
+		break;
+	}
+}
+
 void CMonster::Free()
 {
 	__super::Free();

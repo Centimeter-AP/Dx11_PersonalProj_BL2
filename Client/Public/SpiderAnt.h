@@ -8,9 +8,8 @@ NS_BEGIN(Client)
 class CSpiderAnt final : public CMonster
 {
 public:
-	typedef struct tagSkagDesc : public CMonster::DESC
+	typedef struct tagSpiderAntDesc : public CMonster::DESC
 	{
-		_float3 fSpawnPoint = {};
 
 	}DESC;
 
@@ -55,6 +54,9 @@ public:
 	friend class CSpiderAntState;
 	friend class CSpiderAntState_Idle;
 	friend class CSpiderAntState_Patrol;
+	friend class CSpiderAntState_Attack_Shot1;
+	friend class CSpiderAntState_Attack_Shot3;
+	friend class CSpiderAntState_Attack_Shot6;
 	friend class CSpiderAntState_Attack_Claw;
 	friend class CSpiderAntState_Attack_Leap;
 	friend class CSpiderAntState_Attack_Charge;
@@ -90,8 +92,11 @@ private:
 	void Update_State(_float fTimeDelta);
 	virtual void Set_State_Dead();
 
+	HRESULT Spawn_SpitBullet();
+
 private:
 	_uint m_iSpineBoneIdx = {};
+	_uint m_iTailBoneIdx = {};
 
 private:
 	class CSpiderAntState*	m_pCurState = { nullptr };

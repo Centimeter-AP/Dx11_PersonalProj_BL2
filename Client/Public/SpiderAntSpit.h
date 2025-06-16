@@ -24,9 +24,18 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
-
 private:
 	HRESULT Ready_Components(void* pArg);
+
+	void Launch_Projectile(const _float3& targetPos, _float fSpeed);
+	void Update_Projectile(_float fTimeDelta);
+
+private:
+	_vector m_vVelocity = XMVectorZero();
+	_vector m_vGravity = XMVectorSet(0.f, -55.f, 0.f, 0.f);
+	_bool   m_bIsProjectile = false;
+
+	_float	m_fLifeTime = {};
 
 public:
 	static CSpiderAntSpit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

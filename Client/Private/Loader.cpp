@@ -19,6 +19,7 @@
 #include "Skag.h"
 #include "Warrior.h"
 #include "SpiderAnt.h"
+#include "SpiderAntSpit.h"
 
 //#include "Effect.h"
 //#include "Sky.h"
@@ -247,6 +248,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_SpiderAnt */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
 		CSpiderAnt::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_SpiderAnt */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAntSpit"),
+		CSpiderAntSpit::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	///* For.Prototype_GameObject_Sky */

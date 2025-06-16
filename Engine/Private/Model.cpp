@@ -335,6 +335,16 @@ HRESULT CModel::Set_BoneMatrix(_uint iBoneIndex, _fmatrix matTransform)
 	return S_OK;
 }
 
+const _float CModel::Get_CurrentTrackPosition()
+{
+	return m_pAnimMgr->Get_CurrentTrackPosition();
+}
+
+const _float CModel::Get_Duration()
+{
+	return m_pAnimMgr->Get_Duration();
+}
+
 HRESULT CModel::Read_OriginalFBX(const string& filepath)
 {
 	if (FAILED(Ready_Bones(m_pAIScene->mRootNode, -1)))

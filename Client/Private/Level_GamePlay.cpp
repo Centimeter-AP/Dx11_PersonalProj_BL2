@@ -51,8 +51,7 @@ void CLevel_GamePlay::Update(_float fTimeDelta)
 	if (KEY_DOWN(DIK_BACKSLASH))
 		CCollider::bColliderDraw = !CCollider::bColliderDraw;
 
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); //이넘클래스 싫네요
-
+	Intersect();
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -280,6 +279,13 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CLevel_GamePlay::Intersect()
+{
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); //이넘클래스 싫네요
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET)); //이넘클래스 싫네요
+
 }
 
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

@@ -22,7 +22,8 @@ public:
 	void Set_TickPerSecond(_float fTickPerSecond) {
 		m_fTickPerSecond = fTickPerSecond;
 	}
-
+	const _float Get_CurrentTrackPosition() { return m_fCurrentTrackPosition; }
+	const _float Get_Duration() { return m_fDuration; }
 
 private:
 	string					m_strName = {};

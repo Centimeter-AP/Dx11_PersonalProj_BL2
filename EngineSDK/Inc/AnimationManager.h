@@ -21,6 +21,10 @@ public:
 
 	void    Reset_CurAnimationFrame() { m_pCurrentAnim->Reset(); }
 
+	const _float Get_CurrentTrackPosition() { return m_pCurrentAnim->Get_CurrentTrackPosition(); }
+	const _float Get_Duration() { return m_pCurrentAnim->Get_Duration(); }
+
+
 protected:
 	vector<CBone*>*			m_pBones = nullptr;
 	vector<CAnimation*>*	m_pAnims = nullptr;

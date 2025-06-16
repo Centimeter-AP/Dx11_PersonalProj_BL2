@@ -70,6 +70,11 @@ void CPlayerState_Run::Execute(_float fTimeDelta)
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);
 		return;
 	}
+
+	if (MOUSE_DOWN(DIM::LBUTTON))
+	{
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Fire); return;
+	}
 }
 
 void CPlayerState_Run::Exit()

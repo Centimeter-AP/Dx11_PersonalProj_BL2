@@ -8,7 +8,7 @@ NS_BEGIN(Client)
 class CWarrior final : public CMonster
 {
 public:
-	typedef struct tagRakkDesc : public CMonster::DESC
+	typedef struct tagWarriorDesc : public CMonster::DESC
 	{
 		_float3 fSpawnPoint = {};
 

@@ -8,9 +8,9 @@ NS_BEGIN(Client)
 class CStalker final : public CMonster
 {
 public:
-	typedef struct tagSkagDesc : public CMonster::DESC
+	typedef struct tagStalkerDesc : public CMonster::DESC
 	{
-		_float3 fSpawnPoint = {};
+		//_float3 fSpawnPoint = {};
 
 	}DESC;
 

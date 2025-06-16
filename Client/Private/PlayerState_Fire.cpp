@@ -11,19 +11,28 @@ void CPlayerState_Fire::Enter()
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Crouch, false);
 		m_pOwner->m_pModelCom->Reset_CurAnimationFrame();
 		static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AR"))->second)->Set_State(CAssaultRifle::STATE_Fire);
+
+		if (m_pOwner->m_pCurPickedCollider != nullptr)
+			//m_pOwner->m_pCurPickedCollider->Get_Owner()->Set_State_Dead();
+			m_pOwner->m_pCurPickedCollider->Get_Owner()->On_Collision(ENUM_CLASS(COL_ID::PLAYER_WEAPON_AR));
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_PST::PST_Crouch, false);
 		m_pOwner->m_pModelCom->Reset_CurAnimationFrame();
 		static_cast<CPistol*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_Pistol"))->second)->Set_State(CPistol::STATE_Fire);
+
+		if (m_pOwner->m_pCurPickedCollider != nullptr)
+			//m_pOwner->m_pCurPickedCollider->Get_Owner()->Set_State_Dead();
+			m_pOwner->m_pCurPickedCollider->Get_Owner()->On_Collision(ENUM_CLASS(COL_ID::PLAYER_WEAPON_AR));
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:
 		break;
 	default:
 		break;
 	}
-	if (m_pOwner->m_pCurPickedCollider != nullptr)
-		m_pOwner->m_pCurPickedCollider->Get_Owner()->Set_State_Dead();
+	//if (m_pOwner->m_pCurPickedCollider != nullptr)
+	//	//m_pOwner->m_pCurPickedCollider->Get_Owner()->Set_State_Dead();
+	//	m_pOwner->m_pCurPickedCollider->Get_Owner()->On_Collision(ENUM_CLASS(COL_ID::PLAYER_WEAPON_AR));
 }
 
 void CPlayerState_Fire::Execute(_float fTimeDelta)

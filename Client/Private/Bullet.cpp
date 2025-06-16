@@ -24,6 +24,10 @@ HRESULT CBullet::Initialize(void* pArg)
 	//Desc.fSpeedPerSec = 0.f;
 	//lstrcpy(Desc.szName, TEXT("Weapon"));
 
+	DESC* pDesc = static_cast<CBullet::DESC*>(pArg);
+
+	m_vTargetPos = pDesc->vTargetPos;
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -112,4 +116,5 @@ void CBullet::Free()
 
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pColliderCom);
 }

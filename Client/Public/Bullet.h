@@ -17,8 +17,7 @@ public:
 	typedef struct tagBulletDesc : public CGameObject::DESC
 	{
 		COL_ID eCollider_ID = { COL_ID::END };
-		_float3 vPosition = {};
-
+		_float3 vTargetPos = {};
 	}DESC;
 
 protected:
@@ -38,6 +37,8 @@ protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
+
+	_float3	m_vTargetPos = {};
 
 protected:
 	HRESULT Ready_Components(void* pArg);

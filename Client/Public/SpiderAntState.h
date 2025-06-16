@@ -181,14 +181,36 @@ public:
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		if (Is_Target_Attackable())
+		//if (Is_Target_Attackable())
+		//{
+		//	m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Claw);
+		//}
+		//else
+		//{
+		//	m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
+		//}
+		if (KEY_DOWN(DIK_1))
 		{
-			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Claw);
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Leap);
 		}
-		else
+		if (KEY_DOWN(DIK_2))
 		{
-			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Charge);
 		}
+		if (KEY_DOWN(DIK_3))
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot1);
+		}
+		if (KEY_DOWN(DIK_4))
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot3);
+		}
+		if (KEY_DOWN(DIK_5))
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot6);
+		}
+
+
 	}
 	virtual void Exit() override
 	{
@@ -196,6 +218,7 @@ public:
 	}
 	virtual void Free() override { __super::Free(); }
 };
+
 
 
 class CSpiderAntState_Attack_Leap final : public CSpiderAntState
@@ -402,6 +425,168 @@ public:
 	virtual void Free() override { __super::Free(); }
 };
 
+
+class CSpiderAntState_Attack_Shot1 final : public CSpiderAntState
+{
+public:
+	CSpiderAntState_Attack_Shot1(class CSpiderAnt* pOwner)
+		: CSpiderAntState(pOwner) {
+	}
+	virtual ~CSpiderAntState_Attack_Shot1() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "a_Shot1" << endl;
+		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Attack_1Shot, false);
+		bSpawnBullet = false;
+
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Provoked_Idle);
+		}
+		auto test = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
+		if (test >= 30.f)
+			return;
+		if (20.f < test && bSpawnBullet == false)
+		{
+			bSpawnBullet = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+
+	}
+	virtual void Exit() override
+	{
+		bSpawnBullet = false;
+	}
+	virtual void Free() override { __super::Free(); }
+
+private:
+	_bool bSpawnBullet = { false };
+};
+
+class CSpiderAntState_Attack_Shot3 final : public CSpiderAntState
+{
+public:
+	CSpiderAntState_Attack_Shot3(class CSpiderAnt* pOwner)
+		: CSpiderAntState(pOwner) {
+	}
+	virtual ~CSpiderAntState_Attack_Shot3() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "a_Shot3" << endl;
+		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Attack_3Shot, false);
+		for (auto& bSpawn : bSpawnBullet)
+			bSpawn = false;
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Provoked_Idle);
+		}
+		auto test = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
+		if (test >= 30.f )
+			return;
+		if (18.f < test && bSpawnBullet[0] == false)
+		{
+			bSpawnBullet[0] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+		if (21.f < test && bSpawnBullet[1] == false)
+		{
+			bSpawnBullet[1] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+		if (25.f < test && bSpawnBullet[2] == false)
+		{
+			bSpawnBullet[2] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+	}
+	virtual void Exit() override
+	{
+
+	}
+	virtual void Free() override { __super::Free(); }
+
+private:
+	_bool bSpawnBullet[3] = {false};
+};
+
+
+class CSpiderAntState_Attack_Shot6 final : public CSpiderAntState
+{
+public:
+	CSpiderAntState_Attack_Shot6(class CSpiderAnt* pOwner)
+		: CSpiderAntState(pOwner) {
+	}
+	virtual ~CSpiderAntState_Attack_Shot6() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "a_Shot6" << endl;
+		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Attack_6Shot, false);
+		for (auto& bSpawn : bSpawnBullet)
+			bSpawn = false;
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Provoked_Idle);
+		}
+		auto test = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
+		if (test >= 50.f)
+			return;
+		if (25.f < test && bSpawnBullet[0] == false)
+		{ // 25 30 34 37 42 48
+			bSpawnBullet[0] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+		if (30.f < test && bSpawnBullet[1] == false)
+		{
+			bSpawnBullet[1] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+		if (34.f < test && bSpawnBullet[2] == false)
+		{
+			bSpawnBullet[2] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+		if (37.f < test && bSpawnBullet[3] == false)
+		{
+			bSpawnBullet[3] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+		if (42.f < test && bSpawnBullet[4] == false)
+		{
+			bSpawnBullet[4] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+		if (48.f < test && bSpawnBullet[5] == false)
+		{
+			bSpawnBullet[5] = true;
+			m_pOwner->Spawn_SpitBullet();
+		}
+	}
+	virtual void Exit() override
+	{
+
+	}
+	virtual void Free() override { __super::Free(); }
+private:
+	_bool bSpawnBullet[6] = { false };
+};
+
+
+
 class CSpiderAntState_Attack_Claw final : public CSpiderAntState
 {
 public:
@@ -516,34 +701,34 @@ public:
 	virtual void Enter() override
 	{
 		cout << "[Dead]" << endl;
-
-		switch (rand()%4)
+		_uint iAnimIdx = {};
+		switch (rand()%3)
 		{
 		case 0:
-			m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::Death_Critical), false);
+			iAnimIdx = ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::Death_Critical);
 			break;
 		case 1:
-			m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::Death_Var1), false);
+			iAnimIdx = ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::Death_Var1);
 			break;
 		case 2:
-			m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::Death_Var2), false);
-			break;
-		case 3:
-			m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::Death_Var3), false);
+			iAnimIdx = ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::Death_Var2);
 			break;
 		default:
 			break;
 		}
+		m_pOwner->m_pModelCom->Set_Animation(iAnimIdx, false);
+		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(iAnimIdx, 10.f);
 
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
+		if (m_pOwner->m_bDead == true)
+			return;
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
 			m_pOwner->Set_Dead();
 			return;
 		}
-		m_pOwner->m_pTransformCom->Go_Down(fTimeDelta);
 	}
 	virtual void Exit() override
 	{

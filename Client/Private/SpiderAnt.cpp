@@ -1,4 +1,5 @@
 #include "SpiderAnt.h"
+#include "SpiderAntSpit.h"
 #include "SpiderAntState.h"
 #include "GameInstance.h"
 
@@ -39,6 +40,7 @@ HRESULT CSpiderAnt::Initialize(void* pArg)
 
 	m_iSpineBoneIdx = m_pModelCom->Find_BoneIndex("Spine1");
 	m_iHeadBoneIdx = m_pModelCom->Find_BoneIndex("Head");
+	m_iTailBoneIdx = m_pModelCom->Find_BoneIndex("Tail6");
 	return S_OK;
 }
 
@@ -63,13 +65,18 @@ void CSpiderAnt::Priority_Update(_float fTimeDelta)
 
 EVENT CSpiderAnt::Update(_float fTimeDelta)
 {
-	if (KEY_DOWN(DIK_1))
+	//if (KEY_DOWN(DIK_1))
+	//{
+	//	m_bChargeCheck = true;
+	//}
+	//if (KEY_DOWN(DIK_2))
+	//{
+	//	m_bLeapCheck = true;
+	//}
+
+	if (KEY_DOWN(DIK_Z))
 	{
-		m_bChargeCheck = true;
-	}
-	if (KEY_DOWN(DIK_2))
-	{
-		m_bLeapCheck = true;
+		Spawn_SpitBullet();
 	}
 
 	auto SpineBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iSpineBoneIdx));
@@ -160,6 +167,9 @@ HRESULT CSpiderAnt::Ready_SkagStates()
 	m_pStates[SPIDERANT_STATE::STATE_Idle] =  new CSpiderAntState_Idle(this);
 	m_pStates[SPIDERANT_STATE::STATE_Death] = new CSpiderAntState_Dead(this);
 	m_pStates[SPIDERANT_STATE::STATE_Patrol] = new CSpiderAntState_Patrol(this);
+	m_pStates[SPIDERANT_STATE::STATE_Attack_Shot1] = new CSpiderAntState_Attack_Shot1(this);
+	m_pStates[SPIDERANT_STATE::STATE_Attack_Shot3] = new CSpiderAntState_Attack_Shot3(this);
+	m_pStates[SPIDERANT_STATE::STATE_Attack_Shot6] = new CSpiderAntState_Attack_Shot6(this);
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Leap] = new CSpiderAntState_Attack_Leap(this);
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Charge] = new CSpiderAntState_Attack_Charge(this);
 	m_pStates[SPIDERANT_STATE::STATE_Provoked_Idle] = new CSpiderAntState_Provoked_Idle(this);
@@ -193,6 +203,25 @@ void CSpiderAnt::Update_State(_float fTimeDelta)
 void CSpiderAnt::Set_State_Dead()
 {
 	Set_State(SPIDERANT_STATE::STATE_Death);
+}
+
+HRESULT CSpiderAnt::Spawn_SpitBullet()
+{
+	auto TailBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iTailBoneIdx)) * m_pTransformCom->Get_WorldMatrix();
+
+	CSpiderAntSpit::DESC SpitDesc = {};
+	SpitDesc.bHasPreset = true;
+	SpitDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	SpitDesc.fSpeedPerSec = 10.f;
+	_vector targetPos = m_pTarget->Get_Transform()->Get_State(STATE::POSITION);
+	XMStoreFloat3(&SpitDesc.vTargetPos, XMVectorSetY(targetPos, targetPos.m128_f32[1] + 1.f));
+
+	XMStoreFloat4x4(&SpitDesc.PresetMatrix, XMMatrixTranslation(TailBoneMat.r[3].m128_f32[0], TailBoneMat.r[3].m128_f32[1], TailBoneMat.r[3].m128_f32[2]));
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAntSpit"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_MonBullet"), &SpitDesc)))
+		return E_FAIL;
 }
 
 
