@@ -25,6 +25,8 @@ public:
 	virtual void Update(_fmatrix WorldMatrix) override;
 	virtual _bool Intersect(CBounding* pTarget) override;
 	virtual _bool Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist)  override;
+	_float3 Get_Penetration(CBounding_AABB& dest);
+	_float3 ComputeCollisionNormal(CBounding_AABB* pDest);
 
 
 

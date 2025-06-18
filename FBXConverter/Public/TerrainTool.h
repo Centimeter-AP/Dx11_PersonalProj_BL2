@@ -20,7 +20,7 @@ public:
 	virtual HRESULT Render();
 
 private:
-	HRESULT Render_TerrainTool();
+	HRESULT Render_NavimeshTool();
 	void Terrain_HeightEditor();
 	void Terrain_Save();
 

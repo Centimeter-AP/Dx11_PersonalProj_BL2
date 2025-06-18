@@ -24,6 +24,7 @@ public:
 
 	CGameObject* Find_Object(_uint iVectorIndex);
 	list<CGameObject*>& Get_LayerObjectLists() { return m_GameObjects; }
+	list<CGameObject*>* Get_LayerObjectListsPtr() { return &m_GameObjects; }
 
 private:
 	list<CGameObject*>			m_GameObjects;

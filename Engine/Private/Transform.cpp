@@ -1,6 +1,8 @@
 #include "Transform.h"
 
 #include "Shader.h"
+#include "Collider.h"
+#include "GameInstance.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent { pDevice, pContext }
@@ -59,12 +61,31 @@ void CTransform::Scaling(const _float3& vScale)
 	Set_State(STATE::LOOK, XMVector3Normalize(Get_State(STATE::LOOK)) * vScale.z);
 }
 
+void CTransform::Go_Straight(_float fTimeDelta, CCollider* pMyCol, _uint iGroupID)
+{
+	_vector		vPosition = Get_State(STATE::POSITION);
+	_vector		vLook = Get_State(STATE::LOOK);
+	
+	_vector vMove = XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
+	_float3 vDesiredMove = {};
+	XMStoreFloat3(&vDesiredMove, vMove);
+
+
+	_float3 res = m_pGameInstance->Resolve_Slide_AABB(pMyCol, vDesiredMove, iGroupID);
+
+	vPosition += XMLoadFloat3(&res);
+
+	Set_State(STATE::POSITION, vPosition);
+}
+
 void CTransform::Go_Straight(_float fTimeDelta)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
-		
+
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
+
+
 
 	Set_State(STATE::POSITION, vPosition);
 }

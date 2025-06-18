@@ -54,7 +54,7 @@ void CObjectTool::Late_Update(_float fTimeDelta)
 HRESULT CObjectTool::Render()
 {
 	ImGuizmo::BeginFrame(); // ← 한 번만 호출
-
+	Window_ObjectList();
 	if (m_pWindowData->ShowObjectMenu)
 	{
 		if (FAILED(Render_ObjectTool()))
@@ -346,11 +346,19 @@ HRESULT CObjectTool::Guizmo_Tool()
 
 HRESULT CObjectTool::Window_ObjectList()
 {
-	ImGui::Begin("Object Lists");
-	if (ImGui::TreeNode("Basic trees"))
-	{
+	ImGui::Begin("Current Object");
+	//if (ImGui::TreeNode("Basic trees"))
+	//{
 
+	//}
+
+	if (m_pSelectedObj != nullptr)
+	{
+		string SelectedObjectTag = "Name : ";
+		SelectedObjectTag += WStringToString(m_pSelectedObj->Get_VIBufferTag());
+		Text(SelectedObjectTag.c_str());
 	}
+	
 	//if (ImGui::BeginListBox("##Current Object List", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
 	//{
 	//	for (int n = 0; n < m_ModelNames.size(); n++)

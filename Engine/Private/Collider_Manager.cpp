@@ -65,14 +65,41 @@ void CCollider_Manager::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
 	{
 		for (auto& pDstCollider : m_pColliders[iDstGroupID])
 		{
-			CCollider_Manager::Intersect(pDstCollider, pSrcCollider);
-			if (true == pSrcCollider->Intersect(pDstCollider))
+			if (pSrcCollider != pDstCollider && true == pSrcCollider->Intersect(pDstCollider))
 			{
 				pSrcCollider->Get_Owner()->On_Collision(pDstCollider->Get_ColliderID());
 				pDstCollider->Get_Owner()->On_Collision(pSrcCollider->Get_ColliderID());
+				if (pSrcCollider->Get_Type() == COLLIDER::AABB && pDstCollider->Get_Type() == COLLIDER::AABB)
+				{
+					_float3 vSrcPen = pSrcCollider->Get_Penetrated();
+					pSrcCollider->Get_Owner()->Get_Transform()->Go_Dir(XMLoadFloat3(&vSrcPen), 0.016f);
+					_float3 vDstPen = pDstCollider->Get_Penetrated();
+					pDstCollider->Get_Owner()->Get_Transform()->Go_Dir(XMLoadFloat3(&vDstPen), 0.016f);
+				}
 			}
 		}
 	}
+}
+
+_float3 CCollider_Manager::Resolve_Slide_AABB(CCollider* pMyCol, const _float3 vDesiredMove, _uint iGroupID)
+{
+	for (auto& pDstCollider : m_pColliders[iGroupID])
+	{
+		if (true == pMyCol->Intersect(pDstCollider))
+		{
+			_vector vMove = XMLoadFloat3(&vDesiredMove);
+			auto normal = pMyCol->ComputeCollisionNormal_AABB(pDstCollider);
+			_vector vNormal = XMLoadFloat3(&normal);
+
+			_vector slideVec = vMove - XMVector3Dot(vMove, vNormal) * vNormal;
+
+			_float3 result;
+			XMStoreFloat3(&result, slideVec);
+
+			return result;
+		}
+	}
+	return vDesiredMove;
 }
 
 CCollider* CCollider_Manager::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float fRayLength, _uint iColliderGroupID, _float& fRayDist)

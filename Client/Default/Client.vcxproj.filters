@@ -70,9 +70,6 @@
     <Filter Include="01.Levels\MapTool\Tools\ObjectTool">
       <UniqueIdentifier>{46604ac4-c9ef-4ef6-a02d-ac850961d8aa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Levels\MapTool\Tools\ConvertTool">
-      <UniqueIdentifier>{b1d97b6d-6bd8-434f-a0ef-a124d95d16da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Player">
       <UniqueIdentifier>{36f7e6ce-51c9-40d3-a217-0c4dcfcf6d7b}</UniqueIdentifier>
     </Filter>
@@ -150,6 +147,9 @@
     </Filter>
     <Filter Include="02.GameObjects\03. Monster\SpiderAnt\Bullet">
       <UniqueIdentifier>{b8e90d5c-58d1-4f99-8f97-40addd5bdd78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\MapTool\Tools\NavigationTool">
+      <UniqueIdentifier>{dfe8f55a-6d28-49a1-ab8d-87f761421378}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -328,9 +328,14 @@
     <ClInclude Include="..\Public\SpiderAntState.h">
       <Filter>02.GameObjects\03. Monster\SpiderAnt</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\public\SpiderAntSpit.h">
       <Filter>02.GameObjects\03. Monster\SpiderAnt\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Bullet.h">
+      <Filter>02.GameObjects\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\NavigationTool.h">
+      <Filter>01.Levels\MapTool\Tools\NavigationTool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -534,9 +539,14 @@
     <ClCompile Include="..\Private\SpiderAnt.cpp">
       <Filter>02.GameObjects\03. Monster\SpiderAnt</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\private\SpiderAntSpit.cpp">
       <Filter>02.GameObjects\03. Monster\SpiderAnt\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Bullet.cpp">
+      <Filter>02.GameObjects\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\NavigationTool.cpp">
+      <Filter>01.Levels\MapTool\Tools\NavigationTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

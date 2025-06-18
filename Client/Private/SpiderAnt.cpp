@@ -170,6 +170,7 @@ HRESULT CSpiderAnt::Ready_SkagStates()
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Shot1] = new CSpiderAntState_Attack_Shot1(this);
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Shot3] = new CSpiderAntState_Attack_Shot3(this);
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Shot6] = new CSpiderAntState_Attack_Shot6(this);
+	m_pStates[SPIDERANT_STATE::STATE_Attack_Claw] = new CSpiderAntState_Attack_Claw(this);
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Leap] = new CSpiderAntState_Attack_Leap(this);
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Charge] = new CSpiderAntState_Attack_Charge(this);
 	m_pStates[SPIDERANT_STATE::STATE_Provoked_Idle] = new CSpiderAntState_Provoked_Idle(this);

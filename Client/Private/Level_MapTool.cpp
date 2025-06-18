@@ -7,6 +7,7 @@
 #include "TerrainTool.h"
 #include <ObjectTool.h>
 #include <ConvertTool.h>
+#include "NavigationTool.h"
 
 
 
@@ -70,7 +71,7 @@ HRESULT CLevel_MapTool::Render()
 
     ImGui_Render();
     //렌더링 어쩌구저쩌구들
-    ImGui::ShowDemoWindow(); // Show demo window! :)
+    //ImGui::ShowDemoWindow(); // Show demo window! :)
 
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -135,12 +136,12 @@ HRESULT CLevel_MapTool::ImGui_Render()
     }
 
     /* 기본 윈도우들 */
-    if (FAILED(Window_ObjectList()))
-        return E_FAIL;
-    if (FAILED(Window_ObjectInspector()))
-        return E_FAIL;
-    if (FAILED(Window_ResourceList()))
-        return E_FAIL;
+    //if (FAILED(Window_ObjectList()))
+    //    return E_FAIL;
+    //if (FAILED(Window_ObjectInspector()))
+    //    return E_FAIL;
+    //if (FAILED(Window_ResourceList()))
+    //    return E_FAIL;
 
 
     return S_OK;
@@ -307,6 +308,12 @@ HRESULT CLevel_MapTool::Ready_ImGuiTools()
             if (nullptr == m_ImGuiTools[i])
                 return E_FAIL;
             m_tWindowData.ShowObjectMenu = true;
+            break;
+        case IMGUITOOL::NAVIGATION:
+            m_ImGuiTools[i] = CNavigationTool::Create(m_pDevice, m_pContext, &m_tWindowData);
+            if (nullptr == m_ImGuiTools[i])
+                return E_FAIL;
+            m_tWindowData.ShowNavigationMenu = true;
             break;
         case IMGUITOOL::CAMERA:
             m_ImGuiTools[i] = nullptr;

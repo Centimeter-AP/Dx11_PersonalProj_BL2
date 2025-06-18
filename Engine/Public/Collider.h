@@ -20,12 +20,12 @@ public:
 	_bool Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist);
 	class CGameObject* Get_Owner() { return m_pOwner; }
 	_uint Get_ColliderID() { return m_iColliderID; }
-
 	const _float3 Get_Pos();
-
 	const _float Get_MaxLength();
+	const _float3 ComputeCollisionNormal_AABB(CCollider* pDest);
+	const _float3 Get_Penetrated();
+	const COLLIDER Get_Type() { return m_eType; }
 
-	static _bool		bColliderDraw;
 private:
 	COLLIDER			m_eType = { COLLIDER::END };
 	class CBounding*	m_pBounding = { nullptr };
@@ -43,6 +43,7 @@ private:
 	_vector								 m_vRenderColor = {XMVectorSet(0.f, 1.f, 0.f, 1.f)};
 
 public:
+	static _bool		bColliderDraw;
 	void Set_ColliderColor(_float4 vColor) { m_vRenderColor = XMVectorSet(vColor.x, vColor.y, vColor.z, vColor.w); }
 	HRESULT Render();
 #endif

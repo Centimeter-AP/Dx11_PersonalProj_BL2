@@ -233,7 +233,7 @@ void CPlayer::Ride_Terrain()
 	_float z = m_pTransformCom->Get_WorldMatrix4x4Ref()._43;
 	_float y = pVIBuffer->Get_Height(x, z);
 
-	_float yOffset = 1.5f;
+	_float yOffset = 0.5f;
 	XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
 	//cout << y << endl;
 	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);

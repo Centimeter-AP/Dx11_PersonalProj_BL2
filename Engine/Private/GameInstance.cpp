@@ -397,6 +397,11 @@ void CGameInstance::Delete_Collider(const CGameObject* pOwner)
 	m_pCollider_Manager->Delete_Collider(pOwner);
 }
 
+_float3 CGameInstance::Resolve_Slide_AABB(CCollider* pMyCol, const _float3 vDesiredMove, _uint iGroupID)
+{
+	return m_pCollider_Manager->Resolve_Slide_AABB(pMyCol, vDesiredMove, iGroupID);
+}
+
 #pragma endregion
 
 void CGameInstance::Release_Engine()

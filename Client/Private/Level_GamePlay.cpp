@@ -130,7 +130,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
 		return E_FAIL;
 
-	//for (size_t i = 0; i < 10; i++)
+	//for (size_t i = 0; i < 5; i++)
 	//{
 	//	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(rand()%100, 2.f, rand()%100));
 	//	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
@@ -295,8 +295,9 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 void CLevel_GamePlay::Intersect()
 {
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); 
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET)); 
+	//m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); 
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::MONSTER), ENUM_CLASS(COL_GROUP::MONSTER));
+	//m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET)); 
 }
 
 void CLevel_GamePlay::Key_Input()

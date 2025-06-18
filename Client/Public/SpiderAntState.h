@@ -183,14 +183,14 @@ public:
 		//Console(fTimeDelta);
 		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 
-		//if (Is_Target_Attackable())
-		//{
-		//	m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Claw);
-		//}
-		//else
-		//{
-		//	m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
-		//}
+		if (Is_Target_Attackable())
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Claw);
+		}
+		else
+		{
+			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
+		}
 		if (KEY_DOWN(DIK_1))
 		{
 			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Leap);

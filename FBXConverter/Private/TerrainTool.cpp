@@ -49,14 +49,14 @@ HRESULT CTerrainTool::Render()
 {
 	if (m_pWindowData->ShowTerrainMenu)
 	{
-		if (FAILED(Render_TerrainTool()))
+		if (FAILED(Render_NavimeshTool()))
 			return E_FAIL;
 	}
 
 	return S_OK;
 }
 
-HRESULT CTerrainTool::Render_TerrainTool()
+HRESULT CTerrainTool::Render_NavimeshTool()
 {
 	ImGui::SetNextWindowSize(ImVec2(600, 400));
 	ImGui::Begin("Terrain Tools", &m_pWindowData->ShowTerrainMenu, NULL);

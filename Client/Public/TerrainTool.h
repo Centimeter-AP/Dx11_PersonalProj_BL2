@@ -1,8 +1,11 @@
 #pragma once
 #include "ImGuiTool.h"
 
-NS_BEGIN(Client)
+NS_BEGIN(Engine)
+class CVIBuffer_Terrain;
+NS_END
 
+NS_BEGIN(Client)
 
 class CTerrainTool final : public CImGuiTool
 {
@@ -26,8 +29,10 @@ private:
 	void Terrain_Save();
 	void Terrain_Load();
 
-private:
 	void Height_Update(_float fTimeDelta);
+
+public:
+	void Set_PickingVairables_ToFalse_All() { m_bBrushEnable = false; m_bEnablePicking = false; }
 
 private:
 	_int	m_iVerticesX = {100};
@@ -38,10 +43,13 @@ private:
 	_float	m_fBrushPower = {5.f};
 
 	_bool	m_bBrushEnable = {false};
-	_bool	m_bEnablePicking = { true };
+	_bool	m_bEnablePicking = { false };
 
 	_bool	m_bSave = { false };
 	_bool	m_bLoad = { false };
+
+	class CTerrain* m_pCurTerrain = { nullptr };
+	CVIBuffer_Terrain* m_pCurTerrainBuffer = { nullptr };
 
 public:
 	static CTerrainTool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
@@ -49,29 +57,6 @@ public:
 	virtual void Free() override;
 
 };
-
-//class CTerrainBrush final : public CGameObject
-//{
-//private:
-//	CTerrainBrush(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-//	CTerrainBrush(const CTerrainBrush& Prototype);
-//	virtual ~CTerrainBrush() = default;
-//
-//public:
-//	virtual HRESULT Initialize_Prototype();
-//	virtual HRESULT Initialize(void* pArg);
-//	virtual void Priority_Update(_float fTimeDelta);
-//	virtual EVENT Update(_float fTimeDelta);
-//	virtual void Late_Update(_float fTimeDelta);
-//	virtual HRESULT Render();
-//
-//
-//public:
-//	static CTerrainBrush* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
-//	virtual CGameObject* Clone(void* pArg) override;
-//	virtual void Free() override;
-//
-//};
 
 
 NS_END

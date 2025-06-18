@@ -178,6 +178,7 @@
     <ClInclude Include="..\public\MainApp.h" />
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Monster.h" />
+    <ClInclude Include="..\Public\NavigationTool.h" />
     <ClInclude Include="..\Public\ObjectTool.h" />
     <ClInclude Include="..\public\Pistol.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="..\private\MainApp.cpp" />
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Monster.cpp" />
+    <ClCompile Include="..\Private\NavigationTool.cpp" />
     <ClCompile Include="..\Private\ObjectTool.cpp" />
     <ClCompile Include="..\private\Pistol.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />

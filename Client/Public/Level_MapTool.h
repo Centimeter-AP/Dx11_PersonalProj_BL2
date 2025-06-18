@@ -18,6 +18,7 @@ public:
 	enum class IMGUITOOL {
 		TERRAIN,
 		OBJECT,
+		NAVIGATION,
 		CAMERA,
 		END
 	};
@@ -47,7 +48,7 @@ private: /* 상단 툴 바 */
 
 private:
 	CGameObject* m_pCurSelectedObj = { nullptr };
-	IMGUIWINDATA		m_tWindowData;
+	IMGUIWINDATA	m_tWindowData;
 
 private:
 	class CImGuiTool* m_ImGuiTools[ENUM_CLASS(IMGUITOOL::END)] = { nullptr };

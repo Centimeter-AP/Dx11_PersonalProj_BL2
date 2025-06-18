@@ -160,6 +160,15 @@
     <ClInclude Include="..\public\Collider_Manager.h">
       <Filter>01.Utility\04.Components\Collider\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Navigation.h">
+      <Filter>01.Utility\04.Components\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h">
+      <Filter>01.Utility\04.Components\Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cell.h">
+      <Filter>01.Utility\04.Components\VIBuffer\Cell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -302,6 +311,15 @@
     </ClCompile>
     <ClCompile Include="..\private\Collider_Manager.cpp">
       <Filter>01.Utility\04.Components\Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Navigation.cpp">
+      <Filter>01.Utility\04.Components\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp">
+      <Filter>01.Utility\04.Components\Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
+      <Filter>01.Utility\04.Components\VIBuffer\Cell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -463,6 +481,18 @@
     </Filter>
     <Filter Include="01.Utility\04.Components\Collider\Manager">
       <UniqueIdentifier>{c1bd046a-0857-4f2f-b2e8-f0f2d0874977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Navigation">
+      <UniqueIdentifier>{21c32c10-eec7-4442-bcd1-55388a54556a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Navigation\Cell">
+      <UniqueIdentifier>{2397f1b9-3563-4c30-86ca-4939f7a7f128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\VIBuffer\Cell">
+      <UniqueIdentifier>{6c889d1e-800f-4f78-85f2-6dcffa245bf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\VIBuffer\Instance">
+      <UniqueIdentifier>{79ebc000-8bf7-431f-821a-82a89e86318b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -108,6 +108,7 @@ public:
 	void Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID);
 	class CCollider* Raycast(_fvector vRayOrigin, _fvector vRayDir, _float fRayLength, _uint iColliderGroupID, _float& fRayDist);
 	void Delete_Collider(const class CGameObject* pOwner);
+	_float3 Resolve_Slide_AABB(class CCollider* pMyCol, const _float3 vDesiredMove, _uint iGroupID);
 #pragma endregion
 
 

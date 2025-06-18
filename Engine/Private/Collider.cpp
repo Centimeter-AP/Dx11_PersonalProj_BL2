@@ -3,7 +3,6 @@
 #include "GameInstance.h"
 
 
-_bool CCollider::bColliderDraw = true;
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent { pDevice, pContext }
@@ -134,8 +133,20 @@ const _float CCollider::Get_MaxLength()
 	}
 }
 
+const _float3 CCollider::ComputeCollisionNormal_AABB(CCollider* pDest)
+{
+	return static_cast<CBounding_AABB*>(m_pBounding)->ComputeCollisionNormal(static_cast<CBounding_AABB*>(pDest->m_pBounding));
+}
+
+const _float3 CCollider::Get_Penetrated()
+{
+	return m_pBounding->Get_Penetrated();
+}
 
 #ifdef _DEBUG
+
+_bool CCollider::bColliderDraw = true;
+
 HRESULT CCollider::Render()
 {
 	if (bColliderDraw == true)

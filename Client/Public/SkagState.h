@@ -198,27 +198,36 @@ public:
 	virtual void Enter() override
 	{
 		cout << "provoked_idle" << endl;
-		//Set_OwnerAnim(CSkag::SKAG_ANIM::, true);
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Idle, true);
+
 		// 바로바로 전환 해주는 용도로 거치기만 해도 될듯?
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		if (Is_Target_Attackable())
+		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
+		m_fCooldown += fTimeDelta;
+		if (m_fCooldown > 0.5f)
 		{
-			rand() % 2 ?
-				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite) :
-				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
-		}
-		else
-		{
-			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Run);
+			if (Is_Target_Attackable())
+			{
+				rand() % 2 ?
+					m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Bite) :
+					m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
+			}
+			else
+			{
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Run);
+			}
 		}
 	}
 	virtual void Exit() override
 	{
-
+		m_fCooldown = 0.f;
 	}
 	virtual void Free() override { __super::Free(); }
+
+private:
+	_float m_fCooldown = {};
 };
 
 #pragma region Attack_Patterns
@@ -627,9 +636,7 @@ public:
 		}
 		if (Dist < m_pOwner->m_fAttackableDistance)
 		{
-			rand() % 2 ?
-				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Run_Bite) :
-				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Run_Tongue);
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Run_Bite);
 			return;
 				//m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
 		}

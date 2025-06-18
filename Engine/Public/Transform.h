@@ -61,6 +61,7 @@ public:
 	void Scaling(_float fX = 1.f, _float fY = 1.f, _float fZ = 1.f);
 	void Scaling(const _float3& vScale);
 public:
+	void Go_Straight(_float fTimeDelta, class CCollider* pMyCol, _uint iGroupID);
 	void Go_Straight(_float fTimeDelta); 
 	void Go_Backward(_float fTimeDelta);
 	void Go_Right(_float fTimeDelta);
