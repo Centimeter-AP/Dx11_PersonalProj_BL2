@@ -16,7 +16,7 @@
 #include "DirectXTK/SpriteFont.h"
 #include "DirectXTK/PrimitiveBatch.h"
 #include "DirectXTK/Effects.h"
-
+#include "DirectXTK/ScreenGrab.h"
 
 #include "Fx11/d3dx11effect.h"
 
@@ -29,7 +29,6 @@ using namespace DirectX;
 
 #include <string>
 #include <map>
-#include <unordered_map>
 #include <list>
 #include <vector>
 using namespace std;
@@ -44,6 +43,7 @@ using namespace std::filesystem;
 #include "Engine_Enum.h"
 #include "Engine_Function.h"
 
+
 namespace Engine
 {
 	const _wstring	g_strTransformTag = TEXT("Com_Transform");
@@ -51,6 +51,8 @@ namespace Engine
 }
 
 using namespace Engine;
+
+
 
 
 #ifdef _DEBUG

@@ -1,25 +1,25 @@
-#include "VIBuffer_Rect.h"
+#include "VIBuffer_Cell.h"
 
-CVIBuffer_Rect::CVIBuffer_Rect(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-    : CVIBuffer { pDevice, pContext }
+CVIBuffer_Cell::CVIBuffer_Cell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+	: CVIBuffer{ pDevice, pContext }
 {
 }
 
-CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect& Prototype)
-    : CVIBuffer( Prototype )
+CVIBuffer_Cell::CVIBuffer_Cell(const CVIBuffer_Cell& Prototype)
+	: CVIBuffer{ Prototype }
 {
 }
 
-HRESULT CVIBuffer_Rect::Initialize_Prototype()
+HRESULT CVIBuffer_Cell::Initialize_Prototype(const _float3* pPoints)
 {
-	
+
 	m_iNumVertexBuffers = 1;
-	m_iNumVertices = 4;
-	m_iVertexStride = sizeof(VTXPOSTEX);
-	m_iNumIndices = 6;
+	m_iNumVertices = 3;
+	m_iVertexStride = sizeof(VTXPOS);
+	m_iNumIndices = 4;
 	m_iIndexStride = sizeof(_ushort);
 	m_eIndexFormat = DXGI_FORMAT_R16_UINT;
-	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_ePrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
 
 	D3D11_BUFFER_DESC			VBBufferDesc{};
 	VBBufferDesc.ByteWidth = m_iNumVertices * m_iVertexStride;
@@ -31,23 +31,13 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 	D3D11_SUBRESOURCE_DATA		VBInitialData{};
 
-	VTXPOSTEX* pVertices = new VTXPOSTEX[m_iNumVertices];
-	ZeroMemory(pVertices, sizeof(VTXPOSTEX) * m_iNumVertices);
+	VTXPOS* pVertices = new VTXPOS[m_iNumVertices];
+	ZeroMemory(pVertices, sizeof(VTXPOS) * m_iNumVertices);
 
 	m_pVertexPositions = new _float3[m_iNumVertices];
 	ZeroMemory(m_pVertexPositions, sizeof(_float3) * m_iNumVertices);
 
-	pVertices[0].vPosition = _float3(-0.5f, 0.5f, 0.f);
-	pVertices[0].vTexcoord = _float2(0.f, 0.f);
-
-	pVertices[1].vPosition = _float3(0.5f, 0.5f, 0.f);
-	pVertices[1].vTexcoord = _float2(1.f, 0.f);
-
-	pVertices[2].vPosition = _float3(0.5f, -0.5f, 0.f);
-	pVertices[2].vTexcoord = _float2(1.f, 1.f);
-
-	pVertices[3].vPosition = _float3(-0.5f, -0.5f, 0.f);
-	pVertices[3].vTexcoord = _float2(0.f, 1.f);
+	memcpy(pVertices, pPoints, sizeof(_float3) * m_iNumVertices);
 
 	for (_uint i = 0; i < m_iNumVertices; ++i)
 		m_pVertexPositions[i] = pVertices[i].vPosition;
@@ -73,10 +63,8 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 	pIndices[0] = 0;
 	pIndices[1] = 1;
 	pIndices[2] = 2;
-
 	pIndices[3] = 0;
-	pIndices[4] = 2;
-	pIndices[5] = 3;
+
 
 	D3D11_SUBRESOURCE_DATA		IBInitialData{};
 	IBInitialData.pSysMem = pIndices;
@@ -89,43 +77,43 @@ HRESULT CVIBuffer_Rect::Initialize_Prototype()
 
 
 
-    return S_OK;
+	return S_OK;
 }
 
-HRESULT CVIBuffer_Rect::Initialize(void* pArg)
+HRESULT CVIBuffer_Cell::Initialize(void* pArg)
 {
-    return S_OK;
+	return S_OK;
 }
 
-CVIBuffer_Rect* CVIBuffer_Rect::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CVIBuffer_Cell* CVIBuffer_Cell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints)
 {
-	CVIBuffer_Rect* pInstance = new CVIBuffer_Rect(pDevice, pContext);
+	CVIBuffer_Cell* pInstance = new CVIBuffer_Cell(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype()))
+	if (FAILED(pInstance->Initialize_Prototype(pPoints)))
 	{
-		MSG_BOX("Failed to Created : CVIBuffer_Rect");
+		MSG_BOX("Failed to Created : CVIBuffer_Cell");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CComponent* CVIBuffer_Rect::Clone(void* pArg)
+CComponent* CVIBuffer_Cell::Clone(void* pArg)
 {
-	CVIBuffer_Rect* pInstance = new CVIBuffer_Rect(*this);
+	CVIBuffer_Cell* pInstance = new CVIBuffer_Cell(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CVIBuffer_Rect");
+		MSG_BOX("Failed to Cloned : CVIBuffer_Cell");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CVIBuffer_Rect::Free()
+void CVIBuffer_Cell::Free()
 {
-    __super::Free();
+	__super::Free();
 
 
 }

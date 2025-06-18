@@ -6,7 +6,7 @@ CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CShader::CShader(const CShader& Prototype)
-	: CComponent( Prototype )
+	: CComponent{ Prototype }
 	, m_pEffect { Prototype.m_pEffect }
 	, m_InputLayouts { Prototype.m_InputLayouts }
 {
@@ -86,9 +86,8 @@ HRESULT CShader::Bind_RawValue(const _char* pConstantName, const void* pData, _u
 	if (nullptr == pVariable)
 		return E_FAIL;
 
-	return pVariable->SetRawValue(pData, 0, iLength);
+	return pVariable->SetRawValue(pData, 0, iLength);	
 }
-
 
 HRESULT CShader::Bind_Matrix(const _char* pConstantName, const _float4x4* pMatrix)
 {
@@ -128,6 +127,20 @@ HRESULT CShader::Bind_SRV(const _char* pConstantName, ID3D11ShaderResourceView* 
 		return E_FAIL;
 
 	return pShaderResourceVariable->SetResource(pSRV);
+}
+
+HRESULT CShader::Bind_SRVs(const _char* pConstantName, ID3D11ShaderResourceView** ppSRV, _uint iNumTextures)
+{
+	ID3DX11EffectVariable* pVariable = m_pEffect->GetVariableByName(pConstantName);
+	if (nullptr == pVariable)
+		return E_FAIL;
+
+
+	ID3DX11EffectShaderResourceVariable* pShaderResourceVariable = pVariable->AsShaderResource();
+	if (nullptr == pShaderResourceVariable)
+		return E_FAIL;
+
+	return pShaderResourceVariable->SetResourceArray(ppSRV, 0, iNumTextures);
 }
 
 CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
