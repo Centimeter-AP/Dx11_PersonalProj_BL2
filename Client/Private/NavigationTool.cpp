@@ -3,8 +3,9 @@
 #include "VIBuffer_Terrain.h"
 #include "Cell.h"
 #include "Layer.h"
-
+#include "Shader.h"
 #include "GameInstance.h"
+#include <MapObject.h>
 
 
 CNavigationTool::CNavigationTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -28,6 +29,10 @@ HRESULT CNavigationTool::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOS::Elements, VTXPOS::iNumElements);
+	if (nullptr == m_pShader)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -38,7 +43,7 @@ void CNavigationTool::Priority_Update(_float fTimeDelta)
 
 EVENT CNavigationTool::Update(_float fTimeDelta)
 {
-
+	Key_Input();
 	return EVN_NONE;
 }
 
@@ -52,9 +57,52 @@ HRESULT CNavigationTool::Render()
 	{
 		if (FAILED(Render_NavimeshTool()))
 			return E_FAIL;
-		for (auto& pCell : m_Cells)
+
+		if (FAILED(Render_Cells()))
+			return E_FAIL;
+		
+	}
+
+	return S_OK;
+}
+
+HRESULT CNavigationTool::Render_Cells()
+{
+	if (m_bEnablePicking)
+	{
+		_float4x4		WorldMatrix = m_pCurTerrain->Get_Transform()->Get_WorldMatrix4x4Ref();
+		WorldMatrix.m[3][1] += 0.1f;
+		if (!m_Cells.empty())
 		{
-			pCell->Render();
+			m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW));
+			m_pShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ));
+
+			m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);
+			_float4 vColor = _float4(0.f, 1.f, 0.f, 1.f);
+
+			m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
+
+			m_pShader->Begin(0);
+
+			for (auto& pCell : m_Cells)
+			{
+				pCell->Render();
+			}
+
+			if (m_iSelectedCellIndex != -1)
+			{
+				//_float4x4		WorldMatrix = m_pCurTerrain->Get_Transform()->Get_WorldMatrix4x4Ref();
+				WorldMatrix.m[3][1] += 0.1f;
+
+				m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);
+
+				vColor = _float4(1.f, 0.f, 0.f, 1.f);
+
+				m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
+
+				m_pShader->Begin(0);
+				m_Cells[m_iSelectedCellIndex]->Render();
+			}
 		}
 	}
 
@@ -65,13 +113,13 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 {
 	ImGui::Begin("NaviMesh Tools", &m_pWindowData->ShowNavigationMenu, NULL);
 
-	ImGui::SeparatorText("Navigation Cells");
-
-	Text("!!Check your other picking variables!!");
-	Text("Should be false before making navigation cells\n");
-	Text("Before Starting, Load all Terrain and Objects");
+	ImGui::Separator();
 
 	Checkbox("Start Picking", &m_bEnablePicking);
+	Text("!!Check your other picking variables!!");
+	Text("Should be false before making navigation cells");
+	Text("\nBefore Starting, Load all Terrain and Objects");
+
 	if (m_bEnablePicking && m_pCurTerrain == nullptr && m_pObjectList == nullptr)
 	{
 		m_pCurTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Terrain"), 0));
@@ -79,6 +127,7 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 		{
 			m_bEnablePicking = false;
 			MSG_BOX("땅이 없는데 어떻게 찍지용");
+			End();
 			return E_FAIL;
 		}
 
@@ -88,6 +137,7 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 			m_bEnablePicking = false;
 			m_pCurTerrain = nullptr;
 			MSG_BOX("터레인은 있는데 버퍼를 못가져왔다고?");
+			End();
 			return E_FAIL;
 		}
 
@@ -97,6 +147,7 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 			m_bEnablePicking = false;
 			m_pCurTerrain = nullptr;
 			MSG_BOX("님아 오브젝트도 불러주세용");
+			End();
 			return E_FAIL;
 
 		}
@@ -106,25 +157,47 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 			m_bEnablePicking = false;
 			m_pCurTerrain = nullptr;
 			MSG_BOX("레이어가 잇는데 리스트를 못가져왔다고??");
+			End();
 			return E_FAIL;
 		}
 	}
-
-	if (ImGui::RadioButton("Pick Meshes", m_isTerrainPicking == false)) {
-		m_isTerrainPicking = false;
+	Separator();
+	Text("Shift + Q / W / E");
+	if (ImGui::RadioButton("Pick Terrain", m_ePickingType == TYPE_TERRIAN)) {
+		m_ePickingType = TYPE_TERRIAN;
 	}
-	if (ImGui::RadioButton("Pick Terrain", m_isTerrainPicking)) {
-		m_isTerrainPicking = true;
+	if (ImGui::RadioButton("Pick Meshes", m_ePickingType == TYPE_MESH)) {
+		m_ePickingType = TYPE_MESH;
+	}
+	if (ImGui::RadioButton("Pick Cell", m_ePickingType == TYPE_CELL)) {
+		m_ePickingType = TYPE_CELL;
 	}
 
-	if (m_isTerrainPicking)
+	switch (m_ePickingType)
 	{
+	case Client::CNavigationTool::TYPE_TERRIAN:
 		Pick_Terrain();
-	}
-	else
-	{
+		break;
+	case Client::CNavigationTool::TYPE_MESH:
 		Pick_Objects();
+		break;
+	case Client::CNavigationTool::TYPE_CELL:
+		Pick_Cells();
+		break;
+	default:
+		break;
 	}
+
+	Separator();
+	if (Button("Save Navi"))
+	{
+
+	}
+	if (Button("Load Navi"))
+	{
+
+	}
+
 
 	End();
 	return S_OK;
@@ -140,14 +213,6 @@ HRESULT CNavigationTool::Pick_Terrain()
 		{
 			if (MOUSE_DOWN(DIM::LBUTTON))
 			{
-				// Terrain 찾기
-				if (nullptr == m_pCurTerrain)
-					return E_FAIL;
-
-				// 버텍스와 인덱스 정보 가져오기
-				if (nullptr == m_pCurTerrainBuffer)
-					return E_FAIL;
-
 				const _float3* pVertices = m_pCurTerrainBuffer->Get_VertexPositions();
 				const _uint* pIndices = m_pCurTerrainBuffer->Get_Indices();
 				_uint iNumIndices = m_pCurTerrainBuffer->Get_NumIndices();
@@ -156,13 +221,14 @@ HRESULT CNavigationTool::Pick_Terrain()
 				_matrix WorldMatrix = m_pCurTerrain->Get_Transform()->Get_WorldMatrix();
 
 				_float3 fPick = {};
-
+				_float fDist = {};
 				// 피킹된 위치 저장
-				if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPick))
+				if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPick, fDist))
 				{
-					m_fPickedPos[m_iCurIndex] = { fPick.x, fPick.y + 0.2f, fPick.z };
-					m_iCurIndex++;
-					if (m_iCurIndex > 2)
+					fPick = Snap_PickedPos(fPick, 0.6f);
+					m_fPickedPos[m_iCurCellIndex] = fPick;
+					m_iCurCellIndex++;
+					if (m_iCurCellIndex > 2)
 					{
 						Make_Cell();
 					}
@@ -177,24 +243,141 @@ HRESULT CNavigationTool::Pick_Objects()
 {
 	if (m_bEnablePicking)
 	{
-		for (auto& pObject : *m_pObjectList)
+		// 마우스 좌클릭 상태 확인
+		ImGuiIO& io = ImGui::GetIO();
+		if (!io.WantCaptureMouse)
 		{
+			if (MOUSE_DOWN(DIM::LBUTTON))
+			{
+				_float3 fClosestPos = {};
+				_float fClosestDist = FLT_MAX;
+				CGameObject* pClosestObject = { nullptr };
+				for (auto& pObject : *m_pObjectList)
+				{
+					CModel* pModel = static_cast<CModel*>(static_cast<CMapObject*>(pObject)->Get_Component(TEXT("Com_Model")));
+					
+					auto pMeshes = pModel->Get_Meshes();
 
+					for (auto& pMesh : *pMeshes)
+					{
+						const _float3* pVertices = pMesh->Get_VertexPositions();
+						const _uint* pIndices = pMesh->Get_Indices();
+						_uint iNumIndices = pMesh->Get_NumIndices();
+						_matrix WorldMatrix = pObject->Get_Transform()->Get_WorldMatrix();
+						// 월드 행렬 가져오기
+
+						_float3 fPick = {};
+						_float fDist = {};
+						// 피킹된 위치 저장
+						if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPick, fDist))
+						{
+							cout << "\npicked Object : " << WStringToString(pObject->Get_VIBufferTag()) << endl;
+							cout << "Distance : " << fDist << endl;
+							if (fDist < fClosestDist)
+							{
+								fClosestDist = fDist;
+								fClosestPos = fPick;
+								pClosestObject = pObject;
+							}
+						}
+					}
+				}
+				if (fClosestDist < 0.f)
+					return S_OK;
+
+				/*가까운놈만 걸러야*/
+				fClosestPos = Snap_PickedPos(fClosestPos, 0.5f);
+				m_fPickedPos[m_iCurCellIndex] = fClosestPos;
+				m_iCurCellIndex++;
+				if (m_iCurCellIndex > 2)
+				{
+					Make_Cell();
+				}
+			}
 		}
 	}
 
 	return S_OK;
 }
 
+HRESULT CNavigationTool::Pick_Cells()
+{
+	if (m_bEnablePicking)
+	{
+		for (auto& pCell : m_Cells)
+		{
+			// 마우스 좌클릭 상태 확인
+			ImGuiIO& io = ImGui::GetIO();
+			if (!io.WantCaptureMouse)
+			{
+				if (MOUSE_DOWN(DIM::LBUTTON))
+				{
+					const _float3* pVertices = m_pCurTerrainBuffer->Get_VertexPositions();
+					const _uint* pIndices = m_pCurTerrainBuffer->Get_Indices();
+					_uint iNumIndices = m_pCurTerrainBuffer->Get_NumIndices();
+
+					// 월드 행렬 가져오기
+					_matrix WorldMatrix = m_pCurTerrain->Get_Transform()->Get_WorldMatrix();
+
+					_float3 fPick = {};
+					_float fDist = {};
+
+					// 피킹된 위치 저장
+					if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPick, fDist))
+					{
+						// 로컬로 옮겨줌, 기준 월드 행렬은 터레인인거로
+						_vector		vLocalPos = XMVector3TransformCoord(XMLoadFloat3(&fPick), XMMatrixInverse(nullptr, m_pCurTerrain->Get_Transform()->Get_WorldMatrix()));
+
+						_int		iNeighborIndex = { -1 };
+						for (_int i = 0; i < m_Cells.size(); i++)
+						{
+							if (true == m_Cells[i]->isIn(XMLoadFloat3(&fPick), &iNeighborIndex))
+							{
+								m_iSelectedCellIndex = i;
+								break; // 셀 안에 있으면 걍 트루
+							}
+						}
+
+
+						/* 뭐 적으려 했는데 기억 안나서 비움 */
+
+
+					}
+				}
+			}
+		}
+	}
+	return S_OK;
+}
+
+
+void CNavigationTool::EnsureClockwise(_float3& a, _float3& b, _float3& c)
+{
+	// 2D 외적: (bx - ax)*(cz - az) - (cx - ax)*(bz - az)
+	_float ab_x = b.x - a.x;
+	_float ab_z = b.z - a.z;
+	_float ac_x = c.x - a.x;
+	_float ac_z = c.z - a.z;
+
+	_float cross = ab_x * ac_z - ac_x * ab_z;
+
+	if (cross > 0.f)
+	{
+		swap(b, c);
+	}
+}
+
 HRESULT CNavigationTool::Make_Cell()
 {
+	EnsureClockwise(m_fPickedPos[0], m_fPickedPos[1], m_fPickedPos[2]);
+
 	CCell* pCell = CCell::Create(m_pDevice, m_pContext, m_fPickedPos, m_Cells.size());
 	if (nullptr == pCell)
 		return E_FAIL;
 
 	m_Cells.push_back(pCell);
 
-	m_iCurIndex = 0;
+	m_iCurCellIndex = 0;
 	for (auto& vPos : m_fPickedPos)
 		vPos = { 0.f, 0.f, 0.f };
 
@@ -203,12 +386,74 @@ HRESULT CNavigationTool::Make_Cell()
 
 HRESULT CNavigationTool::Save_Navigation()
 {
+
+
 	return S_OK;
 }
 
 HRESULT CNavigationTool::Load_Navigation()
 {
 	return S_OK;
+}
+
+_float3 CNavigationTool::Snap_PickedPos(const _float3& vPos, _float fSnapRadius)
+{
+	_float closestDistSq = fSnapRadius * fSnapRadius;
+	const _float3* closestPoint = nullptr;
+
+	for (auto& pCell : m_Cells)
+	{
+		for (_uint i = 0; i < 3; i++)
+		{
+			_float3 vCellPoint = {};
+			XMStoreFloat3(&vCellPoint, pCell->Get_Point(static_cast<CCell::POINT>(i)));
+
+			_float distSq =
+				(vCellPoint.x - vPos.x) * (vCellPoint.x - vPos.x) +
+				(vCellPoint.y - vPos.y) * (vCellPoint.y - vPos.y) +
+				(vCellPoint.z - vPos.z) * (vCellPoint.z - vPos.z);
+
+			if (distSq <= closestDistSq)
+			{
+				return vCellPoint;
+				closestDistSq = distSq;
+				closestPoint = &vCellPoint;
+			}
+		}
+	}
+	return vPos;
+	return closestPoint != nullptr ? *closestPoint : vPos;
+
+}
+
+void CNavigationTool::Key_Input()
+{
+	if (m_ePickingType == TYPE_CELL && m_iSelectedCellIndex != -1)
+	{
+		if (KEY_DOWN(DIK_DELETE))
+		{
+			auto iter = m_Cells.begin() + m_iSelectedCellIndex;
+			Safe_Release(*iter);
+			m_Cells.erase(iter);
+			m_iSelectedCellIndex = -1;
+		}
+	}
+
+	if (KEY_PRESSING(DIK_LSHIFT))
+	{
+		if (KEY_DOWN(DIK_Q))
+		{
+			m_ePickingType = TYPE_TERRIAN;
+		}
+		if (KEY_DOWN(DIK_W))
+		{
+			m_ePickingType = TYPE_MESH;
+		}
+		if (KEY_DOWN(DIK_E))
+		{
+			m_ePickingType = TYPE_CELL;
+		}
+	}
 }
 
 CNavigationTool* CNavigationTool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
@@ -244,4 +489,6 @@ void CNavigationTool::Free()
 
 	for (auto& pCell : m_Cells)
 		Safe_Release(pCell);
+
+	Safe_Release(m_pShader);
 }

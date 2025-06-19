@@ -39,16 +39,15 @@ HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex)
 
 _bool CCell::isIn(_fvector vLocalPos, _int* pNeighborIndex)
 {
-	for (size_t i = 0; i < LINE_END; i++)
+	for (size_t i = 0; i < LINE_END; i++) // 세 변에 대해서 전부 검사를 수행 
 	{
 		_vector		vDir = vLocalPos - XMLoadFloat3(&m_vPoints[i]);
 
 		if (0 < XMVectorGetX(XMVector3Dot(XMVector3Normalize(vDir), XMVector3Normalize(XMLoadFloat3(&m_vNormals[i])))))
-		{
-			*pNeighborIndex = m_iNeighborIndices[i];
+		{ // 검사를 통과하지 못했을 경우 (셀 안에 있지 않을 경우)
+			*pNeighborIndex = m_iNeighborIndices[i]; // 그럼 그 선분에 이웃한 인덱스의 셀로 갔음을 알려줌 (이웃도 없었을 시 -1 반환)
 			return false;
 		}
-			
 	}
 
 	return true;

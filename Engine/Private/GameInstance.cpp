@@ -320,9 +320,9 @@ _bool CGameInstance::Picking(_float3& vPickedPos, const _float3& vPointA, const 
 	return m_pPicking_Manager->Picking(vPickedPos, vPointA, vPointB, vPointC);;
 }
 
-_bool CGameInstance::Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos)
+_bool CGameInstance::Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos, _Out_ _float& fHitDist)
 {
-	return m_pPicking_Manager->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, vOutPickedPos);
+	return m_pPicking_Manager->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, vOutPickedPos, fHitDist);
 }
 CGameObject* CGameInstance::Pick_Object_In_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _float3& fPickedPos)
 {

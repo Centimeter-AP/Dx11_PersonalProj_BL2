@@ -90,12 +90,13 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 
 _bool CNavigation::isMove(_fvector vWorldPos)
 {
+	// 로컬로 옮겨줌, 기준 월드 행렬은 터레인인거로
 	_vector		vLocalPos = XMVector3TransformCoord(vWorldPos, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
 
 	_int		iNeighborIndex = { -1 };
 
 	if (true == m_Cells[m_iIndex]->isIn(vLocalPos, &iNeighborIndex))
-		return true;
+		return true; // 셀 안에 있으면 걍 트루
 
 	else
 	{
@@ -105,19 +106,19 @@ _bool CNavigation::isMove(_fvector vWorldPos)
 
 		else
 		{
-			while (true)
+			while (true) // 진짜 셀 안에 있는 거 확인 될 때 까지 안 가고 버티겠다
 			{
-				if (true == m_Cells[iNeighborIndex]->isIn(vLocalPos, &iNeighborIndex))
+				if (true == m_Cells[iNeighborIndex]->isIn(vLocalPos, &iNeighborIndex)) // 존나검사해
 					break;
 
-				if (-1 == iNeighborIndex)
+				if (-1 == iNeighborIndex) // 없으면 걍 가지마 
 					return false;
 			}
 
-			m_iIndex = iNeighborIndex;
+			m_iIndex = iNeighborIndex; // 이웃잇으면 true반환하면서 내가 위치한 셀의 인덱스 바까줌 .
 
 			/* 이웃이 있다면 */
-			return true;
+			return true; 
 		}
 	}	
 }

@@ -150,10 +150,13 @@ void CObjectTool::Key_Input()
 
 	if (m_pSelectedObj != nullptr)
 	{
-		if (KEY_DOWN(DIK_DELETE))
+		if (m_isGizmoEnable)
 		{
-			m_pSelectedObj->Set_Dead();
-			m_pSelectedObj = nullptr;
+			if (KEY_DOWN(DIK_DELETE))
+			{
+				m_pSelectedObj->Set_Dead();
+				m_pSelectedObj = nullptr;
+			}
 		}
 	}
 }

@@ -66,27 +66,8 @@ void CPicking_Manager::Update()
 
 }
 
-_bool CPicking_Manager::Picking(_float3& vPickedPos, const _float3& A, const _float3& B, const _float3& C)
-{
-    _vector orig = XMLoadFloat3(&m_tRay.vOrigin);
-    _vector dir = XMLoadFloat3(&m_tRay.vDirection);
-    _vector v0 = XMLoadFloat3(&A);
-    _vector v1 = XMLoadFloat3(&B);
-    _vector v2 = XMLoadFloat3(&C);
 
-    float dist = 0.f;
-
-    if (TriangleTests::Intersects(orig, dir, v0, v1, v2, dist))
-    {
-        _vector hitPos = orig + dir * dist;
-        XMStoreFloat3(&vPickedPos, hitPos);
-        return true;
-    }
-
-    return false;
-}
-
-_bool CPicking_Manager::Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices,  _float3& vOutPickedPos)
+_bool CPicking_Manager::Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices, const _uint* pIndices, _uint iNumIndices, _float3& vOutPickedPos, _Out_ _float& fHitDist)
 {
     _float fMinDist = FLT_MAX;
     _bool bHit = false;
@@ -117,10 +98,29 @@ _bool CPicking_Manager::Pick_Mesh(_fmatrix WorldMatrix, const _float3* pVertices
             }
         }
     }
-
+    fHitDist = fMinDist;
     return bHit;
 }
 
+_bool CPicking_Manager::Picking(_float3& vPickedPos, const _float3& A, const _float3& B, const _float3& C)
+{
+    _vector orig = XMLoadFloat3(&m_tRay.vOrigin);
+    _vector dir = XMLoadFloat3(&m_tRay.vDirection);
+    _vector v0 = XMLoadFloat3(&A);
+    _vector v1 = XMLoadFloat3(&B);
+    _vector v2 = XMLoadFloat3(&C);
+
+    float dist = 0.f;
+
+    if (TriangleTests::Intersects(orig, dir, v0, v1, v2, dist))
+    {
+        _vector hitPos = orig + dir * dist;
+        XMStoreFloat3(&vPickedPos, hitPos);
+        return true;
+    }
+
+    return false;
+}
 CGameObject* CPicking_Manager::Pick_Object_In_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _float3& fPickedPos)
 {
     CLayer* pLayer = m_pGameInstance->Find_Layer(iLevelIndex, strLayerTag);
@@ -147,7 +147,8 @@ CGameObject* CPicking_Manager::Pick_Object_In_Layer(_uint iLevelIndex, const _ws
                 // 월드 행렬 가져오기
                 _matrix WorldMatrix = pObject->Get_Transform()->Get_WorldMatrix();
                 // 피킹된 위치 저장
-                if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPickedPos))
+                _float fDist = {};
+                if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPickedPos, fDist))
                 {
                     return pObject;
                 }
