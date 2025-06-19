@@ -187,15 +187,23 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 	default:
 		break;
 	}
-
+	Separator();
+	if (Button("Make Terrain buffer to NaviMesh"))
+	{
+		Make_Terrain_Navimesh();
+	}
+	//if (Button("SetUp_Neighbors"))
+	//{
+	//	SetUp_Neighbors();
+	//}
 	Separator();
 	if (Button("Save Navi"))
 	{
-
+		Save_Navigation();
 	}
 	if (Button("Load Navi"))
 	{
-
+		Load_Navigation();
 	}
 
 
@@ -303,46 +311,39 @@ HRESULT CNavigationTool::Pick_Objects()
 HRESULT CNavigationTool::Pick_Cells()
 {
 	if (m_bEnablePicking)
-	{
-		for (auto& pCell : m_Cells)
+	{			
+		// 마우스 좌클릭 상태 확인
+		ImGuiIO& io = ImGui::GetIO();
+		if (!io.WantCaptureMouse)
 		{
-			// 마우스 좌클릭 상태 확인
-			ImGuiIO& io = ImGui::GetIO();
-			if (!io.WantCaptureMouse)
+			if (MOUSE_DOWN(DIM::LBUTTON))
 			{
-				if (MOUSE_DOWN(DIM::LBUTTON))
+				const _float3* pVertices = m_pCurTerrainBuffer->Get_VertexPositions();
+				const _uint* pIndices = m_pCurTerrainBuffer->Get_Indices();
+				_uint iNumIndices = m_pCurTerrainBuffer->Get_NumIndices();
+
+				// 월드 행렬 가져오기
+				_matrix WorldMatrix = m_pCurTerrain->Get_Transform()->Get_WorldMatrix();
+
+				_float3 fPick = {};
+				_float fDist = {};
+
+				// 피킹된 위치 저장
+				if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPick, fDist))
 				{
-					const _float3* pVertices = m_pCurTerrainBuffer->Get_VertexPositions();
-					const _uint* pIndices = m_pCurTerrainBuffer->Get_Indices();
-					_uint iNumIndices = m_pCurTerrainBuffer->Get_NumIndices();
+					// 로컬로 옮겨줌, 기준 월드 행렬은 터레인인거로
+					_vector		vLocalPos = XMVector3TransformCoord(XMLoadFloat3(&fPick), XMMatrixInverse(nullptr, m_pCurTerrain->Get_Transform()->Get_WorldMatrix()));
 
-					// 월드 행렬 가져오기
-					_matrix WorldMatrix = m_pCurTerrain->Get_Transform()->Get_WorldMatrix();
-
-					_float3 fPick = {};
-					_float fDist = {};
-
-					// 피킹된 위치 저장
-					if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, fPick, fDist))
+					_int		iNeighborIndex = { -1 };
+					for (_int i = 0; i < m_Cells.size(); i++)
 					{
-						// 로컬로 옮겨줌, 기준 월드 행렬은 터레인인거로
-						_vector		vLocalPos = XMVector3TransformCoord(XMLoadFloat3(&fPick), XMMatrixInverse(nullptr, m_pCurTerrain->Get_Transform()->Get_WorldMatrix()));
-
-						_int		iNeighborIndex = { -1 };
-						for (_int i = 0; i < m_Cells.size(); i++)
-						{
-							if (true == m_Cells[i]->isIn(XMLoadFloat3(&fPick), &iNeighborIndex))
-							{
-								m_iSelectedCellIndex = i;
-								break; // 셀 안에 있으면 걍 트루
-							}
+						if (true == m_Cells[i]->isIn(XMLoadFloat3(&fPick), &iNeighborIndex))
+						{      
+							m_iSelectedCellIndex = i;
+							break; // 셀 안에 있으면 걍 트루
 						}
-
-
-						/* 뭐 적으려 했는데 기억 안나서 비움 */
-
-
 					}
+					/* 뭐 적으려 했는데 기억 안나서 비움 */
 				}
 			}
 		}
@@ -384,15 +385,129 @@ HRESULT CNavigationTool::Make_Cell()
 	return S_OK;
 }
 
+HRESULT CNavigationTool::Make_Terrain_Navimesh()
+{
+	const _float3* pVertices = m_pCurTerrainBuffer->Get_VertexPositions();
+	const _uint* pIndices = m_pCurTerrainBuffer->Get_Indices();
+	_uint iNumIndices = m_pCurTerrainBuffer->Get_NumIndices();
+
+	//for (_uint i = 0; i < iNumIndices; i += 3)
+	//{
+	//	m_fPickedPos[0] = pVertices[pIndices[i]];
+	//	m_fPickedPos[1] = pVertices[pIndices[i + 1]];
+	//	m_fPickedPos[2] = pVertices[pIndices[i + 2]];
+
+	//	Make_Cell();
+	//}
+
+	_uint	iIdx = { 0 };
+	_uint	iMul = { 5 };
+
+	for (_uint i = iMul * 4; i < m_pCurTerrainBuffer->Get_NumVerticesZ() - 1 - iMul * 6; i += iMul)
+	{
+		for (_uint j = iMul * 4; j < m_pCurTerrainBuffer->Get_NumVerticesX() - 1 - iMul * 6; j += iMul)
+		{
+			_uint		iIndex = i * m_pCurTerrainBuffer->Get_NumVerticesX() + j;
+
+			_uint		iIndices[4] = {
+				iIndex + m_pCurTerrainBuffer->Get_NumVerticesX() * iMul,
+				iIndex + m_pCurTerrainBuffer->Get_NumVerticesX() * iMul + iMul,
+				iIndex + iMul,
+				iIndex
+			};
+
+			m_fPickedPos[0] = pVertices[iIndices[0]];
+			m_fPickedPos[1] = pVertices[iIndices[1]];
+			m_fPickedPos[2] = pVertices[iIndices[2]];
+			Make_Cell();
+
+			m_fPickedPos[0] = pVertices[iIndices[0]];
+			m_fPickedPos[1] = pVertices[iIndices[2]];
+			m_fPickedPos[2] = pVertices[iIndices[3]];
+			Make_Cell();
+		}
+	}
+
+
+	return S_OK;
+}
+
+void CNavigationTool::SetUp_Neighbors()
+{
+	for (auto& pSourCell : m_Cells)
+	{
+		for (auto& pDestCell : m_Cells)
+		{
+			if (pSourCell == pDestCell)
+				continue;
+
+			if (true == pDestCell->Compare(pSourCell->Get_Point(CCell::POINT_A), pSourCell->Get_Point(CCell::POINT_B)))
+			{
+				pSourCell->Set_Neighbor(CCell::LINE_AB, pDestCell);
+			}
+
+			if (true == pDestCell->Compare(pSourCell->Get_Point(CCell::POINT_B), pSourCell->Get_Point(CCell::POINT_C)))
+			{
+				pSourCell->Set_Neighbor(CCell::LINE_BC, pDestCell);
+			}
+
+			if (true == pDestCell->Compare(pSourCell->Get_Point(CCell::POINT_C), pSourCell->Get_Point(CCell::POINT_A)))
+			{
+				pSourCell->Set_Neighbor(CCell::LINE_CA, pDestCell);
+			}
+		}
+	}
+	return;
+}
+
 HRESULT CNavigationTool::Save_Navigation()
 {
+	ofstream ofs("../Bin/DataFiles/Navigation.dat", ios::binary);
+	if (!ofs.is_open())
+	{
+		MSG_BOX("파일 저장 실패");
+		return E_FAIL;
+	}
+	for (auto& pCell : m_Cells)
+	{
+		for (_uint i = 0; i < 3; i++)
+		{
+			_float3 vCellPoint = {};
+			XMStoreFloat3(&vCellPoint, pCell->Get_Point(static_cast<CCell::POINT>(i)));
 
+			ofs.write(reinterpret_cast<const char*>(&vCellPoint), sizeof(_float3));
+		}
+	}
 
 	return S_OK;
 }
 
 HRESULT CNavigationTool::Load_Navigation()
 {
+	ifstream ifs("../Bin/DataFiles/Navigation.dat", ios::binary);
+
+	if (!ifs.is_open())
+		return E_FAIL;
+
+	for (auto& pCell : m_Cells)
+		Safe_Release(pCell);
+	m_Cells.clear();
+	m_Cells.shrink_to_fit();
+
+	while (true)
+	{
+		_float3 vCellPoint[3] = {};
+
+		if (!ifs.read(reinterpret_cast<char*>(&vCellPoint), sizeof(_float3) * 3))
+			return S_OK;
+
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vCellPoint, m_Cells.size());
+		if (nullptr == pCell)
+			return E_FAIL;
+
+		m_Cells.push_back(pCell);
+	}
+
 	return S_OK;
 }
 
@@ -416,13 +531,13 @@ _float3 CNavigationTool::Snap_PickedPos(const _float3& vPos, _float fSnapRadius)
 			if (distSq <= closestDistSq)
 			{
 				return vCellPoint;
-				closestDistSq = distSq;
-				closestPoint = &vCellPoint;
+				//closestDistSq = distSq;
+				//closestPoint = &vCellPoint;
 			}
 		}
 	}
 	return vPos;
-	return closestPoint != nullptr ? *closestPoint : vPos;
+	//return closestPoint != nullptr ? *closestPoint : vPos;
 
 }
 
@@ -439,17 +554,17 @@ void CNavigationTool::Key_Input()
 		}
 	}
 
-	if (KEY_PRESSING(DIK_LSHIFT))
+	if (KEY_PRESSING(DIK_LCONTROL))
 	{
-		if (KEY_DOWN(DIK_Q))
+		if (KEY_DOWN(DIK_1))
 		{
 			m_ePickingType = TYPE_TERRIAN;
 		}
-		if (KEY_DOWN(DIK_W))
+		if (KEY_DOWN(DIK_2))
 		{
 			m_ePickingType = TYPE_MESH;
 		}
-		if (KEY_DOWN(DIK_E))
+		if (KEY_DOWN(DIK_3))
 		{
 			m_ePickingType = TYPE_CELL;
 		}

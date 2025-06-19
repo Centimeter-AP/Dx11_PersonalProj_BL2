@@ -165,9 +165,9 @@ void CTerrainTool::Height_Update(_float fTimeDelta)
 
 		// 월드 행렬 가져오기
 		_matrix WorldMatrix = pTerrain->Get_Transform()->Get_WorldMatrix();
-
+		_float fDist = {};
 		// 피킹된 위치 저장
-		if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, m_fPickedPos))
+		if (m_pGameInstance->Pick_Mesh(WorldMatrix, pVertices, pIndices, iNumIndices, m_fPickedPos, fDist))
 		{
 			// 브러시 적용
 			if (m_pGameInstance->Get_DIMouseState(DIM::LBUTTON) & 0x80 && m_bBrushEnable)

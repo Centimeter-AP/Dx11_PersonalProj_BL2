@@ -33,6 +33,8 @@ private:
 	HRESULT Pick_Objects();
 	HRESULT Pick_Cells();
 	HRESULT Make_Cell();
+	HRESULT Make_Terrain_Navimesh();
+	void	SetUp_Neighbors();
 	HRESULT Save_Navigation();
 	HRESULT Load_Navigation();
 	
