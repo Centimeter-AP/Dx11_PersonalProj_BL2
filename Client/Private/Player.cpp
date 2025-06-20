@@ -92,7 +92,8 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 #pragma endregion
 
 	Update_State(fTimeDelta);
-	Ride_Terrain();
+	m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
+	//Ride_Terrain();
 	Key_Input(fTimeDelta);
 	Raycast_Object();
 	//Spine3
@@ -149,12 +150,11 @@ HRESULT CPlayer::Render()
 	}
 	
 #ifdef _DEBUG
-	
 	m_pColliderCom->Render();
 
 
-
-
+	if (m_pNavigationCom != nullptr)
+		m_pNavigationCom->Render();
 
 #endif 
 
@@ -264,6 +264,15 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = 32;
+
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+
 
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/1st_Person_Pistol.anim)");
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/1st_Person_Unarmed.anim)");
@@ -273,7 +282,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	// need: collider, sound, maybe gravity?
 
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-
 
 	return S_OK;
 }
@@ -402,6 +410,7 @@ void CPlayer::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pNavigationCom);
 
 
 

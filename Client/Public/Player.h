@@ -7,6 +7,7 @@ NS_BEGIN(Engine)
 class CCollider;
 class CShader;
 class CModel;
+class CNavigation;
 NS_END
 
 NS_BEGIN(Client)
@@ -105,6 +106,7 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
+	CNavigation*		m_pNavigationCom = { nullptr };
 
 private:
 	_float				m_fSensor = {};

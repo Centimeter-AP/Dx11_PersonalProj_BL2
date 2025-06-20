@@ -308,7 +308,10 @@ void CLevel_GamePlay::Key_Input()
 	}
 
 	if (KEY_DOWN(DIK_BACKSLASH))
+	{
 		CCollider::bColliderDraw = !CCollider::bColliderDraw;
+		CNavigation::bNavigationDraw = !CNavigation::bNavigationDraw;
+	}
 
 	if (KEY_DOWN(DIK_F1)) // using free
 	{

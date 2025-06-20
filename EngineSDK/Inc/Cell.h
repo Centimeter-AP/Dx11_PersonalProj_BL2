@@ -24,6 +24,7 @@ public:
 	void Set_Neighbor(LINE eLine, CCell* pCell) {
 		m_iNeighborIndices[eLine] = pCell->m_iIndex;
 	}
+	const _int Get_MyIndex() const { return m_iIndex; }
 
 public:
 	HRESULT Initialize(const _float3* pPoints, _int iIndex);
@@ -45,6 +46,7 @@ private:
 	_float3			m_vNormals[LINE_END] = {};
 	_int			m_iNeighborIndices[LINE_END] = { -1, -1, -1 };
 	_int			m_iIndex = {};
+	_int			m_iCellAttribute = {};
 
 #ifdef _DEBUG
 	class CVIBuffer_Cell* m_pVIBuffer = { nullptr };

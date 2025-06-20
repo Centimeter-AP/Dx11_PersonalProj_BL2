@@ -197,6 +197,11 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 	//	SetUp_Neighbors();
 	//}
 	Separator();
+
+	Text("Current Selected Cell Index");
+	Text(to_string(m_iSelectedCellIndex).c_str());
+
+	Separator();
 	if (Button("Save Navi"))
 	{
 		Save_Navigation();
@@ -205,6 +210,7 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 	{
 		Load_Navigation();
 	}
+	
 
 
 	End();

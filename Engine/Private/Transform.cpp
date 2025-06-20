@@ -78,7 +78,7 @@ void CTransform::Go_Straight(_float fTimeDelta, CCollider* pMyCol, _uint iGroupI
 	Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Straight(_float fTimeDelta)
+void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
@@ -86,38 +86,44 @@ void CTransform::Go_Straight(_float fTimeDelta)
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
 
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+		Set_State(STATE::POSITION, vPosition);
 
-	Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Backward(_float fTimeDelta)
+void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
 
 	vPosition -= XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+		Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Right(_float fTimeDelta)
+void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vRight = Get_State(STATE::RIGHT);
 
 	vPosition += XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
+
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+		Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Left(_float fTimeDelta)
+void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vRight = Get_State(STATE::RIGHT);
 
 	vPosition -= XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
+
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+		Set_State(STATE::POSITION, vPosition);
 }
 
 void CTransform::Go_Straight_Hover(_float fTimeDelta)
@@ -140,15 +146,19 @@ void CTransform::Go_Backward_Hover(_float fTimeDelta)
 	Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance)
+void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance, CNavigation* pNavigation)
 {
 	_vector		vMoveDir = vTarget - Get_State(STATE::POSITION);
 
-	if(fMinDistance <= XMVectorGetX(XMVector3Length(vMoveDir)))
-		Set_State(STATE::POSITION, Get_State(STATE::POSITION) + XMVector3Normalize(vMoveDir) * m_fSpeedPerSec * fTimeDelta);
+	if (fMinDistance <= XMVectorGetX(XMVector3Length(vMoveDir)))
+	{
+		auto pos = Get_State(STATE::POSITION) + XMVector3Normalize(vMoveDir) * m_fSpeedPerSec * fTimeDelta;
+		if (nullptr == pNavigation || true == pNavigation->isMove(pos))
+			Set_State(STATE::POSITION, pos);
+	}
 }
 
-void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta)
+void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigation)
 {
 	// 1. 방향 정규화
     _vector vNormDir = XMVector3Normalize(vDir);
@@ -163,7 +173,7 @@ void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta)
     Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed)
+void CTransform::Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed, CNavigation* pNavigation)
 {
 	// 1. 현재 LOOK 방향
 	_vector vCurrentLook = XMVector3Normalize(Get_State(STATE::LOOK));

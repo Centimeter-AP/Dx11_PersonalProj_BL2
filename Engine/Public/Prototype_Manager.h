@@ -9,7 +9,7 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Model.h"
-
+#include "Navigation.h"
 
 #include "Bounding_AABB.h"
 #include "Bounding_OBB.h"

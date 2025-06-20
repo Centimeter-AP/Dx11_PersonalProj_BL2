@@ -644,10 +644,13 @@ HRESULT CObjectTool::Autosave(_float fTimeDelta)
 
 HRESULT CObjectTool::Save_Objects(path SavePath)
 {
+	auto pLayer = m_pGameInstance->Find_Layer(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_MapObject");
+	if (pLayer == nullptr)
+		return S_OK;
+
 	ofstream ofs(SavePath);
 	json jSave;
 
-	auto pLayer = m_pGameInstance->Find_Layer(ENUM_CLASS(LEVEL::MAPTOOL), L"Layer_MapObject");
 
 	auto& Objects = pLayer->Get_LayerObjectLists();
 	

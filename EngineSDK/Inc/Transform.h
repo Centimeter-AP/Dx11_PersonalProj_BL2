@@ -62,15 +62,15 @@ public:
 	void Scaling(const _float3& vScale);
 public:
 	void Go_Straight(_float fTimeDelta, class CCollider* pMyCol, _uint iGroupID);
-	void Go_Straight(_float fTimeDelta); 
-	void Go_Backward(_float fTimeDelta);
-	void Go_Right(_float fTimeDelta);
-	void Go_Left(_float fTimeDelta);
+	void Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr); 
+	void Go_Backward(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
 	void Go_Straight_Hover(_float fTimeDelta);
 	void Go_Backward_Hover(_float fTimeDelta);
-	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance);
-	void Go_Dir(_fvector vDir, _float fTimeDelta);
-	void Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed);
+	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance, class CNavigation* pNavigation = nullptr);
+	void Go_Dir(_fvector vDir, _float fTimeDelta, class CNavigation* pNavigation = nullptr);
+	void Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed, class CNavigation* pNavigation = nullptr);
 	void Go_Up(_float fTimeDelta);
 	void Go_Down(_float fTimeDelta);
 	void Turn(_fvector vAxis, _float fTimeDelta);
