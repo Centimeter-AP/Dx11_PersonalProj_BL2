@@ -123,13 +123,21 @@ _bool CNavigation::isMove(_fvector vWorldPos)
 	}	
 }
 
-_vector CNavigation::SetUp_Height(_fvector vWorldPos)
+_vector CNavigation::SetUp_Height(_fvector vWorldPos, _float fOffset)
 {
 	_vector		vLocalPos = XMVector3TransformCoord(vWorldPos, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
 
-	vLocalPos = XMVectorSetY(vLocalPos, m_Cells[m_iIndex]->Compute_Height(vLocalPos));
+	vLocalPos = XMVectorSetY(vLocalPos, m_Cells[m_iIndex]->Compute_Height(vLocalPos) + fOffset);
 
 	return XMVector3TransformCoord(vLocalPos, XMLoadFloat4x4(&m_WorldMatrix));
+}
+
+_vector CNavigation::Get_CurCenterPoint()
+{
+	if (!m_Cells.empty() && m_iIndex != -1)
+		return m_Cells[m_iIndex]->Get_CenterPos();
+	else
+		return XMVectorSet(0.f, 0.f, 0.f, 0.f);
 }
 
 #ifdef _DEBUG

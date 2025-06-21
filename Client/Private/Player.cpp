@@ -26,11 +26,10 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	DESC			Desc{};
+	
+	DESC*	pDesc = static_cast<DESC*>(pArg);
+	m_iNavIndex = pDesc->iNavigationIndex;
 
-	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
-	Desc.fSpeedPerSec = PLAYER_DEFAULTSPEED;
-	Desc.szName  = TEXT("Player");
 
 	m_fSensor = XMConvertToRadians(4.f);
 
@@ -48,8 +47,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_PlayerStates()))
 		return E_FAIL;
 
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 20.f, 0.f, 1.f));
-
 	m_pModelCom->Set_Animation(AR_Idle, true, 0.2f);
 	Set_State(STATE_Idle);
 
@@ -57,6 +54,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pModelCom->Play_Animation(0.01f);
 
 	m_iCameraBoneIdx = m_pModelCom->Find_BoneIndex("Camera");
+
+	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CurCenterPoint());
+
 	return S_OK;
 }
 
@@ -92,10 +92,11 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 #pragma endregion
 
 	Update_State(fTimeDelta);
-	m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION)));
+	//m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 3.f));
 	//Ride_Terrain();
 	Key_Input(fTimeDelta);
 	Raycast_Object();
+	m_pGravityCom->Update(fTimeDelta);
 	//Spine3
 }
 
@@ -103,6 +104,7 @@ EVENT CPlayer::Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return EVN_NONE;
+
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -266,10 +268,19 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 
 	/* For.Com_Navigation */
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
-	NaviDesc.iIndex = 32;
-
+	NaviDesc.iIndex = m_iNavIndex; // 32
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+
+	/* For.Com_Gravity */
+	CGravity::DESC	GravityDesc{};
+	GravityDesc.fGravity = -50.f;
+	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
+	GravityDesc.pOwnerTransformCom = m_pTransformCom;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
+		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
 		return E_FAIL;
 
 

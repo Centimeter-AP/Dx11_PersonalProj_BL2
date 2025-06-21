@@ -24,7 +24,7 @@ void CPlayerState_Run_R::Execute(_float fTimeDelta)
 	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 	if (KEY_PRESSING(DIK_D))
 	{
-		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta);
+		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi);
 		if (KEY_PRESSING(DIK_W) || KEY_PRESSING(DIK_S))
 		{
 			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Run);

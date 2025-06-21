@@ -38,31 +38,31 @@ void CPlayerState_Run::Execute(_float fTimeDelta)
 		}
 		else
 		{
-			m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta);
+			m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta, m_pOwnerNavi);
 			if (KEY_PRESSING(DIK_A)){
-				m_pOwner->m_pTransformCom->Go_Left(fTimeDelta);
+				m_pOwner->m_pTransformCom->Go_Left(fTimeDelta, m_pOwnerNavi);
 			}
 			if (KEY_PRESSING(DIK_D)){
-				m_pOwner->m_pTransformCom->Go_Right(fTimeDelta);
+				m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi);
 			}
 			return;
 		}
 	}
 	if (KEY_PRESSING(DIK_W))
 	{
-		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta);
+		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta, m_pOwnerNavi);
 		if (KEY_PRESSING(DIK_LSHIFT)){
 			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Sprint); return;
 		}
 	}
 	if (KEY_PRESSING(DIK_A)){
-		m_pOwner->m_pTransformCom->Go_Left(fTimeDelta);
+		m_pOwner->m_pTransformCom->Go_Left(fTimeDelta, m_pOwnerNavi);
 	}
 	if (KEY_PRESSING(DIK_D)){
-		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta);
+		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi);
 	}
 	if (KEY_PRESSING(DIK_S)){
-		m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta);
+		m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta, m_pOwnerNavi);
 	}
 
 	if (KEY_DOWN(DIK_R))

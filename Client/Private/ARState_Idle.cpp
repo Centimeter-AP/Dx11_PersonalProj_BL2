@@ -4,7 +4,7 @@
 
 void CARState_Idle::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CAssaultRifle::AR_ANIM::Idle), true);
+	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CAssaultRifle::AR_ANIM::Idle), false);
 }
 
 void CARState_Idle::Execute(_float fTimeDelta)

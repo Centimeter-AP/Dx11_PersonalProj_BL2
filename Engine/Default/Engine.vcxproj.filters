@@ -169,6 +169,7 @@
     <ClInclude Include="..\Public\VIBuffer_Cell.h">
       <Filter>01.Utility\04.Components\VIBuffer\Cell</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Gravity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -321,6 +322,7 @@
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
       <Filter>01.Utility\04.Components\VIBuffer\Cell</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Gravity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="00.System">
@@ -493,6 +495,9 @@
     </Filter>
     <Filter Include="01.Utility\04.Components\VIBuffer\Instance">
       <UniqueIdentifier>{79ebc000-8bf7-431f-821a-82a89e86318b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\Gravity">
+      <UniqueIdentifier>{7492533f-6f94-49ca-96cb-1689788df132}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

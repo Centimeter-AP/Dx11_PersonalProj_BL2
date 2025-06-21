@@ -12,6 +12,7 @@ public:
 		: m_pOwner(pOwner),
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
+		//m_pOwnerNavi = m_pOwner->m_pNavigationCom;
 		m_pTarget = m_pOwner->m_pTarget;
 		m_pTargetTransform = m_pTarget->Get_Transform();
 		//Safe_AddRef(m_pGameInstance);
@@ -67,6 +68,7 @@ public:
 
 protected:
 	CSkag*			m_pOwner;
+	//CNavigation*	m_pOwnerNavi = { nullptr };
 	CGameObject*	m_pTarget = { nullptr };
 	CTransform*		m_pTargetTransform = { nullptr };
 

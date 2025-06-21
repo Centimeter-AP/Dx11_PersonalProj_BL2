@@ -90,9 +90,16 @@ _float CCell::Compute_Height(_fvector vLocalPos)
 	return (-vPlane.m128_f32[0] * vLocalPos.m128_f32[0] - vPlane.m128_f32[2] * vLocalPos.m128_f32[2] - vPlane.m128_f32[3]) / vPlane.m128_f32[1];
 
 	// y = (-ax - cz - d) / b
+}
+
+_vector CCell::Get_CenterPos()
+{
+	_vector vPointA = XMLoadFloat3(&m_vPoints[POINT_A]);
+	_vector vPointB = XMLoadFloat3(&m_vPoints[POINT_B]);
+	_vector vPointC = XMLoadFloat3(&m_vPoints[POINT_C]);
 
 
-	
+	return (vPointA + vPointB + vPointC) / 3.f;
 }
 
 #ifdef _DEBUG

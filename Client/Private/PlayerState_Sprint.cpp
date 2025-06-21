@@ -28,15 +28,15 @@ void CPlayerState_Sprint::Execute(_float fTimeDelta)
 	}
 	else
 	{
-		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * m_fSpeedMultiplier);
+		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi);
 
 		if (KEY_PRESSING(DIK_A))
 		{
-			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta * m_fSpeedMultiplier);
+			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi);
 		}
 		if (KEY_PRESSING(DIK_D))
 		{
-			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta * m_fSpeedMultiplier);
+			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi);
 		}
 		if (KEY_PRESSING(DIK_S))
 		{

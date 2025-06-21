@@ -31,6 +31,7 @@ public:
 	_bool isIn(_fvector vLocalPos, _int* pNeighborIndex);
 	_bool Compare(_fvector vSour, _fvector vDest);
 	_float Compute_Height(_fvector vLocalPos);
+	_vector Get_CenterPos();
 
 #ifdef _DEBUG
 public:

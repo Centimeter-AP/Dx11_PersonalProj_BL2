@@ -3,6 +3,9 @@
 #include "AssaultRifle.h"
 #include "Pistol.h"
 
+NS_BEGIN(Engine)
+class CNavigation;
+NS_END
 
 NS_BEGIN(Client) 
 
@@ -15,7 +18,7 @@ public:
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
 		//Safe_AddRef(m_pGameInstance);
-
+		m_pOwnerNavi = m_pOwner->m_pNavigationCom;
 	}
 	virtual ~CPlayerState() = default;
 
@@ -42,6 +45,7 @@ protected:
 
 protected:
 	CPlayer*		m_pOwner;
+	CNavigation*	m_pOwnerNavi = { nullptr };
 	_float			m_fElapsedTime = {};
 	CGameInstance*	m_pGameInstance = { nullptr };
 };

@@ -12,7 +12,7 @@ public:
 		_float			fSpeedPerSec;
 		_float			fRotationPerSec;
 
-		_bool			bHasPreset = { false };
+		_bool			bHasTransformPreset = { false };
 		_float4x4		PresetMatrix = {};
 	}TRANSFORM_DESC;
 

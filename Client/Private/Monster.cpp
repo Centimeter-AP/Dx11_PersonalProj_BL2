@@ -185,6 +185,14 @@ void CMonster::On_Collision(_uint iColID)
 	}
 }
 
+void CMonster::Initialize_BasicStatus()
+{
+	m_iHP = 0.f;
+	m_iMaxHP = 0.f;
+	m_iAttackPower = 0.f;
+	m_iDefense = 0.f;
+}
+
 void CMonster::Free()
 {
 	__super::Free();

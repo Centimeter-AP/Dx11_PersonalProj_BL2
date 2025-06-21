@@ -24,7 +24,8 @@ public:
 
 	void Update(_fmatrix WorldMatrix);
 	_bool isMove(_fvector vWorldPos);
-	_vector SetUp_Height(_fvector vWorldPos);
+	_vector SetUp_Height(_fvector vWorldPos, _float fOffset = 0.f);
+	_vector Get_CurCenterPoint();
 
 #ifdef _DEBUG
 public:

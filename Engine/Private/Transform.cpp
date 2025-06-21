@@ -39,7 +39,7 @@ HRESULT CTransform::Initialize(void* pArg)
 	m_fSpeedPerSec = pDesc->fSpeedPerSec;
 	m_fRotationPerSec = pDesc->fRotationPerSec;
 
-	if (pDesc->bHasPreset)
+	if (pDesc->bHasTransformPreset)
 	{
 		Set_Matrix(XMLoadFloat4x4(&pDesc->PresetMatrix));
 	}

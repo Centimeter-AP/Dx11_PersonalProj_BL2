@@ -71,7 +71,7 @@ protected:
 	void Ride_Terrain(); //임시지형타기..
 
 	virtual void On_Collision(_uint iColID);
-
+	virtual void Initialize_BasicStatus();
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

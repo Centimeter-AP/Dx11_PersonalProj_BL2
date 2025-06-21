@@ -395,7 +395,7 @@ HRESULT CObjectTool::Make_Player()
 		PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
 		PlayerDesc.fSpeedPerSec = 10.f;
 		PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
-		PlayerDesc.bHasPreset = true;
+		PlayerDesc.bHasTransformPreset = true;
 		XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixTranslation(39.f, 0.f, 33.26f));
 		PlayerDesc.szName = TEXT("Player");
 		PlayerDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Siren_Hand");
@@ -598,7 +598,7 @@ HRESULT CObjectTool::Load_Objects(path SavePath)
 		mDesc.pParentObject = nullptr;
 		mDesc.szName = ObjectName;
 		mDesc.strVIBufferTag = ObjectModelName;
-		mDesc.bHasPreset = true;
+		mDesc.bHasTransformPreset = true;
 		mDesc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
 		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
 

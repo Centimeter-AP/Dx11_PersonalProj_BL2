@@ -4,7 +4,7 @@
 
 void CPSTState_Reload_Fast::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPistol::PST_ANIM::R_Hyperion_Fast), false);
+	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPistol::PST_ANIM::R_Jakobs), false);
 }
 
 void CPSTState_Reload_Fast::Execute(_float fTimeDelta)

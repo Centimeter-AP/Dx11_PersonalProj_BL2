@@ -211,7 +211,7 @@ HRESULT CSpiderAnt::Spawn_SpitBullet()
 	auto TailBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iTailBoneIdx)) * m_pTransformCom->Get_WorldMatrix();
 
 	CSpiderAntSpit::DESC SpitDesc = {};
-	SpitDesc.bHasPreset = true;
+	SpitDesc.bHasTransformPreset = true;
 	SpitDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SpitDesc.fSpeedPerSec = 10.f;
 	_vector targetPos = m_pTarget->Get_Transform()->Get_State(STATE::POSITION);

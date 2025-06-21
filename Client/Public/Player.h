@@ -8,6 +8,7 @@ class CCollider;
 class CShader;
 class CModel;
 class CNavigation;
+class CGravity;
 NS_END
 
 NS_BEGIN(Client)
@@ -17,6 +18,7 @@ class CPlayer final : public CGameObject
 public:
 	typedef struct tagPlayerDesc : public CGameObject::DESC
 	{
+		_int				iNavigationIndex = { -1 };
 	}DESC;
 
 	enum PLA_AR {
@@ -27,7 +29,7 @@ public:
 	};
 	enum PLA_PST {
 		PST_Crouch = PLA_AR_END, PST_Draw, PST_Grenade_throw, PST_Holster, PST_Idle, PST_Jump_End, PST_Jump_Idle, PST_Jump_Start, PST_NONE46, PST_NONE47, PST_NONE48, PST_NONE49,
-		PST_R_Hyperion, PST_R_Hyperion_Fast, PST_NONE52, PST_NONE53, PST_NONE54, PST_NONE55, PST_NONE56, PST_NONE57, PST_NONE58, PST_NONE59, PST_NONE60, PST_Run_F = 61, PST_Run_L, PST_Run_R, PST_Sight_Idle, PST_Sight_Jump_End, PST_Sight_Jump_Idle, PST_Sight_Jump_Start,
+		PST_R_Hyperion, PST_R_Hyperion_Fast, PST_R_Jakobs, PST_R_Jakobs_Fast, PST_NONE54, PST_NONE55, PST_NONE56, PST_NONE57, PST_NONE58, PST_NONE59, PST_NONE60, PST_Run_F = 61, PST_Run_L, PST_Run_R, PST_Sight_Idle, PST_Sight_Jump_End, PST_Sight_Jump_Idle, PST_Sight_Jump_Start,
 		PST_Sight_Walk_F, PST_Sprint, PST_Sprint_DualWield, PST_NONE71, PST_NONE72, PST_NONE73, PST_Reload_DualWield, PST_Holster_Fast, PST_Incap_F, PST_NONE77, PST_ADD_Fire_Recoil, PST_ADD_Fire_Revolver_Recoil, PST_PickUp_Equip, PST_Fire_Fan_Recoil, PLA_PST_END
 	};
 	enum PLA_UNARMED {
@@ -106,7 +108,9 @@ private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
+	CGravity*			m_pGravityCom = { nullptr };
 	CNavigation*		m_pNavigationCom = { nullptr };
+	_int				m_iNavIndex = {};
 
 private:
 	_float				m_fSensor = {};

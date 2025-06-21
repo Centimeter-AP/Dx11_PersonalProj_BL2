@@ -67,7 +67,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring strLayerTag)
 	desc.isToolver = false;
 	desc.fRotationPerSec = 0.f;
 	desc.fSpeedPerSec = 0.f;
-	desc.bHasPreset = false;
+	desc.bHasTransformPreset = false;
 	desc.pParentMatrix = nullptr;
 	desc.pParentObject = nullptr;
 	desc.strVIBufferTag = L"";
@@ -112,7 +112,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	RakkDesc.fSpeedPerSec = 9.f;
 	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
-	RakkDesc.bHasPreset = true;
+	RakkDesc.bHasTransformPreset = true;
 	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 13.f, rand()%10 + 40.f));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
@@ -124,7 +124,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	SkagDesc.fSpeedPerSec = 8.f;
 	SkagDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SkagDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Skag");
-	SkagDesc.bHasPreset = true;
+	SkagDesc.bHasTransformPreset = true;
 	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
@@ -144,7 +144,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	SpiderAntDesc.fSpeedPerSec = 7.f;
 	SpiderAntDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SpiderAntDesc.strVIBufferTag = TEXT("Prototype_Component_Model_SpiderAnt");
-	SpiderAntDesc.bHasPreset = true;
+	SpiderAntDesc.bHasTransformPreset = true;
 	XMStoreFloat4x4(&SpiderAntDesc.PresetMatrix, XMMatrixTranslation(60.f, 2.f, 50.f));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
@@ -161,8 +161,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
 	PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	PlayerDesc.fSpeedPerSec = 10.f;
 	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
-	PlayerDesc.bHasPreset = true;
-	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixTranslation(39.f, 2.f, 33.26f));
+	//PlayerDesc.bHasPreset = true;
+	//XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixTranslation(39.f, 2.f, 33.26f));
+	PlayerDesc.iNavigationIndex = 32;
 	PlayerDesc.szName = TEXT("Player");
 	PlayerDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Siren_Hand");
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
@@ -258,7 +259,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_MapObject(const _wstring strLayerTag)
 		mDesc.pParentObject = nullptr;
 		mDesc.szName = ObjectName.data();
 		mDesc.strVIBufferTag = ObjectModelName;
-		mDesc.bHasPreset = true;        
+		mDesc.bHasTransformPreset = true;        
 		mDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 		XMStoreFloat4x4(&mDesc.PresetMatrix, objWorldMat);
 		_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(-90.f);

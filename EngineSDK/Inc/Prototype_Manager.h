@@ -8,6 +8,7 @@
 #include "Collider.h"
 #include "Texture.h"
 #include "Shader.h"
+#include "Gravity.h"
 #include "Model.h"
 #include "Navigation.h"
 
