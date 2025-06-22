@@ -7,6 +7,8 @@ NS_BEGIN(Engine)
 class CCollider;
 class CShader;
 class CModel;
+class CNavigation;
+class CGravity;
 NS_END
 
 NS_BEGIN(Client)
@@ -16,8 +18,8 @@ class CMonster abstract : public CGameObject
 public:
 	typedef struct tagMonsterDesc : public CGameObject::DESC
 	{
-		_float3 vPosition = {};
-		_bool	bActive = { true };
+		_bool				bActive = { true };
+		_int				iNavigationIndex = { -1 };
 
 	}DESC;
 
@@ -40,6 +42,8 @@ public:
 protected:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
+	CGravity*			m_pGravityCom = { nullptr };
+	CNavigation*		m_pNavigationCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
 	CCollider*			m_pColliderHeadCom = { nullptr };
 
@@ -61,17 +65,18 @@ protected:
 	CCollider*			m_LastCollidedCollider = { nullptr };
 	_uint				m_iHeadBoneIdx = {};
 
+	_int				m_iNavIndex = {};
 
 protected:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Bind_ShaderResources();
+	virtual void Initialize_BasicStatus(_int iLevel);
 
 	EVENT Death_Delay(_float fTimeDelta);
 
 	void Ride_Terrain(); //임시지형타기..
 
 	virtual void On_Collision(_uint iColID);
-	virtual void Initialize_BasicStatus();
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

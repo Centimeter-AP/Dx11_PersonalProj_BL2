@@ -17,8 +17,8 @@ public:
 		: m_pOwner(pOwner),
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
-		//Safe_AddRef(m_pGameInstance);
 		m_pOwnerNavi = m_pOwner->m_pNavigationCom;
+		m_pIsGrounded = m_pOwner->m_pGravityCom->Is_Grounded_Ptr();
 	}
 	virtual ~CPlayerState() = default;
 
@@ -34,18 +34,19 @@ public:
 protected:
 	void Default_Movements(_float fTimeDelta) {
 		if (KEY_PRESSING(DIK_W))
-			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta);
+			m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
 		if (KEY_PRESSING(DIK_S))
-			m_pOwner->m_pTransformCom->Go_Backward(fTimeDelta);
+			m_pOwner->m_pTransformCom->Go_Backward_Hover(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
 		if (KEY_PRESSING(DIK_A))
-			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta);
+			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
 		if (KEY_PRESSING(DIK_D))
-			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta);
+			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
 	}
 
 protected:
 	CPlayer*		m_pOwner;
 	CNavigation*	m_pOwnerNavi = { nullptr };
+	const _bool*	m_pIsGrounded = { nullptr };
 	_float			m_fElapsedTime = {};
 	CGameInstance*	m_pGameInstance = { nullptr };
 };
@@ -142,6 +143,7 @@ public:
 	virtual void Free() override { __super::Free(); }
 private:
 	_bool	m_isJumping = { false };
+	_bool	m_isLanded = { false };
 };
 
 class CPlayerState_Fire final : public CPlayerState

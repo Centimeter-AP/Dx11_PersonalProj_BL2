@@ -24,7 +24,7 @@ void CPlayerState_Run_R::Execute(_float fTimeDelta)
 	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 	if (KEY_PRESSING(DIK_D))
 	{
-		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi);
+		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
 		if (KEY_PRESSING(DIK_W) || KEY_PRESSING(DIK_S))
 		{
 			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Run);
@@ -44,6 +44,13 @@ void CPlayerState_Run_R::Execute(_float fTimeDelta)
 	if (MOUSE_DOWN(DIM::LBUTTON))
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Fire); return;
+	}
+	if (KEY_DOWN(DIK_SPACE))
+	{
+		if (m_pOwner->m_pGravityCom->Is_Grounded())
+		{
+			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Jump); return;
+		}
 	}
 }
 

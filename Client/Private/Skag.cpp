@@ -2,6 +2,10 @@
 #include "SkagState.h"
 #include "GameInstance.h"
 
+constexpr float BASE_HP = 100.f;
+constexpr float BASE_ATK = 15.f;
+constexpr float GROWTH_RATE = 1.13f; // 13% ¼ºÀå
+
 CSkag::CSkag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster { pDevice, pContext }
 {
@@ -24,13 +28,14 @@ HRESULT CSkag::Initialize(void* pArg)
  	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	Initialize_BasicStatus(2);
+
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_SkagStates()))
 		return E_FAIL;
 	
-	//m_pModelCom->Set_Animation(RAKK_ANIM::Flight_BankL, true);
 	m_eCurState = STATE_Idle;
 	Set_State(m_eCurState);
 
@@ -39,6 +44,8 @@ HRESULT CSkag::Initialize(void* pArg)
 
 	m_iSpineBoneIdx = m_pModelCom->Find_BoneIndex("Spine1");
 	m_iHeadBoneIdx = m_pModelCom->Find_BoneIndex("Head");
+
+	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CurCenterPoint());
 	return S_OK;
 }
 
@@ -58,6 +65,7 @@ void CSkag::Priority_Update(_float fTimeDelta)
 	}
 #pragma endregion
 	Update_State(fTimeDelta);
+	m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 0.1f));
 
 }
 
@@ -76,6 +84,7 @@ EVENT CSkag::Update(_float fTimeDelta)
 	auto HeadBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iHeadBoneIdx));
 	m_pColliderCom->Update(SpineBoneMat * m_pTransformCom->Get_WorldMatrix());
 	m_pColliderHeadCom->Update(HeadBoneMat * m_pTransformCom->Get_WorldMatrix());
+
 	return __super::Update(fTimeDelta);
 }
 
@@ -109,6 +118,9 @@ HRESULT CSkag::Render()
 	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderCom->Render();
 	m_pColliderHeadCom->Render();
+
+	if (m_pNavigationCom != nullptr)
+		m_pNavigationCom->Render();
 
 	return S_OK;
 }
@@ -152,6 +164,23 @@ HRESULT CSkag::Ready_Components(void* pArg)
 		TEXT("Com_ColliderHead"), reinterpret_cast<CComponent**>(&m_pColliderHeadCom), &SphereDesc)))
 		return E_FAIL;
 
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = m_iNavIndex;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	/* For.Com_Gravity */
+	CGravity::DESC	GravityDesc{};
+	GravityDesc.fGravity = -40.f;
+	GravityDesc.fJumpPower = 25.f;
+	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
+	GravityDesc.pOwnerTransformCom = m_pTransformCom;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
+		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -172,6 +201,17 @@ HRESULT CSkag::Ready_SkagStates()
 	m_pStates[SKAG_STATE::STATE_Run] = new CSkagState_Run(this);
 	m_pCurState = m_pStates[SKAG_STATE::STATE_Idle];
 	return S_OK;
+}
+
+
+void CSkag::Initialize_BasicStatus(_int iLevel)
+{
+	m_iMaxHP = BASE_HP * powf(GROWTH_RATE, iLevel - 1);
+	m_iHP = m_iMaxHP = m_pGameInstance->AddVariance(m_iMaxHP, 0.15f);
+
+	m_iAttackPower = BASE_ATK * powf(GROWTH_RATE, iLevel - 1);
+	m_iAttackPower = m_pGameInstance->AddVariance(m_iAttackPower, 0.15f);
+	m_iDefense = 0.f;
 }
 
 void CSkag::Set_State(SKAG_STATE eState)

@@ -13,6 +13,7 @@ class CNavigationTool final : public CImGuiTool
 {
 private:
 	enum PICKTYPE { TYPE_TERRIAN, TYPE_MESH, TYPE_CELL, TYPE_END };
+	enum CELLATTRIBUTE { ATT_NORMAL, ATT_JUMP }; 
 private:
 	CNavigationTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CNavigationTool(const CNavigationTool& Prototype);
@@ -37,6 +38,8 @@ private:
 	void	SetUp_Neighbors();
 	HRESULT Save_Navigation();
 	HRESULT Load_Navigation();
+	HRESULT Load_Past_Navigation();
+
 	
 	_float3 Snap_PickedPos(const _float3& vPos, _float fSnapRadius);
 
@@ -49,7 +52,7 @@ private:
 
 	_bool		m_bEnablePicking = { false };
 	PICKTYPE	m_ePickingType = {};
-
+	CELLATTRIBUTE m_eCellAttribute = { ATT_NORMAL };
 	_float3		m_fPickedPos[3] = {};
 	_uint		m_iCurCellIndex = {};
 	_int		m_iSelectedCellIndex = { -1 };

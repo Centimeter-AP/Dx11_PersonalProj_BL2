@@ -39,13 +39,15 @@ public:
 
 public:
 	_bool Is_Grounded() const { return m_isGrounded; }
+	//사기행각
+	const _bool* Is_Grounded_Ptr() { return &m_isGrounded; }
 	void Jump();
 
 private:
 	class CNavigation*		m_pNavigationCom = { nullptr };
 	class CTransform*		m_pTransformCom = { nullptr };
 
-	_bool					m_isGrounded = { false };
+	_bool					m_isGrounded = { true };
 	_float					m_fGravity = {};
 	_float					m_fVerticalVelocity = {};
 	_float					m_fJumpPower = {};

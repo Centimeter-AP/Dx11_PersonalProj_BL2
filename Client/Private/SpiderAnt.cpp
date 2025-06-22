@@ -41,6 +41,8 @@ HRESULT CSpiderAnt::Initialize(void* pArg)
 	m_iSpineBoneIdx = m_pModelCom->Find_BoneIndex("Spine1");
 	m_iHeadBoneIdx = m_pModelCom->Find_BoneIndex("Head");
 	m_iTailBoneIdx = m_pModelCom->Find_BoneIndex("Tail6");
+
+	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CurCenterPoint());
 	return S_OK;
 }
 
@@ -60,6 +62,7 @@ void CSpiderAnt::Priority_Update(_float fTimeDelta)
 	}
 #pragma endregion
 	Update_State(fTimeDelta);
+	m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 0.1f));
 
 }
 
@@ -117,6 +120,9 @@ HRESULT CSpiderAnt::Render()
 	m_pColliderCom->Render();
 	m_pColliderHeadCom->Render();
 
+	if (m_pNavigationCom != nullptr)
+		m_pNavigationCom->Render();
+
 	return S_OK;
 }
 
@@ -157,6 +163,23 @@ HRESULT CSpiderAnt::Ready_Components(void* pArg)
 	/* For.Com_HeadCollider */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_ColliderHead"), reinterpret_cast<CComponent**>(&m_pColliderHeadCom), &SphereDesc)))
+		return E_FAIL;
+
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = m_iNavIndex;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	/* For.Com_Gravity */
+	CGravity::DESC	GravityDesc{};
+	GravityDesc.fGravity = -40.f;
+	GravityDesc.fJumpPower = 25.f;
+	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
+	GravityDesc.pOwnerTransformCom = m_pTransformCom;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
+		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
 		return E_FAIL;
 
 	return S_OK;

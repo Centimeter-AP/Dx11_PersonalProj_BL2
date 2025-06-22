@@ -9,7 +9,7 @@ CCell::CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	Safe_AddRef(m_pContext);
 }
 
-HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex)
+HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex, ATTRIBUTE eAttribute)
 {
 	m_iIndex = iIndex;
 
@@ -26,6 +26,7 @@ HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex)
 	vLine = XMLoadFloat3(&m_vPoints[POINT_A]) - XMLoadFloat3(&m_vPoints[POINT_C]);
 	m_vNormals[LINE_CA] = _float3(vLine.m128_f32[2] * -1.f, 0.f, vLine.m128_f32[0]);
 
+	m_eAttribute = eAttribute;
 
 #ifdef _DEBUG
 	m_pVIBuffer = CVIBuffer_Cell::Create(m_pDevice, m_pContext, pPoints);
@@ -112,11 +113,11 @@ HRESULT CCell::Render()
 }
 #endif
 
-CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex)
+CCell* CCell::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex, ATTRIBUTE eAttribute)
 {
 	CCell* pInstance = new CCell(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize(pPoints, iIndex)))
+	if (FAILED(pInstance->Initialize(pPoints, iIndex, eAttribute)))
 	{
 		MSG_BOX("Failed to Created : CCell");
 		Safe_Release(pInstance);

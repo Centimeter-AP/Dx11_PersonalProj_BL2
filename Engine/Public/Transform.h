@@ -58,19 +58,20 @@ public:
 
 
 public:
+	void Go_Straight(_float fTimeDelta, class CCollider* pMyCol, _uint iGroupID); //deprecated
 	void Scaling(_float fX = 1.f, _float fY = 1.f, _float fZ = 1.f);
 	void Scaling(const _float3& vScale);
+
 public:
-	void Go_Straight(_float fTimeDelta, class CCollider* pMyCol, _uint iGroupID);
-	void Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr); 
-	void Go_Backward(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Straight_Hover(_float fTimeDelta);
-	void Go_Backward_Hover(_float fTimeDelta);
-	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance, class CNavigation* pNavigation = nullptr);
-	void Go_Dir(_fvector vDir, _float fTimeDelta, class CNavigation* pNavigation = nullptr);
-	void Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed, class CNavigation* pNavigation = nullptr);
+	void Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true); 
+	void Go_Backward(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
+	void Go_Right(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
+	void Go_Left(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
+	void Go_Straight_Hover(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
+	void Go_Backward_Hover(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
+	void Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
+	void Go_Dir(_fvector vDir, _float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
+	void Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed, class CNavigation* pNavigation = nullptr, _bool isGrounded = true);
 	void Go_Up(_float fTimeDelta);
 	void Go_Down(_float fTimeDelta);
 	void Turn(_fvector vAxis, _float fTimeDelta);
@@ -80,7 +81,10 @@ public:
 public:
 	void LookWithLook(_fvector vLook);
 	void LookAt(_fvector vAt);
+	void LookAt_NoY(_fvector vAt);
 	void LookAtLerp(_fvector vAt, _float fTimeDelta, _float fLerpSpeed);
+	void LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpeed);
+
 	
 
 public:

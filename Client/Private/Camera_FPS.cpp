@@ -78,8 +78,8 @@ EVENT CCamera_FPS::Update(_float fTimeDelta)
 	if (!m_isUsing)
 		return EVN_NONE;
 
-	m_pTransformCom->Go_Straight(fTimeDelta);
-	m_pTransformCom->Go_Left(fTimeDelta);
+	//m_pTransformCom->Go_Straight(fTimeDelta);
+	//m_pTransformCom->Go_Left(fTimeDelta);
 	return EVN_NONE;
 }
 

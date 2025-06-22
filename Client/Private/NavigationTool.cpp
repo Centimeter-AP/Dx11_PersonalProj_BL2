@@ -72,20 +72,33 @@ HRESULT CNavigationTool::Render_Cells()
 	{
 		_float4x4		WorldMatrix = m_pCurTerrain->Get_Transform()->Get_WorldMatrix4x4Ref();
 		WorldMatrix.m[3][1] += 0.1f;
+		_float4x4		SlightlyUpMat = WorldMatrix;
+		SlightlyUpMat.m[3][1] += 0.05f;
 		if (!m_Cells.empty())
 		{
 			m_pShader->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW));
 			m_pShader->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ));
 
 			m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);
+
 			_float4 vColor = _float4(0.f, 1.f, 0.f, 1.f);
-
-			m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
-
-			m_pShader->Begin(0);
 
 			for (auto& pCell : m_Cells)
 			{
+				if (pCell->Get_Attribute() == CCell::ATT_NORMAL)
+				{
+					m_pShader->Bind_Matrix("g_WorldMatrix", &WorldMatrix);
+					vColor = _float4(0.f, 1.f, 0.f, 1.f);
+				}
+				else if (pCell->Get_Attribute() == CCell::ATT_JUMPONLY)
+				{
+					m_pShader->Bind_Matrix("g_WorldMatrix", &SlightlyUpMat);
+					vColor = _float4(0.f, 0.f, 1.f, 1.f);
+				}
+
+				m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
+
+				m_pShader->Begin(0);
 				pCell->Render();
 			}
 
@@ -192,14 +205,20 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 	{
 		Make_Terrain_Navimesh();
 	}
-	//if (Button("SetUp_Neighbors"))
-	//{
-	//	SetUp_Neighbors();
-	//}
+
 	Separator();
 
 	Text("Current Selected Cell Index");
 	Text(to_string(m_iSelectedCellIndex).c_str());
+	if (m_ePickingType == TYPE_CELL && m_iSelectedCellIndex != -1)
+	{
+		if (ImGui::RadioButton("Attribute : NORMAL", *m_Cells[m_iSelectedCellIndex]->Get_Attribute_Ptr() == CCell::ATT_NORMAL)) {
+			*m_Cells[m_iSelectedCellIndex]->Get_Attribute_Ptr() = CCell::ATT_NORMAL;
+		}
+		if (ImGui::RadioButton("Attribute : JUMPONLY", *m_Cells[m_iSelectedCellIndex]->Get_Attribute_Ptr() == CCell::ATT_JUMPONLY)) {
+			*m_Cells[m_iSelectedCellIndex]->Get_Attribute_Ptr() = CCell::ATT_JUMPONLY;
+		}
+	}
 
 	Separator();
 	if (Button("Save Navi"))
@@ -207,12 +226,14 @@ HRESULT CNavigationTool::Render_NavimeshTool()
 		Save_Navigation();
 	}
 	if (Button("Load Navi"))
-	{
+	{ 
 		Load_Navigation();
 	}
+	if (Button("Load PastCell ver."))
+	{
+		Load_Past_Navigation();
+	}
 	
-
-
 	End();
 	return S_OK;
 }
@@ -483,12 +504,46 @@ HRESULT CNavigationTool::Save_Navigation()
 
 			ofs.write(reinterpret_cast<const char*>(&vCellPoint), sizeof(_float3));
 		}
+		CCell::ATTRIBUTE eAtt = pCell->Get_Attribute();
+		ofs.write(reinterpret_cast<const char*>(&eAtt), sizeof(CCell::ATTRIBUTE));
 	}
 
 	return S_OK;
 }
 
 HRESULT CNavigationTool::Load_Navigation()
+{
+	ifstream ifs("../Bin/DataFiles/Navigation.dat", ios::binary);
+
+	if (!ifs.is_open())
+		return E_FAIL;
+
+	for (auto& pCell : m_Cells)
+		Safe_Release(pCell);
+	m_Cells.clear();
+	m_Cells.shrink_to_fit();
+
+	while (true)
+	{
+		_float3 vCellPoint[3] = {};
+		CCell::ATTRIBUTE eAtt = {};
+
+		if (!ifs.read(reinterpret_cast<char*>(&vCellPoint), sizeof(_float3) * 3))
+			return S_OK;
+		if (!ifs.read(reinterpret_cast<char*>(&eAtt), sizeof(CCell::ATTRIBUTE)))
+			return S_OK;
+
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vCellPoint, m_Cells.size(), eAtt);
+		if (nullptr == pCell)
+			return E_FAIL;
+
+		m_Cells.push_back(pCell);
+	}
+
+	return S_OK;
+}
+
+HRESULT CNavigationTool::Load_Past_Navigation()
 {
 	ifstream ifs("../Bin/DataFiles/Navigation.dat", ios::binary);
 
@@ -573,6 +628,17 @@ void CNavigationTool::Key_Input()
 		if (KEY_DOWN(DIK_3))
 		{
 			m_ePickingType = TYPE_CELL;
+		}
+	}
+	if (m_iSelectedCellIndex != -1)
+	{
+		if (KEY_DOWN(DIK_1))
+		{
+			*m_Cells[m_iSelectedCellIndex]->Get_Attribute_Ptr() = CCell::ATT_NORMAL;
+		}
+		if (KEY_DOWN(DIK_2))
+		{
+			*m_Cells[m_iSelectedCellIndex]->Get_Attribute_Ptr() = CCell::ATT_JUMPONLY;
 		}
 	}
 }

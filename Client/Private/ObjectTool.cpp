@@ -243,6 +243,8 @@ HRESULT CObjectTool::Render_ObjectTool()
 		mDesc.szName = ObjectTag.data();
 		mDesc.strVIBufferTag = m_ModelNames[item_selected_idx];
 		mDesc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
+		mDesc.bHasTransformPreset = true;
+		XMStoreFloat4x4(&mDesc.PresetMatrix, XMMatrixTranslation(50.f, 10.f, 50.f));
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
 			return E_FAIL;

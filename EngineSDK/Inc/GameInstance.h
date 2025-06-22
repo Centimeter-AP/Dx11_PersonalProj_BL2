@@ -27,6 +27,12 @@ public:
 	_float Compute_Random_Normal();
 	_float Compute_Random(_float fMin, _float fMax);
 
+	_float AddVariance(_float fValue, _float fPercentRange) // 입력한 퍼센트 만큼의 오차범위를 넣어 반환해주는 함수
+	{
+		_float r = ((rand() % 1001) / 1000.f) * 2.f - 1.f; // -1.0 ~ +1.0
+		return fValue * (1.f + r * fPercentRange);
+	}
+
 #pragma region LEVEL_MANAGER
 public:
 	HRESULT Change_Level(_uint iLevelIndex, class CLevel* pNewLevel);

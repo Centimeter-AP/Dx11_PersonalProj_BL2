@@ -78,31 +78,32 @@ void CTransform::Go_Straight(_float fTimeDelta, CCollider* pMyCol, _uint iGroupI
 	Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation)
+void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation, _bool isGrounded)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
 
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
+	
 
-
-	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition, isGrounded))
 		Set_State(STATE::POSITION, vPosition);
 
 }
 
-void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavigation)
+void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavigation, _bool isGrounded)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
 
 	vPosition -= XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition, isGrounded))
 		Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
+void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation, _bool isGrounded)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vRight = Get_State(STATE::RIGHT);
@@ -110,11 +111,11 @@ void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 	vPosition += XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
 
 
-	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition, isGrounded))
 		Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavigation)
+void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavigation, _bool isGrounded)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vRight = Get_State(STATE::RIGHT);
@@ -122,43 +123,45 @@ void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavigation)
 	vPosition -= XMVector3Normalize(vRight) * m_fSpeedPerSec * fTimeDelta;
 
 
-	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition))
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition, isGrounded))
 		Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Straight_Hover(_float fTimeDelta)
+void CTransform::Go_Straight_Hover(_float fTimeDelta, CNavigation* pNavigation, _bool isGrounded)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
 	vLook = XMVectorSetY(vLook, 0.0f);
 	vPosition += XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition, isGrounded))
+		Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Backward_Hover(_float fTimeDelta)
+void CTransform::Go_Backward_Hover(_float fTimeDelta, CNavigation* pNavigation, _bool isGrounded)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
 	_vector		vLook = Get_State(STATE::LOOK);
 	vLook = XMVectorSetY(vLook, 0.0f);
 	vPosition -= XMVector3Normalize(vLook) * m_fSpeedPerSec * fTimeDelta;
 
-	Set_State(STATE::POSITION, vPosition);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPosition, isGrounded))
+		Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance, CNavigation* pNavigation)
+void CTransform::Go_Target(_fvector vTarget, _float fTimeDelta, _float fMinDistance, CNavigation* pNavigation, _bool isGrounded)
 {
 	_vector		vMoveDir = vTarget - Get_State(STATE::POSITION);
 
 	if (fMinDistance <= XMVectorGetX(XMVector3Length(vMoveDir)))
 	{
 		auto pos = Get_State(STATE::POSITION) + XMVector3Normalize(vMoveDir) * m_fSpeedPerSec * fTimeDelta;
-		if (nullptr == pNavigation || true == pNavigation->isMove(pos))
+		if (nullptr == pNavigation || true == pNavigation->isMove(pos, isGrounded))
 			Set_State(STATE::POSITION, pos);
 	}
 }
 
-void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigation)
+void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigation, _bool isGrounded)
 {
 	// 1. 방향 정규화
     _vector vNormDir = XMVector3Normalize(vDir);
@@ -173,7 +176,7 @@ void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigati
     Set_State(STATE::POSITION, vPosition);
 }
 
-void CTransform::Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed, CNavigation* pNavigation)
+void CTransform::Go_Dir_Lerp(_fvector vDir, _float fTimeDelta, _float fLerpSpeed, CNavigation* pNavigation, _bool isGrounded)
 {
 	// 1. 현재 LOOK 방향
 	_vector vCurrentLook = XMVector3Normalize(Get_State(STATE::LOOK));
@@ -279,6 +282,25 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScaled.z);
 }
 
+void CTransform::LookAt_NoY(_fvector vAt)
+{
+	_float4	vCustomAt = {};
+	XMStoreFloat4(&vCustomAt, vAt);
+	vCustomAt.y = m_WorldMatrix.m[ENUM_CLASS(STATE::POSITION)][1];
+	vCustomAt.w = 1.f;
+	_vector vResAt = XMLoadFloat4(&vCustomAt);
+
+	_float3		vScaled = Get_Scaled();
+
+	_vector		vLook = vResAt - Get_State(STATE::POSITION);
+	_vector		vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_vector		vUp = XMVector3Cross(vLook, vRight);
+
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScaled.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScaled.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vLook) * vScaled.z);
+}
+
 void CTransform::LookAtLerp(_fvector vAt, _float fTimeDelta, _float fLerpSpeed)
 {
 	_float3        vScaled = Get_Scaled();
@@ -300,6 +322,36 @@ void CTransform::LookAtLerp(_fvector vAt, _float fTimeDelta, _float fLerpSpeed)
 	Set_State(STATE::LOOK, XMVector3Normalize(vInterpolatedDir) * vScaled.z);
 
 }
+
+void CTransform::LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpeed)
+{
+	_float4	vCustomAt = {};
+	XMStoreFloat4(&vCustomAt, vAt);
+	vCustomAt.y = m_WorldMatrix.m[ENUM_CLASS(STATE::POSITION)][1];
+	vCustomAt.w = 1.f;
+	_vector vResAt = XMLoadFloat4(&vCustomAt);
+
+	_float3         vScaled = Get_Scaled();
+	_vector         vPos = Get_State(STATE::POSITION);
+	_vector			vLook = vResAt - Get_State(STATE::POSITION);
+
+	_vector        vTargetDir = XMVector3Normalize(vResAt - vPos);
+
+	/* Lerp 방식 보간 */
+	_vector vInterpolatedDir = XMVector3Normalize(
+		XMVectorLerp(vLook, vTargetDir, fTimeDelta * fLerpSpeed)
+	);
+
+	_vector vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_vector vUp = XMVector3Cross(vLook, vRight);
+
+	Set_State(STATE::RIGHT, XMVector3Normalize(vRight) * vScaled.x);
+	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScaled.y);
+	Set_State(STATE::LOOK, XMVector3Normalize(vInterpolatedDir) * vScaled.z);
+
+}
+
+
 HRESULT CTransform::Bind_ShaderResource(CShader* pShader, const _char* pConstantName)
 {
 	return pShader->Bind_Matrix(pConstantName, &m_WorldMatrix);	

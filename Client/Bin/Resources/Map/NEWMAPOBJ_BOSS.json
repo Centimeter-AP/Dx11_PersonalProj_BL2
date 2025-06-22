@@ -1,0 +1,144 @@
+{
+    "MapObject": [
+        {
+            "ModelName": "WormBellyRockColumn_02",
+            "Name": "MapObject",
+            "Position": [
+                10.026785850524902,
+                1.0211667358817067e-05,
+                130.10501098632813
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                1.0,
+                1.0,
+                1.0
+            ]
+        },
+        {
+            "ModelName": "AlienFloorRuins",
+            "Name": "MapObject",
+            "Position": [
+                164.7153778076172,
+                14.0,
+                58.40088653564453
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        },
+        {
+            "ModelName": "AlienFloorRuins_02",
+            "Name": "MapObject",
+            "Position": [
+                147.14700317382813,
+                14.0,
+                62.82925033569336
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        },
+        {
+            "ModelName": "Alien_Pyramid01",
+            "Name": "MapObject",
+            "Position": [
+                -20.0,
+                39.0,
+                21.0
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        },
+        {
+            "ModelName": "Alien_Pyramid02",
+            "Name": "MapObject",
+            "Position": [
+                266.0,
+                39.0,
+                -30.0
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        },
+        {
+            "ModelName": "Alien_Pyramid04",
+            "Name": "MapObject",
+            "Position": [
+                22.0,
+                39.0,
+                327.0
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        },
+        {
+            "ModelName": "Alien_Pyramid03",
+            "Name": "MapObject",
+            "Position": [
+                325.0,
+                39.0,
+                272.0
+            ],
+            "Rotation": [
+                -0.0,
+                0.0,
+                -0.0,
+                1.0
+            ],
+            "Scale": [
+                2.0,
+                2.0,
+                2.0
+            ]
+        }
+    ]
+}

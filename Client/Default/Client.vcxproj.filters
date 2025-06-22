@@ -151,6 +151,9 @@
     <Filter Include="01.Levels\MapTool\Tools\NavigationTool">
       <UniqueIdentifier>{dfe8f55a-6d28-49a1-ab8d-87f761421378}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\Boss">
+      <UniqueIdentifier>{5fee7505-a582-4694-8487-2703996fb08e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -336,6 +339,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\NavigationTool.h">
       <Filter>01.Levels\MapTool\Tools\NavigationTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Boss.h">
+      <Filter>01.Levels\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -547,6 +553,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\NavigationTool.cpp">
       <Filter>01.Levels\MapTool\Tools\NavigationTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Boss.cpp">
+      <Filter>01.Levels\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

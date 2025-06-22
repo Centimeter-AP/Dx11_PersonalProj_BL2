@@ -170,38 +170,6 @@ HRESULT CMainApp::Ready_Gara()
 
 
 
-
-
-
-
-	/* 네비메시용 임시 정점 찍는거.. */
-	_float3		vPoints[3] = {};
-
-	_ulong		dwByte = {};
-	HANDLE		hFile = CreateFile(TEXT("../Bin/DataFiles/Navigation.dat"), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-
-	vPoints[0] = _float3(0.0f, 2.f, 10.f);
-	vPoints[1] = _float3(10.f, 0.f, 0.f);
-	vPoints[2] = _float3(0.f, 5.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	vPoints[0] = _float3(0.0f, 2.f, 10.f);
-	vPoints[1] = _float3(10.f, 0.f, 10.f);
-	vPoints[2] = _float3(10.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	vPoints[0] = _float3(0.0f, 0.f, 20.f);
-	vPoints[1] = _float3(10.f, 0.f, 10.f);
-	vPoints[2] = _float3(0.f, 2.f, 10.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-
-	vPoints[0] = _float3(10.f, 0.f, 10.f);
-	vPoints[1] = _float3(20.f, 0.f, 0.f);
-	vPoints[2] = _float3(10.f, 0.f, 0.f);
-	WriteFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-	CloseHandle(hFile);
 	return S_OK;
 }
 
@@ -261,6 +229,11 @@ HRESULT CMainApp::Ready_Prototype_Component()
 	/* For.Prototype_Component_Texture_Logo_BackGround*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Logo_BackGround"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo_Background.dds"), 1))))
+		return E_FAIL;
+
+	///* Prototype_Component_Gravity */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
+		CGravity::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

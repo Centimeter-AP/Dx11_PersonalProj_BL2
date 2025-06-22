@@ -32,30 +32,27 @@ CNavigation::CNavigation(const CNavigation& Prototype)
 
 HRESULT CNavigation::Initialize_Prototype(const _tchar* pNavigationDataFile)
 {
-	_ulong	dwByte = {};
-	HANDLE	hFile = CreateFile(pNavigationDataFile, GENERIC_READ, 0, nullptr,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	ifstream ifs(pNavigationDataFile, ios::binary);
 
-	if (0 == hFile)
+	if (!ifs.is_open())
 		return E_FAIL;
 
 	while (true)
 	{
-		_float3		vPoints[3] = {};
+		_float3 vCellPoint[3] = {};
+		CCell::ATTRIBUTE eAtt = {};
 
-		ReadFile(hFile, vPoints, sizeof(_float3) * 3, &dwByte, nullptr);
-
-		if (0 == dwByte)
+		if (!ifs.read(reinterpret_cast<char*>(&vCellPoint), sizeof(_float3) * 3))
+			break;
+		if (!ifs.read(reinterpret_cast<char*>(&eAtt), sizeof(CCell::ATTRIBUTE)))
 			break;
 
-		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, m_Cells.size());
+		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vCellPoint, m_Cells.size(), eAtt);
 		if (nullptr == pCell)
 			return E_FAIL;
 
 		m_Cells.push_back(pCell);
 	}
-
-	CloseHandle(hFile);
 
 	if (FAILED(SetUp_Neighbors()))
 		return E_FAIL;
@@ -88,7 +85,7 @@ void CNavigation::Update(_fmatrix WorldMatrix)
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 }
 
-_bool CNavigation::isMove(_fvector vWorldPos)
+_bool CNavigation::isMove(_fvector vWorldPos, _bool isGrounded)
 {
 	// 로컬로 옮겨줌, 기준 월드 행렬은 터레인인거로
 	_vector		vLocalPos = XMVector3TransformCoord(vWorldPos, XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_WorldMatrix)));
@@ -96,7 +93,12 @@ _bool CNavigation::isMove(_fvector vWorldPos)
 	_int		iNeighborIndex = { -1 };
 
 	if (true == m_Cells[m_iIndex]->isIn(vLocalPos, &iNeighborIndex))
-		return true; // 셀 안에 있으면 걍 트루
+	{
+		if (m_Cells[m_iIndex]->Get_Attribute() == CCell::ATT_JUMPONLY && isGrounded)
+			return false; // 점프 안 하고 있는데 점프 전용 셀 들어가려 하면 거절
+
+		return true; 
+	}
 
 	else
 	{
@@ -108,8 +110,14 @@ _bool CNavigation::isMove(_fvector vWorldPos)
 		{
 			while (true) // 진짜 셀 안에 있는 거 확인 될 때 까지 안 가고 버티겠다
 			{
+				_int curNeighborIndex = iNeighborIndex;
 				if (true == m_Cells[iNeighborIndex]->isIn(vLocalPos, &iNeighborIndex)) // 존나검사해
+				{
+					if (m_Cells[curNeighborIndex]->Get_Attribute() == CCell::ATT_JUMPONLY && isGrounded)
+						return false;
+
 					break;
+				}
 
 				if (-1 == iNeighborIndex) // 없으면 걍 가지마 
 					return false;
@@ -157,14 +165,20 @@ HRESULT CNavigation::Render()
 		{
 			m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix);
 
-			vColor = _float4(0.f, 1.f, 0.f, 1.f);
-
-			m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
-
-			m_pShader->Begin(0);
 
 			for (auto& pCell : m_Cells)
+			{
+				if (pCell->Get_Attribute() == CCell::ATT_NORMAL)
+					vColor = _float4(0.f, 1.f, 0.f, 1.f);
+				else if (pCell->Get_Attribute() == CCell::ATT_JUMPONLY)
+					vColor = _float4(0.f, 0.f, 1.f, 1.f);
+
+				m_pShader->Bind_RawValue("g_vColor", &vColor, sizeof(_float4));
+
+				m_pShader->Begin(0);
 				pCell->Render();
+
+			}
 		}
 		else
 		{

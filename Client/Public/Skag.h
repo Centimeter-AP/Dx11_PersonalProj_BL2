@@ -10,7 +10,7 @@ class CSkag final : public CMonster
 public:
 	typedef struct tagSkagDesc : public CMonster::DESC
 	{
-		_float3 fSpawnPoint = {};
+		//_float3 fSpawnPoint = {};
 
 	}DESC;
 
@@ -78,6 +78,7 @@ public:
 	friend class CSkagState_Hardflinch_Head; /* 머리 맞았을 때 넉백만 추가 */
 	friend class CSkagState_Dodge; /* 예정은 없음 */
 	friend class CSkagState_Run;
+	friend class CSkagState_Hit;
 	friend class CSkagState_Dead;
 	//friend class
 #pragma endregion
@@ -98,6 +99,7 @@ public:
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_SkagStates();
+	virtual void Initialize_BasicStatus(_int iLevel) override;
 
 	void Set_State(SKAG_STATE eState);
 	void Update_State(_float fTimeDelta);

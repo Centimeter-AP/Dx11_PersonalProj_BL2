@@ -49,8 +49,6 @@ void CGravity::Update(_float fTimeDelta)
 	_float3 vCurPos;
 	XMStoreFloat3(&vCurPos, vPos);
 
-
-
 	_float3 vNavPos = {};
 	_vector vecNavPos = m_pNavigationCom->SetUp_Height(vPos, 0.f);
 	XMStoreFloat3(&vNavPos, vecNavPos);
@@ -58,10 +56,10 @@ void CGravity::Update(_float fTimeDelta)
 	_float fNavY = vNavPos.y;
 	//if (m_pNavigationCom->Get_Height(vCurPos, fNavY))  // 예: NavMesh 높이 반환
 	{
-		if (vCurPos.y <= fNavY + 0.1f)
+		if (vCurPos.y <= fNavY + 3.f)
 		{
-			vCurPos.y = fNavY;
-			m_pTransformCom->Set_State(STATE::POSITION, XMLoadFloat3(&vCurPos));
+			vCurPos.y = fNavY + 3.f;
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetY(vecNavPos, fNavY + 3.f));
 
 			m_fVerticalVelocity = 0.f;
 			m_isGrounded = true;

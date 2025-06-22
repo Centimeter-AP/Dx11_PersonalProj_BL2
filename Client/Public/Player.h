@@ -92,7 +92,7 @@ public:
 private: 
 	void Update_State(_float fTimeDelta);
 	void Raycast_Object();
-	void Ride_Terrain(); // 임시로 지형이라도 타자 
+	//void Ride_Terrain(); // 임시로 지형이라도 타자 // 이제 안 타도 돼요
 
 private:
 	HRESULT Ready_Components(void* pArg);
@@ -127,6 +127,10 @@ private: // maybe deprecated
 private:
 	CCollider*			m_pCurPickedCollider = { nullptr };
 	_uint				m_iCameraBoneIdx = {};
+
+private:
+	_bool				m_bSprint = { false };
+	_float				m_fSpeedMultiplier = { 1.f };
 
 private:
 	vector<CGameObject*>		m_pWeapons; // 임시 무기 저장 변수, 인벤토리 만들고 꼭 이새끼 날릴 것 !!! 아닌가그냥써야하나??

@@ -11,6 +11,8 @@ class ENGINE_DLL CCell final : public CBase
 public:
 	enum POINT { POINT_A, POINT_B, POINT_C, POINT_END };
 	enum LINE { LINE_AB, LINE_BC, LINE_CA, LINE_END };
+	enum ATTRIBUTE { ATT_NORMAL, ATT_JUMPONLY, ATT_END };
+
 private:
 	CCell(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CCell() = default;
@@ -19,15 +21,24 @@ public:
 	_vector Get_Point(POINT ePoint) {
 		return XMLoadFloat3(&m_vPoints[ePoint]);
 	}
+	ATTRIBUTE Get_Attribute() const {
+		return m_eAttribute;
+	}
+	ATTRIBUTE* Get_Attribute_Ptr() {
+		return &m_eAttribute;
+	}
 
 public:
 	void Set_Neighbor(LINE eLine, CCell* pCell) {
 		m_iNeighborIndices[eLine] = pCell->m_iIndex;
 	}
+	void Set_Attribute(ATTRIBUTE eAttribute) {
+		m_eAttribute = eAttribute;
+	}
 	const _int Get_MyIndex() const { return m_iIndex; }
 
 public:
-	HRESULT Initialize(const _float3* pPoints, _int iIndex);
+	HRESULT Initialize(const _float3* pPoints, _int iIndex, ATTRIBUTE eAttribute);
 	_bool isIn(_fvector vLocalPos, _int* pNeighborIndex);
 	_bool Compare(_fvector vSour, _fvector vDest);
 	_float Compute_Height(_fvector vLocalPos);
@@ -47,15 +58,14 @@ private:
 	_float3			m_vNormals[LINE_END] = {};
 	_int			m_iNeighborIndices[LINE_END] = { -1, -1, -1 };
 	_int			m_iIndex = {};
-	_int			m_iCellAttribute = {};
+	ATTRIBUTE		m_eAttribute = {};
 
 #ifdef _DEBUG
 	class CVIBuffer_Cell* m_pVIBuffer = { nullptr };
-
 #endif
 
 public:
-	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex);
+	static CCell* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _float3* pPoints, _int iIndex, ATTRIBUTE eAttribute = ATT_NORMAL);
 	virtual void Free() override;
 
 };

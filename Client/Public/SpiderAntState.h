@@ -12,6 +12,7 @@ public:
 		: m_pOwner(pOwner),
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
+		m_pOwnerNavi = m_pOwner->m_pNavigationCom;
 		m_pTarget = m_pOwner->m_pTarget;
 		m_pTargetTransform = m_pTarget->Get_Transform();
 		Safe_AddRef(m_pGameInstance);
@@ -64,6 +65,7 @@ public:
 
 protected:
 	CSpiderAnt*		m_pOwner;
+	CNavigation*	m_pOwnerNavi = { nullptr };
 	CGameObject*	m_pTarget = { nullptr };
 	CTransform*		m_pTargetTransform = { nullptr };
 
@@ -258,15 +260,15 @@ public:
 		}
 		if (LeapStatus[2] == true)
 		{
-			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * fDecel);
+			m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta * fDecel, m_pOwnerNavi);
 			fDecel *= 0.95f;
 		}
 		else if (LeapStatus[1] == true)
 		{
 			auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTargetTransform->Get_State(STATE::POSITION))));
 
-			m_pOwner->m_pTransformCom->Go_Target(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta * Dist * 0.8f, 1.f);
-			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+			m_pOwner->m_pTransformCom->Go_Target(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta * Dist * 0.8f, 1.f, m_pOwnerNavi);
+			m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
 		}
 		//else if (LeapStatus[0] == true)
 		//{
@@ -326,7 +328,7 @@ public:
 		}
 		if (ChargeStatus[1] == false)
 		{   // 준비 중에 고개 돌리기
-			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+			m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
 		}
 		if (ChargeStatus[1] == true && ChargeStatus[2] == false)
 		{
@@ -341,14 +343,14 @@ public:
 				}
 			}
 			//m_pOwner->m_pTransformCom->Go_Target(XMVectorSetW(XMLoadFloat3(&vChargePos), 1.f), fTimeDelta * 1.2f, 1.f);
-			m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 2.5f);
+			m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 2.5f);
 
-			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * 2.f);
+			m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta * 2.f, m_pOwnerNavi);
 		}
 		if (ChargeStatus[2] == true)
 		{
 			//m_pOwner->m_pTransformCom->Go_Target(XMVectorSetW(XMLoadFloat3(&vChargePos), 1.f), fTimeDelta * fDecel, 1.f);
-			m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * fDecel);
+			m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta * fDecel, m_pOwnerNavi);
 			fDecel *= 0.95f;
 		}
 	}
@@ -673,8 +675,8 @@ public:
 			//m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Tongue);
 		}
 
-		m_pOwner->m_pTransformCom->LookAtLerp(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
-		m_pOwner->m_pTransformCom->Go_Straight(/*m_pTargetTransform->Get_State(STATE::POSITION), */fTimeDelta/*, 1.f*/);
+		m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+		m_pOwner->m_pTransformCom->Go_Straight_Hover(/*m_pTargetTransform->Get_State(STATE::POSITION), */fTimeDelta/*, 1.f*/, m_pOwnerNavi);
 
 	}
 	virtual void Exit() override

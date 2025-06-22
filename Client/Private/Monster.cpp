@@ -22,6 +22,9 @@ HRESULT CMonster::Initialize_Prototype()
 
 HRESULT CMonster::Initialize(void* pArg)
 {
+	DESC* pDesc = static_cast<DESC*>(pArg);
+	m_iNavIndex = pDesc->iNavigationIndex;
+	m_bActive = pDesc->bActive;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -59,9 +62,8 @@ EVENT CMonster::Update(_float fTimeDelta)
 {
 	if (m_bDead)
 		return Death_Delay(fTimeDelta);
-	//if (true == m_pModelCom->Play_Animation(fTimeDelta))
-	//	int a = 10;
-	Ride_Terrain();
+
+
 	return EVN_NONE;
 }
 
@@ -116,6 +118,26 @@ HRESULT CMonster::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_Model_") + tag,
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
+
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = m_iNavIndex; // 32
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+
+	/* For.Com_Gravity */
+	CGravity::DESC	GravityDesc{};
+	GravityDesc.fGravity = -40.f;
+	GravityDesc.fJumpPower = 25.f;
+	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
+	GravityDesc.pOwnerTransformCom = m_pTransformCom;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
+		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
+		return E_FAIL;
+
+
 
 
 	return S_OK;
@@ -185,7 +207,7 @@ void CMonster::On_Collision(_uint iColID)
 	}
 }
 
-void CMonster::Initialize_BasicStatus()
+void CMonster::Initialize_BasicStatus(_int iLevel)
 {
 	m_iHP = 0.f;
 	m_iMaxHP = 0.f;
@@ -202,5 +224,6 @@ void CMonster::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pColliderHeadCom);
 	Safe_Release(m_pTarget);
-
+	Safe_Release(m_pGravityCom);
+	Safe_Release(m_pNavigationCom);
 }

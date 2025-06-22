@@ -71,32 +71,14 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	}
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 
-#pragma region 애니메이션 테스트
-	static _uint test = {};
-	if (KEY_DOWN(DIK_Z))
-	{
-#ifdef _CONSOLE
-		cout << "애니메이션 : " << test << endl;
-#endif
-		test > PLA_ALL_END - 1 ? test = 0 : test++;
-		m_pModelCom->Set_Animation(test, true, 0.2f);
-	}
-	if (KEY_DOWN(DIK_X))
-	{
-#ifdef _CONSOLE
-		cout << "애니메이션 : " << test << endl;
-#endif
-		test < 1 ? test = PLA_ALL_END - 1 : test--;
-		m_pModelCom->Set_Animation(test, true, 0.2f);
-	}
-#pragma endregion
-
 	Update_State(fTimeDelta);
-	//m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 3.f));
 	//Ride_Terrain();
 	Key_Input(fTimeDelta);
 	Raycast_Object();
+	if (m_pGravityCom->Is_Grounded())
+		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 5.f));
 	m_pGravityCom->Update(fTimeDelta);
+
 	//Spine3
 }
 
@@ -104,6 +86,7 @@ EVENT CPlayer::Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return EVN_NONE;
+
 
 	for (auto& pPartObject : m_PartObjects)
 	{
@@ -225,21 +208,21 @@ void CPlayer::Raycast_Object()
 	//	int a = 0;
 }
 
-void CPlayer::Ride_Terrain()
-{
-	auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(
-		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_BackGround"), 0));
-
-	auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
-	_float x = m_pTransformCom->Get_WorldMatrix4x4Ref()._41;
-	_float z = m_pTransformCom->Get_WorldMatrix4x4Ref()._43;
-	_float y = pVIBuffer->Get_Height(x, z);
-
-	_float yOffset = 0.5f;
-	XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
-	//cout << y << endl;
-	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
-}
+//void CPlayer::Ride_Terrain()
+//{
+//	auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(
+//		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_BackGround"), 0));
+//
+//	auto pVIBuffer = dynamic_cast<CVIBuffer_Terrain*>(pTerrain->Get_Component(TEXT("Com_VIBuffer")));
+//	_float x = m_pTransformCom->Get_WorldMatrix4x4Ref()._41;
+//	_float z = m_pTransformCom->Get_WorldMatrix4x4Ref()._43;
+//	_float y = pVIBuffer->Get_Height(x, z);
+//
+//	_float yOffset = 0.5f;
+//	XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
+//	//cout << y << endl;
+//	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
+//}
 
 HRESULT CPlayer::Ready_Components(void* pArg)
 {
@@ -276,7 +259,8 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 
 	/* For.Com_Gravity */
 	CGravity::DESC	GravityDesc{};
-	GravityDesc.fGravity = -50.f;
+	GravityDesc.fGravity = -40.f;
+	GravityDesc.fJumpPower = 20.f;
 	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
 	GravityDesc.pOwnerTransformCom = m_pTransformCom;
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
@@ -299,10 +283,11 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 
 HRESULT CPlayer::Ready_PartObjects(void* pArg)
 {
+	if (FAILED(Ready_Weapons(pArg)))
+		return E_FAIL;
 
 
-
-	return Ready_Weapons(pArg);
+	return S_OK;
 }
 
 HRESULT CPlayer::Ready_Weapons(void* pArg)
@@ -419,9 +404,10 @@ void CPlayer::Free()
 {
 	__super::Free();
 	Safe_Release(m_pColliderCom);
+	Safe_Release(m_pGravityCom);
+	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pNavigationCom);
 
 
 

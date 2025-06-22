@@ -21,7 +21,7 @@ void CPlayerState_Idle::Enter()
 void CPlayerState_Idle::Execute(_float fTimeDelta)
 {
 	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
-	if (KEY_PRESSING(DIK_LSHIFT) && KEY_PRESSING(DIK_W))
+	if ((KEY_PRESSING(DIK_LSHIFT) && KEY_PRESSING(DIK_W)) || (m_pOwner->m_bSprint && KEY_PRESSING(DIK_W)))
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Sprint); return;
 	}
@@ -36,6 +36,10 @@ void CPlayerState_Idle::Execute(_float fTimeDelta)
 	else if (KEY_PRESSING(DIK_D))
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Run_R); return;
+	}
+	else
+	{
+		m_pOwner->m_bSprint = false;
 	}
 
 	if (KEY_DOWN(DIK_R))

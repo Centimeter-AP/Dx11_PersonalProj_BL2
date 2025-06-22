@@ -85,11 +85,11 @@ void CCamera_Tool::Priority_Update(_float fTimeDelta)
 		{
 			if (MouseWheel > 0)
 			{
-				m_pTransformCom->Go_Straight(MouseWheel * fTimeDelta * m_fSensor);
+				m_pTransformCom->Go_Straight(MouseWheel * fTimeDelta * m_fSensor * m_fSpeedMultiplier);
 			}	
 			else
 			{
-				m_pTransformCom->Go_Backward(-MouseWheel * fTimeDelta * m_fSensor);
+				m_pTransformCom->Go_Backward(-MouseWheel * fTimeDelta * m_fSensor * m_fSpeedMultiplier);
 			}
 		}
 	}

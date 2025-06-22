@@ -4,6 +4,7 @@
 
 void CPlayerState_Sprint::Enter()
 {
+	m_pOwner->m_bSprint = true;
 	switch (m_pOwner->m_eCurWeapon)
 	{
 	case CPlayer::WEAPON_TYPE::WTYPE_AR:
@@ -28,30 +29,40 @@ void CPlayerState_Sprint::Execute(_float fTimeDelta)
 	}
 	else
 	{
-		m_pOwner->m_pTransformCom->Go_Straight(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi);
+		m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi, *m_pIsGrounded);
 
 		if (KEY_PRESSING(DIK_A))
 		{
-			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi);
+			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi, *m_pIsGrounded);
 		}
 		if (KEY_PRESSING(DIK_D))
 		{
-			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi);
+			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta * m_fSpeedMultiplier, m_pOwnerNavi, *m_pIsGrounded);
 		}
 		if (KEY_PRESSING(DIK_S))
 		{
+			m_pOwner->m_bSprint = false;
 			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle);
 		}
 	}
 	if (KEY_DOWN(DIK_R))
 	{
+		m_pOwner->m_bSprint = false;
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);
 		return;
 	}
 
 	if (MOUSE_DOWN(DIM::LBUTTON))
 	{
+		m_pOwner->m_bSprint = false;
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Fire); return;
+	}
+	if (KEY_DOWN(DIK_SPACE))
+	{
+		if (m_pOwner->m_pGravityCom->Is_Grounded())
+		{
+			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Jump); return;
+		}
 	}
 }
 
