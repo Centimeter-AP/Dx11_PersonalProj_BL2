@@ -125,20 +125,47 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	SkagDesc.fSpeedPerSec = 13.f;
 	SkagDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SkagDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Skag");
-	SkagDesc.bHasTransformPreset = true;
-	SkagDesc.iNavigationIndex = 49;
+	//SkagDesc.bHasTransformPreset = true;
+	SkagDesc.iNavigationIndex = 55;
+	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	// 667, 668, 767, 808, 936, 853, 770
+	
+
+	SkagDesc.iNavigationIndex = 56;
 	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
 		return E_FAIL;
 
-	//for (size_t i = 0; i < 5; i++)
-	//{
-	//	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(rand()%100, 2.f, rand()%100));
-	//	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-	//		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-	//		return E_FAIL;
-	//}
+	SkagDesc.iNavigationIndex = 57;
+	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+
+	//SkagDesc.iNavigationIndex = 936;
+	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+	//	return E_FAIL;
+
+	//SkagDesc.iNavigationIndex = 767;
+	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+	//	return E_FAIL;
+
+
+
+
+
+
+
+
+
 
 	CSpiderAnt::DESC	SpiderAntDesc;
 	SpiderAntDesc.bActive = true;
@@ -146,13 +173,18 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	SpiderAntDesc.fSpeedPerSec = 10.f;
 	SpiderAntDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SpiderAntDesc.strVIBufferTag = TEXT("Prototype_Component_Model_SpiderAnt");
-	SpiderAntDesc.bHasTransformPreset = true;
+	//SpiderAntDesc.bHasTransformPreset = true;
 	SpiderAntDesc.iNavigationIndex = 51;
 	XMStoreFloat4x4(&SpiderAntDesc.PresetMatrix, XMMatrixTranslation(60.f, 2.f, 50.f));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
 		return E_FAIL;
 
+	SpiderAntDesc.iNavigationIndex = 49;
+	XMStoreFloat4x4(&SpiderAntDesc.PresetMatrix, XMMatrixTranslation(60.f, 2.f, 50.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
+		return E_FAIL;
 
 
 	return S_OK;
@@ -179,7 +211,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_MapObject(const _wstring strLayerTag)
 {
 	json jLoad;
 
-	ifstream ifs(R"(../Bin/Resources/Map/GamePlay.json)");
+	ifstream ifs(R"(../Bin/Resources/Map/backup/1/GamePlay.json)");
+	//ifstream ifs(R"(../Bin/Resources/Map/GamePlay.json)");
 
 	if (!ifs.is_open())
 	{

@@ -151,8 +151,13 @@ HRESULT CLoader::Loading_For_GamePlay()
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 	/* For.Prototype_Component_VIBuffer_Terrain */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Terrain"),
-		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Map/GamePlay.ter"), true))))
+		CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Map/backup/1/GamePlay.ter"), true))))
+		//CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Map/backup/2/GamePlay.ter"), true))))
 		return E_FAIL;
+
+
+
+
 
 	///* For.Prototype_Component_VIBuffer_Cube */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
@@ -205,7 +210,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* Prototype_Component_Navigation */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
-		CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/backup/1/Navigation.dat")))))
+		CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Navigation_1.dat")))))
+		//CNavigation::Create(m_pDevice, m_pContext, TEXT("../Bin/DataFiles/Navigation_2.dat")))))
 		return E_FAIL;
 
 	///* Prototype_Component_Gravity */

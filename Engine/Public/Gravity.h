@@ -41,6 +41,8 @@ public:
 	_bool Is_Grounded() const { return m_isGrounded; }
 	//사기행각
 	const _bool* Is_Grounded_Ptr() { return &m_isGrounded; }
+
+	void Set_IsGrounded(_bool isGrounded) { m_isGrounded = isGrounded; }
 	void Jump();
 
 private:

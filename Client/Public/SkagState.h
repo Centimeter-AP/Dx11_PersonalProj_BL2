@@ -686,6 +686,84 @@ private:
 	const _float m_fLeapDist = { 30.f };
 };
 
+
+class CSkagState_Phaselocked final : public CSkagState
+{
+public:
+	CSkagState_Phaselocked(class CSkag* pOwner)
+		: CSkagState(pOwner) {
+	}
+	virtual ~CSkagState_Phaselocked() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "Phaselocked" << endl;
+		Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Lift, false);
+		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Lift), 1.f);
+		m_ePhaselockStatus = PL_LIFT;
+		m_fImsiSkillVar = 0.f;
+		m_pOwner->m_pGravityCom->Set_IsGrounded(false);
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		_bool res = m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
+		if (true == res)
+		{
+			switch (m_ePhaselockStatus)
+			{
+			case PL_LIFT:
+				m_ePhaselockStatus = PL_LOOP;
+				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Loop, true);
+				break;
+			case PL_FALL:
+				m_ePhaselockStatus = PL_LAND;
+				m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Land), 3.f);
+				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Land, false);
+				break;
+			case PL_LAND:
+				m_pOwner->m_pGravityCom->Set_IsGrounded(true);
+				m_pOwner->Set_State(CSkag::STATE_Provoked_Idle);
+				break;
+			default:
+				break;
+			}
+		}
+
+		switch (m_ePhaselockStatus)
+		{
+		case PL_LIFT:
+			m_pOwner->m_pTransformCom->Go_Up(fTimeDelta * 5.f);
+			break;
+		case PL_LOOP:
+			m_fImsiSkillVar += fTimeDelta;
+			if (m_fImsiSkillVar >= 2.f)
+			{
+				m_ePhaselockStatus = PL_FALL;
+				m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Fall), 3.f);
+				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Fall, true);
+			}
+			break;
+		case PL_FALL:
+			break;
+		case PL_LAND:
+			break;
+		default:
+			break;
+		}
+	}
+	virtual void Exit() override
+	{
+
+	}
+	virtual void Free() override { __super::Free(); }
+private:
+	enum PL_STATUS { PL_LIFT, PL_LOOP, PL_FALL, PL_LAND };
+	PL_STATUS	m_ePhaselockStatus = {};
+
+	_float m_fImsiSkillVar = {};
+};
+
 class CSkagState_Dead final : public CSkagState
 {
 public:

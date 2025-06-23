@@ -65,7 +65,8 @@ void CSkag::Priority_Update(_float fTimeDelta)
 	}
 #pragma endregion
 	Update_State(fTimeDelta);
-	m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 0.1f));
+	if (m_pGravityCom->Is_Grounded())
+		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 0.1f));
 
 }
 
@@ -199,6 +200,7 @@ HRESULT CSkag::Ready_SkagStates()
 	m_pStates[SKAG_STATE::STATE_Provoked] = new CSkagState_Provoked(this);
 	m_pStates[SKAG_STATE::STATE_Provoked_Idle] = new CSkagState_Provoked_Idle(this);
 	m_pStates[SKAG_STATE::STATE_Run] = new CSkagState_Run(this);
+	m_pStates[SKAG_STATE::STATE_PhaseLocked] = new CSkagState_Phaselocked(this);
 	m_pCurState = m_pStates[SKAG_STATE::STATE_Idle];
 	return S_OK;
 }
@@ -237,6 +239,20 @@ void CSkag::Update_State(_float fTimeDelta)
 void CSkag::Set_State_Dead()
 {
 	Set_State(SKAG_STATE::STATE_Death);
+}
+
+void CSkag::On_Collision(_uint iColID)
+{
+	__super::On_Collision(iColID);
+
+	switch (iColID)
+	{
+	case ENUM_CLASS(COL_ID::PLAYER_SKILL_PHASELOCK):
+		Set_State(SKAG_STATE::STATE_PhaseLocked);
+		break;
+	default:
+		break;
+	}
 }
 
 

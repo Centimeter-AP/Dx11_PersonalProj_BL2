@@ -13,7 +13,7 @@ public:
 		//_float3 fSpawnPoint = {};
 
 	}DESC;
-
+	// 667, 668, 767, 808, 936, 853, 770
 	enum SKAG_ANIM {
 		NONE0, NONE1, NONE2,
 		Attack_Bite1, Attack_Bite2,
@@ -104,6 +104,10 @@ private:
 	void Set_State(SKAG_STATE eState);
 	void Update_State(_float fTimeDelta);
 	virtual void Set_State_Dead();
+
+private:
+	virtual void On_Collision(_uint iColID) override;
+
 
 private:
 	_uint m_iSpineBoneIdx = {};
