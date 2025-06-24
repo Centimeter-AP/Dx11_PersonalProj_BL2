@@ -134,6 +134,23 @@ HRESULT CRakk::Ready_Components(void* pArg)
 		return E_FAIL;
 
 
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	NaviDesc.iIndex = m_iNavIndex;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+	/* For.Com_Gravity */
+	CGravity::DESC	GravityDesc{};
+	GravityDesc.fGravity = -40.f;
+	GravityDesc.fJumpPower = 25.f;
+	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
+	GravityDesc.pOwnerTransformCom = m_pTransformCom;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
+		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
+		return E_FAIL;
+
 
 	return S_OK;
 }

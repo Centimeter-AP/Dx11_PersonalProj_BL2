@@ -34,6 +34,8 @@ HRESULT CPistol::Initialize(void* pArg)
 	if (FAILED(Ready_PSTStates()))
 		return E_FAIL;
 
+	Initialize_BasicStatus();
+
 	m_pModelCom->Set_Animation(3, false);
 	m_pModelCom->Set_Animation_TickPerSecond_All(30.f);
 	m_pModelCom->Play_Animation(0.01f);
@@ -121,6 +123,15 @@ HRESULT CPistol::Ready_PSTStates()
 	m_pCurState = m_pStates[PST_STATE::STATE_Idle];
 
 	return S_OK;
+}
+
+void CPistol::Initialize_BasicStatus()
+{
+	m_iDamage = { 23 };
+	m_fAccuracy = { 92.2f };
+	m_fFireRate = { 16.7f };
+	m_iMagazineSize = { 6 };
+	m_iCurMagazineLeft = { 6 };
 }
 
 CPistol* CPistol::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

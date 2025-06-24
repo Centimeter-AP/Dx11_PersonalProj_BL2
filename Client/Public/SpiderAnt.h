@@ -95,6 +95,12 @@ private:
 	HRESULT Spawn_SpitBullet();
 
 private:
+	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) override;
+
+public:
+	virtual void OnHit_Phaselock() override;
+
+private:
 	_uint m_iSpineBoneIdx = {};
 	_uint m_iTailBoneIdx = {};
 

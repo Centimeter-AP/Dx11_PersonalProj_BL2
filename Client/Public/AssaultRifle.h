@@ -52,6 +52,7 @@ private:
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_ARStates();
+	virtual void Initialize_BasicStatus() override;
 
 private:
 	class CARState*		m_pCurState = { nullptr };

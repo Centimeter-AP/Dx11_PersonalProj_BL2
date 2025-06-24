@@ -50,9 +50,14 @@ protected:
 	_int				m_iCurMagazineLeft = {};
 	// 총 탄약 수는 플레이어쪽에서 받는게 맞지 않으려나
 
+public:
+	const _int& Get_Damage() const{ return m_iDamage; }
+	const _float& Get_Accuracy() const { return m_fAccuracy; }
+	const _float& Get_Firerate() const { return m_fFireRate; }
 
 protected:
 	HRESULT Ready_Components(void* pArg);
+	virtual void Initialize_BasicStatus() {};
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;

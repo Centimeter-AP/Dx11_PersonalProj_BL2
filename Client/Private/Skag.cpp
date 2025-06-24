@@ -67,7 +67,8 @@ void CSkag::Priority_Update(_float fTimeDelta)
 	Update_State(fTimeDelta);
 	if (m_pGravityCom->Is_Grounded())
 		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 0.1f));
-
+	if (m_eCurState != STATE_PhaseLocked)
+		m_pGravityCom->Update(fTimeDelta);
 }
 
 EVENT CSkag::Update(_float fTimeDelta)
@@ -241,18 +242,23 @@ void CSkag::Set_State_Dead()
 	Set_State(SKAG_STATE::STATE_Death);
 }
 
-void CSkag::On_Collision(_uint iColID)
+void CSkag::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
-	__super::On_Collision(iColID);
+	__super::On_Collision(iMyColID, iHitColID, pHitCol);
 
-	switch (iColID)
+	switch (iHitColID)
 	{
 	case ENUM_CLASS(COL_ID::PLAYER_SKILL_PHASELOCK):
-		Set_State(SKAG_STATE::STATE_PhaseLocked);
 		break;
 	default:
 		break;
 	}
+}
+
+void CSkag::OnHit_Phaselock()
+{
+	Set_State(SKAG_STATE::STATE_PhaseLocked);
+
 }
 
 

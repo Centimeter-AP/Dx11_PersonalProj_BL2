@@ -62,8 +62,10 @@ void CSpiderAnt::Priority_Update(_float fTimeDelta)
 	}
 #pragma endregion
 	Update_State(fTimeDelta);
-	m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 0.1f));
-
+	if (m_pGravityCom->Is_Grounded())
+		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 0.1f));
+	if (m_eCurState != STATE_PhaseLocked)
+		m_pGravityCom->Update(fTimeDelta);
 }
 
 EVENT CSpiderAnt::Update(_float fTimeDelta)
@@ -198,6 +200,7 @@ HRESULT CSpiderAnt::Ready_SkagStates()
 	m_pStates[SPIDERANT_STATE::STATE_Attack_Charge] = new CSpiderAntState_Attack_Charge(this);
 	m_pStates[SPIDERANT_STATE::STATE_Provoked_Idle] = new CSpiderAntState_Provoked_Idle(this);
 	m_pStates[SPIDERANT_STATE::STATE_Run] = new CSpiderAntState_Run(this);
+	m_pStates[SPIDERANT_STATE::STATE_PhaseLocked] = new CSpiderAntState_Phaselocked(this);
 
 
 	m_pCurState = m_pStates[SPIDERANT_STATE::STATE_Idle];
@@ -246,6 +249,24 @@ HRESULT CSpiderAnt::Spawn_SpitBullet()
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAntSpit"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Layer_MonBullet"), &SpitDesc)))
 		return E_FAIL;
+}
+
+void CSpiderAnt::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
+{
+	__super::On_Collision(iMyColID, iHitColID, pHitCol);
+
+	switch (iHitColID)
+	{
+	case ENUM_CLASS(COL_ID::PLAYER_SKILL_PHASELOCK):
+		break;
+	default:
+		break;
+	}
+}
+
+void CSpiderAnt::OnHit_Phaselock()
+{
+	Set_State(SPIDERANT_STATE::STATE_PhaseLocked);
 }
 
 

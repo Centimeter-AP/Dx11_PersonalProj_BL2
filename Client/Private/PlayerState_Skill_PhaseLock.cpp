@@ -1,5 +1,6 @@
 #include "PlayerState.h"
 #include "Model.h"
+#include "Monster.h"
 
 void CPlayerState_Skill_PhaseLock::Enter()
 {
@@ -7,7 +8,7 @@ void CPlayerState_Skill_PhaseLock::Enter()
 	{
 		m_pOwner->m_bPhaselockAble = false;
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock, false);
-		m_pOwner->m_pCurPickedCollider->Get_Owner()->On_Collision(ENUM_CLASS(COL_ID::PLAYER_SKILL_PHASELOCK));
+		static_cast<CMonster*>(m_pOwner->m_pCurPickedCollider->Get_Owner())->OnHit_Phaselock();
 	}
 	else
 	{

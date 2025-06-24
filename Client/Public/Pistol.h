@@ -52,6 +52,7 @@ private:
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_PSTStates();
+	virtual void Initialize_BasicStatus() override;
 
 private:
 	class CPSTState*	m_pCurState = { nullptr };

@@ -106,15 +106,18 @@ private:
 	virtual void Set_State_Dead();
 
 private:
-	virtual void On_Collision(_uint iColID) override;
+	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) override;
+
+public:
+	virtual void OnHit_Phaselock() override;
 
 
 private:
 	_uint m_iSpineBoneIdx = {};
 
 private:
-	class CSkagState* m_pCurState = { nullptr };
-	class CSkagState* m_pStates[STATE_END] = { nullptr };
+	class CSkagState*	m_pCurState = { nullptr };
+	class CSkagState*	m_pStates[STATE_END] = { nullptr };
 	SKAG_STATE			m_eCurState = { SKAG_STATE::STATE_END };
 	SKAG_STATE			m_ePrevState = { SKAG_STATE::STATE_END };
 

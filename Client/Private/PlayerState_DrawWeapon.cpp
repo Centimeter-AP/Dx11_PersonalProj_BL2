@@ -1,7 +1,5 @@
 #include "PlayerState.h"
-#include "Model.h"
-
-
+//#include "Model.h"
 
 void CPlayerState_DrawWeapon::Enter() // 무슨 무기로 바꿨는지 정보 받아야함 
 {

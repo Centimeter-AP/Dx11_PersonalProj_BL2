@@ -2,6 +2,8 @@
 
 #include "GameInstance.h"
 #include <Terrain.h>
+#include <Player.h>
+#include "Weapon.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
@@ -171,6 +173,7 @@ HRESULT CMonster::Bind_ShaderResources()
 EVENT CMonster::Death_Delay(_float fTimeDelta)
 {
 	m_fDeathDelay += fTimeDelta;
+
 	if (m_fDeathDelay > m_fForceDeathDelay)
 		return EVN_DEAD;
 	else
@@ -192,27 +195,34 @@ void CMonster::Ride_Terrain()
 	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
 }
 
-void CMonster::On_Collision(_uint iColID)
+void CMonster::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
-	switch (iColID)
+	COL_ID eHitColID = static_cast<COL_ID>(iHitColID);
+
+	if (CI_PLWEAPON(eHitColID))
 	{
-	case ENUM_CLASS(COL_ID::PLAYER_WEAPON_AR):
-		Set_State_Dead();
-		break;
-	case ENUM_CLASS(COL_ID::PLAYER_WEAPON_PST):
-		Set_State_Dead();
-		break;
-	default:
-		break;
+		m_iHP -= static_cast<const CWeapon*>(static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurWeapon())->Get_Damage();
+		if (m_iHP <= 0)
+		{
+			m_iHP = 0;
+			Set_State_Dead();
+		}
 	}
+	//switch (iHitColID)
+	//{
+	//case ENUM_CLASS(COL_ID::PLAYER_WEAPON_AR):
+	//	break;
+	//default:
+	//	break;
+	//}
 }
 
 void CMonster::Initialize_BasicStatus(_int iLevel)
 {
-	m_iHP = 0.f;
-	m_iMaxHP = 0.f;
-	m_iAttackPower = 0.f;
-	m_iDefense = 0.f;
+	m_iHP = 0;
+	m_iMaxHP = 0;
+	m_iAttackPower = 0;
+	m_iDefense = 0;
 }
 
 void CMonster::Free()

@@ -67,8 +67,8 @@ void CCollider_Manager::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
 		{
 			if (pSrcCollider != pDstCollider && true == pSrcCollider->Intersect(pDstCollider))
 			{
-				pSrcCollider->Get_Owner()->On_Collision(pDstCollider->Get_ColliderID());
-				pDstCollider->Get_Owner()->On_Collision(pSrcCollider->Get_ColliderID());
+				pSrcCollider->Get_Owner()->On_Collision(pSrcCollider->Get_ColliderID(), pDstCollider->Get_ColliderID(), pDstCollider);
+				pDstCollider->Get_Owner()->On_Collision(pDstCollider->Get_ColliderID(), pSrcCollider->Get_ColliderID(), pSrcCollider);
 				if (pSrcCollider->Get_Type() == COLLIDER::AABB && pDstCollider->Get_Type() == COLLIDER::AABB)
 				{
 					_float3 vSrcPen = pSrcCollider->Get_Penetrated();

@@ -1,6 +1,7 @@
 #include "Gravity.h"
 #include "Transform.h"
 #include "Navigation.h"
+#include <VIBuffer_Terrain.h>
 
 CGravity::CGravity(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent{ pDevice, pContext }
@@ -50,6 +51,56 @@ void CGravity::Update(_float fTimeDelta)
 	_float3 vCurPos;
 	XMStoreFloat3(&vCurPos, vPos);
 
+	_float3 vNavPos = {};
+	_vector vecNavPos = m_pNavigationCom->SetUp_Height(vPos, 0.f);
+	XMStoreFloat3(&vNavPos, vecNavPos);
+
+	_float fNavY = vNavPos.y;
+	//if (m_pNavigationCom->Get_Height(vCurPos, fNavY))  // 예: NavMesh 높이 반환
+	{
+		if (vCurPos.y <= fNavY + m_fOffsetY)
+		{
+			vCurPos.y = fNavY + m_fOffsetY;
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetY(vecNavPos, fNavY + m_fOffsetY));
+
+			m_fVerticalVelocity = 0.f;
+			m_isGrounded = true;
+		}
+	}
+}
+
+
+void CGravity::Update_NoNav(_float fTimeDelta, CVIBuffer_Terrain* pTerrainBuffer)
+{
+	if (m_isGrounded)
+		return;
+
+	// 중력 속도 갱신
+	m_fVerticalVelocity += m_fGravity * fTimeDelta;
+
+	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
+	vPos.m128_f32[1] += m_fVerticalVelocity * fTimeDelta;
+	m_pTransformCom->Set_State(STATE::POSITION, vPos);
+
+	// 현재 위치의 NavMesh Y값 얻기
+	_float3 vCurPos;
+	XMStoreFloat3(&vCurPos, vPos);
+
+
+
+
+	
+	_float x = m_pTransformCom->Get_WorldMatrix4x4Ref()._41;
+	_float z = m_pTransformCom->Get_WorldMatrix4x4Ref()._43;
+	_float y = pTerrainBuffer->Get_Height(x, z);
+
+	_float yOffset = 0.3f;
+	XMVECTOR fixedPos = XMVectorSet(x, y + yOffset, z, 1.0f);
+	m_pTransformCom->Set_State(STATE::POSITION, fixedPos);
+
+
+
+	////
 	_float3 vNavPos = {};
 	_vector vecNavPos = m_pNavigationCom->SetUp_Height(vPos, 0.f);
 	XMStoreFloat3(&vNavPos, vecNavPos);

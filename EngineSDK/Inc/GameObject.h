@@ -39,7 +39,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	virtual void On_Collision(_uint iColID) {};
+	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) {};
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -75,11 +75,13 @@ protected:
 
 
 	// Replace들은 오브젝트 삭제를 안해주니까 누수 주의할 것!!!!!!!!!!!!!!! 꼭 항상 알아서 지워주기 바람 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
 	// 내부적으로 생성해서 넣고 반환값으로 이미 있었던 놈을 뽑아 줍니다.
 	CGameObject* Replace_PartObject(_uint iPrototypeLevelIndex, const _wstring& strPartObjKey, const _wstring& strPrototypeTag, void* pArg);
 	// 생성 된 걸 갖다 넣고 반환값으로 이미 있었던 놈을 뽑아 줍니다.
 	CGameObject* Replace_PartObject(const _wstring& strPartObjKey, CGameObject* pReplaceObject);
 
+public:
 	CGameObject* Find_PartObject(const _wstring& strPartObjKey);
 
 public:

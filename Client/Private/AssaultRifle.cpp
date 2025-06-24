@@ -34,6 +34,8 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 	if (FAILED(Ready_ARStates()))
 		return E_FAIL;
 
+	Initialize_BasicStatus();
+
 	m_pModelCom->Set_Animation(3, false);
 	m_pModelCom->Set_Animation_TickPerSecond_All(30.f);
 	m_pModelCom->Play_Animation(0.01f);
@@ -99,7 +101,6 @@ void CAssaultRifle::Update_State(_float fTimeDelta)
 	m_pCurState->Execute(fTimeDelta);
 }
 
-
 HRESULT CAssaultRifle::Ready_Components(void* pArg)
 {
 	/* For.Com_Model */
@@ -120,6 +121,15 @@ HRESULT CAssaultRifle::Ready_ARStates()
 	m_pCurState = m_pStates[AR_STATE::STATE_Idle];
 
 	return S_OK;
+}
+
+void CAssaultRifle::Initialize_BasicStatus()
+{
+	m_iDamage = { 13 };
+	m_fAccuracy = { 82.0f };
+	m_fFireRate = { 8.3 }; 
+	m_iMagazineSize = { 26 };
+	m_iCurMagazineLeft = { 26 };
 }
 
 CAssaultRifle* CAssaultRifle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

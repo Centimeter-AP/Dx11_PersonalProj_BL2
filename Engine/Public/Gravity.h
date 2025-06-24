@@ -36,6 +36,7 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 	void Update(_float fTimeDelta);
+	void Update_NoNav(_float fTimeDelta, class CVIBuffer_Terrain* pTerrainBuffer);
 
 
 public:

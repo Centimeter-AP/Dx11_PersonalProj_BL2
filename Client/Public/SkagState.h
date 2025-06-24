@@ -683,7 +683,6 @@ private:
 	const _float m_fLeapDist = { 30.f };
 };
 
-
 class CSkagState_Phaselocked final : public CSkagState
 {
 public:
@@ -757,7 +756,6 @@ public:
 	}
 	virtual void Exit() override
 	{
-
 	}
 	virtual void Free() override { __super::Free(); }
 private:

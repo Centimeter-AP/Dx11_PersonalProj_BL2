@@ -2,7 +2,7 @@
 #include "PlayerState.h"
 #include "GameInstance.h"
 #include "Camera.h"
-#include <Terrain.h>
+#include "Terrain.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
 constexpr _float NONCOMBAT_TIMER = 10.f;
@@ -161,7 +161,7 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
-void CPlayer::On_Collision(_uint iColID)
+void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
 	m_pColliderCom->Set_ColliderColor(RGBA_RED);
 
@@ -407,6 +407,20 @@ void CPlayer::Skill_Cooldowns(_float fTimeDelta)
 			m_bPhaselockAble = true;
 		}
 	}
+}
+
+const CGameObject* CPlayer::Get_CurWeapon()
+{
+	switch (m_eCurWeapon)
+	{
+	case CPlayer::WEAPON_TYPE::WTYPE_AR:
+		return Find_PartObject(L"PartObject_Player_Weapon_AR");
+	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
+		return Find_PartObject(L"PartObject_Player_Weapon_Pistol");
+	default:
+		break;
+	}
+	return nullptr;
 }
 
 void CPlayer::Check_Player_NoHitTime(_float fTimeDelta)

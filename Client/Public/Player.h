@@ -83,7 +83,7 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	virtual void On_Collision(_uint iColID) override;
+	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) override;
 
 	void Key_Input(_float fTimeDelta);
 		 
@@ -112,6 +112,7 @@ public:
 
 	const _float& Get_PhaselockDuration() { return m_fPhaselockDuration; }
 	const _bool Get_PhaselockAble() { return m_bPhaselockAble; }
+	const CGameObject* Get_CurWeapon();
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
