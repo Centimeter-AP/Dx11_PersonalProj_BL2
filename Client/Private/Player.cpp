@@ -4,7 +4,8 @@
 #include "Camera.h"
 #include <Terrain.h>
 
-#define PLAYER_DEFAULTSPEED 10.f
+constexpr _float PLAYER_DEFAULTSPEED = 10.f;
+constexpr _float NONCOMBAT_TIMER = 10.f;
 
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -37,6 +38,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
+
+	Initialize_BasicStatus();
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
@@ -74,7 +77,6 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	Update_State(fTimeDelta);
 	//Ride_Terrain();
 	Key_Input(fTimeDelta);
-	Raycast_Object();
 	if (m_pGravityCom->Is_Grounded())
 		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 5.f));
 	m_pGravityCom->Update(fTimeDelta);
@@ -87,6 +89,9 @@ EVENT CPlayer::Update(_float fTimeDelta)
 	if (m_isActive == false)
 		return EVN_NONE;
 
+	Check_Player_NoHitTime(fTimeDelta);
+	Recharge_Shield(fTimeDelta);
+	Cooldown_Phaselock(fTimeDelta);
 
 	for (auto& pPartObject : m_PartObjects)
 	{
@@ -97,8 +102,6 @@ EVENT CPlayer::Update(_float fTimeDelta)
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 	//auto val = m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("Camera"))
 
-
-
 	return EVN_NONE;
 }
 
@@ -106,12 +109,13 @@ void CPlayer::Late_Update(_float fTimeDelta)
 {
 	/*if (m_isActive == false)
 		return;*/
+	Raycast_Object();
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Late_Update(fTimeDelta);
 	}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this); // ㅋㅋ 고치시길
 }
 
 HRESULT CPlayer::Render()
@@ -140,6 +144,17 @@ HRESULT CPlayer::Render()
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Render();
+
+	_wstring strTest;
+	_wstring strCurPickedCollider;
+	if (m_pCurPickedCollider != nullptr)
+		strCurPickedCollider = m_pCurPickedCollider->Get_Owner()->Get_VIBufferTag();
+
+	strTest = TEXT("PlayerVariables");
+	strTest += TEXT("\nCurPickedCollider : ") + strCurPickedCollider;
+	strTest += TEXT("\nCurPickedDistance : ") + to_wstring(m_fCurPickedDistance);
+	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strTest.c_str(), _float2(400.f, 0.f), XMVectorSet(0.7f, 0.1f, 0.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
+
 
 #endif 
 
@@ -202,8 +217,7 @@ void CPlayer::Raycast_Object()
 
 	_vector vEye = XMVectorSetW(matFinal.r[3], 1.f);
 	_vector vLook = XMVectorSetW(XMVector4Normalize(matFinal.r[0]), 0.f);
-	_float Dist = {};
-	m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::MONSTER), Dist);
+	m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::MONSTER), m_fCurPickedDistance);
 	//if (m_pCurPickedCollider != nullptr)
 	//	int a = 0;
 }
@@ -263,6 +277,7 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	GravityDesc.fJumpPower = 20.f;
 	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
 	GravityDesc.pOwnerTransformCom = m_pTransformCom;
+	GravityDesc.fOffsetY = 5.f;
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
 		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
 		return E_FAIL;
@@ -394,15 +409,55 @@ void CPlayer::Skill_Cooldowns(_float fTimeDelta)
 	}
 }
 
+void CPlayer::Check_Player_NoHitTime(_float fTimeDelta)
+{
+	m_fNoHitTimeTicker += fTimeDelta;
+	if (m_fShield < m_fMaxShield && m_fNoHitTimeTicker >= m_fShieldRechargeDelay)
+	{
+		Recharge_Shield(fTimeDelta);
+	}
+	if (true == m_bCombat && m_fNoHitTimeTicker >= NONCOMBAT_TIMER)
+		m_bCombat = false;
+}
+
+void CPlayer::Recharge_Shield(_float fTimeDelta)
+{
+	_float fRechargePerTick = m_iShieldRechargeRate * fTimeDelta;
+	m_fShield += fRechargePerTick;
+
+	if (m_fShield >= m_fMaxShield)
+		m_fShield = m_fMaxShield;
+}
+
 void CPlayer::Initialize_BasicStatus()
 {
 	m_iLevel = { 1 };
 
 	m_iMaxHP = m_iHP = { 90 };
 	
-	m_iShield = {};
+	m_fMaxShield = m_fShield = {100.f};
 	m_bShield = { true }; // 이걸따로두는게맞나?
-	
+	m_iShieldRechargeRate = {21};
+	m_fShieldRechargeDelay = {3.3f};
+
+	m_fPhaselockDuration = { 3.f };
+	m_fPhaselockCooldown = { 5.f };
+	m_fPhaselockCooldownTicker = {};
+	m_fPhaselockUsableDistance = {100.f};
+
+}
+
+void CPlayer::Cooldown_Phaselock(_float fTimeDelta)
+{
+	if (false == m_bPhaselockAble)
+	{
+		m_fPhaselockCooldownTicker += fTimeDelta;
+		if (m_fPhaselockCooldownTicker >= m_fPhaselockCooldown)
+		{
+			m_bPhaselockAble = true;
+			m_fPhaselockCooldownTicker = 0.f;
+		}
+	}
 }
 
 void CPlayer::Change_Weapon(WEAPON_TYPE eWeaponType)

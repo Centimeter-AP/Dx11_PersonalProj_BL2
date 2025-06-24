@@ -2,6 +2,7 @@
 
 #include "Skag.h"
 #include "GameInstance.h"
+#include <Player.h>
 
 NS_BEGIN(Client)
 
@@ -696,15 +697,14 @@ public:
 	{
 		cout << "Phaselocked" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Lift, false);
-		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Lift), 1.f);
+		//m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Lift), 15.f);
 		m_ePhaselockStatus = PL_LIFT;
-		m_fImsiSkillVar = 0.f;
+		m_fPhaselockTicker = 0.f;
 		m_pOwner->m_pGravityCom->Set_IsGrounded(false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		_bool res = m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
-		if (true == res)
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
 			switch (m_ePhaselockStatus)
 			{
@@ -713,12 +713,12 @@ public:
 				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Loop, true);
 				break;
 			case PL_FALL:
-				m_ePhaselockStatus = PL_LAND;
-				m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Land), 3.f);
-				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Land, false);
+			//	m_ePhaselockStatus = PL_LAND;
+			//	//m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Land), .f);
+			//	Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Land, false);
 				break;
 			case PL_LAND:
-				m_pOwner->m_pGravityCom->Set_IsGrounded(true);
+				//m_pOwner->m_pGravityCom->Set_IsGrounded(true);
 				m_pOwner->Set_State(CSkag::STATE_Provoked_Idle);
 				break;
 			default:
@@ -729,18 +729,25 @@ public:
 		switch (m_ePhaselockStatus)
 		{
 		case PL_LIFT:
-			m_pOwner->m_pTransformCom->Go_Up(fTimeDelta * 5.f);
+			m_pOwner->m_pTransformCom->Go_Up(fTimeDelta * 0.5f);
 			break;
 		case PL_LOOP:
-			m_fImsiSkillVar += fTimeDelta;
-			if (m_fImsiSkillVar >= 2.f)
+			m_fPhaselockTicker += fTimeDelta;
+			if (m_fPhaselockTicker >= static_cast<CPlayer*>(m_pTarget)->Get_PhaselockDuration())
 			{
 				m_ePhaselockStatus = PL_FALL;
-				m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Fall), 3.f);
-				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Fall, true);
+				m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Fall), 3.f); 
+				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Fall, false);
 			}
 			break;
 		case PL_FALL:
+			m_pOwner->m_pGravityCom->Update(fTimeDelta);
+			if (m_pOwner->m_pGravityCom->Is_Grounded())
+			{
+				m_ePhaselockStatus = PL_LAND;
+				//m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Land), 45.f);
+				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Land, false);
+			}
 			break;
 		case PL_LAND:
 			break;
@@ -757,7 +764,7 @@ private:
 	enum PL_STATUS { PL_LIFT, PL_LOOP, PL_FALL, PL_LAND };
 	PL_STATUS	m_ePhaselockStatus = {};
 
-	_float m_fImsiSkillVar = {}; // 플레이어의 스킬 시전시간 따라가게 처리 할 것 
+	_float m_fPhaselockTicker = {}; // 플레이어의 스킬 시전시간 따라가게 처리 할 것 
 };
 
 class CSkagState_Dead final : public CSkagState

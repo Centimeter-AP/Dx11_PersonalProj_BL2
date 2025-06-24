@@ -3,10 +3,18 @@
 
 void CPlayerState_Skill_PhaseLock::Enter()
 {
-	m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock, false); // 애니메이션을 추가해야돼!! 
-
 	if (m_pOwner->m_pCurPickedCollider != nullptr)
+	{
+		m_pOwner->m_bPhaselockAble = false;
+		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock, false);
 		m_pOwner->m_pCurPickedCollider->Get_Owner()->On_Collision(ENUM_CLASS(COL_ID::PLAYER_SKILL_PHASELOCK));
+	}
+	else
+	{
+		m_pOwner->m_bPhaselockAble = false;
+		m_pOwner->m_fPhaselockCooldownTicker = m_pOwner->m_fPhaselockCooldown - 1.f;
+		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock_Fail, false);
+	}
 }
 
 void CPlayerState_Skill_PhaseLock::Execute(_float fTimeDelta)

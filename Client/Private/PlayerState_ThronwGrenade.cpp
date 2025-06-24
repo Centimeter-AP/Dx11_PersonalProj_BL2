@@ -1,8 +1,6 @@
 #include "PlayerState.h"
 #include "Model.h"
 
-
-
 void CPlayerState_ThrowGrenade::Enter()
 {
 	switch (m_pOwner->m_eCurWeapon)

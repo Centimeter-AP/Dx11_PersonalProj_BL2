@@ -143,7 +143,7 @@ CCollider* CCollider_Manager::Raycast(_fvector vRayOrigin, _fvector vRayDir, _fl
 			//}
 		}
 	}
-
+	fRayDist = fLastDistance;
 	return pCurCollider;
 }
 

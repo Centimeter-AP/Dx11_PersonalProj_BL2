@@ -13,6 +13,7 @@ public:
 		class CTransform* pOwnerTransformCom = { nullptr };
 		_float fGravity = -50.f;
 		_float fJumpPower = 10.f;
+		_float fOffsetY = {};
 	}DESC;
 
 /* 
@@ -54,6 +55,7 @@ private:
 	_float					m_fVerticalVelocity = {};
 	_float					m_fJumpPower = {};
 
+	_float					m_fOffsetY = {};
 
 public:
 	static CGravity* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

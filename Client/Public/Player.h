@@ -109,7 +109,9 @@ private:
 
 public:
 	const _float& Get_Pitch() { return m_fPitch; }
+
 	const _float& Get_PhaselockDuration() { return m_fPhaselockDuration; }
+	const _bool Get_PhaselockAble() { return m_bPhaselockAble; }
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
@@ -125,12 +127,18 @@ private: /* ㅋㅋ */
 	_int				m_iMaxHP = {};
 
 	// 쉴드 아이템 만들면 빼고, 아님 그냥 플레이어에 붙이고
-	_int				m_iShield = {};
+	_float				m_fShield = {};
+	_float				m_fMaxShield = {};
 	_bool				m_bShield = { true }; // 이걸따로두는게맞나? 
-	_int				m_iShieldRechargeRate = {};
-	_float				m_fShieldRechargeDelay = {};
+	_int				m_iShieldRechargeRate = {}; // 1초당 얼마나 차는지
+	_float				m_fShieldRechargeDelay = {}; // 일정 시간 이상 피격되지 않으면 채움
 
-	//_float				m_fSpeed = {};
+	_float				m_fNoHitTimeTicker = {}; // 이녀석이 비피격 상태 초 체크 할 것 (전투 비전투 상태도 체크할까요)
+	_bool				m_bCombat = { false }; // 전투/비전투
+
+	void Check_Player_NoHitTime(_float fTimeDelta);
+	void Recharge_Shield(_float fTimeDelta);
+
 
 private: /* 플레이어 스테이트 변수 */
 	_float				m_fSensor = {};
@@ -146,6 +154,7 @@ private: // maybe deprecated /* 카메라 회전 용 변수.. */
 
 private: /* 레이피킹 변수 */
 	CCollider*			m_pCurPickedCollider = { nullptr };
+	_float				m_fCurPickedDistance = {};
 	_uint				m_iCameraBoneIdx = {};
 
 private: /* 달리기 변수 */
@@ -158,6 +167,8 @@ private: /* 스킬 변수 */
 	_float				m_fPhaselockCooldown = {};
 	_float				m_fPhaselockCooldownTicker = {};
 	_float				m_fPhaselockUsableDistance = {};
+
+	void Cooldown_Phaselock(_float fTimeDelta);
 	// 시간 안되겟지만 다른 스킬 추가하면 밑에
 
 

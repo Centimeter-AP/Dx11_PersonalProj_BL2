@@ -83,6 +83,18 @@ void CPlayerState_Jump::Execute(_float fTimeDelta)
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Fire); return;
 	}
+	if (KEY_DOWN(DIK_1))
+	{
+		m_pOwner->Change_Weapon(CPlayer::WTYPE_AR); return;
+	}
+	if (KEY_DOWN(DIK_2))
+	{
+		m_pOwner->Change_Weapon(CPlayer::WTYPE_PISTOL); return;
+	}
+	if (KEY_DOWN(DIK_F) && true == m_pOwner->m_bPhaselockAble)
+	{
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Skill_PhaseLock); return;
+	}
 }
 
 void CPlayerState_Jump::Exit()

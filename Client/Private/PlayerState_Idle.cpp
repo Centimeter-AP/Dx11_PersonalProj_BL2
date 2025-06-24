@@ -54,12 +54,11 @@ void CPlayerState_Idle::Execute(_float fTimeDelta)
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_CloseAttack); return;
 	}
-	if (KEY_DOWN(DIK_F))
+	if (KEY_DOWN(DIK_F) && true == m_pOwner->m_bPhaselockAble)
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Skill_PhaseLock); return;
 	}
 
-	/*임시단축키*/
 	if (KEY_DOWN(DIK_1))
 	{
 		m_pOwner->Change_Weapon(CPlayer::WTYPE_AR);

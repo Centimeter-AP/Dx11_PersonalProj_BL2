@@ -48,8 +48,12 @@ void CPlayerState_Sprint::Execute(_float fTimeDelta)
 	if (KEY_DOWN(DIK_R))
 	{
 		m_pOwner->m_bSprint = false;
-		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);
-		return;
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload); return;
+	}
+	if (KEY_DOWN(DIK_F) && true == m_pOwner->m_bPhaselockAble)
+	{
+		m_pOwner->m_bSprint = false;
+		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Skill_PhaseLock); return;
 	}
 
 	if (MOUSE_DOWN(DIM::LBUTTON))

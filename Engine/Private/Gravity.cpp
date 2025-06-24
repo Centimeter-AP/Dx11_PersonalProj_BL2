@@ -30,6 +30,7 @@ HRESULT CGravity::Initialize(void* pArg)
 	m_pNavigationCom = pDesc->pOwnerNavigationCom;
 	m_pTransformCom = pDesc->pOwnerTransformCom;
 	m_fJumpPower = pDesc->fJumpPower;
+	m_fOffsetY = pDesc->fOffsetY;
     return S_OK;
 }
 
@@ -56,10 +57,10 @@ void CGravity::Update(_float fTimeDelta)
 	_float fNavY = vNavPos.y;
 	//if (m_pNavigationCom->Get_Height(vCurPos, fNavY))  // 예: NavMesh 높이 반환
 	{
-		if (vCurPos.y <= fNavY + 3.f)
+		if (vCurPos.y <= fNavY + m_fOffsetY)
 		{
-			vCurPos.y = fNavY + 3.f;
-			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetY(vecNavPos, fNavY + 3.f));
+			vCurPos.y = fNavY + m_fOffsetY;
+			m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetY(vecNavPos, fNavY + m_fOffsetY));
 
 			m_fVerticalVelocity = 0.f;
 			m_isGrounded = true;
