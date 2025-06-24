@@ -72,6 +72,20 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Draw();
 
+	static _float fTimeAcc = {};
+	static _int	iFPSCounter = {};
+	static _int iFPS = {};
+	fTimeAcc += m_pGameInstance->Get_TimeDelta(TEXT("Timer_120"));
+	iFPSCounter++;
+	if (fTimeAcc >= 1.f)
+	{
+		fTimeAcc = 0.f;
+		iFPS = iFPSCounter;
+		iFPSCounter = 0;
+	}
+	_wstring strFPS = TEXT("FPS : ") + to_wstring(iFPS);
+	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strFPS.c_str(), _float2(0.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
+
 	//m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), TEXT("Help"), _float2(0.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.8f);
 
 

@@ -286,6 +286,11 @@ HRESULT CPlayer::Ready_PartObjects(void* pArg)
 	if (FAILED(Ready_Weapons(pArg)))
 		return E_FAIL;
 
+	if (FAILED(Ready_Effects(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_UIObjects(pArg)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -315,6 +320,17 @@ HRESULT CPlayer::Ready_Weapons(void* pArg)
 	Find_PartObject(L"PartObject_Player_Weapon_Pistol")->Set_Active(true);
 	Find_PartObject(L"PartObject_Player_Weapon_AR")->Set_Active(false);
 	m_ePrevWeapon = m_eCurWeapon = WTYPE_PISTOL;
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_UIObjects(void* pArg)
+{
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_Effects(void* pArg)
+{
 	return S_OK;
 }
 
@@ -365,6 +381,30 @@ HRESULT CPlayer::Bind_ShaderResources()
 	return S_OK;
 }
 
+void CPlayer::Skill_Cooldowns(_float fTimeDelta)
+{
+	if (false == m_bPhaselockAble)
+	{
+		m_fPhaselockCooldownTicker += fTimeDelta;
+		if (m_fPhaselockCooldownTicker >= m_fPhaselockCooldown)
+		{
+			m_fPhaselockCooldownTicker = 0.f;
+			m_bPhaselockAble = true;
+		}
+	}
+}
+
+void CPlayer::Initialize_BasicStatus()
+{
+	m_iLevel = { 1 };
+
+	m_iMaxHP = m_iHP = { 90 };
+	
+	m_iShield = {};
+	m_bShield = { true }; // 이걸따로두는게맞나?
+	
+}
+
 void CPlayer::Change_Weapon(WEAPON_TYPE eWeaponType)
 {
 	if (m_eCurWeapon == eWeaponType)
@@ -408,9 +448,6 @@ void CPlayer::Free()
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
-
-
-
 
 	//for (auto& Weapon : m_pWeapons)
 	//	Safe_Release(Weapon);

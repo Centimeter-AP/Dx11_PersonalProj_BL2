@@ -88,7 +88,8 @@ public:
 	void Key_Input(_float fTimeDelta);
 		 
 	void Set_State(PLA_STATE eState);
-		 
+	void Initialize_BasicStatus();
+
 private: 
 	void Update_State(_float fTimeDelta);
 	void Raycast_Object();
@@ -98,11 +99,17 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_PartObjects(void* pArg);
 	HRESULT Ready_Weapons(void* pArg);
+	HRESULT Ready_UIObjects(void* pArg);
+	HRESULT Ready_Effects(void* pArg);
 	HRESULT Ready_PlayerStates();
 	HRESULT Bind_ShaderResources();
+	
+private:
+	void Skill_Cooldowns(_float fTimeDelta);
 
 public:
 	const _float& Get_Pitch() { return m_fPitch; }
+	const _float& Get_PhaselockDuration() { return m_fPhaselockDuration; }
 
 private:
 	CShader*			m_pShaderCom = { nullptr };
@@ -112,25 +119,47 @@ private:
 	CNavigation*		m_pNavigationCom = { nullptr };
 	_int				m_iNavIndex = {};
 
-private:
+private: /* ㅋㅋ */
+	_int				m_iLevel = { 1 };
+	_int				m_iHP = {};
+	_int				m_iMaxHP = {};
+
+	// 쉴드 아이템 만들면 빼고, 아님 그냥 플레이어에 붙이고
+	_int				m_iShield = {};
+	_bool				m_bShield = { true }; // 이걸따로두는게맞나? 
+	_int				m_iShieldRechargeRate = {};
+	_float				m_fShieldRechargeDelay = {};
+
+	//_float				m_fSpeed = {};
+
+private: /* 플레이어 스테이트 변수 */
 	_float				m_fSensor = {};
 	class CPlayerState*	m_pCurState = { nullptr };
 	class CPlayerState*	m_pStates[STATE_END] = { nullptr };
 	PLA_STATE			m_eCurState = { PLA_STATE::STATE_END };
 	PLA_STATE			m_ePrevState = { PLA_STATE::STATE_END };
 
-private: // maybe deprecated 
+private: // maybe deprecated /* 카메라 회전 용 변수.. */
 	_float				m_fPitch = {};
 	_float				m_fPreviousPitch = {};
 	const _float		m_fPitchLimit = XMConvertToRadians(89.9f); 
 
-private:
+private: /* 레이피킹 변수 */
 	CCollider*			m_pCurPickedCollider = { nullptr };
 	_uint				m_iCameraBoneIdx = {};
 
-private:
+private: /* 달리기 변수 */
 	_bool				m_bSprint = { false };
 	_float				m_fSpeedMultiplier = { 1.f };
+
+private: /* 스킬 변수 */
+	_bool				m_bPhaselockAble = { true };
+	_float				m_fPhaselockDuration = {};
+	_float				m_fPhaselockCooldown = {};
+	_float				m_fPhaselockCooldownTicker = {};
+	_float				m_fPhaselockUsableDistance = {};
+	// 시간 안되겟지만 다른 스킬 추가하면 밑에
+
 
 private:
 	vector<CGameObject*>		m_pWeapons; // 임시 무기 저장 변수, 인벤토리 만들고 꼭 이새끼 날릴 것 !!! 아닌가그냥써야하나??

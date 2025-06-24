@@ -24,7 +24,7 @@ HRESULT CMonster::Initialize(void* pArg)
 {
 	DESC* pDesc = static_cast<DESC*>(pArg);
 	m_iNavIndex = pDesc->iNavigationIndex;
-	m_bActive = pDesc->bActive;
+	m_isActive = pDesc->bActive;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 

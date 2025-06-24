@@ -154,6 +154,9 @@
     <Filter Include="01.Levels\Boss">
       <UniqueIdentifier>{5fee7505-a582-4694-8487-2703996fb08e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03. Monster\Boss_Leviathan">
+      <UniqueIdentifier>{00b59b5b-5db2-4884-9f77-053d94bc6b7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -342,6 +345,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Level_Boss.h">
       <Filter>01.Levels\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Leviathan.h">
+      <Filter>02.GameObjects\03. Monster\Boss_Leviathan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LeviathanState.h">
+      <Filter>02.GameObjects\03. Monster\Boss_Leviathan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -556,6 +565,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Level_Boss.cpp">
       <Filter>01.Levels\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Leviathan.cpp">
+      <Filter>02.GameObjects\03. Monster\Boss_Leviathan</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

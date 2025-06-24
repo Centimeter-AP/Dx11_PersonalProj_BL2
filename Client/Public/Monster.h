@@ -48,6 +48,7 @@ protected:
 	CCollider*			m_pColliderHeadCom = { nullptr };
 
 protected:
+	_int				m_iLevel = {};
 	_int				m_iHP = {};
 	_int				m_iMaxHP = {};
 	_uint				m_iAttackPower = {};
@@ -55,8 +56,6 @@ protected:
 	_float				m_fSpeed = {};
 	_float				m_fDeathDelay = {};
 	const _float		m_fForceDeathDelay = { 0.f };
-
-	_bool				m_bActive = { true };
 
 	CGameObject*		m_pTarget = { nullptr };
 	_float				m_fAttackableDistance = {};

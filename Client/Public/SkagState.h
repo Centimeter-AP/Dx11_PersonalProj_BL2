@@ -614,10 +614,6 @@ public:
 
 #pragma endregion
 
-
-
-
-
 class CSkagState_Run final : public CSkagState
 {
 public:
@@ -761,7 +757,7 @@ private:
 	enum PL_STATUS { PL_LIFT, PL_LOOP, PL_FALL, PL_LAND };
 	PL_STATUS	m_ePhaselockStatus = {};
 
-	_float m_fImsiSkillVar = {};
+	_float m_fImsiSkillVar = {}; // 플레이어의 스킬 시전시간 따라가게 처리 할 것 
 };
 
 class CSkagState_Dead final : public CSkagState

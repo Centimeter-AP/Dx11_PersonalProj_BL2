@@ -62,6 +62,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_60"))))
         return FALSE;
 
+    if (FAILED(pGameInstance->Add_Timer(TEXT("Timer_120"))))
+        return FALSE;
+
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
 
     MSG msg;
@@ -87,11 +90,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         fTimeAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));        
 
-        if (fTimeAcc >= 1.f / 60.f)
-        {
-            pGameInstance->Update_Timer(TEXT("Timer_60"));      
+        //if (fTimeAcc >= 1.f / 60.f)
+        //{
+        //    pGameInstance->Update_Timer(TEXT("Timer_60"));      
 
-            pMainApp->Update(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+        //    pMainApp->Update(pGameInstance->Get_TimeDelta(TEXT("Timer_60")));
+        //    pMainApp->Render();
+
+        //    fTimeAcc = 0.f;
+        //}
+
+        if (fTimeAcc >= 1.f / 120.f)
+        {
+            pGameInstance->Update_Timer(TEXT("Timer_120"));
+
+            pMainApp->Update(pGameInstance->Get_TimeDelta(TEXT("Timer_120")));
             pMainApp->Render();
 
             fTimeAcc = 0.f;
