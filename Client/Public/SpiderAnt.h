@@ -87,6 +87,7 @@ public:
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_SkagStates();
+	virtual void Initialize_BasicStatus(_int iLevel)override;
 
 	void Set_State(SPIDERANT_STATE eState);
 	void Update_State(_float fTimeDelta);

@@ -16,8 +16,8 @@ public:
 		class CGameObject* pOwner = { nullptr };
 		_uint				iColliderID = {};
 		_uint				iColliderGroup = {};
-		COLLIDER	eType;
-		_float3		vCenter;
+		COLLIDER			eType;
+		_float3				vCenter;
 	}BOUNDING_DESC;
 
 protected:

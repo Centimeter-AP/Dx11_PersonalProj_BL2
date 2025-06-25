@@ -18,6 +18,7 @@ public:
 	{
 		COL_ID eCollider_ID = { COL_ID::END };
 		_float3 vTargetPos = {};
+		_uint	iDamage = {1};
 	}DESC;
 
 protected:
@@ -33,12 +34,17 @@ public:
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 
+public:
+	const _uint Get_Damage() { return m_iDamage; }
+
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
 	CCollider* m_pColliderCom = { nullptr };
 
 	_float3	m_vTargetPos = {};
+
+	_uint	m_iDamage = {};
 
 protected:
 	HRESULT Ready_Components(void* pArg);

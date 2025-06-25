@@ -25,6 +25,8 @@ HRESULT CSpiderAnt::Initialize(void* pArg)
  	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	Initialize_BasicStatus(rand() % 3 + 1);
+
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
@@ -83,7 +85,18 @@ EVENT CSpiderAnt::Update(_float fTimeDelta)
 	{
 		Spawn_SpitBullet();
 	}
-
+	if (KEY_DOWN(DIK_3))
+	{
+		Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot1);
+	}
+	if (KEY_DOWN(DIK_4))
+	{
+		Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot3);
+	}
+	if (KEY_DOWN(DIK_5))
+	{
+		Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot6);
+	}
 	auto SpineBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iSpineBoneIdx));
 	auto HeadBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iHeadBoneIdx));
 	m_pColliderCom->Update(SpineBoneMat * m_pTransformCom->Get_WorldMatrix());
@@ -207,6 +220,24 @@ HRESULT CSpiderAnt::Ready_SkagStates()
 	return S_OK;
 }
 
+void CSpiderAnt::Initialize_BasicStatus(_int iLevel)
+{
+	m_fBase_HP = 90.f;
+	m_fBase_ATK = 13.f;
+	m_iMaxHP = m_fBase_HP * powf(m_fGrowthRate, iLevel - 1);
+	m_iHP = m_iMaxHP = m_pGameInstance->AddVariance(m_iMaxHP, 0.15f);
+
+	m_iDamage = m_fBase_ATK * powf(m_fGrowthRate, iLevel - 1);
+	m_iDamage = m_pGameInstance->AddVariance(m_iDamage, 0.15f);
+	m_iDefense = 0.f;
+
+	m_fAttackableDistance = 6.f;
+	m_fDetectiveDistance = 40.f;
+
+	m_fLeapCheckTimer = 10.f;
+	m_fChargeCheckTimer = 10.f;
+}
+
 void CSpiderAnt::Set_State(SPIDERANT_STATE eState)
 {
 	m_ePrevState = m_eCurState;
@@ -240,8 +271,9 @@ HRESULT CSpiderAnt::Spawn_SpitBullet()
 	SpitDesc.bHasTransformPreset = true;
 	SpitDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SpitDesc.fSpeedPerSec = 10.f;
+	SpitDesc.iDamage = m_iDamage;
 	_vector targetPos = m_pTarget->Get_Transform()->Get_State(STATE::POSITION);
-	XMStoreFloat3(&SpitDesc.vTargetPos, XMVectorSetY(targetPos, targetPos.m128_f32[1] + 1.f));
+	XMStoreFloat3(&SpitDesc.vTargetPos, XMVectorSetY(targetPos, targetPos.m128_f32[1]));
 
 	XMStoreFloat4x4(&SpitDesc.PresetMatrix, XMMatrixTranslation(TailBoneMat.r[3].m128_f32[0], TailBoneMat.r[3].m128_f32[1], TailBoneMat.r[3].m128_f32[2]));
 

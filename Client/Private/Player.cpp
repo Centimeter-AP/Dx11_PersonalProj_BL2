@@ -2,6 +2,8 @@
 #include "PlayerState.h"
 #include "GameInstance.h"
 #include "Camera.h"
+#include "Monster.h"
+#include "Bullet.h"
 #include "Terrain.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
@@ -90,7 +92,6 @@ EVENT CPlayer::Update(_float fTimeDelta)
 		return EVN_NONE;
 
 	Check_Player_NoHitTime(fTimeDelta);
-	Recharge_Shield(fTimeDelta);
 	Cooldown_Phaselock(fTimeDelta);
 
 	for (auto& pPartObject : m_PartObjects)
@@ -153,6 +154,7 @@ HRESULT CPlayer::Render()
 	strTest = TEXT("PlayerVariables");
 	strTest += TEXT("\nCurPickedCollider : ") + strCurPickedCollider;
 	strTest += TEXT("\nCurPickedDistance : ") + to_wstring(m_fCurPickedDistance);
+	strTest += TEXT("\nPlayer HP : ") + to_wstring(m_iHP) + L" / " + to_wstring(m_iMaxHP);
 	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strTest.c_str(), _float2(400.f, 0.f), XMVectorSet(0.7f, 0.1f, 0.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
 
 
@@ -163,8 +165,30 @@ HRESULT CPlayer::Render()
 
 void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
-	m_pColliderCom->Set_ColliderColor(RGBA_RED);
+	COL_ID eHitColID = static_cast<COL_ID>(iHitColID);
 
+	m_pColliderCom->Set_ColliderColor(RGBA_RED);
+	if (CI_MONSTERATK(eHitColID))
+	{
+		CMonster* pHitOwner = static_cast<CMonster*>(pHitCol->Get_Owner());
+		if (pHitOwner->Is_FirstHit())
+		{
+			m_iHP -= pHitOwner->Get_Damage();
+			pHitOwner->Set_FirstHit_False(); // true로 바꾸는 건 피격 당사자만
+		}
+	}
+
+	if (CI_MONSTERBULLET(eHitColID))
+	{
+		CBullet* pHitOwner = static_cast<CBullet*>(pHitCol->Get_Owner());
+		m_iHP -= pHitOwner->Get_Damage();
+		pHitOwner->Set_Dead();
+	}
+
+	if (CI_MONSTER(eHitColID))
+		;
+	if (m_iHP <= 0)
+		;
 }
 
 void CPlayer::Key_Input(_float fTimeDelta)
@@ -246,8 +270,8 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::PLAYER);
 
 	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::PLAYER_BODY);
-	AABBDesc.vExtents = _float3(0.3f, 0.8f, 0.3f);
-	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y, 0.f);
+	AABBDesc.vExtents = _float3(0.4f, 1.5f, 0.4f);
+	AABBDesc.vCenter = _float3(0.0f, AABBDesc.vExtents.y - 3.f, 0.f);
 	/* For.Com_Collider */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
@@ -269,7 +293,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
-
 
 	/* For.Com_Gravity */
 	CGravity::DESC	GravityDesc{};
@@ -432,6 +455,8 @@ void CPlayer::Check_Player_NoHitTime(_float fTimeDelta)
 	}
 	if (true == m_bCombat && m_fNoHitTimeTicker >= NONCOMBAT_TIMER)
 		m_bCombat = false;
+	if (m_fNoHitTimeTicker >= 1000.f)
+		m_fNoHitTimeTicker = 0.f;
 }
 
 void CPlayer::Recharge_Shield(_float fTimeDelta)

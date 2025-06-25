@@ -85,7 +85,8 @@ public:
 	void LookAtLerp(_fvector vAt, _float fTimeDelta, _float fLerpSpeed);
 	void LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpeed);
 
-	
+public:
+	_float Compute_Target_Look_Angle(_fvector vTargetPos);
 
 public:
 	HRESULT Bind_ShaderResource(class CShader* pShader, const _char* pConstantName);

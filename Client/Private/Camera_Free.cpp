@@ -28,7 +28,7 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 	Desc.fNear = 0.1f;
 	Desc.fFar = 500.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
-	Desc.fSpeedPerSec = 10.0f;
+	Desc.fSpeedPerSec = 30.0f;
 	Desc.szName = TEXT("Camera");
 
 	m_fSensor = 0.1f;

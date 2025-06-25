@@ -57,6 +57,7 @@ HRESULT CCollider::Initialize(void* pArg)
 
 	pDesc->eType = m_eType;
 	m_pOwner = pDesc->pOwner;
+	m_iColliderID = pDesc->iColliderID;
 	if (m_pOwner == nullptr)
 	{
 		MSG_BOX("이러면안된다니까요");
@@ -76,17 +77,22 @@ HRESULT CCollider::Initialize(void* pArg)
 		break;
 	}
 
-	m_pGameInstance->Add_Collider(pDesc->iColliderGroup, this);
+	m_pGameInstance->Add_Collider(pDesc->iColliderGroup, this); 
 	return S_OK;
 }
 
 void CCollider::Update(_fmatrix WorldMatrix)
 {
+	if (false == m_isActive)
+		return;
 	m_pBounding->Update(WorldMatrix);
 }
 
 _bool CCollider::Intersect(CCollider* pTargetCollider)
 {
+	if (false == m_isActive) // 비활성화 중이면 무조건 충돌x 반환?
+		return false;
+
 	m_isColl = m_pBounding->Intersect(pTargetCollider->m_pBounding);
 
 	return m_isColl;
@@ -94,6 +100,9 @@ _bool CCollider::Intersect(CCollider* pTargetCollider)
 
 _bool CCollider::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist)
 {
+	if (false == m_isActive) // 비활성화 중이면 무조건 충돌x 반환?
+		return false;
+
 	return m_pBounding->Raycast(vRayOrigin, vRayDir, fRayDist);
 }
 
@@ -149,6 +158,9 @@ _bool CCollider::bColliderDraw = true;
 
 HRESULT CCollider::Render()
 {
+	if (false == m_isActive)
+		return S_OK;
+
 	if (bColliderDraw == true)
 	{
 		m_pEffect->SetWorld(XMMatrixIdentity());

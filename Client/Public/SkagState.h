@@ -185,6 +185,42 @@ public:
 	virtual void Free() override { __super::Free(); }
 };
 
+class CSkagState_Turn180 final : public CSkagState
+{
+public:
+	CSkagState_Turn180(class CSkag* pOwner)
+		: CSkagState(pOwner) {
+	}
+	virtual ~CSkagState_Turn180() = default;
+
+public:
+	virtual void Enter() override
+	{
+		cout << "turn180" << endl;
+		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::Dodge_L), 20.f);
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Dodge_L, false);
+		m_fDecel = 1.f;
+	}
+	virtual void Execute(_float fTimeDelta) override
+	{
+		m_fDecel *= 0.98f;
+		m_fDecel = clamp(m_fDecel, 0.3f, 1.f);
+		//m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta * m_fDecel, m_pOwnerNavi);
+		//m_pOwner->m_pTransformCom->Go_Right(fTimeDelta * m_fDecel, m_pOwnerNavi);
+		m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 10.f);
+		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
+		}
+	}
+	virtual void Exit() override
+	{
+	}
+	virtual void Free() override { __super::Free(); }
+private:
+	_float m_fDecel = {1.f};
+};
+
 
 class CSkagState_Provoked final : public CSkagState
 {
@@ -239,6 +275,14 @@ public:
 		m_fCooldown += fTimeDelta;
 		if (m_fCooldown > 0.5f)
 		{
+			auto angle = m_pOwner->m_pTransformCom->Compute_Target_Look_Angle(m_pTargetTransform->Get_State(STATE::POSITION));
+			auto angle150 = XMConvertToRadians(150);
+			if (angle > angle150) //각도 차이 확인
+			{
+				m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Turn180); return;
+			}
+
+			
 			if (Is_Target_Attackable())
 			{
 				rand() % 2 ?
@@ -278,7 +322,7 @@ public:
 		rand() % 2 ?
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite1, false) :
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite2, false);
-
+		m_pOwner->m_pColliderAttackCom->Set_Active(true);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -289,7 +333,8 @@ public:
 	}
 	virtual void Exit() override
 	{
-
+		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->Set_FirstHit_True();
 	}
 	virtual void Free() override { __super::Free(); }
 };
@@ -309,6 +354,7 @@ public:
 		rand() % 2 ?
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue1, false) :
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue2, false);
+		m_pOwner->m_pColliderAttackCom->Set_Active(true);
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -320,6 +366,8 @@ public:
 	}
 	virtual void Exit() override
 	{
+		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->Set_FirstHit_True();
 
 	}
 	virtual void Free() override { __super::Free(); }
@@ -353,6 +401,7 @@ public:
 			{
 				ChargeStatus[1] = true;
 				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Loop, true);
+				m_pOwner->m_pColliderAttackCom->Set_Active(true);
 				//XMStoreFloat3(&vChargePos, m_pTargetTransform->Get_State(STATE::POSITION));
 			}
 		}
@@ -369,7 +418,9 @@ public:
 				if (Dist >= 10.f || fChargingTime > 4.f)
 				{
 					ChargeStatus[2] = true;
+					m_pOwner->m_pColliderAttackCom->Set_Active(false);
 					Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Stop, false);
+					m_pOwner->Set_FirstHit_True();
 				}
 			}
 			//m_pOwner->m_pTransformCom->Go_Target(XMVectorSetW(XMLoadFloat3(&vChargePos), 1.f), fTimeDelta * 1.2f, 1.f);
@@ -416,6 +467,8 @@ public:
 	{
 		cout << "a_Charge_HitWall" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Hitwall, false);
+		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->Set_FirstHit_True();
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -444,6 +497,8 @@ public:
 	{
 		cout << "a_Charge_Strike" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Strike, false);
+		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->Set_FirstHit_True();
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -510,12 +565,15 @@ public:
 			else if (LeapStatus[1] == true)
 			{
 				LeapStatus[2] = true;
+				m_pOwner->m_pColliderAttackCom->Set_Active(false);
+				m_pOwner->Set_FirstHit_True();
 				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Leap_End, false);
 			}
 			else if (LeapStatus[0] == true)
 			{
 				LeapStatus[1] = true;
 				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Leap_Idle, false);
+				m_pOwner->m_pColliderAttackCom->Set_Active(true);
 				//XMStoreFloat3(&vLeapPos, m_pTargetTransform->Get_State(STATE::POSITION));
 			}
 		}
@@ -566,15 +624,19 @@ public:
 	virtual void Enter() override
 	{
 		cout << "a_runbite" << endl;
+		m_pOwner->m_pColliderAttackCom->Set_Active(true);
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Bite, false);
+		m_pOwner->m_pTransformCom->LookAt_NoY(m_pTarget->Get_Transform()->Get_State(STATE::POSITION));
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
+			m_pOwner->m_pColliderAttackCom->Set_Active(false);
+			m_pOwner->Set_FirstHit_True();
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
 		}
-		m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta, m_pOwnerNavi);
+		m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta*1.5f, m_pOwnerNavi);
 	}
 	virtual void Exit() override
 	{
@@ -595,12 +657,15 @@ public:
 	virtual void Enter() override
 	{
 		cout << "a_runtongue" << endl;
+		m_pOwner->m_pColliderAttackCom->Set_Active(true);
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Tongue, false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
+			m_pOwner->m_pColliderAttackCom->Set_Active(false);
+			m_pOwner->Set_FirstHit_True();
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
 		}
 		m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta, m_pOwnerNavi);
@@ -631,10 +696,12 @@ public:
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Run_F, true) :
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Run_F3, true)) :
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Run_F_Big1, true);
+		m_pOwner->m_pModelCom->Play_Animation(0.001f);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		Console(fTimeDelta);
+		m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTarget->Get_Transform()->Get_State(STATE::POSITION), fTimeDelta, 8.f);
 		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 
 		auto Dist = fabs(XMVectorGetX(XMVector3Length(m_pOwner->m_pTransformCom->Get_State(STATE::POSITION) - m_pTargetTransform->Get_State(STATE::POSITION))));
@@ -661,14 +728,13 @@ public:
 				return;
 			}
 		}
-		if (Dist < m_pOwner->m_fAttackableDistance)
+		if (Dist < m_fRunAtkDist)
 		{
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Run_Bite);
 			return;
 				//m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Attack_Tongue);
 		}
 
-		m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTarget->Get_Transform()->Get_State(STATE::POSITION), fTimeDelta, 8.f);
 		m_pOwner->m_pTransformCom->Go_Straight_Hover(/*m_pTargetTransform->Get_State(STATE::POSITION), */fTimeDelta/*, 1.f*/, m_pOwnerNavi);
 		
 	}
@@ -679,8 +745,9 @@ public:
 	virtual void Free() override { __super::Free(); }
 
 private:
-	const _float m_fChargeDist = { 50.f };
+	const _float m_fChargeDist = { 40.f };
 	const _float m_fLeapDist = { 30.f };
+	const _float m_fRunAtkDist = { 15.f };
 };
 
 class CSkagState_Phaselocked final : public CSkagState

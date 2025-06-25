@@ -45,24 +45,23 @@ void CPlayerState_Run::Execute(_float fTimeDelta)
 			if (KEY_PRESSING(DIK_D)){
 				m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
 			}
-			return;
 		}
 	}
-	if (KEY_PRESSING(DIK_W))
+	else if (KEY_PRESSING(DIK_W))
 	{
 		m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
 		if (KEY_PRESSING(DIK_LSHIFT)){
 			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Sprint); return;
 		}
 	}
-	if (KEY_PRESSING(DIK_A)){
-		m_pOwner->m_pTransformCom->Go_Left(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
-	}
-	if (KEY_PRESSING(DIK_D)){
-		m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
-	}
-	if (KEY_PRESSING(DIK_S)){
-		m_pOwner->m_pTransformCom->Go_Backward_Hover(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
+	if (!KEY_PRESSING(DIK_S))
+	{
+		if (KEY_PRESSING(DIK_A)) {
+			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
+		}
+		if (KEY_PRESSING(DIK_D)) {
+			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
+		}
 	}
 
 	if (KEY_DOWN(DIK_R))

@@ -13,7 +13,11 @@ protected:
 
 public:
 	virtual HRESULT Initialize_Prototype();
-	virtual HRESULT Initialize(void* pArg);	
+	virtual HRESULT Initialize(void* pArg);
+
+public:
+	void Set_Active(_bool isActive) { m_isActive = isActive; }
+	const _bool Is_Active() { return m_isActive; }
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };
@@ -22,6 +26,7 @@ protected:
 	class CGameInstance*		m_pGameInstance = { nullptr };
 
 	_bool						m_isCloned = { false };
+	_bool						m_isActive = { true };
 
 public:
 	virtual CComponent* Clone(void* pArg) = 0;

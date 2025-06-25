@@ -333,7 +333,7 @@ void CTransform::LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpe
 
 	_float3         vScaled = Get_Scaled();
 	_vector         vPos = Get_State(STATE::POSITION);
-	_vector			vLook = vResAt - Get_State(STATE::POSITION);
+	_vector			vLook = Get_State(STATE::LOOK);
 
 	_vector        vTargetDir = XMVector3Normalize(vResAt - vPos);
 
@@ -349,6 +349,20 @@ void CTransform::LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpe
 	Set_State(STATE::UP, XMVector3Normalize(vUp) * vScaled.y);
 	Set_State(STATE::LOOK, XMVector3Normalize(vInterpolatedDir) * vScaled.z);
 
+}
+
+_float CTransform::Compute_Target_Look_Angle(_fvector vTargetPos)
+{
+	_vector vPos = Get_State(STATE::POSITION);
+	_vector vTargetDir = vTargetPos - vPos;
+	vTargetDir.m128_f32[1] = 0.f;
+	_vector vLook = Get_State(STATE::LOOK);
+	vLook.m128_f32[1] = 0.f;
+
+	_float dot = XMVectorGetX(XMVector3Dot(XMVector3Normalize(vLook), XMVector3Normalize(vTargetDir)));
+	dot = clamp(dot, -1.0f, 1.0f); // 오차 방지
+
+	return acosf(dot);
 }
 
 

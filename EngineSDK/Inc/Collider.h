@@ -35,6 +35,7 @@ private:
 
 	_bool				m_isColl = { false };
 
+
 #ifdef _DEBUG
 private:
 	PrimitiveBatch<VertexPositionColor>* m_pBatch = { nullptr };

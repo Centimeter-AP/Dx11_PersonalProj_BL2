@@ -52,7 +52,7 @@ public:
 		STATE_Attack_Radius, STATE_Attack_Run_Bite, STATE_Attack_Run_Tongue, STATE_Attack_Spit, STATE_Attack_Tongue,
 		STATE_Death, STATE_Dodge, STATE_GetUp, STATE_Hardflinch, STATE_Idle, STATE_Injured_Walk, STATE_Knockback, STATE_Leap,
 		STATE_Patrol, STATE_Perch_DONTUSE, STATE_PhaseLocked, STATE_Provoked, STATE_Provoked_Idle, STATE_Retreat, STATE_Roar, STATE_Run,
-		STATE_Spawn,
+		STATE_Spawn, STATE_Turn180,
 
 		/*STATE_Idle, STATE_Hover, STATE_Ground_Idle, STATE_Flying_Idle, STATE_Flying_Attack,
 		STATE_Flying_SuicidalDive, STATE_PhaseLocked, STATE_Takeoff, STATE_Landing, STATE_Provoked, STATE_Dead, */STATE_END
@@ -78,6 +78,7 @@ public:
 	friend class CSkagState_Hardflinch_Head; /* 머리 맞았을 때 넉백만 추가 */
 	friend class CSkagState_Dodge; /* 예정은 없음 */
 	friend class CSkagState_Run;
+	friend class CSkagState_Turn180;
 	friend class CSkagState_Hit;
 	friend class CSkagState_Dead;
 	//friend class
@@ -116,6 +117,8 @@ private:
 	_uint m_iSpineBoneIdx = {};
 
 private:
+	CCollider*			m_pColliderAttackCom = { nullptr };
+
 	class CSkagState*	m_pCurState = { nullptr };
 	class CSkagState*	m_pStates[STATE_END] = { nullptr };
 	SKAG_STATE			m_eCurState = { SKAG_STATE::STATE_END };

@@ -2,9 +2,6 @@
 #include "SkagState.h"
 #include "GameInstance.h"
 
-constexpr float BASE_HP = 100.f;
-constexpr float BASE_ATK = 15.f;
-constexpr float GROWTH_RATE = 1.13f; // 13% ¼ºÀå
 
 CSkag::CSkag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster { pDevice, pContext }
@@ -28,7 +25,7 @@ HRESULT CSkag::Initialize(void* pArg)
  	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	Initialize_BasicStatus(2);
+	Initialize_BasicStatus(rand()%3 + 1);
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
@@ -39,8 +36,7 @@ HRESULT CSkag::Initialize(void* pArg)
 	m_eCurState = STATE_Idle;
 	Set_State(m_eCurState);
 
-	m_fAttackableDistance = 3.f;
-	m_fDetectiveDistance = 20.f;
+
 
 	m_iSpineBoneIdx = m_pModelCom->Find_BoneIndex("Spine1");
 	m_iHeadBoneIdx = m_pModelCom->Find_BoneIndex("Head");
@@ -86,7 +82,7 @@ EVENT CSkag::Update(_float fTimeDelta)
 	auto HeadBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iHeadBoneIdx));
 	m_pColliderCom->Update(SpineBoneMat * m_pTransformCom->Get_WorldMatrix());
 	m_pColliderHeadCom->Update(HeadBoneMat * m_pTransformCom->Get_WorldMatrix());
-
+	m_pColliderAttackCom->Update(HeadBoneMat * m_pTransformCom->Get_WorldMatrix());
 	return __super::Update(fTimeDelta);
 }
 
@@ -118,8 +114,10 @@ HRESULT CSkag::Render()
 	
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderAttackCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderCom->Render();
 	m_pColliderHeadCom->Render();
+	m_pColliderAttackCom->Render();
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Render();
@@ -146,8 +144,6 @@ HRESULT CSkag::Ready_Components(void* pArg)
 	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_SKAG);
 	AABBDesc.vExtents = _float3(35.f, 43.f, 35.f);
 	AABBDesc.vCenter = _float3(0.f, -17.f, 0.f);
-
-
 	/* For.Com_Collider */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
@@ -160,11 +156,20 @@ HRESULT CSkag::Ready_Components(void* pArg)
 	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_SKAG_HEAD);
 	SphereDesc.fRadius = 20.f;
 	SphereDesc.vCenter = _float3(0.f, 0.f, 0.f);
-
-	/* For.Com_HeadCollider */
+	/* For.Com_ColliderHead */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
 		TEXT("Com_ColliderHead"), reinterpret_cast<CComponent**>(&m_pColliderHeadCom), &SphereDesc)))
 		return E_FAIL;
+
+	SphereDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MON_ATTACK);
+	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_SKAG_ATK);
+	SphereDesc.fRadius = 100.f;
+	SphereDesc.vCenter = _float3(70.f, 50.f, 0.f);
+	/* For.Com_ColliderAttack */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
+		TEXT("Com_ColliderAttack"), reinterpret_cast<CComponent**>(&m_pColliderAttackCom), &SphereDesc)))
+		return E_FAIL;
+	m_pColliderAttackCom->Set_Active(false);
 
 	/* For.Com_Navigation */
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
@@ -200,8 +205,9 @@ HRESULT CSkag::Ready_SkagStates()
 	m_pStates[SKAG_STATE::STATE_Attack_Run_Tongue] = new CSkagState_Attack_RunTongue(this);
 	m_pStates[SKAG_STATE::STATE_Provoked] = new CSkagState_Provoked(this);
 	m_pStates[SKAG_STATE::STATE_Provoked_Idle] = new CSkagState_Provoked_Idle(this);
-	m_pStates[SKAG_STATE::STATE_Run] = new CSkagState_Run(this);
 	m_pStates[SKAG_STATE::STATE_PhaseLocked] = new CSkagState_Phaselocked(this);
+	m_pStates[SKAG_STATE::STATE_Run] = new CSkagState_Run(this);
+	m_pStates[SKAG_STATE::STATE_Turn180] = new CSkagState_Turn180(this);
 	m_pCurState = m_pStates[SKAG_STATE::STATE_Idle];
 	return S_OK;
 }
@@ -209,12 +215,20 @@ HRESULT CSkag::Ready_SkagStates()
 
 void CSkag::Initialize_BasicStatus(_int iLevel)
 {
-	m_iMaxHP = BASE_HP * powf(GROWTH_RATE, iLevel - 1);
+	m_fBase_HP = 100.f;
+	m_fBase_ATK = 15.f;
+	m_iMaxHP = m_fBase_HP * powf(m_fGrowthRate, iLevel - 1);
 	m_iHP = m_iMaxHP = m_pGameInstance->AddVariance(m_iMaxHP, 0.15f);
 
-	m_iAttackPower = BASE_ATK * powf(GROWTH_RATE, iLevel - 1);
-	m_iAttackPower = m_pGameInstance->AddVariance(m_iAttackPower, 0.15f);
+	m_iDamage = m_fBase_ATK * powf(m_fGrowthRate, iLevel - 1);
+	m_iDamage = m_pGameInstance->AddVariance(m_iDamage, 0.15f);
 	m_iDefense = 0.f;
+
+	m_fAttackableDistance = 6.f;
+	m_fDetectiveDistance = 40.f;
+
+	m_fLeapCheckTimer = 10.f;
+	m_fChargeCheckTimer = 10.f;
 }
 
 void CSkag::Set_State(SKAG_STATE eState)
@@ -313,4 +327,5 @@ void CSkag::Free()
 	__super::Free();
 	for (auto& State : m_pStates)
 		Safe_Release(State);
+	Safe_Release(m_pColliderAttackCom);
 }

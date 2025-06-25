@@ -27,6 +27,7 @@ HRESULT CBullet::Initialize(void* pArg)
 	DESC* pDesc = static_cast<CBullet::DESC*>(pArg);
 
 	m_vTargetPos = pDesc->vTargetPos;
+	m_iDamage = pDesc->iDamage;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -47,7 +48,8 @@ EVENT CBullet::Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return EVN_NONE;
-
+	if (m_bDead)
+		return EVN_DEAD;
 	return EVN_NONE;
 }
 

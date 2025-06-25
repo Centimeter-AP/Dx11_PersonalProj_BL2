@@ -221,7 +221,7 @@ void CMonster::Initialize_BasicStatus(_int iLevel)
 {
 	m_iHP = 0;
 	m_iMaxHP = 0;
-	m_iAttackPower = 0;
+	m_iDamage = 0;
 	m_iDefense = 0;
 }
 

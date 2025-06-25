@@ -389,7 +389,7 @@ void CGameInstance::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
 
 CCollider* CGameInstance::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float fRayLength, _uint iColliderGroupID, _float& fRayDist)
 {
-	return 	m_pCollider_Manager->Raycast(vRayOrigin, vRayDir, fRayLength, iColliderGroupID, fRayDist);
+	return m_pCollider_Manager->Raycast(vRayOrigin, vRayDir, fRayLength, iColliderGroupID, fRayDist);
 }
 
 void CGameInstance::Delete_Collider(const CGameObject* pOwner)

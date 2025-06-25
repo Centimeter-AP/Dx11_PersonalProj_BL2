@@ -74,6 +74,9 @@ void CPlayerState_Jump::Execute(_float fTimeDelta)
 			break;
 		}
 		m_isLanded = true;
+		//if (KEY_PRESSING(DIK_W))
+		//if (KEY_PRESSING(DIK_S)|| KEY_PRESSING(DIK_A)|| KEY_PRESSING(DIK_D))
+
 	}
 	if (KEY_DOWN(DIK_R))
 	{

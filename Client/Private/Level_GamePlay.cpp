@@ -134,17 +134,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	// 667, 668, 767, 808, 936, 853, 770
 	
 
-	SkagDesc.iNavigationIndex = 56;
-	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
-	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-		return E_FAIL;
+	//SkagDesc.iNavigationIndex = 56;
+	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+	//	return E_FAIL;
 
-	SkagDesc.iNavigationIndex = 57;
-	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
-	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-		return E_FAIL;
+	//SkagDesc.iNavigationIndex = 57;
+	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+	//	return E_FAIL;
 
 	//SkagDesc.iNavigationIndex = 936;
 	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
@@ -157,13 +157,6 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
 	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
 	//	return E_FAIL;
-
-
-
-
-
-
-
 
 
 
@@ -194,7 +187,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
 {
 	CPlayer::DESC PlayerDesc;
 	PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
-	PlayerDesc.fSpeedPerSec = 10.f;
+	PlayerDesc.fSpeedPerSec = 13.f;
 	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 	PlayerDesc.bHasTransformPreset = true;
 	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixScaling(1.5f, 1.5f, 1.5f));
@@ -332,9 +325,10 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 void CLevel_GamePlay::Intersect()
 {
-	//m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); 
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); 
 	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::MONSTER), ENUM_CLASS(COL_GROUP::MONSTER));
-	//m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET)); 
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_ATTACK));
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET));
 }
 
 void CLevel_GamePlay::Key_Input()
