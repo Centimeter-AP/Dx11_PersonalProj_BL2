@@ -24,10 +24,8 @@ HRESULT CCamera_FPS::Initialize(void* pArg)
 {
 	CCamera::CAMERA_DESC			Desc{};
 
-	m_pPlayer = GET_PLAYER;
-	m_pPlayerModel = dynamic_cast<CModel*>(m_pPlayer->Get_Component(L"Com_Model"));
-	m_pPlayerTransform = m_pPlayer->Get_Transform();
-	m_szPlayerCameraBoneName = "Camera";
+	if (FAILED(Initialize_Player()))
+		return E_FAIL;
 
 
 	Desc.vEye = _float3(0.f, 20.f, -15.f);
@@ -57,7 +55,6 @@ void CCamera_FPS::Priority_Update(_float fTimeDelta)
 		return;
 
 	Mouse_Fix();
-	Update_Camera();
 
 
 #ifdef _CONSOLE
@@ -70,7 +67,6 @@ void CCamera_FPS::Priority_Update(_float fTimeDelta)
 	}
 #endif // _CONSOLE
 
-	__super::Bind_Matrices();
 }
 
 EVENT CCamera_FPS::Update(_float fTimeDelta)
@@ -78,6 +74,8 @@ EVENT CCamera_FPS::Update(_float fTimeDelta)
 	if (!m_isUsing)
 		return EVN_NONE;
 
+	Update_Camera();
+	__super::Bind_Matrices();
 	//m_pTransformCom->Go_Straight(fTimeDelta);
 	//m_pTransformCom->Go_Left(fTimeDelta);
 	return EVN_NONE;
@@ -91,6 +89,18 @@ void CCamera_FPS::Late_Update(_float fTimeDelta)
 HRESULT CCamera_FPS::Render()
 {
 	
+	return S_OK;
+}
+
+HRESULT CCamera_FPS::Initialize_Player()
+{
+	m_pPlayer = GET_PLAYER;
+	m_pPlayerModel = dynamic_cast<CModel*>(m_pPlayer->Get_Component(L"Com_Model"));
+	m_pPlayerTransform = m_pPlayer->Get_Transform();
+	m_szPlayerCameraBoneName = "Camera";
+
+	if (FAILED(Set_PlayerBone()))
+		return E_FAIL;
 	return S_OK;
 }
 

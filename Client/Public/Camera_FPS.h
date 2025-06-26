@@ -29,6 +29,7 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	HRESULT Initialize_Player(); // 임시 함수임 카메라매니저좀 만드삼
 	
 private:
 	HRESULT Set_PlayerBone();

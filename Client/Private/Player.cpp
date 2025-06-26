@@ -76,12 +76,8 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	}
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 
-	Update_State(fTimeDelta);
-	//Ride_Terrain();
-	Key_Input(fTimeDelta);
-	if (m_pGravityCom->Is_Grounded())
-		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 5.f));
-	m_pGravityCom->Update(fTimeDelta);
+
+
 
 	//Spine3
 }
@@ -90,7 +86,12 @@ EVENT CPlayer::Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return EVN_NONE;
-
+	Key_Input(fTimeDelta);
+	Update_State(fTimeDelta);
+	//Ride_Terrain();
+	if (m_pGravityCom->Is_Grounded())
+		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 5.f));
+	m_pGravityCom->Update(fTimeDelta);
 	Check_Player_NoHitTime(fTimeDelta);
 	Cooldown_Phaselock(fTimeDelta);
 
@@ -116,7 +117,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Late_Update(fTimeDelta);
 	}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this); // ㅋㅋ 고치시길
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this); // ㅋㅋ 고치시길
 }
 
 HRESULT CPlayer::Render()
@@ -401,19 +402,19 @@ HRESULT CPlayer::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
 		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+	//	return E_FAIL;
 
-	const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
+	//const LIGHT_DESC* pLightDesc = m_pGameInstance->Get_Light(0);
 
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
-		return E_FAIL;
-	if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
-		return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDir", &pLightDesc->vDirection, sizeof(_float4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightDiffuse", &pLightDesc->vDiffuse, sizeof(_float4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightAmbient", &pLightDesc->vAmbient, sizeof(_float4))))
+	//	return E_FAIL;
+	//if (FAILED(m_pShaderCom->Bind_RawValue("g_vLightSpecular", &pLightDesc->vSpecular, sizeof(_float4))))
+	//	return E_FAIL;
 
 
 	return S_OK;

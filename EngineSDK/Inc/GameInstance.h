@@ -100,6 +100,7 @@ public:
 #pragma region LIGHT_MANAGER
 	const LIGHT_DESC* Get_Light(_uint iIndex);
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 #pragma endregion
 
 #pragma region FONT_MANAGER
@@ -118,6 +119,21 @@ public:
 #pragma endregion
 
 
+#pragma region TARGET_MANAGER
+	HRESULT Add_RenderTarget(const _wstring& strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
+	HRESULT Add_MRT(const _wstring& strMRTTag, const _wstring& strTargetTag);
+	HRESULT Begin_MRT(const _wstring& strMRTTag);
+	HRESULT End_MRT();
+	HRESULT Bind_RT_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pContantName);
+
+#ifdef _DEBUG
+	HRESULT Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
+	HRESULT Render_MRT_Debug(const _wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+#endif
+
+#pragma endregion
+
+
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
 	class CPrototype_Manager*	m_pPrototype_Manager = { nullptr };
@@ -132,6 +148,7 @@ private:
 	class CFont_Manager*		m_pFont_Manager = { nullptr };
 	class CCollider_Manager*	m_pCollider_Manager = { nullptr };
 	class CCamera_Manager*		m_pCamera_Manager = { nullptr };
+	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 
 public:
 	void Release_Engine();

@@ -5,7 +5,7 @@
 #include "Rakk.h"
 #include "Skag.h"
 #include "SpiderAnt.h"
-#include "Camera.h"
+#include "Camera_FPS.h"
 
 #define CAM_FREE 0
 #define CAM_FPS 1
@@ -197,6 +197,9 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
 		ENUM_CLASS(LEVEL::STATIC), strLayerTag, &PlayerDesc)))
 		return E_FAIL;
+
+	//CCamera_FPS* pFPSCamera = static_cast<CCamera_FPS*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::GAMEPLAY), L"Layer_Camera", CAM_FPS));
+	//pFPSCamera->Initialize_Player();
 	return S_OK;
 }
 

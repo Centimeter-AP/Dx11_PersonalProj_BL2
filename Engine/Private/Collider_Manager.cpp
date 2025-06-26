@@ -76,9 +76,9 @@ void CCollider_Manager::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
 				if (pSrcCollider->Get_Type() == COLLIDER::AABB && pDstCollider->Get_Type() == COLLIDER::AABB)
 				{
 					_float3 vSrcPen = pSrcCollider->Get_Penetrated();
-					pSrcCollider->Get_Owner()->Get_Transform()->Go_Dir(XMLoadFloat3(&vSrcPen), 0.016f);
+					pSrcCollider->Get_Owner()->Get_Transform()->Go_Dir(XMLoadFloat3(&vSrcPen), 0.008f);
 					_float3 vDstPen = pDstCollider->Get_Penetrated();
-					pDstCollider->Get_Owner()->Get_Transform()->Go_Dir(XMLoadFloat3(&vDstPen), 0.016f);
+					pDstCollider->Get_Owner()->Get_Transform()->Go_Dir(XMLoadFloat3(&vDstPen), 0.008f);
 				}
 			}
 		}

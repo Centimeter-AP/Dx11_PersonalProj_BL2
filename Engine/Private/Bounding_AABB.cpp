@@ -70,7 +70,6 @@ HRESULT CBounding_AABB::Render(PrimitiveBatch<VertexPositionColor>* pBatch, _fve
 
 #endif
 
-
 _bool CBounding_AABB::Intersect_ToAABB(CBounding* pTarget)
 {
 	_float3		vSourMin = Compute_Min();
@@ -96,7 +95,7 @@ _bool CBounding_AABB::Intersect_ToAABB(CBounding* pTarget)
 	m_vPenetratedVector = push;
 	static_cast<CBounding_AABB*>(pTarget)->m_vPenetratedVector = { -push.x, -push.y, -push.z };
 
-	return true;	
+	return true;
 }
 
 _float3 CBounding_AABB::Compute_Min()

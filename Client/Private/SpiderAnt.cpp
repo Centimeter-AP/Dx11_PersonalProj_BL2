@@ -111,25 +111,9 @@ void CSpiderAnt::Late_Update(_float fTimeDelta)
 
 HRESULT CSpiderAnt::Render()
 {
-	if (FAILED(__super::Bind_ShaderResources()))
+	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-
-	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMesh; i++)
-	{
-		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
-			continue;
-		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
-		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
-
-		if (FAILED(m_pModelCom->Render(i)))
-			return E_FAIL;
-	}
-	
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderCom->Render();
