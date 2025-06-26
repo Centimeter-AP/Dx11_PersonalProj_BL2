@@ -33,6 +33,12 @@ void CLevel_Logo::Update(_float fTimeDelta)
 			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::MAPTOOL))))
 			return;
 	}
+	else if (KEY_DOWN(DIK_F3))
+	{
+		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BOSS))))
+			return;
+	}
 }
 
 HRESULT CLevel_Logo::Render()

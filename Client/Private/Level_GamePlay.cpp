@@ -6,6 +6,7 @@
 #include "Skag.h"
 #include "SpiderAnt.h"
 #include "Camera_FPS.h"
+#include "Sky.h"
 
 #define CAM_FREE 0
 #define CAM_FPS 1
@@ -81,8 +82,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_BackGround(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Sky(const _wstring strLayerTag)
 {
+	CSky::DESC skydesc = {};
+	skydesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Sky"),
-		ENUM_CLASS(LEVEL::STATIC), strLayerTag)))
+		ENUM_CLASS(LEVEL::STATIC), strLayerTag, &skydesc)))
 		return E_FAIL;
 
 	return S_OK;

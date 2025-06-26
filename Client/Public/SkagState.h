@@ -77,6 +77,7 @@ protected:
 
 	_float			m_fTestTick = {};
 
+
 	const _float	m_fSkillCheck = 5.f;
 };
 
@@ -89,7 +90,7 @@ protected:
 							 ㄴ (가까워졌을 때 중거리에서 추가 분기 - 한번 체크 후 Exit할 때 bool초기화) Attack_Leap
 							 ㄴ (근거리에서 가만히 있을 때 공격) Attack_Bite, Attack_Claw
 	  ㄴ 피격시 확률 적으로 Dodge? (일단 x)
-	  ㄴ 이런 시발
+	  ㄴ 이런 
 
 	  몹 종류를 나눌까?
 

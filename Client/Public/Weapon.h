@@ -38,7 +38,6 @@ protected:
 	class CTransform*		m_pPlayerTransform = { nullptr };
 	CModel*					m_pPlayerModel = { nullptr };
 	string					m_szPlayerCameraBoneName;
-	const _float4x4*		m_pSocketMatrix = { nullptr };
 	const _float4x4*		m_pPlayerWorldMatrix = { nullptr };
 
 protected:

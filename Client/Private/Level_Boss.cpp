@@ -5,7 +5,9 @@
 #include "Rakk.h"
 #include "Skag.h"
 #include "SpiderAnt.h"
+#include "Leviathan.h"
 #include "Camera.h"
+#include "Sky.h"
 
 #define CAM_FREE 0
 #define CAM_FPS 1
@@ -35,8 +37,11 @@ HRESULT CLevel_Boss::Initialize()
 	if (FAILED(Ready_Layer_Camera(TEXT("Layer_Camera"))))
 		return E_FAIL;
 
-	if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	if (FAILED(Ready_Layer_Boss(TEXT("Layer_Boss"))))
 		return E_FAIL;
+
+	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_Layer_MapObject(TEXT("Layer_MapObject"))))
 		return E_FAIL;
@@ -81,8 +86,10 @@ HRESULT CLevel_Boss::Ready_Layer_BackGround(const _wstring strLayerTag)
 
 HRESULT CLevel_Boss::Ready_Layer_Sky(const _wstring strLayerTag)
 {
+	CSky::DESC skydesc = {};
+	skydesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Sky"),
-		ENUM_CLASS(LEVEL::STATIC), strLayerTag)))
+		ENUM_CLASS(LEVEL::STATIC), strLayerTag, &skydesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -158,12 +165,30 @@ HRESULT CLevel_Boss::Ready_Layer_Monster(const _wstring strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_Boss::Ready_Layer_Boss(const _wstring strLayerTag)
+{
+	CLeviathan::DESC	LeviDesc;
+	LeviDesc.bActive = true;
+	LeviDesc.fRotationPerSec = XMConvertToRadians(180.f);
+	LeviDesc.fSpeedPerSec = 10.f;
+	LeviDesc.iLevelID = ENUM_CLASS(LEVEL::BOSS);
+	LeviDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Leviathan");
+	LeviDesc.bHasTransformPreset = true;
+	LeviDesc.iNavigationIndex = 51;
+	XMStoreFloat4x4(&LeviDesc.PresetMatrix, XMMatrixScaling(2.f, 2.f, 2.f)*XMMatrixRotationRollPitchYaw(0.f, XMConvertToRadians(180.f), 0.f) * XMMatrixTranslation(150.f, 10.f, 280.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Leviathan"),
+		ENUM_CLASS(LEVEL::BOSS), strLayerTag, &LeviDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CLevel_Boss::Ready_Layer_Player(const _wstring strLayerTag)
 {
 	CPlayer::DESC PlayerDesc;
 	PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	PlayerDesc.fSpeedPerSec = 10.f;
-	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::BOSS);
 	PlayerDesc.bHasTransformPreset = true;
 	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixScaling(1.5f, 1.5f, 1.5f));
 	PlayerDesc.iNavigationIndex = 32;
@@ -179,7 +204,7 @@ HRESULT CLevel_Boss::Ready_Layer_MapObject(const _wstring strLayerTag)
 {
 	json jLoad;
 
-	ifstream ifs(R"(../Bin/Resources/Map/GamePlay.json)");
+	ifstream ifs(R"(../Bin/Resources/Map/backup/2/GamePlay.json)");
 
 	if (!ifs.is_open())
 	{

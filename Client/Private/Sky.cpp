@@ -27,7 +27,7 @@ HRESULT CSky::Initialize(void* pArg)
 	Desc.fSpeedPerSec = 0.f;
 	Desc.szName = TEXT("Sky");	
 
-	if (FAILED(__super::Initialize(&Desc)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))

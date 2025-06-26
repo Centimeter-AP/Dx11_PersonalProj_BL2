@@ -14,7 +14,7 @@ public:
 		_wstring	strVIBufferTag;
 		CGameObject* pParentObject = { nullptr };
 		const _float4x4* pParentMatrix = { nullptr };
-
+		_bool				bActive = { true };
 	}DESC;
 
 protected:
@@ -47,7 +47,7 @@ protected:
 	class CGameInstance*		m_pGameInstance = { nullptr };
 
 protected:
-	_wstring										m_szName = {};
+	_wstring									m_szName = {};
 	map<const _wstring, class CComponent*>		m_Components;
 	class CTransform*							m_pTransformCom = { nullptr };
 	

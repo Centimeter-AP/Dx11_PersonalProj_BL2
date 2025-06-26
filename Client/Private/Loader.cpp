@@ -20,6 +20,7 @@
 #include "Warrior.h"
 #include "SpiderAnt.h"
 #include "SpiderAntSpit.h"
+#include "Leviathan.h"
 
 //#include "Effect.h"
 #include "Sky.h"
@@ -82,7 +83,10 @@ HRESULT CLoader::Loading()
 	case LEVEL::MAPTOOL:
 		hr = Loading_For_Maptool();
 		break;
-		
+
+	case LEVEL::BOSS:
+		hr = Loading_For_Boss();
+		break;
 	}
 
 	LeaveCriticalSection(&m_CriticalSection);
@@ -397,7 +401,7 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 
 	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(XMConvertToRadians(180.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Sky"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Sky"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
 			"../Bin/Resources/Models/Bin_NonAnim/Sky/Sky.bin", PreTransMatrix))))
 		return E_FAIL;
@@ -418,6 +422,18 @@ HRESULT CLoader::Loading_For_Boss()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_SpiderAnt"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
 			"../Bin/Resources/Models/Bin_Anim/SpiderAnt/SpiderAnt.bin", PreTransMatrix))))
+		return E_FAIL;
+
+	PreTransMatrix = /*XMMatrixScaling(0.1f, 0.1f, 0.1f) * */XMMatrixRotationY(XMConvertToRadians(-90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Leviathan"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/Boss_Leviathan/Leviathan.bin", PreTransMatrix))))
+		return E_FAIL;
+
+	PreTransMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Levi_HitMesh"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+			"../Bin/Resources/Models/Bin_NonAnim/Leviathan_HitMesh.bin", PreTransMatrix))))
 		return E_FAIL;
 
 
@@ -457,20 +473,20 @@ HRESULT CLoader::Loading_For_Boss()
 		CMapObject::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	///* For.Prototype_GameObject_Player */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
-	//	CPlayer::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	/* For.Prototype_GameObject_Player */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
+		CPlayer::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
-	///* For.Prototype_GameObject_AssaultRifle */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"),
-	//	CAssaultRifle::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	/* For.Prototype_GameObject_AssaultRifle */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_AssaultRifle"),
+		CAssaultRifle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
-	///* For.Prototype_GameObject_Pistol */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Pistol"),
-	//	CPistol::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	/* For.Prototype_GameObject_Pistol */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Pistol"),
+		CPistol::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	/* For.Prototype_GameObject_Rakk */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Rakk"),
@@ -488,12 +504,17 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SpiderAnt */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Leviathan"),
+		CLeviathan::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_SpiderAnt */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_SpiderAntSpit"),
 		CSpiderAntSpit::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_Sky */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Sky"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 

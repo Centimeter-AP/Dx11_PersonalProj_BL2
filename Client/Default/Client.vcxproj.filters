@@ -157,6 +157,9 @@
     <Filter Include="02.GameObjects\03. Monster\Boss_Leviathan">
       <UniqueIdentifier>{00b59b5b-5db2-4884-9f77-053d94bc6b7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\03. Monster\Boss_Leviathan\Levi_HitMesh">
+      <UniqueIdentifier>{35183b01-0ea2-461d-8ad0-fe5d4f23363c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -352,6 +355,7 @@
     <ClInclude Include="..\Public\LeviathanState.h">
       <Filter>02.GameObjects\03. Monster\Boss_Leviathan</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Levi_HitMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -569,6 +573,7 @@
     <ClCompile Include="..\Private\Leviathan.cpp">
       <Filter>02.GameObjects\03. Monster\Boss_Leviathan</Filter>
     </ClCompile>
+    <ClCompile Include="..\private\Levi_HitMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

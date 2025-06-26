@@ -19,7 +19,6 @@ class CMonster abstract : public CGameObject
 public:
 	typedef struct tagMonsterDesc : public CGameObject::DESC
 	{
-		_bool				bActive = { true };
 		_int				iNavigationIndex = { -1 };
 
 	}DESC;

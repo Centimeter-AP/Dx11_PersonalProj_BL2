@@ -3,10 +3,12 @@
 
 #include "Level_GamePlay.h"
 #include "Level_Logo.h"
+#include "Level_MapTool.h"
+#include "Level_Boss.h"
+
 #include "Loader.h"
 
 #include "GameInstance.h"
-#include <Level_MapTool.h>
 #include <BackGround.h>
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -51,7 +53,9 @@ void CLevel_Loading::Update(_float fTimeDelta)
 			case LEVEL::MAPTOOL:
 				pLevel = CLevel_MapTool::Create(m_pDevice, m_pContext);
 				break;
-
+			case LEVEL::BOSS:
+				pLevel = CLevel_Boss::Create(m_pDevice, m_pContext);
+				break;
 			}
 
 			if (nullptr == pLevel)

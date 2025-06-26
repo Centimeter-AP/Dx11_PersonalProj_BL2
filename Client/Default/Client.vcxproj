@@ -175,6 +175,7 @@
     <ClInclude Include="..\Public\Level_MapTool.h" />
     <ClInclude Include="..\Public\Leviathan.h" />
     <ClInclude Include="..\Public\LeviathanState.h" />
+    <ClInclude Include="..\public\Levi_HitMesh.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\Logo_Background.h" />
     <ClInclude Include="..\public\GameLogo.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Level_MapTool.cpp" />
     <ClCompile Include="..\Private\Leviathan.cpp" />
+    <ClCompile Include="..\private\Levi_HitMesh.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\Logo_Background.cpp" />
     <ClCompile Include="..\private\GameLogo.cpp" />

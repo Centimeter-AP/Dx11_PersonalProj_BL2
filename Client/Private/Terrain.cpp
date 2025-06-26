@@ -128,7 +128,7 @@ HRESULT CTerrain::Ready_Components()
 			TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 			return E_FAIL;
 		/* For.Com_Navigation */
-		if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Navigation"),
+		if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Navigation"),
 			TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom))))
 			return E_FAIL;
 	}
