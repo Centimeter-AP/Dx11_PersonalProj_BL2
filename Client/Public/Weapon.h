@@ -39,6 +39,7 @@ protected:
 	CModel*					m_pPlayerModel = { nullptr };
 	string					m_szPlayerCameraBoneName;
 	const _float4x4*		m_pPlayerWorldMatrix = { nullptr };
+	const _float4x4*		m_pSocketMatrix = { nullptr };
 
 protected:
 	_int				m_iDamage = {};

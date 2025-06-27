@@ -56,7 +56,7 @@ protected:
 	CGameObject*								m_pParentObject = { nullptr };
 	const _float4x4*							m_pParentMatrix = { nullptr };
 	_float4x4									m_CombindWorldMatrix{};
-	// 파트 오브젝트 부모가 관리할 때: 부모 포인터가 있는 경우는 파츠로 판단 예외처리 
+	// 파트 오브젝트 부모가 관리할 때: 부모 포인터가 있는 경우는 파츠로 판단 예외처리?
 
 protected:
 	_wstring			m_strVIBufferTag;

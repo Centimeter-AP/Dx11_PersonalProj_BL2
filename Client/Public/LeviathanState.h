@@ -82,17 +82,44 @@ public:
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::idle_injured, true);
 		else
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
+
+		m_fCooldown = 0.f;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
-		//m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
+
+		m_fCooldown += fTimeDelta;
+
+		if (m_fCooldown >= 2.f)
+		{
+			switch (rand() % 4)
+			{
+			case 0:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Slam);
+				break;
+			case 1:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_SpitWorm);
+				break;
+			case 2:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
+				break;
+			case 3:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_ThrowRock);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	virtual void Exit() override
 	{
 
 	}
 	virtual void Free() override { __super::Free(); }
+
+private:
+	_float m_fCooldown = {};
 };
 
 class CLeviathanState_Attack_Spray final : public CLeviathanState
@@ -140,11 +167,11 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		cout << " Boss State: Attack_Rock" << endl;
 		if (m_pOwner->m_bInjured)
-			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_rock_throw, true);
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_rock_throw, false);
 		else
-			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Rock_Throw, true);
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Rock_Throw, false);
 
 
 	}
@@ -173,10 +200,13 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		cout << " Boss State: Attack_slam" << endl;
 
-		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
-
+		if (m_pOwner->m_bInjured)
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_tongue_ground_slam, false);
+		else
+			rand() % 3 == 0 ? Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false):
+							  Set_OwnerAnim(CLeviathan::LEVI_ANIM::ground_slam, false); // tongue¥¬....?¿Ω
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -203,9 +233,9 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		cout << " Boss State: Attack_Spitworm" << endl;
 
-		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
+		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Spit_worm, false);
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -234,10 +264,12 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		cout << " Boss State: Damaged" << endl;
 
-		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
-
+		if (m_pOwner->m_bInjured)
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_damage, false);
+		else
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Damage, false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -253,37 +285,9 @@ public:
 	virtual void Free() override { __super::Free(); }
 };
 
-
-class CLeviathanState_Roar final : public CLeviathanState
-{
-public:
-	CLeviathanState_Roar(class CLeviathan* pOwner)
-		: CLeviathanState(pOwner) {
-	}
-	virtual ~CLeviathanState_Roar() = default;
-
-public:
-	virtual void Enter() override
-	{
-		cout << " Boss State: Idle" << endl;
-
-		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
-
-	}
-	virtual void Execute(_float fTimeDelta) override
-	{
-		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
-		{
-			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
-		}
-	}
-	virtual void Exit() override
-	{
-
-	}
-	virtual void Free() override { __super::Free(); }
-};
-
+#define STUN_START	0
+#define STUN_IDLE	1
+#define STUN_END	2
 class CLeviathanState_Stun_Left final : public CLeviathanState
 {
 public:
@@ -295,16 +299,40 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		cout << " Boss State: stun_left" << endl;
 
-		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
-
+		Set_OwnerAnim(CLeviathan::LEVI_ANIM::lefteye_start, false);
+		m_iStunStatus = STUN_START;
+		m_fStunTicker = 0.f;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
-			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
+			switch (m_iStunStatus)	
+			{
+			case STUN_START:
+				m_iStunStatus = STUN_IDLE;
+				Set_OwnerAnim(CLeviathan::LEVI_ANIM::idle_lefteye, true);
+				break;
+			case STUN_IDLE:
+				break;
+			case STUN_END:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (m_iStunStatus == STUN_IDLE)
+		{
+			m_fStunTicker += fTimeDelta;
+			if (m_fStunTicker >= 3.f)
+			{
+				Set_OwnerAnim(CLeviathan::LEVI_ANIM::lefteye_end, false);
+				m_iStunStatus = STUN_END;
+			}
 		}
 	}
 	virtual void Exit() override
@@ -312,6 +340,10 @@ public:
 
 	}
 	virtual void Free() override { __super::Free(); }
+
+private:
+	_float	m_fStunTicker = {};
+	_uint	m_iStunStatus = {};
 };
 
 
@@ -326,16 +358,40 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		cout << " Boss State: stun_right" << endl;
 
-		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
-
+		Set_OwnerAnim(CLeviathan::LEVI_ANIM::righteye_start, false);
+		m_iStunStatus = STUN_START;
+		m_fStunTicker = 0.f;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
-			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
+			switch (m_iStunStatus)
+			{
+			case STUN_START:
+				m_iStunStatus = STUN_IDLE;
+				Set_OwnerAnim(CLeviathan::LEVI_ANIM::idle_righteye, true);
+				break;
+			case STUN_IDLE:
+				break;
+			case STUN_END:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (m_iStunStatus == STUN_IDLE)
+		{
+			m_fStunTicker += fTimeDelta;
+			if (m_fStunTicker >= 3.f)
+			{
+				Set_OwnerAnim(CLeviathan::LEVI_ANIM::righteye_end, false);
+				m_iStunStatus = STUN_END;
+			}
 		}
 	}
 	virtual void Exit() override
@@ -343,8 +399,11 @@ public:
 
 	}
 	virtual void Free() override { __super::Free(); }
-};
 
+private:
+	_float	m_fStunTicker = {};
+	_uint	m_iStunStatus = {};
+};
 
 class CLeviathanState_LookAround final : public CLeviathanState
 {
@@ -357,9 +416,10 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		cout << " Boss State: lookaround" << endl;
 
-		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle, true);
+		rand() % 3 == 0 ? Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle_tongue_out_look_around, false) :
+						  Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle_look_around, false);
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -398,7 +458,7 @@ public:
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
 			//m_pOwner->Set_Dead();
-			//»Ï!
+			//»Ï! ¿œ¥‹ ª©∫∏∞Ì...
 			return;
 		}
 	}

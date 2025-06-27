@@ -24,7 +24,7 @@ public:
 	enum LEVI_STATE {
 		STATE_Idle, STATE_Engage,
 		STATE_Attack_Spray, STATE_Attack_ThrowRock, STATE_Attack_Slam, STATE_Attack_SpitWorm,
-		STATE_Damaged, STATE_Roar, STATE_Stun_Left, STATE_Stun_Right, STATE_LookAround,
+		STATE_Damaged, STATE_Stun_Left, STATE_Stun_Right, STATE_LookAround,
 		STATE_Dead,
 		STATE_END
 	};
@@ -39,7 +39,6 @@ public:
 	friend class CLeviathanState_Attack_Slam;
 	friend class CLeviathanState_Attack_SpitWorm;
 	friend class CLeviathanState_Damaged;
-	friend class CLeviathanState_Roar;
 	friend class CLeviathanState_Stun_Left;
 	friend class CLeviathanState_Stun_Right;
 	friend class CLeviathanState_LookAround;

@@ -28,8 +28,8 @@ HRESULT CLeviathan::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 	
-	if (FAILED(Ready_PartObjects(pArg)))
-		return E_FAIL;
+	//if (FAILED(Ready_PartObjects(pArg)))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_LeviathanStates()))
 		return E_FAIL;
@@ -205,7 +205,6 @@ HRESULT CLeviathan::Ready_LeviathanStates()
 	m_pStates[LEVI_STATE::STATE_Attack_Slam] = new CLeviathanState_Attack_Slam(this);
 	m_pStates[LEVI_STATE::STATE_Attack_SpitWorm] = new CLeviathanState_Attack_SpitWorm(this);
 	m_pStates[LEVI_STATE::STATE_Damaged] = new CLeviathanState_Damaged(this);
-	m_pStates[LEVI_STATE::STATE_Roar] = new CLeviathanState_Roar(this);
 	m_pStates[LEVI_STATE::STATE_Stun_Left] = new CLeviathanState_Stun_Left(this);
 	m_pStates[LEVI_STATE::STATE_Stun_Right] = new CLeviathanState_Stun_Right(this);
 	m_pStates[LEVI_STATE::STATE_LookAround] = new CLeviathanState_LookAround(this);
@@ -275,6 +274,8 @@ void CLeviathan::Free()
 {
 	__super::Free();
 
+	for (auto& State : m_pStates)
+		Safe_Release(State);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
 }
