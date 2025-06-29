@@ -57,9 +57,7 @@ void CLayer::Priority_Update(_float fTimeDelta)
 	{
 		if (nullptr != pGameObject)
 			pGameObject->Priority_Update(fTimeDelta);
-
 	}
-		
 }
 
 void CLayer::Clear()

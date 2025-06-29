@@ -242,6 +242,7 @@ void CPlayer::Raycast_Object()
 	_vector vEye = XMVectorSetW(matFinal.r[3], 1.f);
 	_vector vLook = XMVectorSetW(XMVector4Normalize(matFinal.r[0]), 0.f);
 	m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::MONSTER), m_fCurPickedDistance);
+	//m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::BOSS), m_fCurPickedDistance);
 	//if (m_pCurPickedCollider != nullptr)
 	//	int a = 0;
 }

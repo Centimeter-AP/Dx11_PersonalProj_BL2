@@ -24,7 +24,7 @@ private:
 
 public:
 	void Intersect(class CCollider* pDst, class CCollider* pSrc);
-	void Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID);
+	void Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID, _bool bMovePenetrate = true);
 	_float3 Resolve_Slide_AABB(class CCollider* pMyCol, const _float3 vDesiredMove, _uint iGroupID);
 	class CCollider* Raycast(_fvector vRayOrigin, _fvector vRayDir, _float fRayLength, _uint iColliderGroupID, _float& fRayDist);
 

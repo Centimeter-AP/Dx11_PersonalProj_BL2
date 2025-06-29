@@ -49,7 +49,6 @@ void CPistol::Priority_Update(_float fTimeDelta)
 	__super::Priority_Update(fTimeDelta);
 	Update_State(fTimeDelta);
 
-	cout << "Current Animation : " << m_pModelCom->Get_CurAnimationIndex() << endl;
 }
 
 EVENT CPistol::Update(_float fTimeDelta)

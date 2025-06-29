@@ -47,28 +47,60 @@ HRESULT CLeviathan::Initialize(void* pArg)
 
 void CLeviathan::Priority_Update(_float fTimeDelta)
 {
+	m_iHP = 0;
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
+		{
 			pPartObject.second->Priority_Update(fTimeDelta);
+			m_iHP += static_cast<CLevi_HitMesh*>(pPartObject.second)->Get_HP();
+		}
 	}
 
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 	Update_State(fTimeDelta);
-
+	static _float fTime = 0.f;
+	fTime += fTimeDelta;
+	if (fTime >= 1.f)
+	{
+		cout << "Leviathan HP : " << m_iHP << endl;
+		fTime = 0.f;
+	}
 }
 
 EVENT CLeviathan::Update(_float fTimeDelta)
 {
-	for (auto& pPartObject : m_PartObjects)
-	{
-		if (nullptr != pPartObject.second)
-			pPartObject.second->Update(fTimeDelta);
-	}
+	Update_PartObjects(fTimeDelta);
 
 	m_pColliderGroundAttackCom->Update(m_pTransformCom->Get_WorldMatrix());
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+
+	if (KEY_DOWN(DIK_Z))
+		Spawn_Bullet();
 	return EVN_NONE;
+}
+
+HRESULT CLeviathan::Update_PartObjects(_float fTimeDelta)
+{
+	for (auto iter = m_PartObjects.begin(); iter != m_PartObjects.end(); )
+	{
+		EVENT Events = { EVENT::EVN_NONE };
+		if (nullptr != (iter->second))
+			Events = (iter->second)->Update(fTimeDelta);
+		if (Events == EVENT::EVN_DEAD)
+		{
+			if (iter->first == TEXT("PartObject_HitMesh_LeftEye"))
+				Set_State(LEVI_STATE::STATE_Stun_Left);
+			else if (iter->first == TEXT("PartObject_HitMesh_RightEye"))
+				Set_State(LEVI_STATE::STATE_Stun_Right);
+			m_pGameInstance->Delete_Collider(iter->second);
+			Safe_Release(iter->second);
+			iter = m_PartObjects.erase(iter);
+		}
+		else
+			++iter;
+	}
+	return S_OK;
 }
 
 void CLeviathan::Late_Update(_float fTimeDelta)
@@ -125,7 +157,7 @@ HRESULT CLeviathan::Ready_Components(void* pArg)
 	CBounding_AABB::AABB_DESC AABBDesc = {};
 	AABBDesc.pOwner = this;
 	AABBDesc.eType = COLLIDER::AABB;
-	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
+	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::BOSS);
 	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN);
 	AABBDesc.vExtents = _float3(50.f, 50.f, 50.f);
 	AABBDesc.vCenter = _float3(0.f, AABBDesc.vExtents.y, 0.f);

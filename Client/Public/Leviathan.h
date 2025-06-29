@@ -55,6 +55,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual void Priority_Update(_float fTimeDelta);
 	virtual EVENT Update(_float fTimeDelta);
+	HRESULT Update_PartObjects(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
 

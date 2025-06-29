@@ -651,6 +651,8 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 		return S_OK;
 
 	ofstream ofs(SavePath);
+	if (ofs.is_open())
+		int a = 0;
 	json jSave;
 
 

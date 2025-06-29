@@ -2,6 +2,8 @@
 #include "Leviathan.h"
 #include "Model.h"
 #include "GameInstance.h"
+#include "Weapon.h"
+#include "Player.h"
 
 CLevi_HitMesh::CLevi_HitMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject{ pDevice, pContext }
@@ -30,9 +32,8 @@ HRESULT CLevi_HitMesh::Initialize(void* pArg)
 
 	DESC* pDesc = static_cast<DESC*>(pArg);
 	CModel* pParentModel = static_cast<CModel*>(m_pParentObject->Get_Component(L"Com_Model"));
-
-
-	_int iWeaponBoneIndex = pParentModel->Find_BoneIndex(pDesc->strSocketMatrixName.c_str());
+	m_strSocketBoneName = pDesc->strSocketMatrixName;
+	_int iWeaponBoneIndex = pParentModel->Find_BoneIndex(m_strSocketBoneName.c_str());
 	if (iWeaponBoneIndex < 0)
 		return E_FAIL;
 
@@ -43,18 +44,32 @@ HRESULT CLevi_HitMesh::Initialize(void* pArg)
 
 void CLevi_HitMesh::Priority_Update(_float fTimeDelta)
 {
+	static _float fTime = 0.f;
+	fTime += fTimeDelta;
+	if (fTime >= 1.f)
+	{
+		cout << m_strSocketBoneName << " HP : " << m_iHP << endl;
+		fTime = 0.f;
+	}
+	if (m_iHP <= 0)
+	{
+		m_bDead = true;
+	}
 }
 
 EVENT CLevi_HitMesh::Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return EVN_NONE;
+
+	if (m_bDead)
+		return EVN_DEAD;
+
 	//auto test = m_pTransformCom->Get_WorldMatrix4x4Ref();
 	_matrix matFinal = m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, matFinal);
-	//m_pTransformCom->Set_Matrix(matFinal);
-	//m_pColliderCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix)); 
-	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+
+	m_pColliderCom->Update(matFinal);
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 	return EVN_NONE;
 }
@@ -107,7 +122,7 @@ HRESULT CLevi_HitMesh::Ready_Components(void* pArg)
 	SphereDesc.eType = COLLIDER::SPHERE;
 	SphereDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
 	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN_HITMESH);
-	SphereDesc.fRadius = 20.f;
+	SphereDesc.fRadius = 4.f;
 	SphereDesc.vCenter = _float3(0.f, 0.f, 0.f);
 	/* For.Com_ColliderHead */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
@@ -129,12 +144,22 @@ HRESULT CLevi_HitMesh::Bind_ShaderResources()
 
 void CLevi_HitMesh::Initialize_BasicStatus(_int iLevel)
 {
-	m_iHP = m_iMaxHP = 100; // Example value, adjust as needed
+	m_iHP = m_iMaxHP = 300; // Example value, adjust as needed
 }
 
 void CLevi_HitMesh::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
+	COL_ID eHitColID = static_cast<COL_ID>(iHitColID);
 
+	if (CI_PLWEAPON(eHitColID))
+	{
+		m_iHP -= static_cast<const CWeapon*>(static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurWeapon())->Get_Damage();
+		if (m_iHP <= 0)
+		{
+			m_iHP = 0;
+			Set_State_Dead();
+		}
+	}
 }
 
 CLevi_HitMesh* CLevi_HitMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

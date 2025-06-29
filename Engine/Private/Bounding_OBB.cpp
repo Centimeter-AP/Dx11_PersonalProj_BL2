@@ -54,7 +54,7 @@ _bool CBounding_OBB::Intersect(CBounding* pTarget)
 
 _bool CBounding_OBB::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist)
 {
-	return _bool();
+	return m_pDesc->Intersects(vRayOrigin, vRayDir, fRayDist);
 }
 
 #ifdef _DEBUG

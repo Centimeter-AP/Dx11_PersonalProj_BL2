@@ -68,7 +68,7 @@ void CCollider_Manager::Intersect(CCollider* pDst, CCollider* pSrc)
 	}
 }
 
-void CCollider_Manager::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
+void CCollider_Manager::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID, _bool bMovePenetrate)
 {
 	for (auto& pSrcCollider : m_pColliders[iSrcGroupID])
 	{
@@ -82,7 +82,7 @@ void CCollider_Manager::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
 			{
 				pSrcCollider->Get_Owner()->On_Collision(pSrcCollider->Get_ColliderID(), pDstCollider->Get_ColliderID(), pDstCollider);
 				pDstCollider->Get_Owner()->On_Collision(pDstCollider->Get_ColliderID(), pSrcCollider->Get_ColliderID(), pSrcCollider);
-				if (pSrcCollider->Get_Type() == COLLIDER::AABB && pDstCollider->Get_Type() == COLLIDER::AABB)
+				if (bMovePenetrate == true && pSrcCollider->Get_Type() == COLLIDER::AABB && pDstCollider->Get_Type() == COLLIDER::AABB)
 				{
 					_float3 vSrcPen = pSrcCollider->Get_Penetrated();
 					pSrcCollider->Get_Owner()->Get_Transform()->Go_Dir(XMLoadFloat3(&vSrcPen), 0.008f);

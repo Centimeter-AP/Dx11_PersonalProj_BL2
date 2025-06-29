@@ -25,7 +25,7 @@ HRESULT CLevi_Bullet::Initialize(void* pArg)
 		return E_FAIL;
 
 
-	Launch_Projectile(m_vTargetPos, 40.f);
+	Launch_Projectile(m_vTargetPos, 70.f);
 	return S_OK;
 }
 
@@ -75,7 +75,7 @@ HRESULT CLevi_Bullet::Ready_Components(void* pArg)
 	SphereDesc.eType = COLLIDER::SPHERE;
 	SphereDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MON_BULLET);
 	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN_ATK);
-	SphereDesc.fRadius = 0.5f;
+	SphereDesc.fRadius = 8.f;
 	SphereDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
 	/* For.Com_Collider */
@@ -107,9 +107,10 @@ void CLevi_Bullet::Launch_Projectile(const _float3& targetPos, _float fSpeed)
 	_float under = v2 * v2 - g * (g * Dh * Dh + 2 * Dy * v2);
 	if (under < 0) {
 		// 사거리 부족
-		m_bIsProjectile = false;
-		m_bDead = true;
-		return;
+		//m_bIsProjectile = false;
+		//m_bDead = true;
+		//return;
+		under = 0.1f;
 	}
 	_float root = sqrtf(under);
 	// 고각 θ1, 저각 θ2

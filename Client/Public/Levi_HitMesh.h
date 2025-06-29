@@ -40,12 +40,16 @@ private:
 
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol);
 
+public:
+	_int Get_HP() const { return m_iHP; }
+
 private:
 	CShader*			m_pShaderCom = { nullptr };
 	CModel*				m_pModelCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
+
 private:
-	string				strSocketBoneName;
+	string				m_strSocketBoneName;
 	const _float4x4*	m_pSocketMatrix = { nullptr };
 	_float4x4			m_CombinedWorldMatrix = {};
 

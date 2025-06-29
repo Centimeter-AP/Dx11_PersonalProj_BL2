@@ -391,9 +391,9 @@ void CGameInstance::Intersect(CCollider* pDst, CCollider* pSrc)
 	m_pCollider_Manager->Intersect(pDst, pSrc);
 }
 
-void CGameInstance::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID)
+void CGameInstance::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID, _bool bMovePenetrate)
 {
-	m_pCollider_Manager->Intersect_Group(iSrcGroupID, iDstGroupID);
+	m_pCollider_Manager->Intersect_Group(iSrcGroupID, iDstGroupID, bMovePenetrate);
 }
 
 CCollider* CGameInstance::Raycast(_fvector vRayOrigin, _fvector vRayDir, _float fRayLength, _uint iColliderGroupID, _float& fRayDist)
