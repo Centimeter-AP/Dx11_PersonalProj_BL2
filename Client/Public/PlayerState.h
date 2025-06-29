@@ -30,7 +30,7 @@ public:
 	virtual void Execute(_float fTimeDelta) PURE;
 	//상태 퇴장 시 한 번 호출
 	virtual void Exit() PURE;
-	virtual void Free() override { __super::Free(); /*Safe_Release(m_pGameInstance);*/ }
+	virtual void Free() override { __super::Free(); Safe_Release(m_pOwnerNavi);/*Safe_Release(m_pGameInstance);*/ }
 	void Delete_CurNavigation() {
 		if (m_pOwnerNavi) {
 			Safe_Release(m_pOwnerNavi);

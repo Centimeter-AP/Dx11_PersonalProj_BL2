@@ -54,7 +54,8 @@ EVENT CLevi_HitMesh::Update(_float fTimeDelta)
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, matFinal);
 	//m_pTransformCom->Set_Matrix(matFinal);
 	//m_pColliderCom->Update(XMLoadFloat4x4(&m_CombinedWorldMatrix)); 
-
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 	return EVN_NONE;
 }
 

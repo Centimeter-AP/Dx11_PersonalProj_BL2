@@ -155,7 +155,10 @@ public:
 			m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 		}
 		if(80.f < fTrackPos)
+		{
+			m_pOwner->Set_FirstHit_True();
 			m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
+		}
 
 		
 
@@ -236,6 +239,7 @@ public:
 		}
 		if (99.f <= fTrackPos)
 		{
+			m_pOwner->Set_FirstHit_True();
 			m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 		}
 	}
@@ -263,7 +267,7 @@ public:
 		cout << " Boss State: Attack_Spitworm" << endl;
 
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Spit_worm, false);
-
+		m_bSpawnBullet = false;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -271,12 +275,21 @@ public:
 		{
 			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
 		}
+		//50
+		_float fTrackPos = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
+		if (50.f <= fTrackPos && m_bSpawnBullet == false)
+		{
+			m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
+			m_bSpawnBullet = true;
+		}
 	}
 	virtual void Exit() override
 	{
 
 	}
 	virtual void Free() override { __super::Free(); }
+public:
+	_bool m_bSpawnBullet = { false };
 };
 
 

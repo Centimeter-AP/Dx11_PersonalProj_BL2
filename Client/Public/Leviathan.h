@@ -69,6 +69,7 @@ private:
 
 public:
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) override;
+	HRESULT Spawn_Bullet();
 
 private:
 	CCollider*				m_pColliderGroundAttackCom = { nullptr };
@@ -80,6 +81,7 @@ private:
 
 private:
 	_bool					m_bInjured = { false }; // 힛메쉬 한두개 남았을 때 부터?
+	_int					m_iTongueBoneIdx = { -1 }; 
 
 public:
 	static CLeviathan* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

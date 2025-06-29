@@ -117,7 +117,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Late_Update(fTimeDelta);
 	}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this); // ㅋㅋ 고치시길
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this); // ㅋㅋ 고치시길
 }
 
 HRESULT CPlayer::Render()
@@ -142,7 +142,6 @@ HRESULT CPlayer::Render()
 	
 #ifdef _DEBUG
 	m_pColliderCom->Render();
-
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Render();
@@ -433,11 +432,24 @@ HRESULT CPlayer::Change_Level(_uint iLevelIndex)
 	}
 	if (m_pGravityCom != nullptr)
 	{
+		auto iter = m_Components.find(TEXT("Com_Gravity"));
+		if (iter != m_Components.end())
+		{
+			Safe_Release(iter->second);
+			m_Components.erase(iter);
+		}
 		Safe_Release(m_pGravityCom);
 		m_pGravityCom = nullptr;
 	}
+
 	if (m_pNavigationCom != nullptr)
 	{
+		auto iter = m_Components.find(TEXT("Com_Navigation"));
+		if (iter != m_Components.end())
+		{
+			Safe_Release(iter->second);
+			m_Components.erase(iter);
+		}
 		Safe_Release(m_pNavigationCom);
 		m_pNavigationCom = nullptr;
 	}
@@ -457,7 +469,6 @@ HRESULT CPlayer::Change_Level(_uint iLevelIndex)
 	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
-
 
 	/* For.Com_Gravity */
 	CGravity::DESC	GravityDesc{};

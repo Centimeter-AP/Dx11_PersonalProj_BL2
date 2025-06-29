@@ -125,7 +125,6 @@ void CSpiderAntSpit::Launch_Projectile(const _float3& targetPos, _float fSpeed)
 
 	// 5) 발사 플래그
 	m_bIsProjectile = true;
-
 }
 
 void CSpiderAntSpit::Update_Projectile(_float fTimeDelta)

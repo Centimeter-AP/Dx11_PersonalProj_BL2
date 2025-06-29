@@ -4,7 +4,6 @@
 
 class CLevi_Bullet final : public CBullet
 {
-
 public:
 	typedef struct tagSpiderAntSpitDesc : public CBullet::DESC
 	{
@@ -32,7 +31,7 @@ private:
 
 private:
 	_vector m_vVelocity = XMVectorZero();
-	_vector m_vGravity = XMVectorSet(0.f, -55.f, 0.f, 0.f);
+	_vector m_vGravity = XMVectorSet(0.f, -65.f, 0.f, 0.f);
 	_bool   m_bIsProjectile = false;
 
 	_float	m_fLifeTime = {};

@@ -101,6 +101,10 @@ public:
 			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Provoked_Idle);
 			return;
 		}
+		if (KEY_DOWN(DIK_Z))
+		{
+			m_pOwner->Spawn_SpitBullet();
+		}
 
 	}
 	virtual void Exit() override
@@ -214,8 +218,6 @@ public:
 		{
 			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot6);
 		}
-
-
 	}
 	virtual void Exit() override
 	{
@@ -223,8 +225,6 @@ public:
 	}
 	virtual void Free() override { __super::Free(); }
 };
-
-
 
 class CSpiderAntState_Attack_Leap final : public CSpiderAntState
 {
@@ -273,7 +273,8 @@ public:
 		}
 		//else if (LeapStatus[0] == true)
 		//{
-
+		// 응애 나 아기보스 브레쓰 막 뿜음
+		// 
 		//}
 	}
 	virtual void Exit() override

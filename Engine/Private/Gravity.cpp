@@ -29,6 +29,7 @@ HRESULT CGravity::Initialize(void* pArg)
 
 	m_fGravity = pDesc->fGravity;
 	m_pNavigationCom = pDesc->pOwnerNavigationCom;
+	Safe_AddRef(m_pNavigationCom);
 	m_pTransformCom = pDesc->pOwnerTransformCom;
 	m_fJumpPower = pDesc->fJumpPower;
 	m_fOffsetY = pDesc->fOffsetY;

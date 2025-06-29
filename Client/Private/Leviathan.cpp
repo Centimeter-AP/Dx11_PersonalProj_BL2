@@ -2,6 +2,7 @@
 #include "LeviathanState.h"
 #include "GameInstance.h"
 #include "Levi_HitMesh.h"
+#include "Levi_Bullet.h"
 
 CLeviathan::CLeviathan(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster { pDevice, pContext }
@@ -37,6 +38,10 @@ HRESULT CLeviathan::Initialize(void* pArg)
 	//m_pModelCom->Set_Animation(RAKK_ANIM::Flight_BankL, true);
 	m_eCurState = STATE_Engage;
 	Set_State(m_eCurState);
+
+	m_iTongueBoneIdx = m_pModelCom->Find_BoneIndex("tongue_jaw");
+
+
 	return S_OK;
 }
 
@@ -256,6 +261,26 @@ void CLeviathan::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCo
 
 	__super::On_Collision(iMyColID, iHitColID, pHitCol);
 
+}
+
+HRESULT CLeviathan::Spawn_Bullet()
+{
+	auto TailBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iTongueBoneIdx)) * m_pTransformCom->Get_WorldMatrix();
+
+	CLevi_Bullet::DESC SpitDesc = {};
+	SpitDesc.bHasTransformPreset = true;
+	SpitDesc.iLevelID = ENUM_CLASS(LEVEL::BOSS);
+	SpitDesc.fSpeedPerSec = 10.f;
+	SpitDesc.iDamage = m_iDamage;
+	_vector targetPos = m_pTarget->Get_Transform()->Get_State(STATE::POSITION);
+	XMStoreFloat3(&SpitDesc.vTargetPos, XMVectorSetY(targetPos, targetPos.m128_f32[1]));
+
+	XMStoreFloat4x4(&SpitDesc.PresetMatrix, XMMatrixTranslation(TailBoneMat.r[3].m128_f32[0], TailBoneMat.r[3].m128_f32[1], TailBoneMat.r[3].m128_f32[2]));
+
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Levi_Bullet"),
+		ENUM_CLASS(LEVEL::BOSS), TEXT("Layer_MonBullet"), &SpitDesc)))
+		return E_FAIL;
 }
 
 CLeviathan* CLeviathan::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

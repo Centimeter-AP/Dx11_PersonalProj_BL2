@@ -22,6 +22,7 @@
 #include "SpiderAntSpit.h"
 #include "Leviathan.h"
 #include "Levi_HitMesh.h"
+#include "Levi_Bullet.h"
 
 //#include "Effect.h"
 #include "Sky.h"
@@ -575,17 +576,22 @@ HRESULT CLoader::Loading_For_Boss()
 		CSpiderAnt::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_SpiderAnt */
+	/* For.Prototype_GameObject_Leviathan */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Leviathan"),
 		CLeviathan::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
-	/* For.Prototype_GameObject_SpiderAnt */
+	/* For.Prototype_GameObject_Levi_HitMesh */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Levi_HitMesh"),
 		CLevi_HitMesh::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_SpiderAnt */
+	/* For.Prototype_GameObject_Levi_Bullet */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Levi_Bullet"),
+		CLevi_Bullet::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_SpiderAntSpit */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_SpiderAntSpit"),
 		CSpiderAntSpit::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
