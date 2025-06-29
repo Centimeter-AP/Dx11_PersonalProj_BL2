@@ -24,6 +24,9 @@
 #include "Levi_HitMesh.h"
 #include "Levi_Bullet.h"
 
+/** UI **/ 
+#include "UI_Aim.h"
+
 //#include "Effect.h"
 #include "Sky.h"
 
@@ -123,7 +126,7 @@ HRESULT CLoader::Loading_For_Logo()
 
 	/* For.Prototype_Component_Texture_UI_Aim */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Aim"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Tex_Dahl_Sight_Pistol.dds"), 1))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_UI_Icon_HP */
@@ -139,10 +142,6 @@ HRESULT CLoader::Loading_For_Logo()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Left.png"), 1))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_Texture_UI_Bar_Ammo */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Ammo"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Ammo.png"), 1))))
-		return E_FAIL;
 	/* For.Prototype_Component_Texture_UI_Bar_Ammo */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Ammo"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Ammo.png"), 1))))
@@ -204,6 +203,43 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_GameObject_BackGround"),
 		CBackGround::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+#pragma region STATIC_UI
+
+	/* For.Prototype_GameObject_UI_Aim */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Aim"),
+		CUI_Aim::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	///* For.Prototype_GameObject_UI_Bar_HP */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_HP"),
+	//	CUI_HP::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//
+	///* For.Prototype_GameObject_UI_Bar_Ammo */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Ammo"),
+	//	CUI_Ammo::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//
+	///* For.Prototype_GameObject_UI_Bar_Shield */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Shield"),
+	//	CUI_Shield::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//
+	///* For.Prototype_GameObject_UI_Bar_Phaselock */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Phaselock"),
+	//	CUI_Phaselock::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//
+	///* For.Prototype_GameObject_UI_Bar_Exp */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Exp"),
+	//	CUI_Exp::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+
+#pragma endregion
+
+
+	
 	
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
@@ -509,6 +545,18 @@ HRESULT CLoader::Loading_For_Boss()
 			"../Bin/Resources/Models/Bin_NonAnim/Leviathan_HitMesh.bin", PreTransMatrix))))
 		return E_FAIL;
 
+	PreTransMatrix =/* XMMatrixScaling(0.1f, 0.1f, 0.1f) **/ XMMatrixRotationY(XMConvertToRadians(-90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Levi_Boulder"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+			"../Bin/Resources/Models/Bin_NonAnim/BarrensRockBoulder.bin", PreTransMatrix))))
+		return E_FAIL;
+
+	PreTransMatrix =/* XMMatrixScaling(0.1f, 0.1f, 0.1f) **/ XMMatrixRotationY(XMConvertToRadians(-90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Levi_Boulder_Small"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+			"../Bin/Resources/Models/Bin_NonAnim/BarrensRockBoulder_02.bin", PreTransMatrix))))
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("네비게이션을(를) 로딩중입니다."));
 
@@ -620,7 +668,6 @@ CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, L
 
 	return pInstance;
 }
-
 
 void CLoader::Free()
 {

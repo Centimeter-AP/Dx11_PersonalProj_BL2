@@ -51,6 +51,15 @@ CGameObject* CLayer::Find_Object(_uint iIndex)
 	return *Iter;
 }
 
+void CLayer::Active(_bool bActive)
+{
+	for (auto& pGameObject : m_GameObjects)
+	{
+		if (nullptr != pGameObject)
+			pGameObject->Set_Active(bActive);
+	}
+}
+
 void CLayer::Priority_Update(_float fTimeDelta)
 {
 	for (auto& pGameObject : m_GameObjects)

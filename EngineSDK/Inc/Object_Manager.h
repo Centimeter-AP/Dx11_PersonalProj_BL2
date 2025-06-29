@@ -35,6 +35,7 @@ public:
 	class CLayer* Find_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
 	class CGameObject* Find_Object(_uint iLevelIndex, const _wstring& strLayerTag, _uint iVectorIndex);
 	void Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
+	void Active_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _bool bActive);
 
 public:
 	static CObject_Manager* Create(_uint iNumLevels);

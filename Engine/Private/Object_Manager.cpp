@@ -126,6 +126,14 @@ void CObject_Manager::Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag
 	Layer->Clear();
 }
 
+void CObject_Manager::Active_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _bool bActive)
+{
+	auto Layer = Find_Layer(iLevelIndex, strLayerTag);
+	if (nullptr == Layer)
+		return;
+	Layer->Active(bActive);
+}
+
 
 CObject_Manager* CObject_Manager::Create(_uint iNumLevels)
 {

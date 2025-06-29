@@ -18,6 +18,7 @@ public:
 
 private:
 	HRESULT Ready_Layer_BackGround(const _wstring strLayerTag);
+	HRESULT Ready_Layer_StaticUI(const _wstring strLayerTag);
 
 
 public:

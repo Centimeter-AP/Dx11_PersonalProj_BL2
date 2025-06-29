@@ -210,6 +210,11 @@ void CGameInstance::Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag)
 	m_pObject_Manager->Clear_Layer(iLevelIndex, strLayerTag);
 }
 
+void CGameInstance::Active_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _bool bActive)
+{
+	m_pObject_Manager->Active_Layer(iLevelIndex, strLayerTag, bActive);
+}
+
 #pragma endregion
 
 #pragma region RENDERER

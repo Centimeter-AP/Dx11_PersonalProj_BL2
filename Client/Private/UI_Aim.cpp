@@ -20,11 +20,6 @@ HRESULT CUI_Aim::Initialize(void* pArg)
 {
 	DESC* pDesc = static_cast<DESC*>(pArg);
 
-	pDesc->fSizeX = 1.f;
-	pDesc->fSizeY = 1.f;
-	pDesc->fX = g_iWinSizeX * 0.5f;
-	pDesc->fY = g_iWinSizeY * 0.5f;
-
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -36,15 +31,23 @@ HRESULT CUI_Aim::Initialize(void* pArg)
 
 void CUI_Aim::Priority_Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return;
 }
 
 EVENT CUI_Aim::Update(_float fTimeDelta)
 {
-    return EVENT();
+	if (m_isActive == false)
+		return EVN_NONE;
+
+	return EVN_NONE;
 }
 
 void CUI_Aim::Late_Update(_float fTimeDelta)
 {
+	if (m_isActive == false)
+		return ;
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this);
 }
 
 HRESULT CUI_Aim::Render()
@@ -60,7 +63,7 @@ HRESULT CUI_Aim::Render()
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(0)))
+	if (FAILED(m_pShaderCom->Begin(1)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom->Bind_Buffers()))
@@ -78,16 +81,18 @@ HRESULT CUI_Aim::Ready_Components()
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
+
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
+
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Aim"),
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Aim"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
-	return S_OK;
 
+	return S_OK;
 }
 
 CUI_Aim* CUI_Aim::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

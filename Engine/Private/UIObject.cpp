@@ -26,6 +26,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_fY = pDesc->fY;
 	m_fSizeX = pDesc->fSizeX;
 	m_fSizeY = pDesc->fSizeY;
+	m_iUIDepth = pDesc->iLevelID;
 
 
 	if (FAILED(__super::Initialize(pArg)))

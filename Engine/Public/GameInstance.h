@@ -56,6 +56,7 @@ public:
 	class CLayer* Find_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
 	// 레이어 내 오브젝트 강제 철거 
 	void Clear_Layer(_uint iLevelIndex, const _wstring& strLayerTag);
+	void Active_Layer(_uint iLevelIndex, const _wstring& strLayerTag, _bool bActive = true);
 #pragma endregion
 
 #pragma region RENDERER

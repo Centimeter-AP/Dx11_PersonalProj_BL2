@@ -2,7 +2,6 @@
 #include "SkagState.h"
 #include "GameInstance.h"
 
-
 CSkag::CSkag(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster { pDevice, pContext }
 {

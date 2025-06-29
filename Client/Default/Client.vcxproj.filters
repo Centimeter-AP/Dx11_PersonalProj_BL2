@@ -166,11 +166,14 @@
     <Filter Include="02.GameObjects\07. UI\StaticUI\AmmoBar">
       <UniqueIdentifier>{eec0ec48-c9dd-4656-ab7e-508a51cc00e0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\07. UI\StaticUI\NewFilter1">
+    <Filter Include="02.GameObjects\07. UI\StaticUI\Aim">
+      <UniqueIdentifier>{fd323e0f-3929-4a07-b1c1-4d8dd02e81f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\StaticUI\ExpBar">
       <UniqueIdentifier>{c38763f9-cf26-4eb0-8bbb-dc8cfdd53097}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\07. UI\Aim">
-      <UniqueIdentifier>{fd323e0f-3929-4a07-b1c1-4d8dd02e81f9}</UniqueIdentifier>
+    <Filter Include="02.GameObjects\07. UI\StaticUI\SkillBar">
+      <UniqueIdentifier>{ebcae90e-8cfb-4f2f-b544-70da13ea764e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -373,7 +376,7 @@
       <Filter>02.GameObjects\03. Monster\Boss_Leviathan\Levi_Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UI_Aim.h">
-      <Filter>02.GameObjects\07. UI\Aim</Filter>
+      <Filter>02.GameObjects\07. UI\StaticUI\Aim</Filter>
     </ClInclude>
     <ClInclude Include="..\public\UI_HPBar.h" />
   </ItemGroup>
@@ -599,7 +602,7 @@
       <Filter>02.GameObjects\03. Monster\Boss_Leviathan\Levi_Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UI_Aim.cpp">
-      <Filter>02.GameObjects\07. UI\Aim</Filter>
+      <Filter>02.GameObjects\07. UI\StaticUI\Aim</Filter>
     </ClCompile>
     <ClCompile Include="..\private\UI_HPBar.cpp" />
   </ItemGroup>

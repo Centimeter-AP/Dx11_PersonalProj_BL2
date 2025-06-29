@@ -13,6 +13,8 @@ public:
 	typedef struct tagUIObjectDesc : public CGameObject::DESC
 	{
 		_float			fX, fY, fSizeX, fSizeY;
+		_uint			iUIDepth{};
+
 	}UIOBJECT_DESC;
 protected:
 	CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -33,6 +35,7 @@ protected:
 
 	/* 직교 투영을 위한 행렬. */
 	_float4x4		m_ViewMatrix{}, m_ProjMatrix{};
+	_uint			m_iUIDepth{};	
 
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
