@@ -48,19 +48,8 @@ void CPistol::Priority_Update(_float fTimeDelta)
 		return;
 	__super::Priority_Update(fTimeDelta);
 	Update_State(fTimeDelta);
-#pragma region AnimationTests
-	static _uint test = {};
-	if (KEY_DOWN(DIK_RBRACKET))
-	{
-		++test == PST_ANIMATION_END ? test = 0 : test;
-		m_pModelCom->Set_Animation(test, true);
-	}
-	if (KEY_DOWN(DIK_LBRACKET))
-	{
-		test < 1 ? test = 74 : test--;
-		m_pModelCom->Set_Animation(test, true);
-	}
-#pragma endregion
+
+	cout << "Current Animation : " << m_pModelCom->Get_CurAnimationIndex() << endl;
 }
 
 EVENT CPistol::Update(_float fTimeDelta)

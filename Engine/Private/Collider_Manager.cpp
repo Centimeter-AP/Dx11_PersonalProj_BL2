@@ -49,6 +49,15 @@ void CCollider_Manager::Delete_Collider(const CGameObject* pOwner)
 	}
 }
 
+void CCollider_Manager::Clear()
+{
+	for (_uint i = 0; i < m_iNumGroups; ++i)
+	{
+		for (auto Collider : m_pColliders[i])
+			Safe_Release(Collider);
+		m_pColliders[i].clear();
+	}
+}
 
 void CCollider_Manager::Intersect(CCollider* pDst, CCollider* pSrc)
 {

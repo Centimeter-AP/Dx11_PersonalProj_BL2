@@ -42,12 +42,12 @@ protected:
 	const _float4x4*		m_pSocketMatrix = { nullptr };
 
 protected:
-	_int				m_iDamage = {};
-	_float				m_fAccuracy = {};
-	_float				m_fFireRate = {};
-	//_float				m_fReloadSpeed...는하지말죠?
-	_int				m_iMagazineSize = {};
-	_int				m_iCurMagazineLeft = {};
+	_int					m_iDamage = {};
+	_float					m_fAccuracy = {};
+	_float					m_fFireRate = {};
+	//_float					m_fReloadSpeed...는하지말죠?
+	_int					m_iMagazineSize = {};
+	_int					m_iCurMagazineLeft = {};
 	// 총 탄약 수는 플레이어쪽에서 받는게 맞지 않으려나
 
 public:

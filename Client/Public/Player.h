@@ -89,6 +89,7 @@ public:
 		 
 	void Set_State(PLA_STATE eState);
 	void Initialize_BasicStatus();
+	HRESULT Change_Level(_uint iLevelIndex);
 
 private: 
 	void Update_State(_float fTimeDelta);
@@ -113,6 +114,7 @@ public:
 	const _float& Get_PhaselockDuration() { return m_fPhaselockDuration; }
 	const _bool Get_PhaselockAble() { return m_bPhaselockAble; }
 	const CGameObject* Get_CurWeapon();
+	const _uint	Get_CurLevel() { return m_iLevelID; }
 
 private:
 	CShader*			m_pShaderCom = { nullptr };

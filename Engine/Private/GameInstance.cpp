@@ -411,6 +411,11 @@ _float3 CGameInstance::Resolve_Slide_AABB(CCollider* pMyCol, const _float3 vDesi
 	return m_pCollider_Manager->Resolve_Slide_AABB(pMyCol, vDesiredMove, iGroupID);
 }
 
+void CGameInstance::Clear_Collider()
+{
+	m_pCollider_Manager->Clear();
+}
+
 #pragma endregion
 
 

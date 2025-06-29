@@ -117,7 +117,7 @@ private:
 	_uint m_iSpineBoneIdx = {};
 
 private:
-	CCollider*			m_pColliderAttackCom = { nullptr };
+	CCollider*			m_pColliderGroundAttackCom = { nullptr };
 
 	class CSkagState*	m_pCurState = { nullptr };
 	class CSkagState*	m_pStates[STATE_END] = { nullptr };

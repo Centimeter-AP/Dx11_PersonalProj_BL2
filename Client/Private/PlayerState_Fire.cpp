@@ -1,6 +1,6 @@
 #include "PlayerState.h"
 #include "Model.h"
-
+#include "Camera_FPS.h"
 
 
 void CPlayerState_Fire::Enter()
@@ -33,6 +33,13 @@ void CPlayerState_Fire::Enter()
 	//if (m_pOwner->m_pCurPickedCollider != nullptr)
 	//	//m_pOwner->m_pCurPickedCollider->Get_Owner()->Set_State_Dead();
 	//	m_pOwner->m_pCurPickedCollider->Get_Owner()->On_Collision(ENUM_CLASS(COL_ID::PLAYER_WEAPON_AR));
+	CCamera_FPS* pCamera = dynamic_cast<CCamera_FPS*>(m_pGameInstance->Find_Object(m_pOwner->Get_CurLevel(), L"Layer_Camera", CAM_FPS));
+	if (pCamera == nullptr)
+	{
+		MSG_BOX("CCamera_FPS is nullptr in CPlayerState_Fire::Enter()");
+		return;
+	}
+	pCamera->Start_Recoil();
 }
 
 void CPlayerState_Fire::Execute(_float fTimeDelta)

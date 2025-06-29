@@ -21,6 +21,7 @@
 #include "SpiderAnt.h"
 #include "SpiderAntSpit.h"
 #include "Leviathan.h"
+#include "Levi_HitMesh.h"
 
 //#include "Effect.h"
 #include "Sky.h"
@@ -114,6 +115,77 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_BackGround"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo_Background.dds"), 1))))
 		return E_FAIL;
+
+	/*************************** Loading for Static Objects *****************************/
+
+#pragma region UI_TEXTURE
+
+	/* For.Prototype_Component_Texture_UI_Aim */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Aim"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo.dds"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_UI_Icon_HP */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Icon_HP"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Icon_HP.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_HPBar */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_HP"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_HP.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_Left */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Left"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Left.png"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_UI_Bar_Ammo */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Ammo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Ammo.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_Ammo */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Ammo"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Ammo.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_Right */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Right"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Right.png"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_UI_Icon_Shield */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Icon_Shield"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Icon_Shield.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_Shield */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Shield"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Shield.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_ShieldBack */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_ShieldBack"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_ShieldBack.png"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_UI_Bar_Phaselock_Back */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Phaselock_Back"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Phaselock_Back.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_Phaselock */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Phaselock"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Phaselock.png"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_UI_Bar_Exp_Back */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Exp_Back"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp_Back.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_Exp */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_Exp"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp.png"), 1))))
+		return E_FAIL;
+
+
+
+#pragma endregion
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
@@ -430,7 +502,7 @@ HRESULT CLoader::Loading_For_Boss()
 			"../Bin/Resources/Models/Bin_Anim/Boss_Leviathan/Leviathan.bin", PreTransMatrix))))
 		return E_FAIL;
 
-	PreTransMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
+	PreTransMatrix =/* XMMatrixScaling(0.1f, 0.1f, 0.1f) **/ XMMatrixRotationY(XMConvertToRadians(-90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Levi_HitMesh"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
 			"../Bin/Resources/Models/Bin_NonAnim/Leviathan_HitMesh.bin", PreTransMatrix))))
@@ -506,6 +578,11 @@ HRESULT CLoader::Loading_For_Boss()
 	/* For.Prototype_GameObject_SpiderAnt */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Leviathan"),
 		CLeviathan::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_SpiderAnt */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Levi_HitMesh"),
+		CLevi_HitMesh::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	/* For.Prototype_GameObject_SpiderAnt */

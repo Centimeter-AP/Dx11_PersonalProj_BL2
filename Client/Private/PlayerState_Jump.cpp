@@ -14,7 +14,6 @@ void CPlayerState_Jump::Enter()
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_PST::PST_Jump_Start, false);
-
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:
 		break;

@@ -175,6 +175,7 @@
     <ClInclude Include="..\Public\Level_MapTool.h" />
     <ClInclude Include="..\Public\Leviathan.h" />
     <ClInclude Include="..\Public\LeviathanState.h" />
+    <ClInclude Include="..\Public\Levi_Bullet.h" />
     <ClInclude Include="..\public\Levi_HitMesh.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\public\Logo_Background.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
     <ClInclude Include="..\public\UI_Aim.h" />
+    <ClInclude Include="..\public\UI_HPBar.h" />
     <ClInclude Include="..\Public\Warrior.h" />
     <ClInclude Include="..\Public\WarriorState.h" />
     <ClInclude Include="..\public\Weapon.h" />
@@ -241,6 +243,7 @@
     <ClCompile Include="..\Private\Level_Logo.cpp" />
     <ClCompile Include="..\Private\Level_MapTool.cpp" />
     <ClCompile Include="..\Private\Leviathan.cpp" />
+    <ClCompile Include="..\Private\Levi_Bullet.cpp" />
     <ClCompile Include="..\private\Levi_HitMesh.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\private\Logo_Background.cpp" />
@@ -280,6 +283,7 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />
     <ClCompile Include="..\private\UI_Aim.cpp" />
+    <ClCompile Include="..\private\UI_HPBar.cpp" />
     <ClCompile Include="..\Private\Warrior.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />

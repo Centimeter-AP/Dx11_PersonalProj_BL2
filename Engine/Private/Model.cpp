@@ -105,7 +105,7 @@ void CModel::Set_Animation(_uint iIndex, _bool isLoop, _float fBlendDuration)
 	if (iIndex >= m_Animations.size())
 		return;
 
-	//m_iCurrentAnimIndex = iIndex;
+	m_iCurrentAnimIndex = iIndex;
 	//m_isLoop = isLoop;
 
 	m_pAnimMgr->SetAnimation(iIndex, isLoop, fBlendDuration);

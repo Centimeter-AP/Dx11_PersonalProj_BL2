@@ -91,5 +91,7 @@ _float3 vCameraPos = { matCamWorld._41, matCamWorld._42, matCamWorld._43 };
 
 #define CLAMP(x, min, max) (x < min ? min : (x > max ? max : x))
 
+#define CAM_FREE 0
+#define CAM_FPS 1
 
 #pragma endregion

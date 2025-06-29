@@ -2,6 +2,7 @@
 
 #include "Leviathan.h"
 #include "GameInstance.h"
+#include "Player.h"
 
 NS_BEGIN(Client)
 
@@ -139,8 +140,6 @@ public:
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_slag_spray, false);
 		else
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Spray, false);
-
-
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -148,6 +147,18 @@ public:
 		{
 			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
 		}
+
+		_float fTrackPos = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
+
+		if (30.f <= fTrackPos && 80.f >= fTrackPos)
+		{
+			m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
+		}
+		if(80.f < fTrackPos)
+			m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
+
+		
+
 	}
 	virtual void Exit() override
 	{
@@ -201,11 +212,11 @@ public:
 	virtual void Enter() override
 	{
 		cout << " Boss State: Attack_slam" << endl;
-
+		m_bSlam = false;
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_tongue_ground_slam, false);
 		else
-			rand() % 3 == 0 ? Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false):
+			/*rand() % 3 == 0 ? Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false):*/
 							  Set_OwnerAnim(CLeviathan::LEVI_ANIM::ground_slam, false); // tongue´Â....?À½
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -214,12 +225,28 @@ public:
 		{
 			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
 		}
+
+		//79
+		_float fTrackPos = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
+		if (79.f <= fTrackPos && m_bSlam == false)
+		{
+			m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
+			static_cast<CPlayer*>(m_pTarget)->Set_State(CPlayer::STATE_Jump);
+			m_bSlam = true;
+		}
+		if (99.f <= fTrackPos)
+		{
+			m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
+		}
 	}
 	virtual void Exit() override
 	{
 
 	}
 	virtual void Free() override { __super::Free(); }
+private:
+	_bool m_bSlam = { false };
+	
 };
 
 class CLeviathanState_Attack_SpitWorm final : public CLeviathanState

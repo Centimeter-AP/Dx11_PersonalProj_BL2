@@ -82,7 +82,7 @@ EVENT CSkag::Update(_float fTimeDelta)
 	auto HeadBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iHeadBoneIdx));
 	m_pColliderCom->Update(SpineBoneMat * m_pTransformCom->Get_WorldMatrix());
 	m_pColliderHeadCom->Update(HeadBoneMat * m_pTransformCom->Get_WorldMatrix());
-	m_pColliderAttackCom->Update(HeadBoneMat * m_pTransformCom->Get_WorldMatrix());
+	m_pColliderGroundAttackCom->Update(HeadBoneMat * m_pTransformCom->Get_WorldMatrix());
 	return __super::Update(fTimeDelta);
 }
 
@@ -114,10 +114,10 @@ HRESULT CSkag::Render()
 	
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderAttackCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderGroundAttackCom->Set_ColliderColor(RGBA_GREEN);
 	m_pColliderCom->Render();
 	m_pColliderHeadCom->Render();
-	m_pColliderAttackCom->Render();
+	m_pColliderGroundAttackCom->Render();
 
 	if (m_pNavigationCom != nullptr)
 		m_pNavigationCom->Render();
@@ -167,9 +167,9 @@ HRESULT CSkag::Ready_Components(void* pArg)
 	SphereDesc.vCenter = _float3(70.f, 50.f, 0.f);
 	/* For.Com_ColliderAttack */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_Sphere"),
-		TEXT("Com_ColliderAttack"), reinterpret_cast<CComponent**>(&m_pColliderAttackCom), &SphereDesc)))
+		TEXT("Com_ColliderAttack"), reinterpret_cast<CComponent**>(&m_pColliderGroundAttackCom), &SphereDesc)))
 		return E_FAIL;
-	m_pColliderAttackCom->Set_Active(false);
+	m_pColliderGroundAttackCom->Set_Active(false);
 
 	/* For.Com_Navigation */
 	CNavigation::NAVIGATION_DESC		NaviDesc{};
@@ -327,5 +327,5 @@ void CSkag::Free()
 	__super::Free();
 	for (auto& State : m_pStates)
 		Safe_Release(State);
-	Safe_Release(m_pColliderAttackCom);
+	Safe_Release(m_pColliderGroundAttackCom);
 }

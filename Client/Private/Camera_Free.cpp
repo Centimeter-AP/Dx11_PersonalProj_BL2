@@ -45,22 +45,25 @@ void CCamera_Free::Priority_Update(_float fTimeDelta)
 	if (!m_isUsing)
 		return;
 	// if (GetKeyState('A') & 0x8000)
+	_float fMultiplier = {1.f};
+	if (KEY_PRESSING(DIK_LSHIFT))
+		fMultiplier = 4.f;
 	if(m_pGameInstance->Get_DIKeyState(DIK_A) & 0x80)
 	{
-		m_pTransformCom->Go_Left(fTimeDelta);
+		m_pTransformCom->Go_Left(fTimeDelta * fMultiplier);
 	}
 
 	if (m_pGameInstance->Get_DIKeyState(DIK_D) & 0x80)
 	{
-		m_pTransformCom->Go_Right(fTimeDelta);
+		m_pTransformCom->Go_Right(fTimeDelta * fMultiplier);
 	}
 	if (m_pGameInstance->Get_DIKeyState(DIK_W) & 0x80)
 	{
-		m_pTransformCom->Go_Straight(fTimeDelta);
+		m_pTransformCom->Go_Straight(fTimeDelta * fMultiplier);
 	}
 	if (m_pGameInstance->Get_DIKeyState(DIK_S) & 0x80)
 	{
-		m_pTransformCom->Go_Backward(fTimeDelta);
+		m_pTransformCom->Go_Backward(fTimeDelta * fMultiplier);
 	}
 
 	_long			MouseMove = {};

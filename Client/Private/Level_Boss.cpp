@@ -185,6 +185,16 @@ HRESULT CLevel_Boss::Ready_Layer_Boss(const _wstring strLayerTag)
 
 HRESULT CLevel_Boss::Ready_Layer_Player(const _wstring strLayerTag)
 {
+	auto pPlayer = static_cast<CPlayer*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::STATIC), TEXT("Layer_Player")));
+
+	if (pPlayer != nullptr)
+	{
+		if (FAILED(pPlayer->Change_Level(ENUM_CLASS(LEVEL::BOSS))))
+			return E_FAIL;
+
+		return S_OK;
+	}
+
 	CPlayer::DESC PlayerDesc;
 	PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	PlayerDesc.fSpeedPerSec = 10.f;

@@ -19,6 +19,9 @@ public:
 	_uint Get_NumBones() const {
 		return _uint(m_Bones.size());
 	}
+	_uint Get_CurAnimationIndex() const {
+		return m_iCurrentAnimIndex;
+	}
 
 	void Set_Animation(_uint iIndex, _bool isLoop = true, _float fBlendDuration = 0.1f);
 	void Set_Animation_TickPerSecond(_uint iIndex, _float fTickPerSecond);

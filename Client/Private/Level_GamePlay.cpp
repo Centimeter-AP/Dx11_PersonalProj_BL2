@@ -1,4 +1,5 @@
 #include "Level_GamePlay.h"
+#include "Level_Loading.h"
 #include "GameInstance.h"
 #include "Terrain.h"
 #include "Player.h"
@@ -8,8 +9,6 @@
 #include "Camera_FPS.h"
 #include "Sky.h"
 
-#define CAM_FREE 0
-#define CAM_FPS 1
 
 
 CLevel_GamePlay::CLevel_GamePlay(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -22,7 +21,6 @@ HRESULT CLevel_GamePlay::Initialize()
 {
 	if (FAILED(Ready_Lights()))
 		return E_FAIL;
-
 
 	if (FAILED(Ready_Layer_BackGround(TEXT("Layer_BackGround"))))
 		return E_FAIL;
@@ -49,9 +47,9 @@ HRESULT CLevel_GamePlay::Initialize()
 
 void CLevel_GamePlay::Update(_float fTimeDelta)
 {
-	Key_Input();
-
 	Intersect();
+
+	Key_Input();
 }
 
 HRESULT CLevel_GamePlay::Render()
@@ -188,10 +186,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
 {
+	auto pPlayer = static_cast<CPlayer*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::STATIC), TEXT("Layer_Player")));
+
+	if (pPlayer != nullptr)
+	{
+		if (FAILED(pPlayer->Change_Level(ENUM_CLASS(LEVEL::BOSS))))
+			return E_FAIL;
+
+		return S_OK;
+	}
 	CPlayer::DESC PlayerDesc;
 	PlayerDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	PlayerDesc.fSpeedPerSec = 13.f;
-	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	PlayerDesc.bHasTransformPreset = true;
 	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixScaling(1.5f, 1.5f, 1.5f));
 	PlayerDesc.iNavigationIndex = 32;
@@ -366,6 +373,15 @@ void CLevel_GamePlay::Key_Input()
 		CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::GAMEPLAY), L"Layer_Camera", CAM_FREE));
 		pPrevCamera->Set_Using(false);
 	}
+
+	if (KEY_DOWN(DIK_F5))
+	{
+		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
+			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BOSS))))
+			return;
+	}
+
+
 }
 
 CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

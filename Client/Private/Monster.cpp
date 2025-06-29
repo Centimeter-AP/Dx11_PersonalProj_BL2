@@ -135,9 +135,6 @@ HRESULT CMonster::Ready_Components(void* pArg)
 		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
 		return E_FAIL;
 
-
-
-
 	return S_OK;
 }
 

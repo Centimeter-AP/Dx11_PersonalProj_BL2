@@ -15,8 +15,10 @@ public:
 	HRESULT Initialize(_uint iNumGroups);
 	HRESULT Add_Collider(_uint iGroupID, class CCollider* pCollider);
 	void Delete_Collider(const class CGameObject* pOwner);
+	void Clear();
 
 private:
+	_uint						m_iNumLevels = {};
 	_uint						m_iNumGroups = {};
 	list<class CCollider*>*		m_pColliders = { nullptr };
 

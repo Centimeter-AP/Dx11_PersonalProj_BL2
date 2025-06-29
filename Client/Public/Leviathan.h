@@ -71,6 +71,8 @@ public:
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) override;
 
 private:
+	CCollider*				m_pColliderGroundAttackCom = { nullptr };
+	//CCollider*				m_pColliderGroundAttackCom = { nullptr };
 	class CLeviathanState*	m_pCurState = { nullptr };
 	class CLeviathanState*	m_pStates[STATE_END] = { nullptr };
 	LEVI_STATE				m_eCurState =  { LEVI_STATE::STATE_END };
@@ -78,7 +80,6 @@ private:
 
 private:
 	_bool					m_bInjured = { false }; // 힛메쉬 한두개 남았을 때 부터?
-	
 
 public:
 	static CLeviathan* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

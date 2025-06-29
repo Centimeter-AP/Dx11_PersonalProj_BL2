@@ -18,7 +18,7 @@ HRESULT CUI_Aim::Initialize_Prototype()
 
 HRESULT CUI_Aim::Initialize(void* pArg)
 {
-	UI_AIM_DESC* pDesc = static_cast<UI_AIM_DESC*>(pArg);
+	DESC* pDesc = static_cast<DESC*>(pArg);
 
 	pDesc->fSizeX = 1.f;
 	pDesc->fSizeY = 1.f;

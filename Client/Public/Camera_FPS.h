@@ -31,10 +31,13 @@ public:
 	virtual HRESULT Render();
 	HRESULT Initialize_Player(); // 임시 함수임 카메라매니저좀 만드삼
 	
+	void Start_Recoil();
+
 private:
 	HRESULT Set_PlayerBone();
 	void Mouse_Fix();
-	void Update_Camera();
+	void Update_Camera(_float fTimeDelta);
+	void Update_Recoil(_float fTimeDelta);
 
 private:
 	_float				m_fSensor{};
@@ -46,6 +49,14 @@ private:
 	_float4x4*				m_pPlayerWorldMatrix = { nullptr };
 	_float4x4*				m_pCameraBoneCombinedMatrix = { nullptr };
 	_int					m_iBoneIndex = {};
+
+private: // 반동용 변수
+	// 반동 오프셋(월드 위치 보정용)
+	_float3 m_vRecoilOffset = {};
+	// 반동 복원 속도
+	_float3 m_vRecoilVelocity = {};
+	// 반동이 진행 중인지 플래그
+	_bool   m_bRecoiling = false;
 
 public:
 	static CCamera_FPS* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

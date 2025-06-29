@@ -186,10 +186,10 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 		pHitOwner->Set_Dead();
 	}
 
-	if (CI_MONSTER(eHitColID))
-		;
-	if (m_iHP <= 0)
-		;
+	//if (CI_MONSTER(eHitColID))
+	//	;
+	//if (m_iHP <= 0)
+	//	;
 }
 
 void CPlayer::Key_Input(_float fTimeDelta)
@@ -418,6 +418,66 @@ HRESULT CPlayer::Bind_ShaderResources()
 
 
 	return S_OK;
+}
+
+HRESULT CPlayer::Change_Level(_uint iLevelIndex)
+{
+	if (m_iLevelID == iLevelIndex)
+		return E_FAIL;
+	m_iLevelID = iLevelIndex;
+
+	for (auto& pState : m_pStates)
+	{
+		if (pState)
+			pState->Delete_CurNavigation();
+	}
+	if (m_pGravityCom != nullptr)
+	{
+		Safe_Release(m_pGravityCom);
+		m_pGravityCom = nullptr;
+	}
+	if (m_pNavigationCom != nullptr)
+	{
+		Safe_Release(m_pNavigationCom);
+		m_pNavigationCom = nullptr;
+	}
+	/* For.Com_Navigation */
+	CNavigation::NAVIGATION_DESC		NaviDesc{};
+	switch (m_iLevelID)
+	{
+	case ENUM_CLASS(LEVEL::GAMEPLAY):
+		NaviDesc.iIndex = 32;
+		break;
+	case ENUM_CLASS(LEVEL::BOSS):
+		NaviDesc.iIndex = 32;
+		break;
+	default:
+		break;
+	}
+	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Navigation"),
+		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
+		return E_FAIL;
+
+
+	/* For.Com_Gravity */
+	CGravity::DESC	GravityDesc{};
+	GravityDesc.fGravity = -40.f;
+	GravityDesc.fJumpPower = 20.f;
+	GravityDesc.pOwnerNavigationCom = m_pNavigationCom;
+	GravityDesc.pOwnerTransformCom = m_pTransformCom;
+	GravityDesc.fOffsetY = 5.f;
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Gravity"),
+		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
+		return E_FAIL;
+	for (auto& pState : m_pStates)
+	{
+		if (pState)
+			pState->Replace_Navigation(m_pNavigationCom);
+	}
+
+	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CurCenterPoint());
+
+	m_pGameInstance->Add_Collider(ENUM_CLASS(COL_GROUP::PLAYER), m_pColliderCom);
 }
 
 void CPlayer::Skill_Cooldowns(_float fTimeDelta)

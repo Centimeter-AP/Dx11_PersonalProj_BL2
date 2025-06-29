@@ -28,8 +28,8 @@ HRESULT CLeviathan::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 	
-	//if (FAILED(Ready_PartObjects(pArg)))
-	//	return E_FAIL;
+	if (FAILED(Ready_PartObjects(pArg)))
+		return E_FAIL;
 
 	if (FAILED(Ready_LeviathanStates()))
 		return E_FAIL;
@@ -42,20 +42,6 @@ HRESULT CLeviathan::Initialize(void* pArg)
 
 void CLeviathan::Priority_Update(_float fTimeDelta)
 {
-#pragma region AnimationTests
-	static _uint test = {};
-	if (KEY_DOWN(DIK_LBRACKET))
-	{
-		test > 30 ? test = 0 : test++;
-		m_pModelCom->Set_Animation(test, true);
-	}
-	if (KEY_DOWN(DIK_RBRACKET))
-	{
-		test < 1 ? test = 30 : test--;
-		m_pModelCom->Set_Animation(test, true);
-	}
-#pragma endregion
-
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -75,6 +61,8 @@ EVENT CLeviathan::Update(_float fTimeDelta)
 			pPartObject.second->Update(fTimeDelta);
 	}
 
+	m_pColliderGroundAttackCom->Update(m_pTransformCom->Get_WorldMatrix());
+	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 	return EVN_NONE;
 }
 
@@ -93,7 +81,6 @@ HRESULT CLeviathan::Render()
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
-
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMesh; i++)
@@ -108,8 +95,12 @@ HRESULT CLeviathan::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-	
 
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderCom->Render();
+
+	m_pColliderGroundAttackCom->Set_ColliderColor(RGBA_MAGENTA);
+	m_pColliderGroundAttackCom->Render();
 
 	return S_OK;
 }
@@ -131,13 +122,34 @@ HRESULT CLeviathan::Ready_Components(void* pArg)
 	AABBDesc.eType = COLLIDER::AABB;
 	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MONSTER);
 	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN);
-	AABBDesc.vExtents = _float3(100.f, 100.f, 100.f);
-	AABBDesc.vCenter = _float3(0.f, -50.f, 0.f);
+	AABBDesc.vExtents = _float3(50.f, 50.f, 50.f);
+	AABBDesc.vCenter = _float3(0.f, AABBDesc.vExtents.y, 0.f);
 	/* For.Com_Collider */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &AABBDesc)))
 		return E_FAIL;
 
+	//CBounding_AABB::AABB_DESC AABBDesc = {};
+	//AABBDesc.pOwner = this;
+	//AABBDesc.eType = COLLIDER::AABB;
+	AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MON_ATTACK);
+	AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN_ATK);
+	AABBDesc.vExtents = _float3(40.f, 5.f, 40.f);
+	AABBDesc.vCenter = _float3(0.f, 45.f, -70.f);
+	/* For.Com_Collider */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
+		TEXT("Com_ColliderAttack"), reinterpret_cast<CComponent**>(&m_pColliderGroundAttackCom), &AABBDesc)))
+		return E_FAIL;
+	m_pColliderGroundAttackCom->Set_Active(false);
+
+	//AABBDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MON_ATTACK);
+	//AABBDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN_ATK);
+	//AABBDesc.vExtents = _float3(40.f, 5.f, 40.f);
+	//AABBDesc.vCenter = _float3(0.f, 45.f, -70.f);
+	///* For.Com_Collider */
+	//if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
+	//	TEXT("Com_ColliderAttack"), reinterpret_cast<CComponent**>(&m_pColliderGroundAttackCom), &AABBDesc)))
+	//	return E_FAIL;
 	return S_OK;
 }
 
@@ -153,15 +165,18 @@ HRESULT CLeviathan::Ready_HitMeshes(void* pArg)
 {
 	CLevi_HitMesh::DESC Desc = {};
 
+	Desc.iLevelID = ENUM_CLASS(LEVEL::BOSS);
 	Desc.fRotationPerSec = XMConvertToRadians(0.f);
 	Desc.fSpeedPerSec = 0.f;
 	Desc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
 	Desc.pParentObject = this;
 
+	// ¾ÕµÚ/À§¾Æ·¡/ÁÂ¿ì
+
 	/* For.PartObject_HitMesh_Tongue */
-	Desc.strSocketMatrixName = ("tongue_jaw");
-	Desc.bHasTransformPreset = true;
-	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixTranslation(0.f, 0.f, 0.f));
+	Desc.strSocketMatrixName = ("tongue_jaw"); // ¾È¸Â¾Æ¼­ ¸øÇÏ°Ù¾î 
+	Desc.bHasTransformPreset = true;													// -ÁÂ +¿ì / ? / À§¾Æ·¡
+	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationRollPitchYaw(XMConvertToRadians(0.f), XMConvertToRadians(0.f), 0.f)* XMMatrixTranslation(0.f, -3.f, 6.f));
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Levi_HitMesh");
 	Desc.szName = L"Hitmesh_Tongue";
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::BOSS), TEXT("PartObject_HitMesh_Tongue"), TEXT("Prototype_GameObject_Levi_HitMesh"), &Desc)))
@@ -170,7 +185,7 @@ HRESULT CLeviathan::Ready_HitMeshes(void* pArg)
 	/* For.PartObject_HitMesh_LeftEye */
 	Desc.strSocketMatrixName = ("Head"); // ¿Þ´« ¿À¸¥´«
 	Desc.bHasTransformPreset = true;
-	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixTranslation(0.f, 0.f, 0.f));
+	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixScaling(1.f, 1.f, 1.f) * XMMatrixRotationRollPitchYaw(XMConvertToRadians(-25.f), XMConvertToRadians(90.f), 0.f) * XMMatrixTranslation(10.f, 0.f, -6.f));
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Levi_HitMesh");
 	Desc.szName = L"Hitmesh_LeftEye";
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::BOSS), TEXT("PartObject_HitMesh_LeftEye"), TEXT("Prototype_GameObject_Levi_HitMesh"), &Desc)))
@@ -178,7 +193,7 @@ HRESULT CLeviathan::Ready_HitMeshes(void* pArg)
 	/* For.PartObject_HitMesh_RightEye */
 	Desc.strSocketMatrixName = ("Head"); // ¿Þ´« ¿À¸¥´«
 	Desc.bHasTransformPreset = true;
-	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixTranslation(0.f, 0.f, 0.f));
+	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixScaling(1.f, 1.f, 1.f) * XMMatrixRotationRollPitchYaw(XMConvertToRadians(25.f), XMConvertToRadians(90.f), 0.f) * XMMatrixTranslation(-10.f, 0.f, -6.f));
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Levi_HitMesh");
 	Desc.szName = L"Hitmesh_RightEye";
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::BOSS), TEXT("PartObject_HitMesh_RightEye"), TEXT("Prototype_GameObject_Levi_HitMesh"), &Desc)))
@@ -186,8 +201,8 @@ HRESULT CLeviathan::Ready_HitMeshes(void* pArg)
 
 	/* For.PartObject_HitMesh_Heart */
 	Desc.strSocketMatrixName = ("upper_fat"); // ½ÉÀå
-	Desc.bHasTransformPreset = true;
-	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixTranslation(0.f, 0.f, 0.f));
+	Desc.bHasTransformPreset = true; 
+	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixScaling(0.8f, 0.8f, 0.8f)* XMMatrixRotationRollPitchYaw(XMConvertToRadians(-15.f), XMConvertToRadians(90.f), 0.f)* XMMatrixTranslation(-2.f, 23.f, 6.5f));
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Levi_HitMesh");
 	Desc.szName = L"Hitmesh_Heart";
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::BOSS), TEXT("PartObject_HitMesh_Heart"), TEXT("Prototype_GameObject_Levi_HitMesh"), &Desc)))
@@ -243,7 +258,6 @@ void CLeviathan::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCo
 
 }
 
-
 CLeviathan* CLeviathan::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CLeviathan* pInstance = new CLeviathan(pDevice, pContext);
@@ -278,4 +292,5 @@ void CLeviathan::Free()
 		Safe_Release(State);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pColliderGroundAttackCom);
 }

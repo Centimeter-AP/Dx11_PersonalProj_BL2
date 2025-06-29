@@ -323,7 +323,7 @@ public:
 		rand() % 2 ?
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite1, false) :
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite2, false);
-		m_pOwner->m_pColliderAttackCom->Set_Active(true);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -334,7 +334,7 @@ public:
 	}
 	virtual void Exit() override
 	{
-		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 		m_pOwner->Set_FirstHit_True();
 	}
 	virtual void Free() override { __super::Free(); }
@@ -355,7 +355,7 @@ public:
 		rand() % 2 ?
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue1, false) :
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue2, false);
-		m_pOwner->m_pColliderAttackCom->Set_Active(true);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -367,7 +367,7 @@ public:
 	}
 	virtual void Exit() override
 	{
-		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 		m_pOwner->Set_FirstHit_True();
 
 	}
@@ -402,7 +402,7 @@ public:
 			{
 				ChargeStatus[1] = true;
 				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Loop, true);
-				m_pOwner->m_pColliderAttackCom->Set_Active(true);
+				m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 				//XMStoreFloat3(&vChargePos, m_pTargetTransform->Get_State(STATE::POSITION));
 			}
 		}
@@ -419,7 +419,7 @@ public:
 				if (Dist >= 10.f || fChargingTime > 4.f)
 				{
 					ChargeStatus[2] = true;
-					m_pOwner->m_pColliderAttackCom->Set_Active(false);
+					m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 					Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Stop, false);
 					m_pOwner->Set_FirstHit_True();
 				}
@@ -468,7 +468,7 @@ public:
 	{
 		cout << "a_Charge_HitWall" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Hitwall, false);
-		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 		m_pOwner->Set_FirstHit_True();
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -498,7 +498,7 @@ public:
 	{
 		cout << "a_Charge_Strike" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Strike, false);
-		m_pOwner->m_pColliderAttackCom->Set_Active(false);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 		m_pOwner->Set_FirstHit_True();
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -566,7 +566,7 @@ public:
 			else if (LeapStatus[1] == true)
 			{
 				LeapStatus[2] = true;
-				m_pOwner->m_pColliderAttackCom->Set_Active(false);
+				m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 				m_pOwner->Set_FirstHit_True();
 				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Leap_End, false);
 			}
@@ -574,7 +574,7 @@ public:
 			{
 				LeapStatus[1] = true;
 				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Leap_Idle, false);
-				m_pOwner->m_pColliderAttackCom->Set_Active(true);
+				m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 				//XMStoreFloat3(&vLeapPos, m_pTargetTransform->Get_State(STATE::POSITION));
 			}
 		}
@@ -625,7 +625,7 @@ public:
 	virtual void Enter() override
 	{
 		cout << "a_runbite" << endl;
-		m_pOwner->m_pColliderAttackCom->Set_Active(true);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Bite, false);
 		m_pOwner->m_pTransformCom->LookAt_NoY(m_pTarget->Get_Transform()->Get_State(STATE::POSITION));
 	}
@@ -633,7 +633,7 @@ public:
 	{
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
-			m_pOwner->m_pColliderAttackCom->Set_Active(false);
+			m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 			m_pOwner->Set_FirstHit_True();
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
 		}
@@ -658,14 +658,14 @@ public:
 	virtual void Enter() override
 	{
 		cout << "a_runtongue" << endl;
-		m_pOwner->m_pColliderAttackCom->Set_Active(true);
+		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Tongue, false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
-			m_pOwner->m_pColliderAttackCom->Set_Active(false);
+			m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 			m_pOwner->Set_FirstHit_True();
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked_Idle);
 		}

@@ -18,6 +18,7 @@ public:
 		m_pGameInstance(CGameInstance::Get_Instance())
 	{
 		m_pOwnerNavi = m_pOwner->m_pNavigationCom;
+		Safe_AddRef(m_pOwnerNavi);
 		m_pIsGrounded = m_pOwner->m_pGravityCom->Is_Grounded_Ptr();
 	}
 	virtual ~CPlayerState() = default;
@@ -30,6 +31,19 @@ public:
 	//상태 퇴장 시 한 번 호출
 	virtual void Exit() PURE;
 	virtual void Free() override { __super::Free(); /*Safe_Release(m_pGameInstance);*/ }
+	void Delete_CurNavigation() {
+		if (m_pOwnerNavi) {
+			Safe_Release(m_pOwnerNavi);
+			m_pOwnerNavi = nullptr;
+		}
+	}
+	void Replace_Navigation(CNavigation* pNewNavi) {
+		if (m_pOwnerNavi == nullptr)
+		{
+			m_pOwnerNavi = pNewNavi;
+			Safe_AddRef(m_pOwnerNavi);
+		}
+	}
 
 protected:
 	void Default_Movements(_float fTimeDelta) {

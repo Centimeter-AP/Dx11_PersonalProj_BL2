@@ -41,9 +41,16 @@ private:
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol);
 
 private:
+	CShader*			m_pShaderCom = { nullptr };
+	CModel*				m_pModelCom = { nullptr };
+	CCollider*			m_pColliderCom = { nullptr };
+private:
 	string				strSocketBoneName;
 	const _float4x4*	m_pSocketMatrix = { nullptr };
+	_float4x4			m_CombinedWorldMatrix = {};
 
+	_int				m_iHP = {};
+	_int				m_iMaxHP = {};
 
 public:
 	static CLevi_HitMesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

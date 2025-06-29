@@ -15,7 +15,7 @@ public:
 	typedef struct tagUIAimDesc : public CUIObject::UIOBJECT_DESC
 	{
 
-	}UI_AIM_DESC;
+	}DESC;
 
 private:
 	CUI_Aim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
