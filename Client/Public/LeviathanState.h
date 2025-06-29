@@ -90,28 +90,44 @@ public:
 	{
 		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 
-		m_fCooldown += fTimeDelta;
-
-		if (m_fCooldown >= 2.f)
+		if (KEY_DOWN(DIK_1))
 		{
-			switch (rand() % 4)
-			{
-			case 0:
-				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Slam);
-				break;
-			case 1:
-				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_SpitWorm);
-				break;
-			case 2:
-				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
-				break;
-			case 3:
-				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_ThrowRock);
-				break;
-			default:
-				break;
-			}
+			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_SpitWorm);
 		}
+		if (KEY_DOWN(DIK_2))
+		{
+			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_ThrowRock);
+		}
+		if (KEY_DOWN(DIK_3))
+		{
+			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
+		}
+		if (KEY_DOWN(DIK_4))
+		{
+			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Slam);
+		}
+		//m_fCooldown += fTimeDelta;
+
+		//if (m_fCooldown >= 2.f)
+		//{
+		//	switch (rand() % 4)
+		//	{
+		//	case 0:
+		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Slam);
+		//		break;
+		//	case 1:
+		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_SpitWorm);
+		//		break;
+		//	case 2:
+		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
+		//		break;
+		//	case 3:
+		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_ThrowRock);
+		//		break;
+		//	default:
+		//		break;
+		//	}
+		//}
 	}
 	virtual void Exit() override
 	{
@@ -219,8 +235,9 @@ public:
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_tongue_ground_slam, false);
 		else
-			/*rand() % 3 == 0 ? Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false):*/
-							  Set_OwnerAnim(CLeviathan::LEVI_ANIM::ground_slam, false); // tongue는....?음
+			//rand() % 3 == 0 ? 
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false);
+			//Set_OwnerAnim(CLeviathan::LEVI_ANIM::ground_slam, false); // tongue는....?음
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -280,6 +297,7 @@ public:
 		if (50.f <= fTrackPos && m_bSpawnBullet == false)
 		{
 			m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
+			m_pOwner->Spawn_Bullet();
 			m_bSpawnBullet = true;
 		}
 	}

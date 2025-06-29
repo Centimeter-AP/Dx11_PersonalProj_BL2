@@ -378,7 +378,21 @@
     <ClInclude Include="..\public\UI_Aim.h">
       <Filter>02.GameObjects\07. UI\StaticUI\Aim</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\UI_HPBar.h" />
+    <ClInclude Include="..\Public\UI_Shield.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\ShieldBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Phaselock.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\SkillBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_HP.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\HPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Exp.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\ExpBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Ammo.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\AmmoBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -604,7 +618,21 @@
     <ClCompile Include="..\private\UI_Aim.cpp">
       <Filter>02.GameObjects\07. UI\StaticUI\Aim</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\UI_HPBar.cpp" />
+    <ClCompile Include="..\Private\UI_HP.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\HPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Ammo.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\AmmoBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Exp.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\ExpBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Phaselock.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\SkillBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Shield.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\ShieldBar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">

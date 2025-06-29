@@ -203,7 +203,11 @@
     <ClInclude Include="..\Public\Terrain.h" />
     <ClInclude Include="..\public\TerrainTool.h" />
     <ClInclude Include="..\public\UI_Aim.h" />
-    <ClInclude Include="..\public\UI_HPBar.h" />
+    <ClInclude Include="..\Public\UI_Ammo.h" />
+    <ClInclude Include="..\Public\UI_Exp.h" />
+    <ClInclude Include="..\Public\UI_HP.h" />
+    <ClInclude Include="..\Public\UI_Phaselock.h" />
+    <ClInclude Include="..\Public\UI_Shield.h" />
     <ClInclude Include="..\Public\Warrior.h" />
     <ClInclude Include="..\Public\WarriorState.h" />
     <ClInclude Include="..\public\Weapon.h" />
@@ -283,7 +287,11 @@
     <ClCompile Include="..\Private\Terrain.cpp" />
     <ClCompile Include="..\private\TerrainTool.cpp" />
     <ClCompile Include="..\private\UI_Aim.cpp" />
-    <ClCompile Include="..\private\UI_HPBar.cpp" />
+    <ClCompile Include="..\Private\UI_Ammo.cpp" />
+    <ClCompile Include="..\Private\UI_Exp.cpp" />
+    <ClCompile Include="..\Private\UI_HP.cpp" />
+    <ClCompile Include="..\Private\UI_Phaselock.cpp" />
+    <ClCompile Include="..\Private\UI_Shield.cpp" />
     <ClCompile Include="..\Private\Warrior.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />

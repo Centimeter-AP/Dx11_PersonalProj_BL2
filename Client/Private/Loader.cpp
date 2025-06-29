@@ -26,6 +26,11 @@
 
 /** UI **/ 
 #include "UI_Aim.h"
+#include "UI_Ammo.h"
+#include "UI_HP.h"
+#include "UI_Shield.h"
+#include "UI_Phaselock.h"
+#include "UI_Exp.h"
 
 //#include "Effect.h"
 #include "Sky.h"
@@ -211,30 +216,30 @@ HRESULT CLoader::Loading_For_Logo()
 		CUI_Aim::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
-	///* For.Prototype_GameObject_UI_Bar_HP */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_HP"),
-	//	CUI_HP::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	//
-	///* For.Prototype_GameObject_UI_Bar_Ammo */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Ammo"),
-	//	CUI_Ammo::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	//
-	///* For.Prototype_GameObject_UI_Bar_Shield */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Shield"),
-	//	CUI_Shield::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	//
-	///* For.Prototype_GameObject_UI_Bar_Phaselock */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Phaselock"),
-	//	CUI_Phaselock::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
-	//
-	///* For.Prototype_GameObject_UI_Bar_Exp */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Exp"),
-	//	CUI_Exp::Create(m_pDevice, m_pContext))))
-	//	return E_FAIL;
+	/* For.Prototype_GameObject_UI_HP */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_HP"),
+		CUI_HP::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_Ammo */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Ammo"),
+		CUI_Ammo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_Shield */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Shield"),
+		CUI_Shield::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_Phaselock */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Phaselock"),
+		CUI_Phaselock::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_Exp */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Exp"),
+		CUI_Exp::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 #pragma endregion
 

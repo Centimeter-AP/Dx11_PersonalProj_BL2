@@ -102,11 +102,22 @@ technique11 DefaultTechnique
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
-        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         
 
         VertexShader = compile vs_5_0 VS_MAIN();        
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_BlackDiscard();
+    }
+    pass AlphaTest_AlphaBlend/* 명암 + 스펙큘러 + 그림자 + ssao + 림라이트 */ 
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+
+        VertexShader = compile vs_5_0 VS_MAIN();        
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

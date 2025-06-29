@@ -83,52 +83,52 @@ HRESULT CLevel_Logo::Ready_Layer_StaticUI(const _wstring strLayerTag)
 		return E_FAIL;
 
 
-	UIDesc.fX = g_iWinSizeX * 0.5f;
-	UIDesc.fY = g_iWinSizeY * 0.5f;
-	UIDesc.fSizeX = 100.0f;
-	UIDesc.fSizeY = 100.0f;
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_HP"),
+	UIDesc.fX = 180.f;
+	UIDesc.fY = 650.f;
+	UIDesc.fSizeX = 214.f;
+	UIDesc.fSizeY = 36.0f;
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_HP"),
+		static_cast<_uint>(LEVEL::STATIC), strLayerTag, &UIDesc)))
+		return E_FAIL;
+	
+
+	UIDesc.fX = g_iWinSizeX - 180.f;
+	UIDesc.fY = 650.f;
+	UIDesc.fSizeX = 214.f;
+	UIDesc.fSizeY = 36.0f;
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Ammo"),
+		static_cast<_uint>(LEVEL::STATIC), strLayerTag, &UIDesc)))
+		return E_FAIL;
+	
+
+	UIDesc.fX = 160.f;
+	UIDesc.fY = 620.f;
+	UIDesc.fSizeX = 168.f;
+	UIDesc.fSizeY = 31.0f;
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Shield"),
 		static_cast<_uint>(LEVEL::STATIC), strLayerTag, &UIDesc)))
 		return E_FAIL;
 	
 
 	UIDesc.fX = g_iWinSizeX * 0.5f;
-	UIDesc.fY = g_iWinSizeY * 0.5f;
-	UIDesc.fSizeX = 100.0f;
-	UIDesc.fSizeY = 100.0f;
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Ammo"),
-		static_cast<_uint>(LEVEL::STATIC), strLayerTag, &UIDesc)))
-		return E_FAIL;
-	
-
-	UIDesc.fX = g_iWinSizeX * 0.5f;
-	UIDesc.fY = g_iWinSizeY * 0.5f;
-	UIDesc.fSizeX = 100.0f;
-	UIDesc.fSizeY = 100.0f;
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Shield"),
-		static_cast<_uint>(LEVEL::STATIC), strLayerTag, &UIDesc)))
-		return E_FAIL;
-	
-
-	UIDesc.fX = g_iWinSizeX * 0.5f;
-	UIDesc.fY = g_iWinSizeY * 0.5f;
-	UIDesc.fSizeX = 100.0f;
-	UIDesc.fSizeY = 100.0f;
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Phaselock"),
+	UIDesc.fY = 560.f;
+	UIDesc.fSizeX = 439.f;
+	UIDesc.fSizeY = 125.f;
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Phaselock"),
 		static_cast<_uint>(LEVEL::STATIC), strLayerTag, &UIDesc)))
 		return E_FAIL;
 
 
-	UIDesc.fX = g_iWinSizeX * 0.5f;
-	UIDesc.fY = g_iWinSizeY * 0.5f;
-	UIDesc.fSizeX = 100.0f;
-	UIDesc.fSizeY = 100.0f;
-	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Bar_Exp"),
+	UIDesc.fX = g_iWinSizeX * 0.5f;// 640 640
+	UIDesc.fY = 640.f;
+	UIDesc.fSizeX = 400.f;
+	UIDesc.fSizeY = 29.f;
+	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Exp"),
 		static_cast<_uint>(LEVEL::STATIC), strLayerTag, &UIDesc)))
 		return E_FAIL;
 
 
-	m_pGameInstance->Active_Layer(static_cast<_uint>(LEVEL::STATIC), strLayerTag, false);
+	//m_pGameInstance->Active_Layer(static_cast<_uint>(LEVEL::STATIC), strLayerTag, false);
 
 	return S_OK;
 }

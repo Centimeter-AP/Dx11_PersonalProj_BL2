@@ -211,9 +211,11 @@ HRESULT CLeviathan::Ready_HitMeshes(void* pArg)
 	// 앞뒤/위아래/좌우
 
 	/* For.PartObject_HitMesh_Tongue */
-	Desc.strSocketMatrixName = ("tongue_jaw"); // 안맞아서 못하겟어 
-	Desc.bHasTransformPreset = true;													// -좌 +우 / ? / 위아래
-	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixScaling(0.5f, 0.5f, 0.5f) * XMMatrixRotationRollPitchYaw(XMConvertToRadians(0.f), XMConvertToRadians(0.f), 0.f)* XMMatrixTranslation(0.f, -3.f, 6.f));
+	Desc.strSocketMatrixName = ("tongue_head"); // 안맞아서 못하겟어 //맞았어
+	Desc.bHasTransformPreset = true;													
+	XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixScaling(0.8f, 0.8f, 0.8f)
+		* XMMatrixRotationRollPitchYaw(XMConvertToRadians(0.f), XMConvertToRadians(0.f), 0.f)
+		* XMMatrixTranslation(0.f, 2.f, 6.f));// -좌 +우 / +앞 -뒤 / -위 +아래
 	Desc.strVIBufferTag = TEXT("Prototype_Component_Model_Levi_HitMesh");
 	Desc.szName = L"Hitmesh_Tongue";
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::BOSS), TEXT("PartObject_HitMesh_Tongue"), TEXT("Prototype_GameObject_Levi_HitMesh"), &Desc)))
@@ -292,7 +294,6 @@ void CLeviathan::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCo
 		return ;
 
 	__super::On_Collision(iMyColID, iHitColID, pHitCol);
-
 }
 
 HRESULT CLeviathan::Spawn_Bullet()
@@ -308,7 +309,6 @@ HRESULT CLeviathan::Spawn_Bullet()
 	XMStoreFloat3(&SpitDesc.vTargetPos, XMVectorSetY(targetPos, targetPos.m128_f32[1]));
 
 	XMStoreFloat4x4(&SpitDesc.PresetMatrix, XMMatrixTranslation(TailBoneMat.r[3].m128_f32[0], TailBoneMat.r[3].m128_f32[1], TailBoneMat.r[3].m128_f32[2]));
-
 
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Levi_Bullet"),
 		ENUM_CLASS(LEVEL::BOSS), TEXT("Layer_MonBullet"), &SpitDesc)))
