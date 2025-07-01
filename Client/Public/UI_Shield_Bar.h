@@ -9,7 +9,7 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CUI_Shield final : public CUIObject
+class CUI_Shield_Bar final : public CUIObject
 {
 public:
 	typedef struct tagUIShieldDesc : public CUIObject::UIOBJECT_DESC
@@ -19,9 +19,9 @@ public:
 	}DESC;
 
 private:
-	CUI_Shield(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_Shield(const CUI_Shield& Prototype);
-	virtual ~CUI_Shield() = default;
+	CUI_Shield_Bar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Shield_Bar(const CUI_Shield_Bar& Prototype);
+	virtual ~CUI_Shield_Bar() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -33,8 +33,7 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
-	enum TEXTYPE {TYPE_ICON, TYPE_BARBACK, TYPE_BAR, TYPE_END};
-	CTexture* m_pTextureCom[3] = {nullptr};
+	CTexture* m_pTextureCom = {nullptr};
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_float* m_fShield = { nullptr };
@@ -44,7 +43,7 @@ private:
 	HRESULT Ready_Components();
 
 public:
-	static CUI_Shield* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_Shield_Bar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 

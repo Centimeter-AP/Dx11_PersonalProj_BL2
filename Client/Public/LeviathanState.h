@@ -106,28 +106,28 @@ public:
 		{
 			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Slam);
 		}
-		//m_fCooldown += fTimeDelta;
+		m_fCooldown += fTimeDelta;
 
-		//if (m_fCooldown >= 2.f)
-		//{
-		//	switch (rand() % 4)
-		//	{
-		//	case 0:
-		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Slam);
-		//		break;
-		//	case 1:
-		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_SpitWorm);
-		//		break;
-		//	case 2:
-		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
-		//		break;
-		//	case 3:
-		//		m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_ThrowRock);
-		//		break;
-		//	default:
-		//		break;
-		//	}
-		//}
+		if (m_fCooldown >= 2.f)
+		{
+			switch (rand() % 4)
+			{
+			case 0:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Slam);
+				break;
+			case 1:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_SpitWorm);
+				break;
+			case 2:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
+				break;
+			case 3:
+				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_ThrowRock);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	virtual void Exit() override
 	{
@@ -515,7 +515,7 @@ public:
 			return;
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
-			//m_pOwner->Set_Dead();
+			m_pOwner->Set_Dead(); 
 			//»Ï! ¿œ¥‹ ª©∫∏∞Ì...
 			return;
 		}

@@ -248,6 +248,9 @@ public:
 	virtual void Execute(_float fTimeDelta) override;
 	virtual void Exit() override;
 	virtual void Free() override { __super::Free(); }
+private:
+	_bool m_bSuccess = { false };
+	_bool m_bCatched = { false };
 };
 
 class CPlayerState_CloseAttack final : public CPlayerState

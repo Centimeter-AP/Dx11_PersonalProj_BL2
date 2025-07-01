@@ -75,8 +75,6 @@ HRESULT CAnimation::Initialize(ifstream& ifs, const vector<class CBone*>& Bones,
 
 _bool CAnimation::Update_Bones(_float fTimeDelta, const vector<CBone*>& Bones, _bool isLoop)
 {
-	_bool			isFinished = { false }; // 언제쓸지도몰라서일단놔둠
-
 	m_fCurrentTrackPosition += m_fTickPerSecond * fTimeDelta;
 
 	if (m_fCurrentTrackPosition >= m_fDuration)
@@ -112,7 +110,7 @@ void CAnimation::Reset()
 	m_fCurrentTrackPosition = 0.f;
 
 	// 2) 각 채널의 키프레임 인덱스도 모두 0으로
-	std::fill(m_CurrentKeyFrameIndices.begin(),
+	fill(m_CurrentKeyFrameIndices.begin(),
 		m_CurrentKeyFrameIndices.end(),
 		0);
 }

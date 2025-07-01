@@ -83,6 +83,7 @@ private:
 private:
 	_bool					m_bInjured = { false }; // 힛메쉬 한두개 남았을 때 부터?
 	_int					m_iTongueBoneIdx = { -1 }; 
+	_bool					m_bDying = { false };
 
 public:
 	static CLeviathan* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -48,6 +48,11 @@ HRESULT CLeviathan::Initialize(void* pArg)
 void CLeviathan::Priority_Update(_float fTimeDelta)
 {
 	m_iHP = 0;
+
+	if (KEY_DOWN(DIK_P))
+	{
+		m_PartObjects.begin()->second->Set_Dead();
+	}
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -55,6 +60,11 @@ void CLeviathan::Priority_Update(_float fTimeDelta)
 			pPartObject.second->Priority_Update(fTimeDelta);
 			m_iHP += static_cast<CLevi_HitMesh*>(pPartObject.second)->Get_HP();
 		}
+	}
+	if (m_iHP <= 0 && m_bDying == false)
+	{
+		Set_State(LEVI_STATE::STATE_Dead);
+		m_bDying = true;
 	}
 
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);

@@ -66,17 +66,22 @@ HRESULT CUI_Exp::Render()
 			continue;
 		if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 			return E_FAIL;
-	//if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	//	return E_FAIL; 
+		//if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
+		//	return E_FAIL; 
 
-	if (FAILED(m_pShaderCom->Begin(2)))
-		return E_FAIL;
+		if (FAILED(m_pShaderCom->Begin(2)))
+			return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Bind_Buffers()))
-		return E_FAIL;
+		if (FAILED(m_pVIBufferCom->Bind_Buffers()))
+			return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Render()))
-		return E_FAIL;
+		if (FAILED(m_pVIBufferCom->Render()))
+			return E_FAIL;
+		_wstring str = L"LV";
+		m_pGameInstance->Draw_Font(TEXT("Font_Compacta"), L"LV", _float2(m_fX - m_fSizeX * 0.5f + 30.f, m_fY + 5.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.7f);
+		m_pGameInstance->Draw_Font(TEXT("Font_Compacta"), L"01", _float2(m_fX - m_fSizeX * 0.5f + 60.f, m_fY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.8f);
+		m_pGameInstance->Draw_Font(TEXT("Font_Compacta"), L"Trickster", _float2(m_fX - m_fSizeX * 0.5f + 100.f, m_fY + 5.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.7f);
+
 	}
 
 	return S_OK;

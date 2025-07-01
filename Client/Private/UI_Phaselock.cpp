@@ -39,6 +39,16 @@ EVENT CUI_Phaselock::Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return EVN_NONE;
+	if (m_bCheckTime)
+	{
+		m_fTime += fTimeDelta;
+		if (m_fTime >= m_fDuration)
+		{
+			m_fTime = 0.f;
+			m_bCheckTime = false;
+			m_isActive = false;
+		}
+	}
 
 	return EVN_NONE;
 }
@@ -64,12 +74,19 @@ HRESULT CUI_Phaselock::Render()
 	{
 		if (nullptr == m_pTextureCom[i])
 			continue;
+		_float fPercentage = 0.f;
+		if (i == TYPE_BAR)
+		{
+			fPercentage = m_fTime / m_fDuration;
+		}
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fPercentage", &fPercentage, sizeof(_float))))
+			return E_FAIL;
 		if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 			return E_FAIL;
 	//if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 	//	return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(2)))
+	if (FAILED(m_pShaderCom->Begin(4)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom->Bind_Buffers()))

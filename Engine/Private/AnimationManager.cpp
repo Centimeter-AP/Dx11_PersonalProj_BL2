@@ -78,6 +78,16 @@ _bool CAnimationManager::Update(_float fTimeDelta, const _fmatrix& PreTransformM
     return isFinished;
 }
 
+const _float CAnimationManager::Get_CurrentTrackPosition()
+{
+	if (m_pNextAnim)
+	{
+		return m_pNextAnim->Get_CurrentTrackPosition();
+	}
+    else
+        return m_pCurrentAnim->Get_CurrentTrackPosition();
+}
+
 //void CAnimationManager::ApplyToBones(const _fmatrix& PreTransformMatrix)
 //{
 //    auto& Bones = *m_pBones;

@@ -20,6 +20,8 @@ HRESULT CUI_Shield::Initialize(void* pArg)
 {
 	DESC* pDesc = static_cast<DESC*>(pArg);
 
+	m_fShield = pDesc->fShield;
+	m_fMaxShield = pDesc->fMaxShield;
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -66,18 +68,25 @@ HRESULT CUI_Shield::Render()
 			continue;
 		if (FAILED(m_pTextureCom[i]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 			return E_FAIL;
-	//if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
-	//	return E_FAIL;
+		_float fPercentage = {};
+		if (i == TYPE_BAR)
+			fPercentage = 1.f - (*m_fShield / *m_fMaxShield);
+		else
+			fPercentage = 0.f;
+		if (FAILED(m_pShaderCom->Bind_RawValue("g_fPercentage", &fPercentage, sizeof(_float))))
+			return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(2)))
-		return E_FAIL;
+		if (FAILED(m_pShaderCom->Begin(3)))
+			return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Bind_Buffers()))
-		return E_FAIL;
+		if (FAILED(m_pVIBufferCom->Bind_Buffers()))
+			return E_FAIL;
 
-	if (FAILED(m_pVIBufferCom->Render()))
-		return E_FAIL;
+		if (FAILED(m_pVIBufferCom->Render()))
+			return E_FAIL;
 
+		_wstring strHP = to_wstring(static_cast<_int>(*m_fShield));
+		m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strHP.c_str(), _float2(m_fX - m_fSizeX * 0.5f + 25.f, m_fY - m_fSizeY * 0.5f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
 	}
 	return S_OK;
 }

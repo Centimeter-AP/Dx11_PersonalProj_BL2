@@ -5,6 +5,12 @@
 #include "Monster.h"
 #include "Bullet.h"
 #include "Terrain.h"
+#include "UI_Aim.h"
+#include "UI_Ammo.h"
+#include "UI_HP.h"
+#include "UI_Shield.h"
+#include "UI_Phaselock.h"
+#include "UI_Exp.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
 constexpr _float NONCOMBAT_TIMER = 10.f;
@@ -117,7 +123,7 @@ void CPlayer::Late_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Late_Update(fTimeDelta);
 	}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this); // ㅋㅋ 고치시길
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this); // ㅋㅋ 고치시길
 }
 
 HRESULT CPlayer::Render()
@@ -195,6 +201,14 @@ void CPlayer::Key_Input(_float fTimeDelta)
 {
 	_long			MouseMove = {};
 
+	if (KEY_PRESSING(DIK_C))
+	{
+		m_iHP--;
+	}
+	if (KEY_DOWN(DIK_X))
+	{
+		m_iHP = m_iMaxHP;
+	}
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
 	{
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
@@ -364,6 +378,62 @@ HRESULT CPlayer::Ready_Weapons(void* pArg)
 
 HRESULT CPlayer::Ready_UIObjects(void* pArg)
 {
+	CUI_Aim::DESC			UIAimDesc;
+	UIAimDesc.fX = g_iWinSizeX * 0.5f;
+	UIAimDesc.fY = g_iWinSizeY * 0.5f;
+	UIAimDesc.fSizeX = 50.0f;
+	UIAimDesc.fSizeY = 50.0f;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Aim"), TEXT("Prototype_GameObject_UI_Aim"), &UIAimDesc)))
+		return E_FAIL;
+
+
+	CUI_HP::DESC			UIHPDesc;
+	UIHPDesc.fX = 180.f;
+	UIHPDesc.fY = 650.f;
+	UIHPDesc.fSizeX = 214.f;
+	UIHPDesc.fSizeY = 36.0f;
+	UIHPDesc.iMaxHP = &m_iMaxHP;
+	UIHPDesc.iHP = &m_iHP;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_HP"), TEXT("Prototype_GameObject_UI_HP"), &UIHPDesc)))
+		return E_FAIL;
+
+
+	CUI_Ammo::DESC			UIAmmoDesc;
+	UIAmmoDesc.fX = g_iWinSizeX - 180.f;
+	UIAmmoDesc.fY = 650.f;
+	UIAmmoDesc.fSizeX = 214.f;
+	UIAmmoDesc.fSizeY = 36.0f;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Ammo"), TEXT("Prototype_GameObject_UI_Ammo"), &UIAmmoDesc)))
+		return E_FAIL;
+
+	CUI_Shield::DESC			UIShieldDesc;
+	UIShieldDesc.fX = 155; // 73
+	UIShieldDesc.fY = 620.f;
+	UIShieldDesc.fSizeX = 168.f;
+	UIShieldDesc.fSizeY = 31.0f;
+	UIShieldDesc.fMaxShield = &m_fMaxShield;
+	UIShieldDesc.fShield = &m_fShield;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Shield"), TEXT("Prototype_GameObject_UI_Shield"), &UIShieldDesc)))
+		return E_FAIL;
+
+
+	CUI_Phaselock::DESC			UIPSDesc;
+	UIPSDesc.fX = g_iWinSizeX * 0.5f;
+	UIPSDesc.fY = 560.f;
+	UIPSDesc.fSizeX = 439.f;
+	UIPSDesc.fSizeY = 125.f;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Phaselock"), TEXT("Prototype_GameObject_UI_Phaselock"), &UIPSDesc)))
+		return E_FAIL;
+
+	m_PartObjects.find(TEXT("PartObject_Player_UI_Phaselock"))->second->Set_Active(false);
+
+	CUI_Exp::DESC			UIExpDesc;
+	UIExpDesc.fX = g_iWinSizeX * 0.5f;// 640 640
+	UIExpDesc.fY = 640.f;
+	UIExpDesc.fSizeX = 380.f;
+	UIExpDesc.fSizeY = 27.55f;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Exp"), TEXT("Prototype_GameObject_UI_Exp"), &UIExpDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
