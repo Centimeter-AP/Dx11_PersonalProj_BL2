@@ -29,7 +29,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	HRESULT Render();
+	virtual HRESULT Render();
 	static _bool		bNavigationDraw;
 #endif
 

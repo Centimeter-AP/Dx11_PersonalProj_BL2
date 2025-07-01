@@ -15,7 +15,6 @@ public:
 	virtual HRESULT Initialize_Prototype(COLLIDER eType);
 	virtual HRESULT Initialize(void* pArg) override;
 	void Update(_fmatrix WorldMatrix);
-
 	_bool Intersect(CCollider* pTargetCollider);
 	_bool Raycast(_fvector vRayOrigin, _fvector vRayDir, _float& fRayDist);
 	class CGameObject* Get_Owner() { return m_pOwner; }
@@ -35,7 +34,6 @@ private:
 
 	_bool				m_isColl = { false };
 
-
 #ifdef _DEBUG
 private:
 	PrimitiveBatch<VertexPositionColor>* m_pBatch = { nullptr };
@@ -46,7 +44,7 @@ private:
 public:
 	static _bool		bColliderDraw;
 	void Set_ColliderColor(_float4 vColor) { m_vRenderColor = XMVectorSet(vColor.x, vColor.y, vColor.z, vColor.w); }
-	HRESULT Render();
+	virtual HRESULT Render() override;
 #endif
 
 public:

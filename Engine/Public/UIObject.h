@@ -29,6 +29,8 @@ public:
 	virtual void Late_Update(_float fTimeDelta) override;
 	virtual HRESULT Render() override;
 
+	_uint Get_UIDepth() const { return m_iUIDepth; }
+
 protected:
 	/* 뷰포트 상의 유아이의 중심위치 fX, fY, 사이즈 fSiuzeX, fSizeY */
 	_float			m_fX{}, m_fY{}, m_fSizeX{}, m_fSizeY{};

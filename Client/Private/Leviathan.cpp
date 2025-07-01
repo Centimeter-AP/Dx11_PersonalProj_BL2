@@ -120,7 +120,10 @@ void CLeviathan::Late_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 			pPartObject.second->Late_Update(fTimeDelta);
 	}
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderGroundAttackCom->Set_ColliderColor(RGBA_MAGENTA);
+	m_pGameInstance->Add_DebugComponent(m_pColliderGroundAttackCom);
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CLeviathan::Render()
@@ -143,11 +146,7 @@ HRESULT CLeviathan::Render()
 			return E_FAIL;
 	}
 
-	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderCom->Render();
 
-	m_pColliderGroundAttackCom->Set_ColliderColor(RGBA_MAGENTA);
-	m_pColliderGroundAttackCom->Render();
 
 	return S_OK;
 }

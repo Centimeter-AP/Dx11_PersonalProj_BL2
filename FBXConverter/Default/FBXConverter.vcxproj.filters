@@ -189,7 +189,6 @@
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\TerrainBrush.h" />
     <ClInclude Include="imgui\ImGuiFileDialog.h">
       <Filter>98.Default\Imgui_Docking</Filter>
     </ClInclude>
@@ -292,7 +291,6 @@
     <ClCompile Include="..\private\ImGuiTool.cpp">
       <Filter>01.Levels\MapTool\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\TerrainBrush.cpp" />
     <ClCompile Include="imgui\ImGuiFileDialog.cpp">
       <Filter>98.Default\Imgui_Docking</Filter>
     </ClCompile>

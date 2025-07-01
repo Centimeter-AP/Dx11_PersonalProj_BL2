@@ -18,6 +18,7 @@ public:
 public:
 	void Set_Active(_bool isActive) { m_isActive = isActive; }
 	const _bool Is_Active() { return m_isActive; }
+	virtual HRESULT Render() { return S_OK; }
 
 protected:
 	ID3D11Device*				m_pDevice = { nullptr };

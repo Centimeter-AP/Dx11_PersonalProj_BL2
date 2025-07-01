@@ -55,6 +55,7 @@ void CSpiderAntSpit::Late_Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return;
+	m_pColliderCom->Set_ColliderColor(RGBA_CYAN);
 	__super::Late_Update(fTimeDelta);
 }
 
@@ -62,8 +63,6 @@ HRESULT CSpiderAntSpit::Render()
 {
 	//__super::Render(); 부를 모델 없어서 잠시 주석..
 
-	m_pColliderCom->Set_ColliderColor(RGBA_CYAN);
-	m_pColliderCom->Render();
 
 	return S_OK;
 }

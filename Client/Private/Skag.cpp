@@ -87,7 +87,12 @@ EVENT CSkag::Update(_float fTimeDelta)
 
 void CSkag::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderGroundAttackCom->Set_ColliderColor(RGBA_GREEN);
+	m_pGameInstance->Add_DebugComponent(m_pColliderGroundAttackCom);
+
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CSkag::Render()
@@ -110,16 +115,7 @@ HRESULT CSkag::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-	
-	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderGroundAttackCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderCom->Render();
-	m_pColliderHeadCom->Render();
-	m_pColliderGroundAttackCom->Render();
 
-	if (m_pNavigationCom != nullptr)
-		m_pNavigationCom->Render();
 
 	return S_OK;
 }

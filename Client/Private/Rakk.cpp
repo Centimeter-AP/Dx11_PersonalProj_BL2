@@ -74,7 +74,9 @@ EVENT CRakk::Update(_float fTimeDelta)
 
 void CRakk::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CRakk::Render()
@@ -98,10 +100,7 @@ HRESULT CRakk::Render()
 			return E_FAIL;
 	}
 	
-	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderCom->Render();
 
-	_wstring AnimationFrame = L"TEST";
 	//m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), AnimationFrame.c_str(), _float2(0.f, 0.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
 
 

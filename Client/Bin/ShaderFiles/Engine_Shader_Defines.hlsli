@@ -4,8 +4,8 @@ sampler DefaultSampler = sampler_state
     filter = min_mag_mip_linear;
     AddressU = wrap;
     AddressV = wrap;
-
 };
+
 
 sampler PointSampler = sampler_state
 {
@@ -67,3 +67,11 @@ BlendState BS_AlphaBlend
     DestBlend = Inv_Src_Alpha;
     BlendOp = Add;
 };
+//BlendState BS_AlphaBlend
+//{
+//    BlendEnable[0] = true;
+//    SrcBlend = one;
+//    DestBlend = one;
+//    BlendOp = Add;
+//};
+

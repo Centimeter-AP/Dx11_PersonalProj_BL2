@@ -70,7 +70,6 @@ EVENT CLevi_HitMesh::Update(_float fTimeDelta)
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, matFinal);
 
 	m_pColliderCom->Update(matFinal);
-	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 	return EVN_NONE;
 }
 
@@ -79,6 +78,9 @@ void CLevi_HitMesh::Late_Update(_float fTimeDelta)
 	if (m_isActive == false)
 		return;
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pGameInstance->Add_DebugComponent(m_pColliderCom);
+
 }
 
 HRESULT CLevi_HitMesh::Render()
@@ -104,8 +106,7 @@ HRESULT CLevi_HitMesh::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderCom->Render();
+
 
 	return S_OK;
 }

@@ -94,8 +94,6 @@ HRESULT CStalker::Render()
 			return E_FAIL;
 	}
 	
-	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderCom->Render();
 
 	return S_OK;
 }

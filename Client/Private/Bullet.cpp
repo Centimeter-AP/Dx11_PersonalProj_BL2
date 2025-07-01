@@ -58,6 +58,8 @@ void CBullet::Late_Update(_float fTimeDelta)
 	if (m_isActive == false)
 		return;
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+	if (m_pColliderCom)
+		m_pGameInstance->Add_DebugComponent(m_pColliderCom);
 }
 
 HRESULT CBullet::Render()

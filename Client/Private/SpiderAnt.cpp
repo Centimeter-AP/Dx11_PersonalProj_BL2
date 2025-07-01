@@ -106,7 +106,10 @@ EVENT CSpiderAnt::Update(_float fTimeDelta)
 
 void CSpiderAnt::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
+	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
+
+	__super::Late_Update(fTimeDelta);
 }
 
 HRESULT CSpiderAnt::Render()
@@ -114,13 +117,6 @@ HRESULT CSpiderAnt::Render()
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
-	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderHeadCom->Set_ColliderColor(RGBA_GREEN);
-	m_pColliderCom->Render();
-	m_pColliderHeadCom->Render();
-
-	if (m_pNavigationCom != nullptr)
-		m_pNavigationCom->Render();
 
 	return S_OK;
 }
