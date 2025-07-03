@@ -136,9 +136,6 @@
     <Filter Include="02.GameObjects\03. Monster\Skag">
       <UniqueIdentifier>{421db0d4-97e0-4b8f-acdb-66e94f6686ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\Bullet">
-      <UniqueIdentifier>{76361411-4a36-4e94-8562-1cf250ee0994}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\03. Monster\SpiderAnt\Bullet">
       <UniqueIdentifier>{b8e90d5c-58d1-4f99-8f97-40addd5bdd78}</UniqueIdentifier>
     </Filter>
@@ -177,6 +174,39 @@
     </Filter>
     <Filter Include="02.GameObjects\07. UI\StaticUI\UI_HPShieldPannel">
       <UniqueIdentifier>{34a500cd-1bba-4f78-b10d-d0e05dc043b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\09. Bullet">
+      <UniqueIdentifier>{76361411-4a36-4e94-8562-1cf250ee0994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect">
+      <UniqueIdentifier>{d991e27e-5572-49fd-adb9-b300594d6773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle">
+      <UniqueIdentifier>{66c47058-9c9b-4db9-8dc4-cd9213281aae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Sprite">
+      <UniqueIdentifier>{9c4aa0f7-7b69-4eb6-a3ab-1b7fc84b79e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\Snow">
+      <UniqueIdentifier>{e79c929b-8d94-4472-8b05-d3c8843b6f24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\Explosion">
+      <UniqueIdentifier>{13333801-e311-49e0-864f-523f4406b6b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\ScreenEffect">
+      <UniqueIdentifier>{f94cb62f-6177-47f8-990d-a5e9afc0ab19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\ScreenEffect\Screen_Snow">
+      <UniqueIdentifier>{5f80f682-da67-46ea-9c08-c8155f8f3dff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\ScreenEffect\Screen_Hit">
+      <UniqueIdentifier>{fe676162-da34-458d-aa88-9e913c11d40d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Sprite\MuzzleFlash">
+      <UniqueIdentifier>{2105f7d1-deed-450a-b854-25a56edbe340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Sprite\BulletTrail">
+      <UniqueIdentifier>{9c0a8cad-3d94-4fb8-925b-671634139b69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -358,7 +388,7 @@
       <Filter>02.GameObjects\03. Monster\SpiderAnt\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Bullet.h">
-      <Filter>02.GameObjects\Bullet</Filter>
+      <Filter>02.GameObjects\09. Bullet</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\NavigationTool.h">
       <Filter>01.Levels\MapTool\Tools\NavigationTool</Filter>
@@ -407,6 +437,21 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_HPShieldPannel.h">
       <Filter>02.GameObjects\07. UI\StaticUI\UI_HPShieldPannel</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestSpirteEffect.h">
+      <Filter>02.GameObjects\10. Effect\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Explosion.h">
+      <Filter>02.GameObjects\10. Effect\Particle\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Snow.h">
+      <Filter>02.GameObjects\10. Effect\Particle\Snow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\SpriteEffect.h">
+      <Filter>02.GameObjects\10. Effect\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Screen_Snow.h">
+      <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Snow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -613,7 +658,7 @@
       <Filter>02.GameObjects\03. Monster\SpiderAnt\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Bullet.cpp">
-      <Filter>02.GameObjects\Bullet</Filter>
+      <Filter>02.GameObjects\09. Bullet</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\NavigationTool.cpp">
       <Filter>01.Levels\MapTool\Tools\NavigationTool</Filter>
@@ -660,6 +705,21 @@
     <ClCompile Include="..\Private\UI_Shield_Bar.cpp">
       <Filter>02.GameObjects\07. UI\StaticUI\ShieldBar</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\TestSpirteEffect.cpp">
+      <Filter>02.GameObjects\10. Effect\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Explosion.cpp">
+      <Filter>02.GameObjects\10. Effect\Particle\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Snow.cpp">
+      <Filter>02.GameObjects\10. Effect\Particle\Snow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SpriteEffect.cpp">
+      <Filter>02.GameObjects\10. Effect\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Screen_Snow.cpp">
+      <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Snow</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosTex.hlsl">
@@ -678,6 +738,12 @@
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxRectInstance.hlsl">
+      <Filter>97.ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxPosInstance.hlsl">
       <Filter>97.ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -2,18 +2,7 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-
 texture2D g_DiffuseTexture;
-
-float4 g_vLightDir;
-float4 g_vLightDiffuse;
-float4 g_vLightAmbient;
-float4 g_vLightSpecular;
-
-float4 g_vCamPosition;
-
-float4 g_vMtrlAmibient = float4(0.4f, 0.4f, 0.4f, 1.f);
-float4 g_vMtrlSpecular = float4(1.f, 1.f, 1.f, 1.f);
 
 
 struct VS_IN
@@ -30,6 +19,7 @@ struct VS_OUT
     float4 vNormal : NORMAL;
     float2 vTexcoord : TEXCOORD0;    
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 };
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -46,7 +36,7 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vNormal = normalize(mul(vector(In.vNormal, 0.f), g_WorldMatrix));
     Out.vTexcoord = In.vTexcoord;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
-    
+    Out.vProjPos = Out.vPosition;
     return Out;
 }
 
@@ -56,17 +46,19 @@ struct PS_IN
     float4 vNormal : NORMAL;
     float2 vTexcoord : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
+    float4 vProjPos : TEXCOORD2;
 };
 
 struct PS_OUT
 {
     vector vDiffuse : SV_TARGET0;
     vector vNormal : SV_TARGET1;
+    vector vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
 {
-    PS_OUT Out;
+    PS_OUT Out;    
     
     vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
     if (vMtrlDiffuse.a < 0.3f)
@@ -74,7 +66,7 @@ PS_OUT PS_MAIN(PS_IN In)
    
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.0f, 0.f, 0.f);
     return Out;
 }
 
@@ -95,8 +87,7 @@ PS_OUT PS_SKYDOME(PS_IN In)
 
 
 technique11 DefaultTechnique
-{
-   
+{   
     pass Default
     {
         SetRasterizerState(RS_Default);

@@ -40,7 +40,10 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_MapObject(TEXT("Layer_MapObject"))))
 		return E_FAIL;
 
-	//ShowCursor(FALSE);
+	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
+		return E_FAIL;
+
+	ShowCursor(FALSE);
 
 	return S_OK;
 }
@@ -319,6 +322,23 @@ HRESULT CLevel_GamePlay::Ready_Layer_MapObject(const _wstring strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring strLayerTag)
+{
+	CGameObject::DESC desc = {};
+	desc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &desc)))
+		return E_FAIL;
+
+	for (size_t i = 0; i < 50; i++)
+	{
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Effect"),
+			ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
+			return E_FAIL;
+	}
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
 	LIGHT_DESC			LightDesc{};
@@ -337,10 +357,10 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 void CLevel_GamePlay::Intersect()
 {
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER)); 
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER), false); 
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_ATTACK), false);
+	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET), false);
 	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::MONSTER), ENUM_CLASS(COL_GROUP::MONSTER));
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_ATTACK));
-	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MON_BULLET));
 }
 
 void CLevel_GamePlay::Key_Input()

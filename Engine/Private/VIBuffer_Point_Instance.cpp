@@ -143,8 +143,6 @@ HRESULT CVIBuffer_Point_Instance::Initialize(void* pArg)
 	return S_OK;
 }
 
-
-
 void CVIBuffer_Point_Instance::Drop(_float fTimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE	SubResource{};
@@ -188,6 +186,32 @@ void CVIBuffer_Point_Instance::Spread(_float fTimeDelta)
 
 		XMStoreFloat4(&pVertices[i].vTranslation, 
 			XMLoadFloat4(&pVertices[i].vTranslation) - (vDir * m_pSpeeds[i] * fTimeDelta));
+
+		if (true == m_isLoop &&
+			pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
+		{
+			pVertices[i].vLifeTime.y = 0.f;
+			pVertices[i].vTranslation = m_pVertexInstances[i].vTranslation;
+		}
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_Point_Instance::Drop_Wave(_float fTimeDelta)
+{
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXPOS_PARTICLE_INSTANCE* pVertices = static_cast<VTXPOS_PARTICLE_INSTANCE*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].vLifeTime.y += fTimeDelta;
+
+		pVertices[i].vTranslation.y -= m_pSpeeds[i] * fTimeDelta;
+		pVertices[i].vTranslation.x -= m_pSpeeds[i] * fTimeDelta * 0.3f;
 
 		if (true == m_isLoop &&
 			pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)

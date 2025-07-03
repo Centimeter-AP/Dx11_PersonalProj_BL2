@@ -119,7 +119,7 @@ PS_OUT PS_MAIN(PS_IN In)
     if(Out.vColor.a < 0.3f)
         discard;
     
-    Out.vColor.rgb = float3(1.f, 0.f, 0.f);
+
     
     Out.vColor.a = saturate(In.vLifeTime.x - In.vLifeTime.y);
     

@@ -35,7 +35,8 @@
 #include "UI_Exp.h"
 #include "UI_HPShieldPannel.h"
 
-//#include "Effect.h"
+#include "TestSpirteEffect.h"
+#include "Snow.h"
 #include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -279,10 +280,28 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Frost/DirtySnow_Dif.dds"), 1))))
 		return E_FAIL;
 
-	///* For.Prototype_Component_Texture_Sky */
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_Texture_Sky"),
-	//	CTexture::Create(m_pGraphic_Device, CTexture::TYPE_CUBE, TEXT("../Bin/Resources/Textures/SkyBox/Sky_%d.dds"), 4))))
-	//	return E_FAIL;
+
+	/* For.Prototype_Component_Shader_VtxRectInstance */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxRectInstance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxRectInstance.hlsl"), VTXRECT_PARTICLE_INSTANCE::Elements, VTXRECT_PARTICLE_INSTANCE::iNumElements))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Shader_VtxPosInstance */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxPosInstance"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosInstance.hlsl"), VTXPOS_PARTICLE_INSTANCE::Elements, VTXPOS_PARTICLE_INSTANCE::iNumElements))))
+		return E_FAIL;
+
+
+	/* For.Prototype_Component_Texture_Terrain */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Splash"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Snow */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Snow"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Snow/Snow.dds")))))
+		return E_FAIL;
+
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 	/* For.Prototype_Component_VIBuffer_Terrain */
@@ -291,7 +310,19 @@ HRESULT CLoader::Loading_For_GamePlay()
 		//CVIBuffer_Terrain::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Map/backup/2/GamePlay.ter"), true))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Snow */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		SnowDesc{};
+	SnowDesc.iNumInstance = 1000;
+	SnowDesc.vCenter = _float3(100.f, 50.f, 100.0f);
+	SnowDesc.vRange = _float3(200.f, 3.0f, 200.f);
+	SnowDesc.vSize = _float2(0.1f, 0.4f);
+	SnowDesc.vLifeTime = _float2(2.f, 5.f);
+	SnowDesc.vSpeed = _float2(10.f, 20.f);
+	SnowDesc.isLoop = true;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Snow"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SnowDesc))))
+		return E_FAIL;
 
 
 
@@ -417,6 +448,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Effect */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Effect"),
+		CTestSpirteEffect::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Snow */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
+		CSnow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

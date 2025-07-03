@@ -164,7 +164,10 @@ PS_OUT PS_MAIN_SOFTEFFECT(PS_IN_PROJPOS In)
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
    
-    
+    if (all(Out.vColor.rgb < 0.1f))
+        discard;
+    if (all(Out.vColor.rgb < 0.2f))
+        Out.vColor.a = Out.vColor.r;
     /*화면 전체 기준(0, 0 ~ 1, 1)으로 이펙트의 픽셀이 그려질 위치에 해당하는 좌표 */    
     float2 vTexcoord;
     
@@ -181,8 +184,8 @@ PS_OUT PS_MAIN_SOFTEFFECT(PS_IN_PROJPOS In)
     if (vDepthDesc.y != 0.f)
     {
         float fOldViewZ = vDepthDesc.y * 500.f;
-    
-        Out.vColor.a = Out.vColor.a * (fOldViewZ - In.vProjPos.w);
+        float fDiff = (fOldViewZ - In.vProjPos.w);
+        Out.vColor.a = Out.vColor.a * saturate(fDiff);
     }
     
     return Out;

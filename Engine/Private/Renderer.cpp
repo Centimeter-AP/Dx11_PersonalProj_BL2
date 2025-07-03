@@ -60,15 +60,15 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.0f, 1.f));
 
 #ifdef _DEBUG
-	_float fRTWidth = ViewportDesc.Width * 0.2f;
-	_float fRTHeight = ViewportDesc.Height * 0.2f;
+	_float fRTWidth = ViewportDesc.Width * 0.1f;
+	_float fRTHeight = ViewportDesc.Height * 0.1f;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), fRTWidth * 0.5f, fRTHeight * 0.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), fRTWidth * 1.5f, fRTHeight * 0.5f, fRTWidth, fRTHeight)))
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Normal"), fRTWidth * 0.5f, fRTHeight * 1.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Depth"), fRTWidth * 2.5f, fRTHeight * 0.5f, fRTWidth, fRTHeight)))
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Depth"), fRTWidth * 0.5f, fRTHeight * 2.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), fRTWidth * 0.5f, fRTHeight * 1.5f, fRTWidth, fRTHeight)))
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), fRTWidth * 1.5f, fRTHeight * 0.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Specular"), fRTWidth * 1.5f, fRTHeight * 1.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
