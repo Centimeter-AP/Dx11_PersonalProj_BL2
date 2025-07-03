@@ -11,6 +11,7 @@
 #include "UI_Shield.h"
 #include "UI_Phaselock.h"
 #include "UI_Exp.h"
+#include "UI_HPShieldPannel.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
 constexpr _float NONCOMBAT_TIMER = 10.f;
@@ -124,7 +125,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 			pPartObject.second->Late_Update(fTimeDelta);
 	}
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
-	
 	m_pGameInstance->Add_DebugComponent(m_pColliderCom);
 
 	if (m_pNavigationCom != nullptr)
@@ -385,16 +385,39 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Aim"), TEXT("Prototype_GameObject_UI_Aim"), &UIAimDesc)))
 		return E_FAIL;
 
-
-	CUI_HP::DESC			UIHPDesc;
-	UIHPDesc.fX = 180.f;
-	UIHPDesc.fY = 650.f;
-	UIHPDesc.fSizeX = 214.f;
-	UIHPDesc.fSizeY = 36.0f;
-	UIHPDesc.iMaxHP = &m_iMaxHP;
-	UIHPDesc.iHP = &m_iHP;
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_HP"), TEXT("Prototype_GameObject_UI_HP"), &UIHPDesc)))
+	CUI_HPShieldPannel::DESC			UIHPSHDesc;
+	UIHPSHDesc.fX = 180.f;
+	UIHPSHDesc.fY = 650.f;
+	UIHPSHDesc.fSizeX = 240.f;
+	UIHPSHDesc.fSizeY = 36.0f;
+	UIHPSHDesc.iMaxHP = &m_iMaxHP;
+	UIHPSHDesc.iHP = &m_iHP;
+	UIHPSHDesc.fMaxShield = &m_fMaxShield;
+	UIHPSHDesc.fShield = &m_fShield;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_HPShieldPannel"), TEXT("Prototype_GameObject_UI_HPShieldPannel"), &UIHPSHDesc)))
 		return E_FAIL;
+
+
+	//CUI_HP::DESC			UIHPDesc;
+	//UIHPDesc.fX = 180.f;
+	//UIHPDesc.fY = 650.f;
+	//UIHPDesc.fSizeX = 214.f;
+	//UIHPDesc.fSizeY = 36.0f;
+	//UIHPDesc.iMaxHP = &m_iMaxHP;
+	//UIHPDesc.iHP = &m_iHP;
+	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_HP"), TEXT("Prototype_GameObject_UI_HP"), &UIHPDesc)))
+	//	return E_FAIL;
+
+
+	//CUI_Shield::DESC			UIShieldDesc;
+	//UIShieldDesc.fX = 155; // 73
+	//UIShieldDesc.fY = 620.f;
+	//UIShieldDesc.fSizeX = 168.f;
+	//UIShieldDesc.fSizeY = 31.0f;
+	//UIShieldDesc.fMaxShield = &m_fMaxShield;
+	//UIShieldDesc.fShield = &m_fShield;
+	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Shield"), TEXT("Prototype_GameObject_UI_Shield"), &UIShieldDesc)))
+	//	return E_FAIL;
 
 
 	CUI_Ammo::DESC			UIAmmoDesc;
@@ -403,16 +426,6 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 	UIAmmoDesc.fSizeX = 214.f;
 	UIAmmoDesc.fSizeY = 36.0f;
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Ammo"), TEXT("Prototype_GameObject_UI_Ammo"), &UIAmmoDesc)))
-		return E_FAIL;
-
-	CUI_Shield::DESC			UIShieldDesc;
-	UIShieldDesc.fX = 155; // 73
-	UIShieldDesc.fY = 620.f;
-	UIShieldDesc.fSizeX = 168.f;
-	UIShieldDesc.fSizeY = 31.0f;
-	UIShieldDesc.fMaxShield = &m_fMaxShield;
-	UIShieldDesc.fShield = &m_fShield;
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Shield"), TEXT("Prototype_GameObject_UI_Shield"), &UIShieldDesc)))
 		return E_FAIL;
 
 

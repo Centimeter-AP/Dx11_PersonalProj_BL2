@@ -12,7 +12,6 @@ CVIBuffer_Rect::CVIBuffer_Rect(const CVIBuffer_Rect& Prototype)
 
 HRESULT CVIBuffer_Rect::Initialize_Prototype()
 {
-	
 	m_iNumVertexBuffers = 1;
 	m_iNumVertices = 4;
 	m_iVertexStride = sizeof(VTXPOSTEX);

@@ -9,7 +9,7 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CUI_HP final : public CUIObject
+class CUI_HP_Bar final : public CUIObject
 {
 public:
 	typedef struct tagUIHPDesc : public CUIObject::UIOBJECT_DESC
@@ -19,9 +19,9 @@ public:
 	}DESC;
 
 private:
-	CUI_HP(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_HP(const CUI_HP& Prototype);
-	virtual ~CUI_HP() = default;
+	CUI_HP_Bar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_HP_Bar(const CUI_HP_Bar& Prototype);
+	virtual ~CUI_HP_Bar() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -33,9 +33,7 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
-	enum TEXTYPE { TYPE_ICON, TYPE_BARBACK, TYPE_BAR, TYPE_END };
-	CTexture* m_pTextureCom[3] = { nullptr };
-	CTransform* m_pTransformCom_Bar = { nullptr };
+	CTexture* m_pTextureCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_int* m_iHP = { nullptr };
@@ -45,7 +43,7 @@ private:
 	HRESULT Ready_Components();
 
 public:
-	static CUI_HP* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_HP_Bar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 

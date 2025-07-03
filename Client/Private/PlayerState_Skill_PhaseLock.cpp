@@ -9,7 +9,7 @@ void CPlayerState_Skill_PhaseLock::Enter()
 	if (m_pOwner->m_pCurPickedCollider != nullptr)
 	{
 		m_pOwner->m_bPhaselockAble = false;
-		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CPlayer::PLA_BASIC::BASIC_PhaseLock), 13.f);
+		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CPlayer::PLA_BASIC::BASIC_PhaseLock), 12.f);
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock, false);
 		static_cast<CMonster*>(m_pOwner->m_pCurPickedCollider->Get_Owner())->OnHit_Phaselock();
 		m_bSuccess = true;

@@ -1,22 +1,22 @@
-#include "UI_Ammo.h"
+#include "UI_Ammo_Bar.h"
 #include "GameInstance.h"
 
-CUI_Ammo::CUI_Ammo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Ammo_Bar::CUI_Ammo_Bar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CUIObject{ pDevice, pContext }
 {
 }
 
-CUI_Ammo::CUI_Ammo(const CUI_Ammo& Prototype)
+CUI_Ammo_Bar::CUI_Ammo_Bar(const CUI_Ammo_Bar& Prototype)
     : CUIObject(Prototype)
 {
 }
 
-HRESULT CUI_Ammo::Initialize_Prototype()
+HRESULT CUI_Ammo_Bar::Initialize_Prototype()
 {
     return S_OK;
 }
 
-HRESULT CUI_Ammo::Initialize(void* pArg)
+HRESULT CUI_Ammo_Bar::Initialize(void* pArg)
 {
 	DESC* pDesc = static_cast<DESC*>(pArg);
 
@@ -29,13 +29,13 @@ HRESULT CUI_Ammo::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_Ammo::Priority_Update(_float fTimeDelta)
+void CUI_Ammo_Bar::Priority_Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return;
 }
 
-EVENT CUI_Ammo::Update(_float fTimeDelta)
+EVENT CUI_Ammo_Bar::Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return EVN_NONE;
@@ -43,14 +43,14 @@ EVENT CUI_Ammo::Update(_float fTimeDelta)
 	return EVN_NONE;
 }
 
-void CUI_Ammo::Late_Update(_float fTimeDelta)
+void CUI_Ammo_Bar::Late_Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return ;
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this);
 }
 
-HRESULT CUI_Ammo::Render()
+HRESULT CUI_Ammo_Bar::Render()
 {
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
@@ -87,7 +87,7 @@ HRESULT CUI_Ammo::Render()
 	return S_OK;
 }
 
-HRESULT CUI_Ammo::Ready_Components()
+HRESULT CUI_Ammo_Bar::Ready_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
@@ -115,33 +115,33 @@ HRESULT CUI_Ammo::Ready_Components()
 	return S_OK;
 }
 
-CUI_Ammo* CUI_Ammo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_Ammo_Bar* CUI_Ammo_Bar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CUI_Ammo* pInstance = new CUI_Ammo(pDevice, pContext);
+	CUI_Ammo_Bar* pInstance = new CUI_Ammo_Bar(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CUI_Ammo");
+		MSG_BOX("Failed to Created : CUI_Ammo_Bar");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CGameObject* CUI_Ammo::Clone(void* pArg)
+CGameObject* CUI_Ammo_Bar::Clone(void* pArg)
 {
-	CUI_Ammo* pInstance = new CUI_Ammo(*this);
+	CUI_Ammo_Bar* pInstance = new CUI_Ammo_Bar(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX("Failed to Cloned : CUI_Ammo");
+		MSG_BOX("Failed to Cloned : CUI_Ammo_Bar");
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CUI_Ammo::Free()
+void CUI_Ammo_Bar::Free()
 {
 	__super::Free();
 	Safe_Release(m_pVIBufferCom);

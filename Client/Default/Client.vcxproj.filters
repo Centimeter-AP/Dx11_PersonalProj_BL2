@@ -175,6 +175,9 @@
     <Filter Include="02.GameObjects\07. UI\StaticUI\SkillBar">
       <UniqueIdentifier>{ebcae90e-8cfb-4f2f-b544-70da13ea764e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07. UI\StaticUI\UI_HPShieldPannel">
+      <UniqueIdentifier>{34a500cd-1bba-4f78-b10d-d0e05dc043b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -392,6 +395,18 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_Ammo.h">
       <Filter>02.GameObjects\07. UI\StaticUI\AmmoBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Shield_Bar.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\ShieldBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_HP_Bar.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\HPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Ammo_Bar.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\AmmoBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_HPShieldPannel.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\UI_HPShieldPannel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -631,6 +646,18 @@
       <Filter>02.GameObjects\07. UI\StaticUI\SkillBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Shield.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\ShieldBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_HPShieldPannel.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\UI_HPShieldPannel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_HP_Bar.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\HPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Ammo_Bar.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\AmmoBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Shield_Bar.cpp">
       <Filter>02.GameObjects\07. UI\StaticUI\ShieldBar</Filter>
     </ClCompile>
   </ItemGroup>

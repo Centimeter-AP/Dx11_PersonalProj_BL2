@@ -28,9 +28,12 @@
 #include "UI_Aim.h"
 #include "UI_Ammo.h"
 #include "UI_HP.h"
+#include "UI_HP_Bar.h"
 #include "UI_Shield.h"
+#include "UI_Shield_Bar.h"
 #include "UI_Phaselock.h"
 #include "UI_Exp.h"
+#include "UI_HPShieldPannel.h"
 
 //#include "Effect.h"
 #include "Sky.h"
@@ -215,10 +218,20 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Aim"),
 		CUI_Aim::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_UI_HPShieldPannel */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_HPShieldPannel"),
+		CUI_HPShieldPannel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	
 	/* For.Prototype_GameObject_UI_HP */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_HP"),
 		CUI_HP::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_HP_Bar */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_HP_Bar"),
+		CUI_HP_Bar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 	/* For.Prototype_GameObject_UI_Ammo */
@@ -229,6 +242,11 @@ HRESULT CLoader::Loading_For_Logo()
 	/* For.Prototype_GameObject_UI_Shield */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Shield"),
 		CUI_Shield::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_Shield */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Shield_Bar"),
+		CUI_Shield_Bar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 	/* For.Prototype_GameObject_UI_Phaselock */

@@ -33,15 +33,12 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
-	enum TEXTYPE {TYPE_ICON, TYPE_BARBACK, TYPE_BAR, TYPE_END};
-	CTexture* m_pTextureCom[3] = {nullptr};
+	CTexture* m_pTextureCom = {nullptr};
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-
-	_float* m_fShield = { nullptr };
-	_float* m_fMaxShield = { nullptr };
 
 private:
 	HRESULT Ready_Components();
+	HRESULT Ready_PartObjects(void* pArg);
 
 public:
 	static CUI_Shield* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

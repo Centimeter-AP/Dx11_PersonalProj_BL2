@@ -1,4 +1,5 @@
 #include "UIObject.h"
+#include "GameInstance.h"
 
 CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
@@ -6,7 +7,7 @@ CUIObject::CUIObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 }
 
 CUIObject::CUIObject(const CUIObject& Prototype)
-	: CGameObject(Prototype)
+	: CGameObject( Prototype )
 {
 }
 
@@ -26,7 +27,7 @@ HRESULT CUIObject::Initialize(void* pArg)
 	m_fY = pDesc->fY;
 	m_fSizeX = pDesc->fSizeX;
 	m_fSizeY = pDesc->fSizeY;
-	m_iUIDepth = pDesc->iLevelID;
+	m_iUIDepth = pDesc->iUIDepth;
 
 
 	if (FAILED(__super::Initialize(pArg)))
@@ -58,6 +59,7 @@ EVENT CUIObject::Update(_float fTimeDelta)
 
 void CUIObject::Late_Update(_float fTimeDelta)
 {
+	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this);
 }
 
 HRESULT CUIObject::Render()

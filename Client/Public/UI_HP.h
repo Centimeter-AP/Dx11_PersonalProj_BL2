@@ -33,16 +33,12 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
-	enum TEXTYPE { TYPE_ICON, TYPE_BARBACK, TYPE_BAR, TYPE_END };
-	CTexture* m_pTextureCom[3] = { nullptr };
-	CTransform* m_pTransformCom_Bar = { nullptr };
+	CTexture* m_pTextureCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-
-	_int* m_iHP = { nullptr };
-	_int* m_iMaxHP = { nullptr };
 
 private:
 	HRESULT Ready_Components();
+	HRESULT Ready_PartObjects(void* pArg);
 
 public:
 	static CUI_HP* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

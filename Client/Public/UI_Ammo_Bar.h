@@ -9,7 +9,7 @@ class CVIBuffer_Rect;
 NS_END
 
 NS_BEGIN(Client)
-class CUI_Ammo final : public CUIObject
+class CUI_Ammo_Bar final : public CUIObject
 {
 public:
 	typedef struct tagUIAimDesc : public CUIObject::UIOBJECT_DESC
@@ -18,9 +18,9 @@ public:
 	}DESC;
 
 private:
-	CUI_Ammo(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_Ammo(const CUI_Ammo& Prototype);
-	virtual ~CUI_Ammo() = default;
+	CUI_Ammo_Bar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_Ammo_Bar(const CUI_Ammo_Bar& Prototype);
+	virtual ~CUI_Ammo_Bar() = default;
 
 public:
 	virtual HRESULT Initialize_Prototype();
@@ -42,7 +42,7 @@ private:
 	HRESULT Ready_Components();
 
 public:
-	static CUI_Ammo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_Ammo_Bar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg) override;
 	virtual void Free() override;
 
