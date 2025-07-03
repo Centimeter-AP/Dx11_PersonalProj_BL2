@@ -233,6 +233,7 @@ CALL $(SolutionDir)\UpdateLib.bat</Command>
     <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\private\AnimationManager.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\Private\BlendObject.cpp" />
     <ClCompile Include="..\Private\Bone.cpp" />
     <ClCompile Include="..\Private\Bounding.cpp" />
     <ClCompile Include="..\Private\Bounding_AABB.cpp" />
