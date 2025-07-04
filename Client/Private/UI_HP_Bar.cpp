@@ -30,7 +30,8 @@ HRESULT CUI_HP_Bar::Initialize(void* pArg)
 		return E_FAIL;
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrix4x4Ptr()) * XMLoadFloat4x4(m_pParentMatrix));
-
+	m_fCurPosX = m_CombinedWorldMatrix._41;
+	m_fCurPosY = m_CombinedWorldMatrix._42;
 	return S_OK;
 }
 
@@ -79,8 +80,11 @@ HRESULT CUI_HP_Bar::Render()
 
 	if (FAILED(m_pVIBufferCom->Render()))
 		return E_FAIL;
+
 	_wstring strHP = to_wstring(*m_iHP);
-	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strHP.c_str(), _float2(m_fX - m_fSizeX * 0.5f + 25.f, m_fY - m_fSizeY * 0.5f + 5.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
+	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strHP.c_str(),
+		_float2(g_iWinSizeX * 0.5f + m_fCurPosX - m_fSizeX * 0.5f, g_iWinSizeY * 0.5f - m_fCurPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
+	
 
 	return S_OK;
 }

@@ -25,8 +25,6 @@ HRESULT CUI_HP::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	auto a = m_pParentMatrix;
-	auto b = m_pTransformCom->Get_WorldMatrix4x4Ptr();
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrix4x4Ptr()) * XMLoadFloat4x4(m_pParentMatrix));
 
 	//if (FAILED(Ready_PartObjects(pArg)))

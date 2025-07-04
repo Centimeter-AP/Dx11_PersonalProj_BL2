@@ -47,13 +47,15 @@ protected:
 	_float					m_fFireRate = {};
 	//_float					m_fReloadSpeed...는하지말죠?
 	_int					m_iMagazineSize = {};
-	_int					m_iCurMagazineLeft = {};
+	_int					m_iCurAmmoLeft = {};
 	// 총 탄약 수는 플레이어쪽에서 받는게 맞지 않으려나
 
 public:
 	const _int& Get_Damage() const{ return m_iDamage; }
 	const _float& Get_Accuracy() const { return m_fAccuracy; }
 	const _float& Get_Firerate() const { return m_fFireRate; }
+	const _int& Get_CurAmmoLeft() const { return m_iCurAmmoLeft; }
+	const _int& Get_MagazineSize() const { return m_iMagazineSize; }
 
 protected:
 	HRESULT Ready_Components(void* pArg);

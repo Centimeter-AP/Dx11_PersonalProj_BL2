@@ -133,6 +133,7 @@ public:
 	HRESULT Begin_MRT(const _wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RT_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pContantName);
+	HRESULT Copy_RT_Resource(const _wstring& strTargetTag, ID3D11Texture2D* pDest);
 
 #ifdef _DEBUG
 	HRESULT Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
@@ -141,6 +142,9 @@ public:
 
 #pragma endregion
 
+#pragma region PICKING
+	_bool Picking(_float4* pOut);
+#pragma endregion
 
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -157,6 +161,8 @@ private:
 	class CCollider_Manager*	m_pCollider_Manager = { nullptr };
 	class CCamera_Manager*		m_pCamera_Manager = { nullptr };
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
+	class CPicking* m_pPicking = { nullptr };
+
 
 public:
 	void Release_Engine();

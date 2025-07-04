@@ -27,8 +27,8 @@ HRESULT CUI_Shield::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrix4x4Ptr()) * XMLoadFloat4x4(m_pParentMatrix));
 
-	if (FAILED(Ready_PartObjects(pArg)))
-		return E_FAIL;
+	//if (FAILED(Ready_PartObjects(pArg)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -71,9 +71,8 @@ void CUI_Shield::Late_Update(_float fTimeDelta)
 
 HRESULT CUI_Shield::Render()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
@@ -122,17 +121,7 @@ HRESULT CUI_Shield::Ready_PartObjects(void* pArg)
 {
 	DESC* pDesc = static_cast<DESC*>(pArg);
 
-	CUI_Shield_Bar::DESC	UISHDesc;
-	UISHDesc.fX = 0.f;
-	UISHDesc.fY = 0.f;
-	UISHDesc.fSizeX = 198.f;
-	UISHDesc.fSizeY = 36.0f;
-	UISHDesc.fShield = pDesc->fShield;
-	UISHDesc.fMaxShield = pDesc->fMaxShield;
-	UISHDesc.pParentObject = this;
-	UISHDesc.pParentMatrix = &m_CombinedWorldMatrix;
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Shield_Bar"), TEXT("Prototype_GameObject_UI_Shield_Bar"), &UISHDesc)))
-		return E_FAIL;
+
 
 	return S_OK;
 }

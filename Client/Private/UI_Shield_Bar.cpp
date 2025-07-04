@@ -29,7 +29,8 @@ HRESULT CUI_Shield_Bar::Initialize(void* pArg)
 		return E_FAIL;
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrix4x4Ptr()) * XMLoadFloat4x4(m_pParentMatrix));
-
+	m_fCurPosX = m_CombinedWorldMatrix._41;
+	m_fCurPosY = m_CombinedWorldMatrix._42;
 	return S_OK;
 }
 
@@ -56,9 +57,8 @@ void CUI_Shield_Bar::Late_Update(_float fTimeDelta)
 
 HRESULT CUI_Shield_Bar::Render()
 {
-	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
 		return E_FAIL;
-
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_ViewMatrix)))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
@@ -82,7 +82,8 @@ HRESULT CUI_Shield_Bar::Render()
 		return E_FAIL;
 
 	_wstring strHP = to_wstring(static_cast<_int>(*m_fShield));
-	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strHP.c_str(), _float2(m_fX - m_fSizeX * 0.5f + 25.f, m_fY - m_fSizeY * 0.5f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
+	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strHP.c_str(),
+		_float2(g_iWinSizeX * 0.5f + m_fCurPosX - m_fSizeX * 0.5f + 2.f, g_iWinSizeY * 0.5f - m_fCurPosY - 4.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
 	return S_OK;
 }
 

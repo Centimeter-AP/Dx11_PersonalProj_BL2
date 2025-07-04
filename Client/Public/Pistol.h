@@ -2,6 +2,10 @@
 #include "Weapon.h"
 #include "PSTState.h"
 
+NS_BEGIN(Engine)
+class CTexture;
+NS_END
+
 NS_BEGIN(Client)
 class CPistol final : public CWeapon
 {
@@ -55,6 +59,7 @@ private:
 	virtual void Initialize_BasicStatus() override;
 
 private:
+	CTexture*			m_pTextureCom = { nullptr };
 	class CPSTState*	m_pCurState = { nullptr };
 	class CPSTState*	m_pStates[PST_STATE::STATE_END] = { nullptr };
 	PST_STATE			m_eCurState = { PST_STATE::STATE_END };

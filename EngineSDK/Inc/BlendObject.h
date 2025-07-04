@@ -9,11 +9,6 @@ NS_BEGIN(Engine)
 
 class ENGINE_DLL CBlendObject abstract : public CGameObject
 {
-	public:
-	typedef struct tagBlendObjectDesc : public CGameObject::DESC
-	{
-
-	}DESC;
 protected:
 	CBlendObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBlendObject(const CBlendObject& Prototype);

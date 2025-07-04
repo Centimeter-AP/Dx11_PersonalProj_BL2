@@ -208,6 +208,12 @@
     <Filter Include="02.GameObjects\10. Effect\Sprite\BulletTrail">
       <UniqueIdentifier>{9c0a8cad-3d94-4fb8-925b-671634139b69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07. UI\StaticUI\UI_AmmoPannel">
+      <UniqueIdentifier>{4e8285c7-91f8-470a-99fe-cb590c280ce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\DamageFont">
+      <UniqueIdentifier>{16304fb7-2a43-49a0-8c5e-868aaf1c1b72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -452,6 +458,9 @@
     </ClInclude>
     <ClInclude Include="..\public\Screen_Snow.h">
       <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Snow</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_AmmoPannel.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\UI_AmmoPannel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -719,6 +728,9 @@
     </ClCompile>
     <ClCompile Include="..\private\Screen_Snow.cpp">
       <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Snow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_AmmoPannel.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\UI_AmmoPannel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,10 @@
 #include "Weapon.h"
 #include "ARState.h"
 
+NS_BEGIN(Engine)
+class CTexture;
+NS_END
+
 NS_BEGIN(Client)
 class CAssaultRifle final : public CWeapon
 {
@@ -55,6 +59,8 @@ private:
 	virtual void Initialize_BasicStatus() override;
 
 private:
+	CTexture*			m_pTextureCom = { nullptr };
+
 	class CARState*		m_pCurState = { nullptr };
 	class CARState*		m_pStates[AR_STATE::STATE_END] = { nullptr };
 	AR_STATE			m_eCurState = { AR_STATE::STATE_END };

@@ -14,7 +14,8 @@ class CUI_Ammo_Bar final : public CUIObject
 public:
 	typedef struct tagUIAimDesc : public CUIObject::UIOBJECT_DESC
 	{
-
+		_int* iAmmo = { nullptr };
+		_int* iMaxAmmo = { nullptr };
 	}DESC;
 
 private:
@@ -32,12 +33,15 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
-	enum TEXTYPE { TYPE_ICON, TYPE_BARBACK, TYPE_BAR, TYPE_END };
-	CTexture* m_pTextureCom[3] = { nullptr };
+	CTexture* m_pTextureCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 	_int* m_iAmmo = { nullptr };
 	_int* m_iMaxAmmo = { nullptr };
+
+	_float m_fCurPosX = {};
+	_float m_fCurPosY = {};
+
 private:
 	HRESULT Ready_Components();
 

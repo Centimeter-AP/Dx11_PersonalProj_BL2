@@ -1,5 +1,6 @@
 #include "GameInstance.h"
 
+#include "Picking.h"
 #include "Picking_Manager.h"
 #include "Renderer.h"
 #include "PipeLine.h"
@@ -14,13 +15,7 @@
 #include "Camera_Manager.h"
 #include "Target_Manager.h"
 
-CGameInstance* CGameInstance::m_pInstance = nullptr; CGameInstance* CGameInstance::Get_Instance() {
-	if (nullptr == m_pInstance) m_pInstance = new CGameInstance; return m_pInstance;
-} unsigned int CGameInstance::Destroy_Instance() {
-	unsigned int iRefCnt = {}; if (nullptr != m_pInstance) {
-		iRefCnt = m_pInstance->Release(); if (0 == iRefCnt) m_pInstance = nullptr;
-	} return iRefCnt;
-};
+IMPLEMENT_SINGLETON(CGameInstance);
 
 CGameInstance::CGameInstance()
 {
@@ -465,6 +460,11 @@ HRESULT CGameInstance::Bind_RT_ShaderResource(const _wstring& strTargetTag, CSha
 	return m_pTarget_Manager->Bind_ShaderResource(strTargetTag, pShader, pContantName);
 }
 
+HRESULT CGameInstance::Copy_RT_Resource(const _wstring& strTargetTag, ID3D11Texture2D* pDest)
+{
+	return m_pTarget_Manager->Copy_Resource(strTargetTag, pDest);
+}
+
 #ifdef _DEBUG
 
 HRESULT CGameInstance::Ready_RT_Debug(const _wstring& strTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
@@ -481,6 +481,12 @@ HRESULT CGameInstance::Render_MRT_Debug(const _wstring& strMRTTag, CShader* pSha
 
 #pragma endregion
 
+#pragma region PICKING
+_bool CGameInstance::Picking(_float4* pOut)
+{
+	return m_pPicking->Picking(pOut);
+}
+#pragma endregion
 
 
 void CGameInstance::Release_Engine()
@@ -488,6 +494,8 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pTarget_Manager);
 
 	Safe_Release(m_pPicking_Manager);
+
+	Safe_Release(m_pPicking);
 
 	Safe_Release(m_pFont_Manager);
 

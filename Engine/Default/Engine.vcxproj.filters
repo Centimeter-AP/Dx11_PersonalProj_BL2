@@ -184,6 +184,9 @@
     <ClInclude Include="..\Public\VIBuffer_Point_Instance.h">
       <Filter>01.Utility\04.Components\VIBuffer\Instance\Point</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Picking.h">
+      <Filter>01.Utility\07.Picking\RTPicking</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -353,6 +356,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BlendObject.cpp">
       <Filter>01.Utility\03.GameObject\BlendObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Picking.cpp">
+      <Filter>01.Utility\07.Picking\RTPicking</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -544,6 +550,9 @@
     </Filter>
     <Filter Include="01.Utility\03.GameObject\BlendObject">
       <UniqueIdentifier>{ef57a2eb-e00e-4060-9ac7-b37657577e39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\07.Picking\RTPicking">
+      <UniqueIdentifier>{3b4f6256-bb7e-4f7d-9b2c-a92d79f75c09}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

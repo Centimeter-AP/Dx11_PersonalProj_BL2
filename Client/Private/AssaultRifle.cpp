@@ -79,7 +79,32 @@ void CAssaultRifle::Late_Update(_float fTimeDelta)
 
 HRESULT CAssaultRifle::Render()
 {
-	return __super::Render();
+	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
+		return E_FAIL;
+
+
+
+	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMesh; i++)
+	{
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
+			continue;
+		if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_NormalTexture", 0)))
+			return E_FAIL;
+		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
+		if (FAILED(m_pShaderCom->Begin(0)))
+			return E_FAIL;
+
+		if (FAILED(m_pModelCom->Render(i)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 
 void CAssaultRifle::Set_State(AR_STATE eState)
@@ -108,6 +133,12 @@ HRESULT CAssaultRifle::Ready_Components(void* pArg)
 		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
 		return E_FAIL;
 
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_AR_Nor"),
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
@@ -129,7 +160,7 @@ void CAssaultRifle::Initialize_BasicStatus()
 	m_fAccuracy = { 82.0f };
 	m_fFireRate = { 8.3 }; 
 	m_iMagazineSize = { 26 };
-	m_iCurMagazineLeft = { 26 };
+	m_iCurAmmoLeft = { 26 };
 }
 
 CAssaultRifle* CAssaultRifle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -164,4 +195,5 @@ void CAssaultRifle::Free()
 
 	for (auto& State : m_pStates)
 		Safe_Release(State);
+	Safe_Release(m_pTextureCom);
 }

@@ -12,6 +12,7 @@
 #include "UI_Phaselock.h"
 #include "UI_Exp.h"
 #include "UI_HPShieldPannel.h"
+#include "UI_AmmoPannel.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
 constexpr _float NONCOMBAT_TIMER = 10.f;
@@ -142,7 +143,8 @@ HRESULT CPlayer::Render()
 	{
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", static_cast<_uint>(i), aiTextureType_DIFFUSE, 0)))
 			continue;
-		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS, 0)))
+			continue;
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", static_cast<_uint>(i));
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
@@ -178,16 +180,44 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 		CMonster* pHitOwner = static_cast<CMonster*>(pHitCol->Get_Owner());
 		if (pHitOwner->Is_FirstHit())
 		{
-			m_iHP -= pHitOwner->Get_Damage();
+			if (m_bShield)
+			{
+				m_fShield -= static_cast<_float>(pHitOwner->Get_Damage());
+				if (m_fShield <= 0.f)
+				{
+					// ShieldBreak();  /* ½¯µå »Ç°¡Áø ÀÌÆåÆ®? */
+					m_fShield = 0.f;
+					m_bShield = false;
+				}
+			}
+			else
+			{
+				m_iHP -= pHitOwner->Get_Damage();
+			}
 			pHitOwner->Set_FirstHit_False(); // true·Î ¹Ù²Ù´Â °Ç ÇÇ°Ý ´ç»çÀÚ¸¸
+			m_fNoHitTimeTicker = 0.f;
 		}
 	}
 
 	if (CI_MONSTERBULLET(eHitColID))
 	{
 		CBullet* pHitOwner = static_cast<CBullet*>(pHitCol->Get_Owner());
-		m_iHP -= pHitOwner->Get_Damage();
+		if (m_bShield)
+		{
+			m_fShield -= static_cast<_float>(pHitOwner->Get_Damage());
+			if (m_fShield <= 0.f)
+			{
+				// ShieldBreak();  /* ½¯µå »Ç°¡Áø ÀÌÆåÆ®? */
+				m_fShield = 0.f;
+				m_bShield = false;
+			}
+		}
+		else
+		{
+			m_iHP -= pHitOwner->Get_Damage();
+		}
 		pHitOwner->Set_Dead();
+		m_fNoHitTimeTicker = 0.f;
 	}
 
 	//if (CI_MONSTER(eHitColID))
@@ -203,10 +233,12 @@ void CPlayer::Key_Input(_float fTimeDelta)
 	if (KEY_PRESSING(DIK_C))
 	{
 		m_iHP--;
+		m_fShield -= 8.f;
 	}
 	if (KEY_DOWN(DIK_X))
 	{
 		m_iHP = m_iMaxHP;
+		m_fShield = m_fMaxShield;
 	}
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
 	{
@@ -387,9 +419,9 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 
 	CUI_HPShieldPannel::DESC			UIHPSHDesc;
 	UIHPSHDesc.fX = 180.f;
-	UIHPSHDesc.fY = 650.f;
-	UIHPSHDesc.fSizeX = 240.f;
-	UIHPSHDesc.fSizeY = 36.0f;
+	UIHPSHDesc.fY = g_iWinSizeY - 70.f;
+	UIHPSHDesc.fSizeX = 1.2f;
+	UIHPSHDesc.fSizeY = 1.2f;
 	UIHPSHDesc.iMaxHP = &m_iMaxHP;
 	UIHPSHDesc.iHP = &m_iHP;
 	UIHPSHDesc.fMaxShield = &m_fMaxShield;
@@ -398,40 +430,30 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 		return E_FAIL;
 
 
-	//CUI_HP::DESC			UIHPDesc;
-	//UIHPDesc.fX = 180.f;
-	//UIHPDesc.fY = 650.f;
-	//UIHPDesc.fSizeX = 214.f;
-	//UIHPDesc.fSizeY = 36.0f;
-	//UIHPDesc.iMaxHP = &m_iMaxHP;
-	//UIHPDesc.iHP = &m_iHP;
-	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_HP"), TEXT("Prototype_GameObject_UI_HP"), &UIHPDesc)))
-	//	return E_FAIL;
+	CUI_AmmoPannel::DESC			UIAmmoPDesc;
+	UIAmmoPDesc.fX = 180.f;
+	UIAmmoPDesc.fY = g_iWinSizeY - 70.f;
+	UIAmmoPDesc.fSizeX = 1.2f;
+	UIAmmoPDesc.fSizeY = 1.2f;
+	UIAmmoPDesc.iAmmo = ;
+	UIAmmoPDesc.iMaxAmmo = ;
 
-
-	//CUI_Shield::DESC			UIShieldDesc;
-	//UIShieldDesc.fX = 155; // 73
-	//UIShieldDesc.fY = 620.f;
-	//UIShieldDesc.fSizeX = 168.f;
-	//UIShieldDesc.fSizeY = 31.0f;
-	//UIShieldDesc.fMaxShield = &m_fMaxShield;
-	//UIShieldDesc.fShield = &m_fShield;
-	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Shield"), TEXT("Prototype_GameObject_UI_Shield"), &UIShieldDesc)))
-	//	return E_FAIL;
-
-
-	CUI_Ammo::DESC			UIAmmoDesc;
-	UIAmmoDesc.fX = g_iWinSizeX - 180.f;
-	UIAmmoDesc.fY = 650.f;
-	UIAmmoDesc.fSizeX = 214.f;
-	UIAmmoDesc.fSizeY = 36.0f;
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Ammo"), TEXT("Prototype_GameObject_UI_Ammo"), &UIAmmoDesc)))
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_AmmoPannel"), TEXT("Prototype_GameObject_UI_AmmoPannel"), &UIAmmoPDesc)))
 		return E_FAIL;
+
+
+	//CUI_Ammo::DESC			UIAmmoDesc;
+	//UIAmmoDesc.fX = g_iWinSizeX - 180.f;
+	//UIAmmoDesc.fY = g_iWinSizeY - 70.f;
+	//UIAmmoDesc.fSizeX = 214.f;
+	//UIAmmoDesc.fSizeY = 36.0f;
+	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Ammo"), TEXT("Prototype_GameObject_UI_Ammo"), &UIAmmoDesc)))
+	//	return E_FAIL;
 
 
 	CUI_Phaselock::DESC			UIPSDesc;
 	UIPSDesc.fX = g_iWinSizeX * 0.5f;
-	UIPSDesc.fY = 560.f;
+	UIPSDesc.fY = g_iWinSizeY - 160.f;
 	UIPSDesc.fSizeX = 439.f;
 	UIPSDesc.fSizeY = 125.f;
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Phaselock"), TEXT("Prototype_GameObject_UI_Phaselock"), &UIPSDesc)))
@@ -441,7 +463,7 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 
 	CUI_Exp::DESC			UIExpDesc;
 	UIExpDesc.fX = g_iWinSizeX * 0.5f;// 640 640
-	UIExpDesc.fY = 640.f;
+	UIExpDesc.fY = g_iWinSizeY - 80.f;
 	UIExpDesc.fSizeX = 380.f;
 	UIExpDesc.fSizeY = 27.55f;
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Exp"), TEXT("Prototype_GameObject_UI_Exp"), &UIExpDesc)))
@@ -617,6 +639,7 @@ void CPlayer::Check_Player_NoHitTime(_float fTimeDelta)
 void CPlayer::Recharge_Shield(_float fTimeDelta)
 {
 	_float fRechargePerTick = m_iShieldRechargeRate * fTimeDelta;
+	m_bShield = true;
 	m_fShield += fRechargePerTick;
 
 	if (m_fShield >= m_fMaxShield)
@@ -639,6 +662,8 @@ void CPlayer::Initialize_BasicStatus()
 	m_fPhaselockCooldownTicker = {};
 	m_fPhaselockUsableDistance = {100.f};
 
+	m_iARAmmo = 400; // 50?
+	m_iPSTAmmo = 100; // 8
 }
 
 void CPlayer::Cooldown_Phaselock(_float fTimeDelta)

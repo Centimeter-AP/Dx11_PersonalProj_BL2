@@ -39,6 +39,9 @@ private:
 	_float* m_fShield = { nullptr };
 	_float* m_fMaxShield = { nullptr };
 
+	_float m_fCurPosX = {};
+	_float m_fCurPosY = {};
+
 private:
 	HRESULT Ready_Components();
 

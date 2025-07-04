@@ -39,6 +39,9 @@ private:
 	_int* m_iHP = { nullptr };
 	_int* m_iMaxHP = { nullptr };
 
+	_float m_fCurPosX = {};
+	_float m_fCurPosY = {};
+
 private:
 	HRESULT Ready_Components();
 

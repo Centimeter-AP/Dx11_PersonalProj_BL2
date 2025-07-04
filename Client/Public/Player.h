@@ -174,6 +174,9 @@ private: /* 스킬 변수 */
 	void Cooldown_Phaselock(_float fTimeDelta);
 	// 시간 안되겟지만 다른 스킬 추가하면 밑에
 
+private:
+	_uint				m_iARAmmo = {};
+	_uint				m_iPSTAmmo = {};
 
 private:
 	vector<CGameObject*>		m_pWeapons; // 임시 무기 저장 변수, 인벤토리 만들고 꼭 이새끼 날릴 것 !!! 아닌가그냥써야하나??

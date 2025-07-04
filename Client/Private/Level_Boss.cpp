@@ -323,7 +323,7 @@ HRESULT CLevel_Boss::Ready_Lights()
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
@@ -369,6 +369,29 @@ void CLevel_Boss::Key_Input()
 		CCamera* pPrevCamera = static_cast<CCamera*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::BOSS), L"Layer_Camera", CAM_FREE));
 		pPrevCamera->Set_Using(false);
 	}
+
+	if (KEY_DOWN(DIK_SPACE))
+	{
+		auto vCamPos = m_pGameInstance->Get_CamPosition();
+		cout << vCamPos->x << ", " << vCamPos->y << ", " << vCamPos->z << endl;
+
+		LIGHT_DESC			LightDesc{};
+
+		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+		LightDesc.vPosition = *vCamPos;
+		LightDesc.fRange = 60.f;
+		// Ambient : 아주 어두운 보라
+		LightDesc.vAmbient = _float4(0.03f, 0.01f, 0.05f, 1.0f);
+		// Diffuse : 어두운 자수정 컬러
+		LightDesc.vDiffuse = _float4(0.10f, 0.04f, 0.20f, 1.0f);
+		// Specular: 살짝 푸른 빛 도는 하이라이트, Power=28 (중앙이 또렷하게)
+		LightDesc.vSpecular = _float4(0.75f, 0.60f, 1.00f, 1.0f);
+		if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+			return ;
+
+
+	}
+
 }
 
 CLevel_Boss* CLevel_Boss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

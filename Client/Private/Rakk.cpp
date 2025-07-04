@@ -81,6 +81,8 @@ void CRakk::Late_Update(_float fTimeDelta)
 
 HRESULT CRakk::Render()
 {
+
+	return __super::Render();
 	if (FAILED(__super::Bind_ShaderResources()))
 		return E_FAIL;
 
@@ -91,7 +93,8 @@ HRESULT CRakk::Render()
 	{
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
 			continue;
-		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS, 0)))
+			continue;
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;

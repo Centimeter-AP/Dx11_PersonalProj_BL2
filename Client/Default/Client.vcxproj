@@ -209,6 +209,7 @@
     <ClInclude Include="..\public\TerrainTool.h" />
     <ClInclude Include="..\public\UI_Aim.h" />
     <ClInclude Include="..\Public\UI_Ammo.h" />
+    <ClInclude Include="..\Public\UI_AmmoPannel.h" />
     <ClInclude Include="..\Public\UI_Ammo_Bar.h" />
     <ClInclude Include="..\Public\UI_Exp.h" />
     <ClInclude Include="..\Public\UI_HP.h" />
@@ -302,6 +303,7 @@
     <ClCompile Include="..\private\TerrainTool.cpp" />
     <ClCompile Include="..\private\UI_Aim.cpp" />
     <ClCompile Include="..\Private\UI_Ammo.cpp" />
+    <ClCompile Include="..\Private\UI_AmmoPannel.cpp" />
     <ClCompile Include="..\Private\UI_Ammo_Bar.cpp" />
     <ClCompile Include="..\Private\UI_Exp.cpp" />
     <ClCompile Include="..\Private\UI_HP.cpp" />

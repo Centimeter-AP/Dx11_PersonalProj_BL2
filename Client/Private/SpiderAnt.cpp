@@ -114,6 +114,7 @@ void CSpiderAnt::Late_Update(_float fTimeDelta)
 
 HRESULT CSpiderAnt::Render()
 {
+	return __super::Render();
 	if (FAILED(__super::Render()))
 		return E_FAIL;
 
