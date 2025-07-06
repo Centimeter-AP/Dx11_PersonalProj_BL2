@@ -21,7 +21,7 @@ HRESULT CTestSpirteEffect::Initialize_Prototype()
 
 HRESULT CTestSpirteEffect::Initialize(void* pArg)
 {
-	CGameObject::DESC			Desc{};
+	CBlendObject::DESC			Desc{};
 
 	Desc.fRotationPerSec = 0.f;
 	Desc.fSpeedPerSec = 0.f;
@@ -29,8 +29,8 @@ HRESULT CTestSpirteEffect::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
-	if (FAILED(Ready_Components()))
-		return E_FAIL;
+	//if (FAILED(Ready_Components()))
+	//	return E_FAIL;
 
 
 	return S_OK;
@@ -142,7 +142,7 @@ void CTestSpirteEffect::Free()
 {
 	__super::Free();
 
-	//Safe_Release(m_pVIBufferCom);
-	//Safe_Release(m_pShaderCom);
-	//Safe_Release(m_pTextureCom);
+	Safe_Release(m_pVIBufferCom);
+	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pTextureCom);
 }
