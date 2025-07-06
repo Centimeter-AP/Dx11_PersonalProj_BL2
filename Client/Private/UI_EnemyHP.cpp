@@ -1,5 +1,6 @@
 #include "UI_EnemyHP.h"
 #include "GameInstance.h"
+#include "Monster.h"
 
 CUI_EnemyHP::CUI_EnemyHP(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CUIObject{ pDevice, pContext }
@@ -68,7 +69,7 @@ EVENT CUI_EnemyHP::Update(_float fTimeDelta)
 
 void CUI_EnemyHP::Late_Update(_float fTimeDelta)
 {
-	if (m_isActive == false)
+	if (m_isActive == false || m_pOwner == nullptr)
 		return ;
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_UI, this);
 }
@@ -85,7 +86,9 @@ HRESULT CUI_EnemyHP::Render()
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOpacity", &m_fOpacity, sizeof(_float))))
 		return E_FAIL;
-
+	_float fPercentage = {};
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPercentage", &fPercentage, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pTextureCom[0]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
 
@@ -101,7 +104,9 @@ HRESULT CUI_EnemyHP::Render()
 	/************************************************************************/
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_BarWorldMatrix)))
 		return E_FAIL;
-
+	fPercentage = 1.f - (*m_pHP / static_cast<_float>(*m_pMaxHP));
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPercentage", &fPercentage, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pTextureCom[1]->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
 
@@ -115,7 +120,43 @@ HRESULT CUI_EnemyHP::Render()
 		return E_FAIL;
 
 
+	_float fFontPosX = { g_iWinSizeX * 0.5f + m_BarWorldMatrix._41 - m_fSizeX * 0.5f };
+	_float fFontPosY = { g_iWinSizeY * 0.5f - m_BarWorldMatrix._42 + 10.f };
+	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), m_strName.c_str(),
+		_float2(fFontPosX, fFontPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
+	_wstring strLevel = to_wstring(m_iLevel);
+	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strLevel.c_str(),
+		_float2(fFontPosX - 20.f, fFontPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.8f);
+
+
 	return S_OK;
+}
+
+void CUI_EnemyHP::Show_UI(CGameObject* pEnemy)
+{
+	if (pEnemy == nullptr)
+	{
+		m_pOwner = nullptr;
+		return;
+	}
+	if (m_pOwner == nullptr)
+	{
+		m_fRenderTime = 0.f;
+		m_fOpacity = 0.f;
+	}
+	m_isActive = true;
+	m_bRender = true;
+	m_pOwner = pEnemy;
+	Set_EnemyStatus(pEnemy);
+}
+
+void CUI_EnemyHP::Set_EnemyStatus(CGameObject* pEnemy)
+{
+	CMonster* pMonster = static_cast<CMonster*>(pEnemy);
+	m_strName = pMonster->Get_Name();
+	m_pHP = pMonster->Get_HP_Ptr();
+	m_pMaxHP = pMonster->Get_MaxHP_Ptr();
+	m_iLevel = pMonster->Get_Level();
 }
 
 HRESULT CUI_EnemyHP::Ready_Components()

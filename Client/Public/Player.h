@@ -94,6 +94,7 @@ public:
 private: 
 	void Update_State(_float fTimeDelta);
 	void Raycast_Object();
+	void EnemyHPUI_Check();
 	//void Ride_Terrain(); // 임시로 지형이라도 타자 // 이제 안 타도 돼요
 
 private:

@@ -39,6 +39,9 @@ public:
 public:
 	CGameObject* Get_Target() { return m_pTarget; }
 	const _uint Get_Damage() { return m_iDamage; }
+	_int* Get_HP_Ptr() { return &m_iHP; }
+	_int* Get_MaxHP_Ptr() { return &m_iMaxHP; }
+	const _int Get_Level() { return m_iLevel; }
 	const _bool Is_FirstHit() { return m_isFirstHit; }
 	void Set_FirstHit_False() { m_isFirstHit = false; }
 

@@ -12,7 +12,7 @@ NS_BEGIN(Client)
 class CUI_EnemyHP final : public CUIObject
 {
 public:
-	typedef struct tagUIAimDesc : public CUIObject::UIOBJECT_DESC
+	typedef struct tagUIEnemyHPDesc : public CUIObject::UIOBJECT_DESC
 	{
 
 	}DESC;
@@ -31,16 +31,9 @@ public:
 	virtual HRESULT Render();
 
 public:
-	void Show_UI(CGameObject* pEnemy)
-	{
-		if (pEnemy != nullptr)
-		m_pOwner = pEnemy;
-		m_isActive = true;
-		m_bRender = true;
-		m_fRenderTime = 0.f;
-		m_fOpacity = 0.f;
-	}
+	void Show_UI(CGameObject* pEnemy);
 	void Hide_UI() {
+		m_pOwner = nullptr;
 		m_bRender = false; m_fRenderTime = 0.f; m_fOpacity = 0.f;
 	}
 	//void Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
@@ -50,21 +43,25 @@ public:
 	//	m_fRenderTime = 0.f; 
 	//	m_fOpacity = 0.f;
 	//}
+	void Set_EnemyStatus(CGameObject* pEnemy);
+
 
 private:
-	CShader* m_pShaderCom = { nullptr };
-	CTexture* m_pTextureCom[2] = {nullptr};
+	CShader*		m_pShaderCom = { nullptr };
+	CTexture*		m_pTextureCom[2] = {nullptr};
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
-	_float4x4 m_BarWorldMatrix = {};
+	_float4x4		m_BarWorldMatrix = {};
 
 private:
-	CGameObject* m_pOwner = { nullptr };
-	_bool	m_bRender = { false }; // 밖에서 렌더하라고 호출하기 위한 용도
-	_float	m_fOpacity = { 1.f };
-	_float	m_fRenderTime = {};
+	CGameObject*	m_pOwner = { nullptr };
+	_bool			m_bRender = { false }; // 밖에서 렌더하라고 호출하기 위한 용도
+	_float			m_fOpacity = { 1.f };
+	_float			m_fRenderTime = {};
 
-	_int*	m_pHP = { nullptr };
-	_int* m_pMaxHP = { nullptr };
+	_wstring		m_strName = {};
+	_int*			m_pHP = { nullptr };
+	_int*			m_pMaxHP = { nullptr };
+	_int			m_iLevel = {};
 
 private:
 	HRESULT Ready_Components();

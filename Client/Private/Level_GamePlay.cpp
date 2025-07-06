@@ -341,11 +341,11 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring strLayerTag)
 {
-	CGameObject::DESC desc = {};
-	desc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
-	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
-		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &desc)))
-		return E_FAIL;
+	//CGameObject::DESC desc = {};
+	//desc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &desc)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -417,7 +417,7 @@ void CLevel_GamePlay::Key_Input()
 		pPrevCamera->Set_Using(false);
 	}
 
-	if (KEY_DOWN(DIK_F5))
+	if (KEY_DOWN(DIK_F3))
 	{
 		if (FAILED(m_pGameInstance->Change_Level(static_cast<_uint>(LEVEL::LOADING),
 			CLevel_Loading::Create(m_pDevice, m_pContext, LEVEL::BOSS))))

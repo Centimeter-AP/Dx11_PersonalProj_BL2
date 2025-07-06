@@ -53,8 +53,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	if (FAILED(Ready_PartObjects(pArg)))
-		return E_FAIL;
+	//if (FAILED(Ready_PartObjects(pArg)))
+	//	return E_FAIL;
 
 	if (FAILED(Ready_PlayerStates()))
 		return E_FAIL;
@@ -82,8 +82,8 @@ void CPlayer::Priority_Update(_float fTimeDelta)
 	}
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 
-
-
+	Raycast_Object();
+	EnemyHPUI_Check();
 
 	//Spine3
 }
@@ -117,7 +117,6 @@ void CPlayer::Late_Update(_float fTimeDelta)
 {
 	/*if (m_isActive == false)
 		return;*/
-	Raycast_Object();
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -151,7 +150,7 @@ HRESULT CPlayer::Render()
 			return E_FAIL;
 	}
 	
-	if (m_pLastPickedCollider != m_pCurPickedCollider)
+	if (m_pLastPickedCollider != m_pCurPickedCollider && m_pCurPickedCollider != nullptr)
 	{
 		_wstring strCurPickedName = m_pCurPickedCollider->Get_Owner()->Get_Name();
 	}
@@ -296,6 +295,17 @@ void CPlayer::Raycast_Object()
 
 }
 
+void CPlayer::EnemyHPUI_Check()
+{
+	if (m_pLastPickedCollider != m_pCurPickedCollider)
+	{
+		if (m_pCurPickedCollider != nullptr)
+			static_cast<CUI_EnemyHP*>(m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second)->Show_UI(m_pCurPickedCollider->Get_Owner());
+		else
+			static_cast<CUI_EnemyHP*>(m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second)->Hide_UI();
+	}
+}
+
 //void CPlayer::Ride_Terrain()
 //{
 //	auto pTerrain = dynamic_cast<CTerrain*>(m_pGameInstance->Find_Object(
@@ -362,7 +372,6 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Siren_1st.anim)");
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Base_Siren_All.anim)");
 
-	// need: collider, sound, maybe gravity?
 
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 
@@ -434,16 +443,16 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 		return E_FAIL;
 
 
-	CUI_AmmoPannel::DESC			UIAmmoPDesc;
-	UIAmmoPDesc.fX = 180.f;
-	UIAmmoPDesc.fY = g_iWinSizeY - 70.f;
-	UIAmmoPDesc.fSizeX = 1.2f;
-	UIAmmoPDesc.fSizeY = 1.2f;
-	//UIAmmoPDesc.iAmmo = ;
-	//UIAmmoPDesc.iMaxAmmo = m_iAmmo;
+	//CUI_AmmoPannel::DESC			UIAmmoPDesc;
+	//UIAmmoPDesc.fX = 180.f;
+	//UIAmmoPDesc.fY = g_iWinSizeY - 70.f;
+	//UIAmmoPDesc.fSizeX = 1.2f;
+	//UIAmmoPDesc.fSizeY = 1.2f;
+	////UIAmmoPDesc.iAmmo = ;
+	////UIAmmoPDesc.iMaxAmmo = m_iAmmo;
 
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_AmmoPannel"), TEXT("Prototype_GameObject_UI_AmmoPannel"), &UIAmmoPDesc)))
-		return E_FAIL;
+	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_AmmoPannel"), TEXT("Prototype_GameObject_UI_AmmoPannel"), &UIAmmoPDesc)))
+	//	return E_FAIL;
 
 
 	//CUI_Ammo::DESC			UIAmmoDesc;
@@ -461,8 +470,6 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 	UIExpDesc.fSizeY = 27.55f;
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Exp"), TEXT("Prototype_GameObject_UI_Exp"), &UIExpDesc)))
 		return E_FAIL;
-
-
 
 	CUI_Phaselock::DESC			UIPSDesc;
 	UIPSDesc.fX = g_iWinSizeX * 0.5f;
