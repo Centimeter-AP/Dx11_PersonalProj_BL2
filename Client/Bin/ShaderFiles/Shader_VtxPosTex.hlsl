@@ -7,6 +7,7 @@ texture2D g_DepthTexture;
 
 
 float g_fPercentage;
+float g_fOpacity = 1.f;
 
 /* 정점의 기초적인 변환 (월드변환, 뷰, 투영변환) */ 
 /* 정점의 구성 정보를 변형할 수 있다. */ 
@@ -102,6 +103,8 @@ PS_OUT PS_MAIN(PS_IN In)
    
     if (Out.vColor.a < 0.2f)
         discard;
+    
+    Out.vColor.a *= g_fOpacity;
     
     return Out;
 }

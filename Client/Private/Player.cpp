@@ -13,6 +13,7 @@
 #include "UI_Exp.h"
 #include "UI_HPShieldPannel.h"
 #include "UI_AmmoPannel.h"
+#include "UI_EnemyHP.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
 constexpr _float NONCOMBAT_TIMER = 10.f;
@@ -37,10 +38,8 @@ HRESULT CPlayer::Initialize_Prototype()
 
 HRESULT CPlayer::Initialize(void* pArg)
 {
-	
 	DESC*	pDesc = static_cast<DESC*>(pArg);
 	m_iNavIndex = pDesc->iNavigationIndex;
-
 
 	m_fSensor = XMConvertToRadians(4.f);
 
@@ -56,13 +55,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(Ready_PartObjects(pArg)))
 		return E_FAIL;
-	
+
 	if (FAILED(Ready_PlayerStates()))
 		return E_FAIL;
 
 	m_pModelCom->Set_Animation(AR_Idle, true, 0.2f);
 	Set_State(STATE_Idle);
-
 
 	m_pModelCom->Play_Animation(0.01f);
 
@@ -153,7 +151,13 @@ HRESULT CPlayer::Render()
 			return E_FAIL;
 	}
 	
+	if (m_pLastPickedCollider != m_pCurPickedCollider)
+	{
+		_wstring strCurPickedName = m_pCurPickedCollider->Get_Owner()->Get_Name();
+	}
+
 #ifdef _DEBUG
+
 	_wstring strTest;
 	_wstring strCurPickedCollider;
 	if (m_pCurPickedCollider != nullptr)
@@ -286,10 +290,10 @@ void CPlayer::Raycast_Object()
 
 	_vector vEye = XMVectorSetW(matFinal.r[3], 1.f);
 	_vector vLook = XMVectorSetW(XMVector4Normalize(matFinal.r[0]), 0.f);
+	m_pLastPickedCollider = m_pCurPickedCollider;
 	m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::MONSTER), m_fCurPickedDistance);
 	//m_pCurPickedCollider = m_pGameInstance->Raycast(vEye, vLook, 500.f, ENUM_CLASS(COL_GROUP::BOSS), m_fCurPickedDistance);
-	//if (m_pCurPickedCollider != nullptr)
-	//	int a = 0;
+
 }
 
 //void CPlayer::Ride_Terrain()
@@ -435,8 +439,8 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 	UIAmmoPDesc.fY = g_iWinSizeY - 70.f;
 	UIAmmoPDesc.fSizeX = 1.2f;
 	UIAmmoPDesc.fSizeY = 1.2f;
-	UIAmmoPDesc.iAmmo = ;
-	UIAmmoPDesc.iMaxAmmo = ;
+	//UIAmmoPDesc.iAmmo = ;
+	//UIAmmoPDesc.iMaxAmmo = m_iAmmo;
 
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_AmmoPannel"), TEXT("Prototype_GameObject_UI_AmmoPannel"), &UIAmmoPDesc)))
 		return E_FAIL;
@@ -450,6 +454,15 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Ammo"), TEXT("Prototype_GameObject_UI_Ammo"), &UIAmmoDesc)))
 	//	return E_FAIL;
 
+	CUI_Exp::DESC			UIExpDesc;
+	UIExpDesc.fX = g_iWinSizeX * 0.5f;// 640 640
+	UIExpDesc.fY = g_iWinSizeY - 80.f;
+	UIExpDesc.fSizeX = 380.f;
+	UIExpDesc.fSizeY = 27.55f;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Exp"), TEXT("Prototype_GameObject_UI_Exp"), &UIExpDesc)))
+		return E_FAIL;
+
+
 
 	CUI_Phaselock::DESC			UIPSDesc;
 	UIPSDesc.fX = g_iWinSizeX * 0.5f;
@@ -461,13 +474,16 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 
 	m_PartObjects.find(TEXT("PartObject_Player_UI_Phaselock"))->second->Set_Active(false);
 
-	CUI_Exp::DESC			UIExpDesc;
-	UIExpDesc.fX = g_iWinSizeX * 0.5f;// 640 640
-	UIExpDesc.fY = g_iWinSizeY - 80.f;
-	UIExpDesc.fSizeX = 380.f;
-	UIExpDesc.fSizeY = 27.55f;
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Exp"), TEXT("Prototype_GameObject_UI_Exp"), &UIExpDesc)))
+	CUI_EnemyHP::DESC			UIEnemyHPDesc;
+	UIEnemyHPDesc.fX = g_iWinSizeX * 0.5f; // 0.72%
+	UIEnemyHPDesc.fY = g_iWinSizeY * 0.35f;
+	UIEnemyHPDesc.fSizeX = 148.f;
+	UIEnemyHPDesc.fSizeY = 24.f;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_EnemyHP"), TEXT("Prototype_GameObject_UI_EnemyHP"), &UIEnemyHPDesc)))
 		return E_FAIL;
+
+	m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second->Set_Active(false);
+
 
 	return S_OK;
 }
@@ -662,8 +678,8 @@ void CPlayer::Initialize_BasicStatus()
 	m_fPhaselockCooldownTicker = {};
 	m_fPhaselockUsableDistance = {100.f};
 
-	m_iARAmmo = 400; // 50?
-	m_iPSTAmmo = 100; // 8
+	m_iAmmo[ATYPE_AR] = 400;
+	m_iAmmo[ATYPE_PST] = 100;
 }
 
 void CPlayer::Cooldown_Phaselock(_float fTimeDelta)

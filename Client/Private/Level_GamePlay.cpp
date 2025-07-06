@@ -339,6 +339,17 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring strLayerTag)
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Layer_UI(const _wstring strLayerTag)
+{
+	CGameObject::DESC desc = {};
+	desc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &desc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CLevel_GamePlay::Ready_Lights()
 {
 	LIGHT_DESC			LightDesc{};

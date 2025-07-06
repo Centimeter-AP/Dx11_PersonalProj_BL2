@@ -32,8 +32,10 @@
 #include "UI_Shield.h"
 #include "UI_Shield_Bar.h"
 #include "UI_Phaselock.h"
-#include "UI_Exp.h"
 #include "UI_HPShieldPannel.h"
+#include "UI_AmmoPannel.h"
+#include "UI_Exp.h"
+#include "UI_EnemyHP.h"
 
 #include "TestSpirteEffect.h"
 #include "Snow.h"
@@ -191,6 +193,24 @@ HRESULT CLoader::Loading_For_Logo()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp.png"), 1))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_UI_Bar_EnemyHP_Back */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP_Back"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp_Back.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_EnemyHP */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp.png"), 1))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_UI_Bar_BossHP_Back */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_BossHP_Back"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp_Back.png"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_UI_Bar_BossHP */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_BossHP"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp.png"), 1))))
+		return E_FAIL;
+
 
 
 #pragma endregion
@@ -258,6 +278,11 @@ HRESULT CLoader::Loading_For_Logo()
 	/* For.Prototype_GameObject_UI_Exp */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Exp"),
 		CUI_Exp::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_UI_EnemyHP */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_EnemyHP"),
+		CUI_EnemyHP::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 #pragma endregion

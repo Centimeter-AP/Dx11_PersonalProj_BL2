@@ -156,6 +156,7 @@ private: // maybe deprecated /* 카메라 회전 용 변수.. */
 	const _float		m_fPitchLimit = XMConvertToRadians(89.9f); 
 
 private: /* 레이피킹 변수 */
+	CCollider*			m_pLastPickedCollider = { nullptr };
 	CCollider*			m_pCurPickedCollider = { nullptr };
 	_float				m_fCurPickedDistance = {};
 	_uint				m_iCameraBoneIdx = {};
@@ -175,8 +176,8 @@ private: /* 스킬 변수 */
 	// 시간 안되겟지만 다른 스킬 추가하면 밑에
 
 private:
-	_uint				m_iARAmmo = {};
-	_uint				m_iPSTAmmo = {};
+	enum AMMOTYPE { ATYPE_AR, ATYPE_PST, ATYPE_END };
+	_uint				m_iAmmo[ATYPE_END] = {};
 
 private:
 	vector<CGameObject*>		m_pWeapons; // 임시 무기 저장 변수, 인벤토리 만들고 꼭 이새끼 날릴 것 !!! 아닌가그냥써야하나??
