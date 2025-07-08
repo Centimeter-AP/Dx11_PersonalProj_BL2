@@ -86,6 +86,9 @@ public:
 	void LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpeed);
 
 public:
+	_matrix Billboard();
+
+public:
 	_float Compute_Target_Look_Angle(_fvector vTargetPos);
 
 public:

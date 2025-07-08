@@ -3,6 +3,7 @@
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 vector g_vCamPosition;
+vector g_vColor = { 1.f };
 
 struct VS_IN
 {
@@ -122,7 +123,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     
     Out.vColor.a = saturate(In.vLifeTime.x - In.vLifeTime.y);
-    
+    Out.vColor.rgb *= g_vColor;
 
     if (In.vLifeTime.y >= In.vLifeTime.x)
         discard;

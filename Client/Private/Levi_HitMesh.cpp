@@ -63,7 +63,10 @@ EVENT CLevi_HitMesh::Update(_float fTimeDelta)
 		return EVN_NONE;
 
 	if (m_bDead)
+	{
+		Spawn_Effect();
 		return EVN_DEAD;
+	}
 
 	//auto test = m_pTransformCom->Get_WorldMatrix4x4Ref();
 	_matrix matFinal = m_pTransformCom->Get_WorldMatrix() * XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
@@ -161,6 +164,20 @@ void CLevi_HitMesh::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHi
 			Set_State_Dead();
 		}
 	}
+}
+
+void CLevi_HitMesh::Spawn_Effect()
+{
+	CGameObject::DESC desc = {};
+
+	desc.bHasTransformPreset = true;
+	XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixScaling(30.f, 30.f, 30.f) * XMMatrixTranslation(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43));
+	// 이거 되나용?
+	desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	if (FAILED(m_pGameInstance->Add_GameObject(desc.iLevelID, TEXT("Prototype_GameObject_WaterExplode"),
+		desc.iLevelID, TEXT("Layer_Effect"), &desc)))
+		return ;
+
 }
 
 CLevi_HitMesh* CLevi_HitMesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

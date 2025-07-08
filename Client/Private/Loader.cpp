@@ -38,10 +38,12 @@
 #include "UI_Exp.h"
 #include "UI_EnemyHP.h"
 
+/** Effect **/
 #include "TestSpirteEffect.h"
 #include "Screen_Snow.h"
 #include "Snow.h"
 #include "MuzzleFlash.h"
+#include "WaterExplode.h"
 #include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -329,12 +331,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 
 	/* For.Prototype_Component_Shader_VtxRectInstance */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxRectInstance"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxRectInstance"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxRectInstance.hlsl"), VTXRECT_PARTICLE_INSTANCE::Elements, VTXRECT_PARTICLE_INSTANCE::iNumElements))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Shader_VtxPosInstance */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Shader_VtxPosInstance"),
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosInstance"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosInstance.hlsl"), VTXPOS_PARTICLE_INSTANCE::Elements, VTXPOS_PARTICLE_INSTANCE::iNumElements))))
 		return E_FAIL;
 
@@ -357,6 +359,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_Component_Texture_ScreenSnowMask */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_ScreenSnowMask"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Snow_Dissipate_Mask.dds")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_Explosion_ParticleTest */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Explosion_ParticleTest"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tex_Explosion_Corrosive.dds")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_AR_Nor */
@@ -388,6 +395,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_VIBuffer_Snow"),
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &SnowDesc))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_Explosion_Test */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		ExplosionDesc{};
+	ExplosionDesc.iNumInstance = 1000;
+	ExplosionDesc.vCenter = _float3(100.f, 50.f, 100.0f);
+	ExplosionDesc.vRange = _float3(200.f, 3.0f, 200.f);
+	ExplosionDesc.vSize = _float2(0.1f, 0.4f);
+	ExplosionDesc.vLifeTime = _float2(2.f, 5.f);
+	ExplosionDesc.vSpeed = _float2(10.f, 20.f);
+	ExplosionDesc.isLoop = true;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Explosion_Test"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplosionDesc))))
 		return E_FAIL;
 
 
@@ -516,8 +537,8 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CSky::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	/* For.Prototype_GameObject_Effect */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Effect"),
+	/* For.Prototype_GameObject_TestSpirteEffect */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_TestSpirteEffect"),
 		CTestSpirteEffect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
@@ -525,10 +546,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
 		CSnow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
-	/* For.Prototype_GameObject_Snow */
+	
+	/* For.Prototype_GameObject_ScreenSnow */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ScreenSnow"),
 		CScreen_Snow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+	/* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds")))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_WaterExplode */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WaterExplode"),
+		CWaterExplode::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
@@ -626,6 +657,17 @@ HRESULT CLoader::Loading_For_Boss()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PST_Nor"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Models/Bin_Anim/Weap_Pistols_Nrm.dds")))))
 		return E_FAIL;
+
+
+	/* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds")))))
+		return E_FAIL;
+	///* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tex_Assault_Muzzle_Flash_Front.dds")))))
+	//	return E_FAIL;
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
@@ -791,6 +833,11 @@ HRESULT CLoader::Loading_For_Boss()
 	/* For.Prototype_GameObject_Sky */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Sky"),
 		CSky::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_WaterExplode */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WaterExplode"),
+		CWaterExplode::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

@@ -39,6 +39,7 @@ private:
 	virtual void Initialize_BasicStatus(_int iLevel);
 
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol);
+	void Spawn_Effect();
 
 public:
 	_int Get_HP() const { return m_iHP; }

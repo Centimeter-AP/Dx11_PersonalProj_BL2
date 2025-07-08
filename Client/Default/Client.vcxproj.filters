@@ -220,6 +220,9 @@
     <Filter Include="02.GameObjects\11. Item\ItemChest">
       <UniqueIdentifier>{9ebc88b5-d40e-47fa-b893-7537aab296c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Sprite\WaterExplode">
+      <UniqueIdentifier>{d44bc22a-509a-461a-85d6-a6004f74b31b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -473,6 +476,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\MuzzleFlash.h">
       <Filter>02.GameObjects\10. Effect\Sprite\MuzzleFlash</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WaterExplode.h">
+      <Filter>02.GameObjects\10. Effect\Sprite\WaterExplode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -749,6 +755,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\MuzzleFlash.cpp">
       <Filter>02.GameObjects\10. Effect\Sprite\MuzzleFlash</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WaterExplode.cpp">
+      <Filter>02.GameObjects\10. Effect\Sprite\WaterExplode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

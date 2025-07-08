@@ -45,6 +45,8 @@ HRESULT CLevel_Boss::Initialize()
 	if (FAILED(Ready_Layer_MapObject(TEXT("Layer_MapObject"))))
 		return E_FAIL;
 
+
+
 	//ShowCursor(FALSE);
 
 	return S_OK;
@@ -344,7 +346,15 @@ void CLevel_Boss::Key_Input()
 {
 	if (KEY_DOWN(DIK_RETURN))
 	{
-		Ready_Layer_Monster(TEXT("Layer_Monster"));
+		CGameObject::DESC desc = {};
+
+		desc.bHasTransformPreset = true;
+		XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(100.f, 20.f, 100.f));
+		// 이거 되나용?
+		desc.iLevelID = ENUM_CLASS(LEVEL::BOSS);
+  		if (FAILED(m_pGameInstance->Add_GameObject(desc.iLevelID, TEXT("Prototype_GameObject_WaterExplode"),
+			desc.iLevelID, TEXT("Layer_Effect"), &desc)))
+			return ;
 	}
 
 	if (KEY_DOWN(DIK_BACKSLASH))

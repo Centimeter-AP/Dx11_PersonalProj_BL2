@@ -65,6 +65,7 @@ HRESULT CRenderer::Initialize()
 	XMStoreFloat4x4(&m_ProjMatrix, XMMatrixOrthographicLH(ViewportDesc.Width, ViewportDesc.Height, 0.0f, 1.f));
 
 #ifdef _DEBUG
+
 	_float fRTWidth = ViewportDesc.Width * 0.1f;
 	_float fRTHeight = ViewportDesc.Height * 0.1f;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Diffuse"), fRTWidth * 0.5f, fRTHeight * 0.5f, fRTWidth, fRTHeight)))
@@ -77,10 +78,8 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Specular"), fRTWidth * 1.5f, fRTHeight * 1.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
-	
 
 #endif
-
 
 	return S_OK;
 }
@@ -100,7 +99,6 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRende
 
 HRESULT CRenderer::Draw()
 {
-	
 	if (FAILED(Render_Priority()))
 		return E_FAIL;	
 	if (FAILED(Render_NonBlend()))
@@ -114,7 +112,7 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
 
-	/* 블렌딩이전에 백버퍼를 완성시키낟.  */
+	/* 블렌딩이전에 백버퍼를 완성시킨다 */
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
 	if (FAILED(Render_UI()))
@@ -123,10 +121,8 @@ HRESULT CRenderer::Draw()
 #ifdef _DEBUG
 	if (FAILED(Render_Debug()))
 		return E_FAIL;
-
 #endif
 	
-
 	return S_OK;
 }
 

@@ -222,6 +222,7 @@
     <ClInclude Include="..\Public\UI_Shield_Bar.h" />
     <ClInclude Include="..\Public\Warrior.h" />
     <ClInclude Include="..\Public\WarriorState.h" />
+    <ClInclude Include="..\Public\WaterExplode.h" />
     <ClInclude Include="..\public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
@@ -317,6 +318,7 @@
     <ClCompile Include="..\Private\UI_Shield.cpp" />
     <ClCompile Include="..\Private\UI_Shield_Bar.cpp" />
     <ClCompile Include="..\Private\Warrior.cpp" />
+    <ClCompile Include="..\Private\WaterExplode.cpp" />
     <ClCompile Include="..\private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="imgui\backends\imgui_impl_dx11.cpp" />

@@ -349,13 +349,10 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring strLayerTag)
 
 	for (size_t i = 0; i < 10; i++)
 	{
-		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Effect"),
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_TestSpirteEffect"),
 			ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
 			return E_FAIL;
 	}
-
-
-
 
 	return S_OK;
 }
@@ -410,10 +407,24 @@ void CLevel_GamePlay::Intersect()
 
 void CLevel_GamePlay::Key_Input()
 {
+	//if (KEY_DOWN(DIK_RETURN))
+	//{
+	//	Ready_Layer_Monster(TEXT("Layer_Monster"));
+	//}
+	//그럼빌드를처하세요
 	if (KEY_DOWN(DIK_RETURN))
 	{
-		Ready_Layer_Monster(TEXT("Layer_Monster"));
+		CGameObject::DESC desc = {};
+
+		desc.bHasTransformPreset = true;
+		XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(100.f, 20.f, 100.f));
+		// 이거 되나용?
+		desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+		if (FAILED(m_pGameInstance->Add_GameObject(desc.iLevelID, TEXT("Prototype_GameObject_WaterExplode"),
+			desc.iLevelID, TEXT("Layer_Effect"), &desc)))
+			return;
 	}
+
 
 	if (KEY_DOWN(DIK_BACKSLASH))
 	{

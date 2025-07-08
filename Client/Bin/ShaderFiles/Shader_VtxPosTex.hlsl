@@ -12,6 +12,7 @@ float g_fOpacity = 1.f;
 texture2D g_MaskTexture;
 float2 g_fTileSize;
 float2 g_fTileOffset;
+float4 g_vColor = { 1.f, 1.f, 1.f, 1.f };
 
 /* 정점의 기초적인 변환 (월드변환, 뷰, 투영변환) */ 
 /* 정점의 구성 정보를 변형할 수 있다. */ 
@@ -168,6 +169,30 @@ struct PS_IN_PROJPOS
     float4 vProjPos : TEXCOORD1;
 };
 
+float4 SoftEffect(float4 vOrigColor, float4 vProjPos)
+{
+    float2 vTexcoord;
+    
+    vTexcoord.x = vProjPos.x / vProjPos.w;
+    vTexcoord.y = vProjPos.y / vProjPos.w;
+    
+    vTexcoord.x = vTexcoord.x * 0.5f + 0.5f;
+    vTexcoord.y = vTexcoord.y * -0.5f + 0.5f;
+    
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
+    
+    if (vDepthDesc.y != 0.f)
+    {
+        float fOldViewZ = vDepthDesc.y * 500.f;
+        float fDiff = (fOldViewZ - vProjPos.w);
+        vOrigColor.a = vOrigColor.a * saturate(fDiff) * (vOrigColor.r + 0.2f);
+    }
+    //vOrigColor.rgb *= float3(0.6f, 0.8f, 1.f);
+    
+    return vOrigColor;
+}
+
+
 PS_OUT PS_MAIN_SOFTEFFECT(PS_IN_PROJPOS In)
 {
     PS_OUT Out;
@@ -179,27 +204,12 @@ PS_OUT PS_MAIN_SOFTEFFECT(PS_IN_PROJPOS In)
     if (all(Out.vColor.rgb < 0.2f))
         Out.vColor.a = Out.vColor.r;
     /*화면 전체 기준(0, 0 ~ 1, 1)으로 이펙트의 픽셀이 그려질 위치에 해당하는 좌표 */    
-    float2 vTexcoord;
+    Out.vColor = SoftEffect(Out.vColor, In.vProjPos);
     
-    /*이펙트의 특정 픽셀(psin)이 화면 전체기준으로 어디에 존재하는지? */ 
-    /* 우선 투영공간상(-1, 1 -> 1, -1)의 픽셀의 위치를 구한다.*/    
-    vTexcoord.x = In.vProjPos.x / In.vProjPos.w;
-    vTexcoord.y = In.vProjPos.y / In.vProjPos.w;
-    
-    vTexcoord.x = vTexcoord.x * 0.5f + 0.5f;
-    vTexcoord.y = vTexcoord.y * -0.5f + 0.5f;
-    
-    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, vTexcoord);
-    
-    if (vDepthDesc.y != 0.f)
-    {
-        float fOldViewZ = vDepthDesc.y * 500.f;
-        float fDiff = (fOldViewZ - In.vProjPos.w);
-        Out.vColor.a = Out.vColor.a * saturate(fDiff);
-    }
-    
+    Out.vColor.rgb *= float3(0.6f, 0.8f, 1.f);
     return Out;
 }
+
 
 PS_OUT PS_MAIN_GRID(PS_IN In)
 {
@@ -223,7 +233,23 @@ PS_OUT PS_MAIN_GRID(PS_IN In)
     return Out;
 }
 
-
+PS_OUT PS_MAIN_SOFTEFFECT_COLOR(PS_IN_PROJPOS In)
+{
+    PS_OUT Out;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+   
+    if (all(Out.vColor.rgb < 0.1f))
+        discard;
+    if (all(Out.vColor.rgb < 0.2f))
+        Out.vColor.a = Out.vColor.r;
+    /*화면 전체 기준(0, 0 ~ 1, 1)으로 이펙트의 픽셀이 그려질 위치에 해당하는 좌표 */    
+    Out.vColor = SoftEffect(Out.vColor, In.vProjPos);
+    
+    //Out.vColor.rgb *= float3(0.6f, 0.8f, 1.f);
+    Out.vColor *= g_vColor;
+    return Out;
+}
 
 
 technique11 DefaultTechnique
@@ -302,5 +328,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_GRID();
+    }
+    pass WaterExplode // 7
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_PROJPOS();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT_COLOR();
     }
 }

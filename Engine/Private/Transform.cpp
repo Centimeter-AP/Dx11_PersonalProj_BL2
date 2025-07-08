@@ -351,6 +351,33 @@ void CTransform::LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpe
 
 }
 
+_matrix CTransform::Billboard() 
+{
+	_float4x4 m_Return = {};
+	XMStoreFloat4x4(&m_Return, XMMatrixIdentity());
+	_float3	vScaled = Get_Scaled();
+	_vector	vPosition = Get_State(STATE::POSITION);
+
+	_matrix matCamWorld = m_pGameInstance->Get_Transform_Matrix_Inv(D3DTS::VIEW);
+	_float4 vCameraPos = *m_pGameInstance->Get_CamPosition();
+	
+	_vector vRight = matCamWorld.r[0]; // X axis
+	_vector vUp = matCamWorld.r[1]; // Y axis
+	_vector vLook = matCamWorld.r[2]; // Z axis
+
+	XMStoreFloat3((_float3*)&m_Return.m[0][0], XMVector3Normalize(vRight) * vScaled.x);
+	XMStoreFloat3((_float3*)&m_Return.m[1][0], XMVector3Normalize(vUp) * vScaled.y);
+	XMStoreFloat3((_float3*)&m_Return.m[2][0], XMVector3Normalize(vLook) * vScaled.z);
+	XMStoreFloat3((_float3*)&m_Return.m[3][0], vPosition);
+	m_Return._44 = 1.f;
+
+	//_float3 vRight = reinterpret_cast<_float3*>(&matCamWorld.m[0][0])->Normalize() * vScaled.x;
+	////_float3 vUp = reinterpret_cast<_float3*>(&matCamWorld.m[1][0])->Normalize() * vScaled.y;
+	//_float3 vLook = reinterpret_cast<_float3*>(&matCamWorld.m[2][0])->Normalize() * vScaled.z;
+	
+	return XMLoadFloat4x4(&m_Return);
+}
+
 _float CTransform::Compute_Target_Look_Angle(_fvector vTargetPos)
 {
 	_vector vPos = Get_State(STATE::POSITION);
