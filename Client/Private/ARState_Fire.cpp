@@ -5,6 +5,9 @@
 void CARState_Fire::Enter()
 {
 	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CAssaultRifle::AR_ANIM::Fire_Jakobs), false);
+	m_pOwner->m_iCurAmmoLeft--;
+	if (m_pOwner->m_iCurAmmoLeft < 0)
+		MSG_BOX("Å«ÀÏ³µµû!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 }
 
 void CARState_Fire::Execute(_float fTimeDelta)

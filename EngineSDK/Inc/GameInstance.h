@@ -108,6 +108,10 @@ public:
 	const LIGHT_DESC* Get_Light(_uint iIndex);
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
 	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	void Clear_Lights();
+	_uint Get_LastLight_Index();
+	void Delete_Light(_uint iIndex);
+	void Delete_LastLight();
 #pragma endregion
 
 #pragma region FONT_MANAGER

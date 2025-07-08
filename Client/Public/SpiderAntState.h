@@ -184,19 +184,57 @@ public:
 	{
 		cout << "provoked_idle" << endl;
 		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Idle_Ready, true);
+		fNextTicker = 0.f;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
 		//Console(fTimeDelta);
 		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
-
-		if (Is_Target_Attackable())
+		fNextTicker += fTimeDelta;
+		if (fNextTicker >= 1.f)
 		{
-			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Claw);
-		}
-		else
-		{
-			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
+			if (Is_Target_Attackable())
+			{
+				m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Claw);
+			}
+			else
+			{
+				switch (rand() % 10)
+				{
+				case 0:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
+					break;
+				case 1:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Leap);
+					break;
+				case 2:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Charge);
+					break;
+				case 3:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot1);
+					break;
+				case 4:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot1);
+					break;
+				case 5:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot3);
+					break;
+				case 6:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot3);
+					break;
+				case 7:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot6);
+					break;
+				case 8:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot6);
+					break;
+				case 9:
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot1);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 		if (KEY_DOWN(DIK_1))
 		{
@@ -218,12 +256,15 @@ public:
 		{
 			m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot6);
 		}
+		
 	}
 	virtual void Exit() override
 	{
 
 	}
 	virtual void Free() override { __super::Free(); }
+private:
+	_float fNextTicker = {};
 };
 
 class CSpiderAntState_Attack_Leap final : public CSpiderAntState

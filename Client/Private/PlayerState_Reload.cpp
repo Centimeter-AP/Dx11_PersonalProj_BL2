@@ -2,7 +2,6 @@
 #include "Model.h"
 
 
-
 void CPlayerState_Reload::Enter()
 {
 	switch (m_pOwner->m_eCurWeapon)
@@ -10,10 +9,13 @@ void CPlayerState_Reload::Enter()
 	case CPlayer::WEAPON_TYPE::WTYPE_AR:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::AR_R_Jakobs, false);
 		static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AR"))->second)->Set_State(CAssaultRifle::STATE_Reload);
+		static_cast<CAssaultRifle*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_AR"))->second)->Reload_Magazine(m_pOwner->m_iAmmo[CPlayer::WTYPE_AR]);
 		break;
+
 	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PST_R_Jakobs, false);
 		static_cast<CPistol*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_Pistol"))->second)->Set_State(CPistol::STATE_Reload);
+		static_cast<CPistol*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Weapon_Pistol"))->second)->Reload_Magazine(m_pOwner->m_iAmmo[CPlayer::WTYPE_PISTOL]);
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:
 		break;

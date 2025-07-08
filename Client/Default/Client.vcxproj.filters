@@ -211,8 +211,14 @@
     <Filter Include="02.GameObjects\07. UI\DamageFont">
       <UniqueIdentifier>{16304fb7-2a43-49a0-8c5e-868aaf1c1b72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\07. UI\EnemyHP">
+    <Filter Include="02.GameObjects\07. UI\StaticUI\EnemyHP">
       <UniqueIdentifier>{e7652dd2-9df2-40a8-a8eb-687d8d276cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\11. Item">
+      <UniqueIdentifier>{bcd9fbe4-8aac-4483-9185-556e0a43423c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\11. Item\ItemChest">
+      <UniqueIdentifier>{9ebc88b5-d40e-47fa-b893-7537aab296c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -463,7 +469,10 @@
       <Filter>02.GameObjects\07. UI\StaticUI\UI_AmmoPannel</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_EnemyHP.h">
-      <Filter>02.GameObjects\07. UI\EnemyHP</Filter>
+      <Filter>02.GameObjects\07. UI\StaticUI\EnemyHP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MuzzleFlash.h">
+      <Filter>02.GameObjects\10. Effect\Sprite\MuzzleFlash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -736,7 +745,10 @@
       <Filter>02.GameObjects\07. UI\StaticUI\UI_AmmoPannel</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_EnemyHP.cpp">
-      <Filter>02.GameObjects\07. UI\EnemyHP</Filter>
+      <Filter>02.GameObjects\07. UI\StaticUI\EnemyHP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MuzzleFlash.cpp">
+      <Filter>02.GameObjects\10. Effect\Sprite\MuzzleFlash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

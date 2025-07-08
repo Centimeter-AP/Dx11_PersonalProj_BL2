@@ -1,4 +1,5 @@
 #include "PlayerState.h"
+#include "UI_AmmoPannel.h"
 //#include "Model.h"
 
 void CPlayerState_DrawWeapon::Enter() // 무슨 무기로 바꿨는지 정보 받아야함 
@@ -9,12 +10,14 @@ void CPlayerState_DrawWeapon::Enter() // 무슨 무기로 바꿨는지 정보 받아야함
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_AR::AR_Draw, false);
 		m_pOwner->Find_PartObject(L"PartObject_Player_Weapon_Pistol")->Set_Active(false);
 		m_pOwner->Find_PartObject(L"PartObject_Player_Weapon_AR")->Set_Active(true);
+		static_cast<CUI_AmmoPannel*>(m_pOwner->Find_PartObject(L"PartObject_Player_UI_AmmoPannel"))->Change_Weapon(CPlayer::WEAPON_TYPE::WTYPE_AR);
 		//m_pOwner->Replace_PartObject(TEXT("PartObject_Player_Weapon"), m_pOwner->m_pWeapons[CPlayer::WTYPE_AR]);
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_PST::PST_Draw, false);
 		m_pOwner->Find_PartObject(L"PartObject_Player_Weapon_Pistol")->Set_Active(true);
 		m_pOwner->Find_PartObject(L"PartObject_Player_Weapon_AR")->Set_Active(false);
+		static_cast<CUI_AmmoPannel*>(m_pOwner->Find_PartObject(L"PartObject_Player_UI_AmmoPannel"))->Change_Weapon(CPlayer::WEAPON_TYPE::WTYPE_PISTOL);
 		//m_pOwner->Replace_PartObject(TEXT("PartObject_Player_Weapon"), m_pOwner->m_pWeapons[CPlayer::WTYPE_PISTOL]);
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:

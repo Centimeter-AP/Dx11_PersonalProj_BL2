@@ -131,7 +131,6 @@ HRESULT CGameInstance::End_Draw()
 void CGameInstance::Clear(_uint iLevelIndex)
 {
 	/* 특정 레벨의 자원을 삭제한다. */
-
 	/* 특정 레벨의 객체을 삭제한다. */
 	m_pObject_Manager->Clear(iLevelIndex);
 
@@ -378,6 +377,22 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
 	return m_pLight_Manager->Render_Lights(pShader, pVIBuffer);
+}
+void CGameInstance::Clear_Lights()
+{
+	m_pLight_Manager->Clear();
+}
+_uint CGameInstance::Get_LastLight_Index()
+{
+	return m_pLight_Manager->Get_LastLight_Index();
+}
+void CGameInstance::Delete_Light(_uint iIndex)
+{
+	m_pLight_Manager->Delete_Light(iIndex);
+}
+void CGameInstance::Delete_LastLight()
+{
+	m_pLight_Manager->Delete_LastLight();
 }
 #pragma endregion
 

@@ -20,8 +20,12 @@ HRESULT CUI_Ammo_Bar::Initialize(void* pArg)
 {
 	DESC* pDesc = static_cast<DESC*>(pArg);
 	
-	m_iAmmo = pDesc->iAmmo;
-	m_iMaxAmmo = pDesc->iMaxAmmo;
+	m_iAmmo[CPlayer::WTYPE_AR] = pDesc->iARAmmo;
+	m_iMaxAmmo[CPlayer::WTYPE_AR] = pDesc->iARMaxAmmo;
+	m_iMaxMagazine[CPlayer::WTYPE_AR] = 26;
+	m_iAmmo[CPlayer::WTYPE_PISTOL] = pDesc->iPstAmmo;
+	m_iMaxAmmo[CPlayer::WTYPE_PISTOL] = pDesc->iPstMaxAmmo;
+	m_iMaxMagazine[CPlayer::WTYPE_PISTOL] = 6;
 
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -69,10 +73,13 @@ HRESULT CUI_Ammo_Bar::Render()
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;
 
-	_float fPercentage = 1.f - (*m_iAmmo / static_cast<_float>(*m_iMaxAmmo));
+	_float fPercentage = 1.f - (*m_iAmmo[m_eWeaponType] / static_cast<_float>(m_iMaxMagazine[m_eWeaponType]));
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPercentage", &fPercentage, sizeof(_float))))
 		return E_FAIL;
 
+	_float fOpacity = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOpacity", &fOpacity, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Begin(POSTEX_UI_BLEND_RIGHT)))
 		return E_FAIL;
 
@@ -82,11 +89,12 @@ HRESULT CUI_Ammo_Bar::Render()
 	if (FAILED(m_pVIBufferCom->Render()))
 		return E_FAIL;
 
-	_wstring strHP = to_wstring(*m_iAmmo);
+	_wstring strHP = to_wstring(*m_iAmmo[m_eWeaponType]);
 	strHP += L" / ";
-	strHP += to_wstring(*m_iMaxAmmo);
+	strHP += to_wstring(*m_iMaxAmmo[m_eWeaponType]);
+	_int len = strHP.length(); // max 8
 	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strHP.c_str(),
-		_float2(g_iWinSizeX * 0.5f + m_fCurPosX - m_fSizeX * 0.5f, g_iWinSizeY * 0.5f - m_fCurPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
+		_float2(g_iWinSizeX * 0.5f + m_fCurPosX - (len - 8) * 12.f, g_iWinSizeY * 0.5f - m_fCurPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
 
 
 	return S_OK;

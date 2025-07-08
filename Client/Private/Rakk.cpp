@@ -32,16 +32,18 @@ HRESULT CRakk::Initialize(void* pArg)
 	if (FAILED(Ready_RakkStates()))
 		return E_FAIL;
 	
+	Initialize_BasicStatus(rand() % 3 + 1);
 	//m_pModelCom->Set_Animation(RAKK_ANIM::Flight_BankL, true);
 	m_eCurState = STATE_Flying_Idle;
 	Set_State(m_eCurState);
 
-	m_fAttackableDistance = 5.f;
-	m_fDetectiveDistance = 20.f;
+
 
 
 	return S_OK;
 }
+
+
 
 void CRakk::Priority_Update(_float fTimeDelta)
 {
@@ -155,6 +157,21 @@ HRESULT CRakk::Ready_Components(void* pArg)
 
 
 	return S_OK;
+}
+
+void CRakk::Initialize_BasicStatus(_int iLevel)
+{
+	m_fBase_HP = 15.f;
+	m_fBase_ATK = 15.f;
+	m_iMaxHP = m_fBase_HP * powf(m_fGrowthRate, iLevel - 1);
+	m_iHP = m_iMaxHP = m_pGameInstance->AddVariance(m_iMaxHP, 0.15f);
+	m_iLevel = iLevel;
+	m_iDamage = m_fBase_ATK * powf(m_fGrowthRate, iLevel - 1);
+	m_iDamage = m_pGameInstance->AddVariance(m_iDamage, 0.15f);
+	m_iDefense = 0.f;
+
+	m_fAttackableDistance = 5.f;
+	m_fDetectiveDistance = 20.f;
 }
 
 HRESULT CRakk::Ready_RakkStates()

@@ -71,7 +71,9 @@ HRESULT CUI_HP_Bar::Render()
 	_float fPercentage = 1.f - (*m_iHP / static_cast<_float>(*m_iMaxHP));
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPercentage", &fPercentage, sizeof(_float))))
 		return E_FAIL;
-
+	_float fOpacity = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOpacity", &fOpacity, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Begin(POSTEX_UI_BLEND)))
 		return E_FAIL;
 
@@ -84,7 +86,7 @@ HRESULT CUI_HP_Bar::Render()
 	_wstring strHP = to_wstring(*m_iHP);
 	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strHP.c_str(),
 		_float2(g_iWinSizeX * 0.5f + m_fCurPosX - m_fSizeX * 0.5f, g_iWinSizeY * 0.5f - m_fCurPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
-	
+
 
 	return S_OK;
 }

@@ -57,6 +57,7 @@ public:
 
 private:
 	HRESULT Ready_Components(void* pArg);
+	void Initialize_BasicStatus(_int iLevel);
 	HRESULT Ready_RakkStates();
 
 	void Set_State(RAKK_STATE eState);

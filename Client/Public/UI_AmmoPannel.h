@@ -1,5 +1,6 @@
 #pragma once
 #include "UIObject.h"
+#include "Player.h"
 #include "Client_Defines.h"
 
 NS_BEGIN(Engine)
@@ -14,8 +15,10 @@ class CUI_AmmoPannel final : public CUIObject
 public:
 	typedef struct tagUIHPDesc : public CUIObject::UIOBJECT_DESC
 	{
-		_int* iAmmo = { nullptr };
-		_int* iMaxAmmo = { nullptr };
+		_int* iPstAmmo = { nullptr };
+		_int* iPstMaxAmmo = { nullptr };
+		_int* iARAmmo = { nullptr };
+		_int* iARMaxAmmo = { nullptr };
 	}DESC;
 
 private:
@@ -30,6 +33,8 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+
+	void Change_Weapon(CPlayer::WEAPON_TYPE eWeaponType);
 
 private:
 	HRESULT Ready_PartObjects(void* pArg);

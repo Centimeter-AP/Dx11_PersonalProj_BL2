@@ -16,6 +16,41 @@ const LIGHT_DESC* CLight_Manager::Get_Light(_uint iIndex)
 	return (*iter)->Get_LightDesc();
 }
 
+void CLight_Manager::Clear()
+{
+	for (auto& pLight : m_Lights)
+		Safe_Release(pLight);
+	m_Lights.clear();
+}
+
+_uint CLight_Manager::Get_LastLight_Index()
+{
+	_uint	iIndex = {};
+	for (auto iter = m_Lights.begin(); iter != m_Lights.end(); iter++)
+		++iIndex;
+
+	return iIndex;
+}
+
+void CLight_Manager::Delete_Light(_uint iIndex)
+{
+	auto	iter = m_Lights.begin();
+
+	for (size_t i = 0; i < iIndex; i++)
+		++iter;
+	if (iter != m_Lights.end())
+	{
+		Safe_Release(*iter);
+		m_Lights.erase(iter);
+	}
+}
+
+void CLight_Manager::Delete_LastLight()
+{
+	Safe_Release(m_Lights.back());
+	m_Lights.pop_back();
+}
+
 HRESULT CLight_Manager::Add_Light(const LIGHT_DESC& LightDesc)
 {
 	CLight* pLight = CLight::Create(LightDesc);

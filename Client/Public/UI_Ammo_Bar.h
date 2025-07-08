@@ -1,5 +1,6 @@
 #pragma once
 #include "UIObject.h"
+#include "Player.h"
 #include "Client_Defines.h"
 
 NS_BEGIN(Engine)
@@ -14,8 +15,10 @@ class CUI_Ammo_Bar final : public CUIObject
 public:
 	typedef struct tagUIAimDesc : public CUIObject::UIOBJECT_DESC
 	{
-		_int* iAmmo = { nullptr };
-		_int* iMaxAmmo = { nullptr };
+		_int* iPstAmmo = { nullptr };
+		_int* iPstMaxAmmo = { nullptr };
+		_int* iARAmmo = { nullptr };
+		_int* iARMaxAmmo = { nullptr };
 	}DESC;
 
 private:
@@ -30,14 +33,22 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	void Change_Weapon(CPlayer::WEAPON_TYPE eWeaponType) { m_eWeaponType = eWeaponType; }
 
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_int* m_iAmmo = { nullptr };
-	_int* m_iMaxAmmo = { nullptr };
+	//_int* m_iPstAmmo = { nullptr };
+	//_int* m_iPstMaxAmmo = { nullptr };
+	//_int* m_iARAmmo = { nullptr };
+	//_int* m_iARMaxAmmo = { nullptr };
+
+	CPlayer::WEAPON_TYPE m_eWeaponType = { CPlayer::WTYPE_PISTOL };
+	_int* m_iAmmo[CPlayer::WTYPE_END] = { nullptr };
+	_int* m_iMaxAmmo[CPlayer::WTYPE_END] = { nullptr };
+	_int m_iMaxMagazine[CPlayer::WTYPE_END] = {};
 
 	_float m_fCurPosX = {};
 	_float m_fCurPosY = {};

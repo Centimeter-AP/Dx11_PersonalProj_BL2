@@ -37,7 +37,7 @@ void CPlayerState_Run_R::Execute(_float fTimeDelta)
 
 	if (KEY_DOWN(DIK_R))
 	{
-		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);	return;
+		Check_Reloadable(); return;
 	}
 	if (KEY_DOWN(DIK_F) && true == m_pOwner->m_bPhaselockAble)
 	{

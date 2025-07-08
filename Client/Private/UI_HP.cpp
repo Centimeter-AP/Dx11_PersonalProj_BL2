@@ -27,12 +27,6 @@ HRESULT CUI_HP::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_CombinedWorldMatrix, XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrix4x4Ptr()) * XMLoadFloat4x4(m_pParentMatrix));
 
-	//if (FAILED(Ready_PartObjects(pArg)))
-	//	return E_FAIL;
-
-	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(0.f, 0.f, 0.f,1.f));
-	//일단 이렇게 하니까 잘됨 , ㅡ홍승훈ㅡ
-	// 포지션에 음수 들어가있음 그래서 렌더는 잘되는데 이상한 위치(마녀아님)에 있었음
 	return S_OK;
 }
 
@@ -91,7 +85,9 @@ HRESULT CUI_HP::Render()
 	_float fPercentage = {};
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fPercentage", &fPercentage, sizeof(_float))))
 		return E_FAIL;
-
+	_float fOpacity = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOpacity", &fOpacity, sizeof(_float))))
+		return E_FAIL;
 	if (FAILED(m_pShaderCom->Begin(POSTEX_ALPHABLEND)))
 		return E_FAIL;
 

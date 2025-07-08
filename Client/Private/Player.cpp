@@ -53,8 +53,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_PartObjects(pArg)))
-	//	return E_FAIL;
+	if (FAILED(Ready_PartObjects(pArg)))
+		return E_FAIL;
 
 	if (FAILED(Ready_PlayerStates()))
 		return E_FAIL;
@@ -443,16 +443,18 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 		return E_FAIL;
 
 
-	//CUI_AmmoPannel::DESC			UIAmmoPDesc;
-	//UIAmmoPDesc.fX = 180.f;
-	//UIAmmoPDesc.fY = g_iWinSizeY - 70.f;
-	//UIAmmoPDesc.fSizeX = 1.2f;
-	//UIAmmoPDesc.fSizeY = 1.2f;
-	////UIAmmoPDesc.iAmmo = ;
-	////UIAmmoPDesc.iMaxAmmo = m_iAmmo;
+	CUI_AmmoPannel::DESC			UIAmmoPDesc;
+	UIAmmoPDesc.fX = g_iWinSizeX - 180.f;
+	UIAmmoPDesc.fY = g_iWinSizeY - 70.f;
+	UIAmmoPDesc.fSizeX = 1.15f;
+	UIAmmoPDesc.fSizeY = 1.15f;
+	UIAmmoPDesc.iARAmmo = static_cast<CAssaultRifle*>(m_PartObjects.find(TEXT("PartObject_Player_Weapon_AR"))->second)->Get_CurAmmoLeft_Ptr();
+	UIAmmoPDesc.iARMaxAmmo = &m_iAmmo[WTYPE_AR];
+	UIAmmoPDesc.iPstAmmo = static_cast<CPistol*>(m_PartObjects.find(TEXT("PartObject_Player_Weapon_Pistol"))->second)->Get_CurAmmoLeft_Ptr();
+	UIAmmoPDesc.iPstMaxAmmo = &m_iAmmo[WTYPE_PISTOL];
 
-	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_AmmoPannel"), TEXT("Prototype_GameObject_UI_AmmoPannel"), &UIAmmoPDesc)))
-	//	return E_FAIL;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_AmmoPannel"), TEXT("Prototype_GameObject_UI_AmmoPannel"), &UIAmmoPDesc)))
+		return E_FAIL;
 
 
 	//CUI_Ammo::DESC			UIAmmoDesc;
@@ -685,8 +687,8 @@ void CPlayer::Initialize_BasicStatus()
 	m_fPhaselockCooldownTicker = {};
 	m_fPhaselockUsableDistance = {100.f};
 
-	m_iAmmo[ATYPE_AR] = 400;
-	m_iAmmo[ATYPE_PST] = 100;
+	m_iAmmo[WTYPE_AR] = 400;
+	m_iAmmo[WTYPE_PISTOL] = 100;
 }
 
 void CPlayer::Cooldown_Phaselock(_float fTimeDelta)

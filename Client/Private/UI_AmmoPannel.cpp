@@ -75,6 +75,12 @@ HRESULT CUI_AmmoPannel::Render()
 	return S_OK;
 }
 
+void CUI_AmmoPannel::Change_Weapon(CPlayer::WEAPON_TYPE eWeaponType)
+{
+	//static_cast<CUI_Ammo*>(m_PartObjects.find(TEXT("PartObject_Ammo"))->second)->Change
+	static_cast<CUI_Ammo_Bar*>(m_PartObjects.find(TEXT("PartObject_Ammo_Bar"))->second)->Change_Weapon(eWeaponType);
+}
+
 HRESULT CUI_AmmoPannel::Ready_PartObjects(void* pArg)
 {
 	DESC* pDesc = static_cast<DESC*>(pArg);
@@ -82,7 +88,7 @@ HRESULT CUI_AmmoPannel::Ready_PartObjects(void* pArg)
 	CUI_Ammo::DESC			UIAmmoDesc;
 	UIAmmoDesc.fX = g_iWinSizeX * 0.5f;
 	UIAmmoDesc.fY = g_iWinSizeY * 0.5f;
-	UIAmmoDesc.fSizeX = 240.f;
+	UIAmmoDesc.fSizeX = 214.f;
 	UIAmmoDesc.fSizeY = 36.0f;
 	UIAmmoDesc.iUIDepth = ENUM_CLASS(UI_DEPTH::UI_AMMO);
 	UIAmmoDesc.pParentObject = this;
@@ -91,12 +97,14 @@ HRESULT CUI_AmmoPannel::Ready_PartObjects(void* pArg)
 		return E_FAIL;
 
 	CUI_Ammo_Bar::DESC	UIAmmoBarDesc;
-	UIAmmoBarDesc.fX = g_iWinSizeX * 0.5f;
+	UIAmmoBarDesc.fX = g_iWinSizeX * 0.5f - 7.f;
 	UIAmmoBarDesc.fY = g_iWinSizeY * 0.5f;
-	UIAmmoBarDesc.fSizeX = 198.f;
+	UIAmmoBarDesc.fSizeX = 200.f;
 	UIAmmoBarDesc.fSizeY = 36.0f;
-	UIAmmoBarDesc.iAmmo = pDesc->iAmmo;
-	UIAmmoBarDesc.iMaxAmmo = pDesc->iMaxAmmo;
+	UIAmmoBarDesc.iARAmmo = pDesc->iARAmmo;
+	UIAmmoBarDesc.iARMaxAmmo = pDesc->iARMaxAmmo;
+	UIAmmoBarDesc.iPstAmmo = pDesc->iPstAmmo;
+	UIAmmoBarDesc.iPstMaxAmmo = pDesc->iPstMaxAmmo;
 	UIAmmoBarDesc.iUIDepth = ENUM_CLASS(UI_DEPTH::UI_AMMOBAR);
 	UIAmmoBarDesc.pParentObject = this;
 	UIAmmoBarDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();

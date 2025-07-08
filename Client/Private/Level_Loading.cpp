@@ -42,7 +42,7 @@ void CLevel_Loading::Update(_float fTimeDelta)
 		{
 			CLevel* pLevel = { nullptr };
 			m_pGameInstance->Clear_Collider();
-
+			m_pGameInstance->Clear_Lights();
 			switch (m_eNextLevelID)
 			{
 			case LEVEL::LOGO:

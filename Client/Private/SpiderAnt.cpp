@@ -213,7 +213,7 @@ void CSpiderAnt::Initialize_BasicStatus(_int iLevel)
 	m_iDefense = 0.f;
 
 	m_fAttackableDistance = 6.f;
-	m_fDetectiveDistance = 40.f;
+	m_fDetectiveDistance = 80.f;
 
 	m_fLeapCheckTimer = 10.f;
 	m_fChargeCheckTimer = 10.f;

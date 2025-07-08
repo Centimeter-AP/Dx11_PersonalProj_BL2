@@ -217,7 +217,7 @@ void CSkag::Initialize_BasicStatus(_int iLevel)
 	m_fBase_ATK = 15.f;
 	m_iMaxHP = m_fBase_HP * powf(m_fGrowthRate, iLevel - 1);
 	m_iHP = m_iMaxHP = m_pGameInstance->AddVariance(m_iMaxHP, 0.15f);
-
+	m_iLevel = iLevel;
 	m_iDamage = m_fBase_ATK * powf(m_fGrowthRate, iLevel - 1);
 	m_iDamage = m_pGameInstance->AddVariance(m_iDamage, 0.15f);
 	m_iDefense = 0.f;

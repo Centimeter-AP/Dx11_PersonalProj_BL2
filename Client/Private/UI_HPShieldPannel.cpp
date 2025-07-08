@@ -32,7 +32,6 @@ HRESULT CUI_HPShieldPannel::Initialize(void* pArg)
 	if (FAILED(Ready_PartObjects(pArg)))
 		return E_FAIL;
 
-
 	return S_OK;
 }
 

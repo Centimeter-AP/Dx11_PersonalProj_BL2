@@ -48,7 +48,7 @@ protected:
 	POSTEX_PATH			m_eShaderPath = {};
 
 protected:
-	HRESULT Ready_Components();
+	virtual HRESULT Ready_Components();
 	HRESULT Bind_ShaderResources();
 
 public:

@@ -1,10 +1,16 @@
 #include "PSTState.h"
 #include "Model.h"
-
+#include "MuzzleFlash.h"
 
 void CPSTState_Fire::Enter()
 {
 	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CPistol::Fire_Hyperion), false);
+	static_cast<CMuzzleFlash*>(m_pOwner->Find_PartObject(TEXT("PartObject_Weapon_Effect_MuzzleFlash")))->Show_Effect();
+
+	m_pOwner->m_iCurAmmoLeft--;
+	if (m_pOwner->m_iCurAmmoLeft < 0)
+		MSG_BOX("Å«ÀÏ³µµû!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 }
 
 void CPSTState_Fire::Execute(_float fTimeDelta)

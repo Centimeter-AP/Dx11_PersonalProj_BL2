@@ -27,6 +27,7 @@
 /** UI **/ 
 #include "UI_Aim.h"
 #include "UI_Ammo.h"
+#include "UI_Ammo_Bar.h"
 #include "UI_HP.h"
 #include "UI_HP_Bar.h"
 #include "UI_Shield.h"
@@ -38,7 +39,9 @@
 #include "UI_EnemyHP.h"
 
 #include "TestSpirteEffect.h"
+#include "Screen_Snow.h"
 #include "Snow.h"
+#include "MuzzleFlash.h"
 #include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -195,11 +198,11 @@ HRESULT CLoader::Loading_For_Logo()
 
 	/* For.Prototype_Component_Texture_UI_Bar_EnemyHP_Back */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP_Back"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp_Back.png"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_EnemyHP.png"), 1))))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_UI_Bar_EnemyHP */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp.png"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_EnemyHP_Bar.png"), 1))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_UI_Bar_BossHP_Back */
@@ -211,6 +214,10 @@ HRESULT CLoader::Loading_For_Logo()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp.png"), 1))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_MuzzleFlash */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_MuzzleFlash"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tex_Assault_Muzzle_Flash_Front.dds")))))
+		return E_FAIL;
 
 
 #pragma endregion
@@ -244,6 +251,11 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_HPShieldPannel"),
 		CUI_HPShieldPannel::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	/* For.Prototype_GameObject_UI_AmmoPannel */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_AmmoPannel"),
+		CUI_AmmoPannel::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 	
 	/* For.Prototype_GameObject_UI_HP */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_HP"),
@@ -258,6 +270,11 @@ HRESULT CLoader::Loading_For_Logo()
 	/* For.Prototype_GameObject_UI_Ammo */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Ammo"),
 		CUI_Ammo::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_Ammo_Bar */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Ammo_Bar"),
+		CUI_Ammo_Bar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 	/* For.Prototype_GameObject_UI_Shield */
@@ -283,6 +300,11 @@ HRESULT CLoader::Loading_For_Logo()
 	/* For.Prototype_GameObject_UI_EnemyHP */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_EnemyHP"),
 		CUI_EnemyHP::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Effect_MuzzleFlash */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Effect_MuzzleFlash"),
+		CMuzzleFlash::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 #pragma endregion
@@ -317,7 +339,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 
-	/* For.Prototype_Component_Texture_Terrain */
+	/* For.Prototype_Component_Texture_Splash */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Splash"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds"), 1))))
 		return E_FAIL;
@@ -325,6 +347,16 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_Component_Texture_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Snow"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Snow/Snow.dds")))))
+		return E_FAIL;
+	
+	/* For.Prototype_Component_Texture_ScreenSnow */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_ScreenSnow"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Snow_FlakesScreen_Dif.dds")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_ScreenSnowMask */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_ScreenSnowMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Snow_Dissipate_Mask.dds")))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_AR_Nor */
@@ -492,6 +524,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
 		CSnow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Snow */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ScreenSnow"),
+		CScreen_Snow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

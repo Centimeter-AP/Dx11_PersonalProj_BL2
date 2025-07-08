@@ -1,5 +1,6 @@
 #include "Pistol.h"
 #include "PSTState.h"
+#include "MuzzleFlash.h"
 #include "GameInstance.h"
 
 CPistol::CPistol(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -32,6 +33,9 @@ HRESULT CPistol::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Ready_PSTStates()))
+		return E_FAIL;
+
+	if (FAILED(Ready_PartObjects(pArg)))
 		return E_FAIL;
 
 	Initialize_BasicStatus();
@@ -103,15 +107,16 @@ void CPistol::Set_State(PST_STATE eState)
 
 	m_pCurState->Exit();
 	m_pCurState = m_pStates[eState];
+	m_pCurState->Enter();
 }
 
 void CPistol::Update_State(_float fTimeDelta)
 {
-	if (m_ePrevState != m_eCurState)
-	{
-		m_pCurState->Enter();
-		m_ePrevState = m_eCurState;
-	}
+	//if (m_ePrevState != m_eCurState)
+	//{
+	//	m_pCurState->Enter();
+	//	m_ePrevState = m_eCurState;
+	//}
 	m_pCurState->Execute(fTimeDelta);
 }
 
@@ -138,6 +143,23 @@ HRESULT CPistol::Ready_PSTStates()
 	m_pStates[PST_STATE::STATE_Reload] = new CPSTState_Reload(this);
 	m_pStates[PST_STATE::STATE_Reload_Fast] = new CPSTState_Reload_Fast(this);
 	m_pCurState = m_pStates[PST_STATE::STATE_Idle];
+
+	return S_OK;
+}
+
+HRESULT CPistol::Ready_PartObjects(void* pArg)
+{
+	CMuzzleFlash::DESC			MuzzleDesc;
+	MuzzleDesc.pParentObject = this;
+	//MuzzleDesc.pParentMatrix = m_pModelCom->Get_CombinedTransformationMatrix(m_pModelCom->Find_BoneIndex("WeaponOffset"));
+	MuzzleDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	MuzzleDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	MuzzleDesc.eShaderPath = POSTEX_GRID_PICK;
+	MuzzleDesc.bHasTransformPreset = true;
+	XMStoreFloat4x4(&MuzzleDesc.PresetMatrix,XMMatrixIdentity());
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC),
+		TEXT("PartObject_Weapon_Effect_MuzzleFlash"), TEXT("Prototype_GameObject_Effect_MuzzleFlash"), &MuzzleDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }

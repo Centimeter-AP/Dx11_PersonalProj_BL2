@@ -53,6 +53,11 @@ void CWeapon::Priority_Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return;
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Priority_Update(fTimeDelta);
+	}
 }
 
 EVENT CWeapon::Update(_float fTimeDelta)
@@ -62,7 +67,11 @@ EVENT CWeapon::Update(_float fTimeDelta)
 	_matrix matFinal = XMLoadFloat4x4(m_pSocketMatrix) * XMLoadFloat4x4(m_pParentMatrix);
 
 	m_pTransformCom->Set_Matrix(matFinal);
-
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Update(fTimeDelta);
+	}
 	return EVN_NONE;
 }
 
@@ -70,6 +79,11 @@ void CWeapon::Late_Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return ;
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Late_Update(fTimeDelta);
+	}
 	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
 }
 
@@ -109,10 +123,21 @@ HRESULT CWeapon::Render()
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-
-
-
 	return S_OK;
+}
+
+void CWeapon::Reload_Magazine(_int& iPlayerAmmo)
+{
+	if (iPlayerAmmo < m_iMagazineSize)
+	{
+		m_iCurAmmoLeft = iPlayerAmmo;
+		iPlayerAmmo = 0;
+	}
+	else
+	{
+		iPlayerAmmo -= m_iMagazineSize - m_iCurAmmoLeft;
+		m_iCurAmmoLeft = m_iMagazineSize;
+	}
 }
 
 HRESULT CWeapon::Ready_Components(void* pArg)

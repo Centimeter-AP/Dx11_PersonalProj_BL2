@@ -44,7 +44,7 @@ void CPlayerState_Idle::Execute(_float fTimeDelta)
 
 	if (KEY_DOWN(DIK_R))
 	{
-		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload); return;
+		Check_Reloadable(); return;
 	}
 	if (KEY_DOWN(DIK_G))
 	{
@@ -67,12 +67,10 @@ void CPlayerState_Idle::Execute(_float fTimeDelta)
 	{
 		m_pOwner->Change_Weapon(CPlayer::WTYPE_PISTOL);
 	}
-
 	if (MOUSE_DOWN(DIM::LBUTTON))
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Fire); return;
 	}
-
 	if (KEY_DOWN(DIK_SPACE))
 	{
 		if (m_pOwner->m_pGravityCom->Is_Grounded())

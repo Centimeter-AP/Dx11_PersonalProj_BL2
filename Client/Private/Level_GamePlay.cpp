@@ -1,6 +1,7 @@
 #include "Level_GamePlay.h"
 #include "Level_Loading.h"
 #include "GameInstance.h"
+#include "UIObject.h"
 #include "Terrain.h"
 #include "Player.h"
 #include "Rakk.h"
@@ -112,6 +113,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 {
 	CRakk::DESC RakkDesc;
 	RakkDesc.bActive = true;
+	RakkDesc.szName = L"Rakk";
 	RakkDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	RakkDesc.fSpeedPerSec = 10.f;
 	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
@@ -125,6 +127,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 
 	CSkag::DESC	SkagDesc;
 	SkagDesc.bActive = true;
+	SkagDesc.szName = L"Skag";
 	SkagDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	SkagDesc.fSpeedPerSec = 13.f;
 	SkagDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
@@ -166,6 +169,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 
 	CSpiderAnt::DESC	SpiderAntDesc;
 	SpiderAntDesc.bActive = true;
+	SpiderAntDesc.szName = L"SpiderAnt";
 	SpiderAntDesc.fRotationPerSec = XMConvertToRadians(180.f);
 	SpiderAntDesc.fSpeedPerSec = 10.f;
 	SpiderAntDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
@@ -329,13 +333,30 @@ HRESULT CLevel_GamePlay::Ready_Layer_Effect(const _wstring strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &desc)))
 		return E_FAIL;
+	
 
-	for (size_t i = 0; i < 1; i++)
+	CUIObject::UIOBJECT_DESC UIdesc = {};
+
+	UIdesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	UIdesc.fSizeX = 64;
+	UIdesc.fSizeY = 64;
+	UIdesc.fX = g_iWinSizeX * 0.5f;
+	UIdesc.fY = g_iWinSizeY * 0.5f;
+
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_ScreenSnow"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &UIdesc)))
+		return E_FAIL;
+
+	for (size_t i = 0; i < 10; i++)
 	{
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Effect"),
 			ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag)))
 			return E_FAIL;
 	}
+
+
+
+
 	return S_OK;
 }
 
@@ -357,8 +378,8 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.7f, 0.7f, 0.7f, 1.f);
-	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vSpecular = _float4(0.4f, 0.4f, 0.4f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;

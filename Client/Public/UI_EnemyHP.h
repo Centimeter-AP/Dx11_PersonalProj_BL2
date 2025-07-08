@@ -34,7 +34,7 @@ public:
 	void Show_UI(CGameObject* pEnemy);
 	void Hide_UI() {
 		m_pOwner = nullptr;
-		m_bRender = false; m_fRenderTime = 0.f; m_fOpacity = 0.f;
+		m_bRender = false; m_fRenderTime = 0.f; m_fOpacity = 1.f;
 	}
 	//void Set_Owner(CGameObject* pOwner) { m_pOwner = pOwner; }
 	//void Set_Render(_bool bRender) {

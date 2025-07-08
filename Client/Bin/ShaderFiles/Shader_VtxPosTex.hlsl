@@ -5,9 +5,13 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_Texture;
 texture2D g_DepthTexture;
 
-
 float g_fPercentage;
 float g_fOpacity = 1.f;
+
+// 타일 이미지용
+texture2D g_MaskTexture;
+float2 g_fTileSize;
+float2 g_fTileOffset;
 
 /* 정점의 기초적인 변환 (월드변환, 뷰, 투영변환) */ 
 /* 정점의 구성 정보를 변형할 수 있다. */ 
@@ -58,6 +62,7 @@ VS_OUT VS_UIBar(VS_IN In)
     return Out;
 }
 
+
 struct VS_OUT_PROJPOS
 {
     float4 vPosition : SV_POSITION;
@@ -101,8 +106,8 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
    
-    if (Out.vColor.a < 0.2f)
-        discard;
+    //if (Out.vColor.a < 0.2f)
+    //    discard;
     
     Out.vColor.a *= g_fOpacity;
     
@@ -129,11 +134,12 @@ PS_OUT PS_MAIN_UIBar(PS_IN In)
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
-    if (Out.vColor.a < 0.2f)
-        discard;
+    //if (Out.vColor.a < 0.2f)
+    //    discard;
     if (In.vTexcoord.x > 1.f || In.vTexcoord.x < 0.f)
-        discard;
+        discard;    
 
+    Out.vColor.a *= g_fOpacity;
 
     return Out;
 }
@@ -144,13 +150,14 @@ PS_OUT PS_MAIN_UIBar_RightDiscard(PS_IN In)
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
 
-    if (Out.vColor.a < 0.2f)
-        discard;
+    //if (Out.vColor.a < 0.2f)
+    //    discard;
     float distance = length(In.vTexcoord.x - 1.f);
 
-    if (distance <= g_fPercentage)
+    if (distance >= 1.f - g_fPercentage)
         discard;
-
+    
+    Out.vColor.a *= g_fOpacity;
     return Out;
 }
 
@@ -190,6 +197,28 @@ PS_OUT PS_MAIN_SOFTEFFECT(PS_IN_PROJPOS In)
         float fDiff = (fOldViewZ - In.vProjPos.w);
         Out.vColor.a = Out.vColor.a * saturate(fDiff);
     }
+    
+    return Out;
+}
+
+PS_OUT PS_MAIN_GRID(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 baseUV = In.vTexcoord * g_fTileSize; 
+    
+    float2 finalUV = baseUV + g_fTileOffset.xy;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, finalUV);
+    
+    if (Out.vColor.a <= 0.01f)
+        discard;
+    
+    float fDissolveValue = g_MaskTexture.Sample(DefaultSampler, finalUV).r;
+
+
+    if (fDissolveValue <= 1.f - g_fOpacity)
+        Out.vColor.a = fDissolveValue;
     
     return Out;
 }
@@ -263,5 +292,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_PROJPOS();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT();
+    }
+    pass Grid_Pick // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_GRID();
     }
 }

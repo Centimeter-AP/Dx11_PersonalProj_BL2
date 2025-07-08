@@ -56,6 +56,7 @@ private:
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_PSTStates();
+	HRESULT Ready_PartObjects(void* pArg);
 	virtual void Initialize_BasicStatus() override;
 
 private:

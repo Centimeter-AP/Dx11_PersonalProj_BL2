@@ -29,8 +29,8 @@ HRESULT CTestSpirteEffect::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(&Desc)))
 		return E_FAIL;
 
-	//if (FAILED(Ready_Components()))
-	//	return E_FAIL;
+	if (FAILED(Ready_Components()))
+		return E_FAIL;
 
 
 	return S_OK;

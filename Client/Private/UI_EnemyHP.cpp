@@ -29,7 +29,7 @@ HRESULT CUI_EnemyHP::Initialize(void* pArg)
 
 	_float3 vPos = {};
 	XMStoreFloat3(&vPos, m_pTransformCom->Get_State(STATE::POSITION));
-	XMStoreFloat4x4(&m_BarWorldMatrix, XMMatrixScaling(112.f, 10.f, 1.f) * XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
+	XMStoreFloat4x4(&m_BarWorldMatrix, XMMatrixScaling(112.f, 24.f, 1.f) * XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
 
 	return S_OK;
 }
@@ -41,7 +41,7 @@ void CUI_EnemyHP::Priority_Update(_float fTimeDelta)
 	if (m_bRender)
 	{
 		m_fRenderTime += fTimeDelta;
-		m_fOpacity = m_fRenderTime * 2.f;
+		m_fOpacity = m_fRenderTime * 4.f;
 		if (m_fOpacity >= 1.f)
 		{
 			m_fOpacity = 1.f;
@@ -50,13 +50,16 @@ void CUI_EnemyHP::Priority_Update(_float fTimeDelta)
 	else
 	{
 		m_fRenderTime += fTimeDelta;
-		m_fOpacity = 1.f - m_fRenderTime * 2.f;
+		m_fOpacity = 1.f - m_fRenderTime * 4.f;
 		if (m_fOpacity <= 0.f)
 		{
 			m_fOpacity = 0.f;
 			m_isActive = false;
 		}
 	}
+
+	if (m_pOwner && *m_pHP == 0)
+		Hide_UI();
 }
 
 EVENT CUI_EnemyHP::Update(_float fTimeDelta)
@@ -123,10 +126,10 @@ HRESULT CUI_EnemyHP::Render()
 	_float fFontPosX = { g_iWinSizeX * 0.5f + m_BarWorldMatrix._41 - m_fSizeX * 0.5f };
 	_float fFontPosY = { g_iWinSizeY * 0.5f - m_BarWorldMatrix._42 + 10.f };
 	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), m_strName.c_str(),
-		_float2(fFontPosX, fFontPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.5f);
+		_float2(fFontPosX, fFontPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
 	_wstring strLevel = to_wstring(m_iLevel);
 	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strLevel.c_str(),
-		_float2(fFontPosX - 20.f, fFontPosY), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.8f);
+		_float2(fFontPosX - 20.f, fFontPosY - 7.f), XMVectorSet(1.f, 1.f, 1.f, 1.f), 0.f, _float2(0.f, 0.f), 0.55f);
 
 
 	return S_OK;
@@ -172,14 +175,15 @@ HRESULT CUI_EnemyHP::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP"),
-		TEXT("Com_Texture_EnemyHP"), reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP_Back"),
+		TEXT("Com_Texture_EnemyHP_Bar"), reinterpret_cast<CComponent**>(&m_pTextureCom[0]))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP_Back"),
-		TEXT("Com_Texture_EnemyHP_Bar"), reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_EnemyHP"),
+		TEXT("Com_Texture_EnemyHP"), reinterpret_cast<CComponent**>(&m_pTextureCom[1]))))
 		return E_FAIL;
+
 
 	return S_OK;
 }

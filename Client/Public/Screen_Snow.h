@@ -35,10 +35,22 @@ public:
 private:
 	CShader* m_pShaderCom = { nullptr };
 	CTexture* m_pTextureCom = { nullptr };
+	CTexture* m_pTextureMaskCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
 private:
+	_int	m_iTileX{}, m_iTileY{};
+	_int	m_iTileIdx{};
+	_float2 m_fTileSize{};
+	_float2 m_fOffset{};
+	_float	m_fDropTicker = {};
+	_float	m_fCoolDown = {};
+	_bool	m_bDrop = {false};
+	_float	m_fOpacity = {1.f};
+
+private:
 	HRESULT Ready_Components();
+	HRESULT Bind_ShaderResources();
 
 public:
 	static CScreen_Snow* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

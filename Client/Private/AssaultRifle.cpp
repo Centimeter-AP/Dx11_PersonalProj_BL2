@@ -114,15 +114,16 @@ void CAssaultRifle::Set_State(AR_STATE eState)
 
 	m_pCurState->Exit();
 	m_pCurState = m_pStates[eState];
+	m_pCurState->Enter();
 }
 
 void CAssaultRifle::Update_State(_float fTimeDelta)
 {
-	if (m_ePrevState != m_eCurState)
-	{
-		m_pCurState->Enter();
-		m_ePrevState = m_eCurState;
-	}
+	//if (m_ePrevState != m_eCurState)
+	//{
+	//	m_pCurState->Enter();
+	//	m_ePrevState = m_eCurState;
+	//}
 	m_pCurState->Execute(fTimeDelta);
 }
 
@@ -151,6 +152,11 @@ HRESULT CAssaultRifle::Ready_ARStates()
 	m_pStates[AR_STATE::STATE_Reload_Fast] = new CARState_Reload_Fast(this);
 	m_pCurState = m_pStates[AR_STATE::STATE_Idle];
 
+	return S_OK;
+}
+
+HRESULT CAssaultRifle::Ready_PartObjects(void* pArg)
+{
 	return S_OK;
 }
 

@@ -32,12 +32,9 @@ public:
 
 private:
 	CShader* m_pShaderCom = { nullptr };
-	enum TEXTYPE { TYPE_ICON, TYPE_BARBACK, TYPE_BAR, TYPE_END };
-	CTexture* m_pTextureCom[3] = { nullptr };
+	CTexture* m_pTextureCom = { nullptr };
 	CVIBuffer_Rect* m_pVIBufferCom = { nullptr };
 
-	_int* m_iAmmo = { nullptr };
-	_int* m_iMaxAmmo = { nullptr };
 private:
 	HRESULT Ready_Components();
 

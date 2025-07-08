@@ -44,6 +44,12 @@ public:
 			Safe_AddRef(m_pOwnerNavi);
 		}
 	}
+	void Check_Reloadable() {
+		if (m_pOwner->m_iAmmo[m_pOwner->m_eCurWeapon])
+			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Reload);
+		else
+			m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle);
+	}
 
 protected:
 	void Default_Movements(_float fTimeDelta) {

@@ -12,6 +12,10 @@ private:
 
 public:
 	const LIGHT_DESC* Get_Light(_uint iIndex);
+	void Clear();
+	_uint Get_LastLight_Index();
+	void Delete_Light(_uint iIndex);
+	void Delete_LastLight();
 
 public:
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);

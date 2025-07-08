@@ -177,8 +177,7 @@ private: /* 스킬 변수 */
 	// 시간 안되겟지만 다른 스킬 추가하면 밑에
 
 private:
-	enum AMMOTYPE { ATYPE_AR, ATYPE_PST, ATYPE_END };
-	_uint				m_iAmmo[ATYPE_END] = {};
+	_int				m_iAmmo[WTYPE_END] = {};
 
 private:
 	vector<CGameObject*>		m_pWeapons; // 임시 무기 저장 변수, 인벤토리 만들고 꼭 이새끼 날릴 것 !!! 아닌가그냥써야하나??

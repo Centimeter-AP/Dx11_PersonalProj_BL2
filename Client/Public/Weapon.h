@@ -55,8 +55,9 @@ public:
 	const _float& Get_Accuracy() const { return m_fAccuracy; }
 	const _float& Get_Firerate() const { return m_fFireRate; }
 	const _int& Get_CurAmmoLeft() const { return m_iCurAmmoLeft; }
+	_int* Get_CurAmmoLeft_Ptr() { return &m_iCurAmmoLeft; }
 	const _int& Get_MagazineSize() const { return m_iMagazineSize; }
-
+	void Reload_Magazine(_int& iPlayerAmmo);
 protected:
 	HRESULT Ready_Components(void* pArg);
 	virtual void Initialize_BasicStatus() {};

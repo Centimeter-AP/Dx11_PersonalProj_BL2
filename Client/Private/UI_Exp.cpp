@@ -59,7 +59,9 @@ HRESULT CUI_Exp::Render()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
-
+	_float fOpacity = 1.f;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fOpacity", &fOpacity, sizeof(_float))))
+		return E_FAIL;
 	for (size_t i = 0; i < TYPE_END; ++i)
 	{
 		if (nullptr == m_pTextureCom[i])

@@ -166,6 +166,7 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
+    <ClInclude Include="..\Public\MuzzleFlash.h" />
     <ClInclude Include="..\public\Screen_Snow.h" />
     <ClInclude Include="..\Public\TestSpirteEffect.h" />
     <ClInclude Include="..\Public\Explosion.h" />
@@ -251,6 +252,7 @@
     <ClCompile Include="..\Private\Camera_FPS.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Tool.cpp" />
+    <ClCompile Include="..\Private\MuzzleFlash.cpp" />
     <ClCompile Include="..\private\Screen_Snow.cpp" />
     <ClCompile Include="..\Private\TestSpirteEffect.cpp" />
     <ClCompile Include="..\Private\Explosion.cpp" />
