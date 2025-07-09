@@ -603,6 +603,21 @@ HRESULT CLoader::Loading_For_Maptool()
 			"../Bin/Resources/Models/Bin_Anim/Pistol.bin", PreTransMatrix))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_Explosion_Test */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		ExplosionDesc{};
+	ExplosionDesc.iNumInstance = 1000;
+	ExplosionDesc.vCenter = _float3(100.f, 50.f, 100.0f);
+	ExplosionDesc.vRange = _float3(200.f, 3.0f, 200.f);
+	ExplosionDesc.vSize = _float2(10.f, 20.f);
+	ExplosionDesc.vLifeTime = _float2(2.f, 5.f);
+	ExplosionDesc.vSpeed = _float2(10.f, 20.f);
+	ExplosionDesc.isLoop = true;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Explosion_Test"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplosionDesc))))
+		return E_FAIL;
+
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));

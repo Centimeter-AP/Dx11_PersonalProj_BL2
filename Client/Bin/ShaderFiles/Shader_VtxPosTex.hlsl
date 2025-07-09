@@ -2,8 +2,9 @@
 
 /* 상수테이블 ConstantTable */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D g_Texture;
-texture2D g_DepthTexture;
+Texture2D g_Texture;
+Texture2D g_DistortionMaskTexture;
+Texture2D g_DepthTexture;
 
 float g_fPercentage;
 float g_fOpacity = 1.f;
@@ -251,6 +252,23 @@ PS_OUT PS_MAIN_SOFTEFFECT_COLOR(PS_IN_PROJPOS In)
     return Out;
 }
 
+PS_OUT PS_MAIN_SOFTEFFECT_COLOR(PS_IN_PROJPOS In)
+{
+    PS_OUT Out;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+   
+    if (all(Out.vColor.rgb < 0.1f))
+        discard;
+    if (all(Out.vColor.rgb < 0.2f))
+        Out.vColor.a = Out.vColor.r;
+    /*화면 전체 기준(0, 0 ~ 1, 1)으로 이펙트의 픽셀이 그려질 위치에 해당하는 좌표 */    
+    Out.vColor = SoftEffect(Out.vColor, In.vProjPos);
+    
+    //Out.vColor.rgb *= float3(0.6f, 0.8f, 1.f);
+    Out.vColor *= g_vColor;
+    return Out;
+}
 
 technique11 DefaultTechnique
 {
@@ -338,5 +356,15 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_PROJPOS();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT_COLOR();
+    }
+    pass Phaselock_Distort // 8
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN_PROJPOS();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT();
     }
 }

@@ -203,9 +203,9 @@ HRESULT CObjectTool::Render_ObjectTool()
 		IFILEDIALOG->Close();
 	}
 
-	static int item_selected_idx = 0; // Here we store our selected data as an index.
+	static _int item_selected_idx = 0; // Here we store our selected data as an index.
 	
-	int item_highlighted_idx = -1; // Here we store our highlighted data as an index.
+	_int item_highlighted_idx = -1; // Here we store our highlighted data as an index.
 
 	if (ImGui::BeginListBox("##listbox 1", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
 	{
