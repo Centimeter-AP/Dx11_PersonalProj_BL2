@@ -44,6 +44,7 @@
 #include "Snow.h"
 #include "MuzzleFlash.h"
 #include "WaterExplode.h"
+#include "Explosion.h"
 #include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -402,7 +403,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 	ExplosionDesc.iNumInstance = 1000;
 	ExplosionDesc.vCenter = _float3(100.f, 50.f, 100.0f);
 	ExplosionDesc.vRange = _float3(200.f, 3.0f, 200.f);
-	ExplosionDesc.vSize = _float2(0.1f, 0.4f);
+	ExplosionDesc.vSize = _float2(10.f, 20.f);
 	ExplosionDesc.vLifeTime = _float2(2.f, 5.f);
 	ExplosionDesc.vSpeed = _float2(10.f, 20.f);
 	ExplosionDesc.isLoop = true;
@@ -545,6 +546,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_Snow */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Snow"),
 		CSnow::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Explosion_Test */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Explosion_Test"),
+		CExplosion::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 	/* For.Prototype_GameObject_ScreenSnow */

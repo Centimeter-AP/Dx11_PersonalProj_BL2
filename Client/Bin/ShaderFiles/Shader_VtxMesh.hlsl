@@ -4,6 +4,7 @@ matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 texture2D g_DiffuseTexture;
 texture2D g_NormalTexture;
+texture2D g_EmissiveTexture;
 
 
 struct VS_IN
@@ -62,6 +63,7 @@ struct PS_OUT
     vector vNormal : SV_TARGET1;
     vector vDepth : SV_TARGET2;
     vector vPickPos : SV_TARGET3;
+    vector vEmissive : SV_TARGET4;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -83,6 +85,7 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.0f, 0.f, 0.f);
+    Out.vEmissive = g_EmissiveTexture.sample(DefaultSampler, In.vTexcoord);
     return Out;
 }
 

@@ -1,9 +1,9 @@
 #include "Engine_Shader_Defines.hlsli"
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
-texture2D g_Texture;
+Texture2D g_Texture;
 vector g_vCamPosition;
-vector g_vColor = { 1.f };
+float3 g_vColor = { 1.f, 1.f, 1.f };
 
 struct VS_IN
 {

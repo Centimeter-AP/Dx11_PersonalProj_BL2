@@ -21,7 +21,7 @@ HRESULT CExplosion::Initialize_Prototype()
 
 HRESULT CExplosion::Initialize(void* pArg)
 {
-	EXPLOSION_DESC* pDesc = static_cast<EXPLOSION_DESC*>(pArg);
+	DESC* pDesc = static_cast<DESC*>(pArg);
 
 	m_pSocketMatrix = pDesc->pSocketMatrix;
 	m_pParentState = pDesc->pParentState;
@@ -45,16 +45,20 @@ EVENT CExplosion::Update(_float fTimeDelta)
 {
 	
 	m_pVIBufferCom->Spread(fTimeDelta);
+	if (m_pSocketMatrix != nullptr)
+	{
+		_matrix		BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
 
-	_matrix		BoneMatrix = XMLoadFloat4x4(m_pSocketMatrix);
-
-	for (size_t i = 0; i < 3; i++)
-		BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
+		for (size_t i = 0; i < 3; i++)
+			BoneMatrix.r[i] = XMVector3Normalize(BoneMatrix.r[i]);
 
 
-	XMStoreFloat4x4(&m_CombinedWorldMatrix,
-		XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrix4x4Ptr()) * BoneMatrix * XMLoadFloat4x4(m_pParentMatrix)
-	);
+		XMStoreFloat4x4(&m_CombinedWorldMatrix,
+			XMLoadFloat4x4(m_pTransformCom->Get_WorldMatrix4x4Ptr()) * BoneMatrix * XMLoadFloat4x4(m_pParentMatrix)
+		);
+	}
+
+
 	return EVN_NONE;
 }
 
@@ -66,15 +70,23 @@ void CExplosion::Late_Update(_float fTimeDelta)
 
 HRESULT CExplosion::Render()
 {
-	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
-		return E_FAIL;
+	if (m_pSocketMatrix != nullptr)
+	{
+
+		if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", &m_CombinedWorldMatrix)))
+			return E_FAIL;
+	}
+	else
+	{
+		if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
+			return E_FAIL;
+	}
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_vCamPosition", m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
-
 
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))

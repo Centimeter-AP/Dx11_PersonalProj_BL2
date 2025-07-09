@@ -349,7 +349,7 @@ void CLevel_Boss::Key_Input()
 		CGameObject::DESC desc = {};
 
 		desc.bHasTransformPreset = true;
-		XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(100.f, 20.f, 100.f));
+		XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(110.f, 90.f, 110.f));
 		// 이거 되나용?
 		desc.iLevelID = ENUM_CLASS(LEVEL::BOSS);
   		if (FAILED(m_pGameInstance->Add_GameObject(desc.iLevelID, TEXT("Prototype_GameObject_WaterExplode"),

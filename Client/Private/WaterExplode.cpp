@@ -1,5 +1,6 @@
 #include "WaterExplode.h"
 
+#include "Explosion.h"
 #include "GameInstance.h"
 
 CWaterExplode::CWaterExplode(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -31,6 +32,16 @@ HRESULT CWaterExplode::Initialize(void* pArg)
 	//m_pTransformCom->Scaling(10.f, 10.f ,10.f);
 	m_isActive = true;
 	m_fOpacity = 1.f;
+
+	CExplosion::DESC desc = {};
+	desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	desc.bHasTransformPreset = true;
+	desc.vColor = _float3(0.6f, 0.8f, 1.f);
+	XMStoreFloat4x4(&desc.PresetMatrix, m_pTransformCom->Get_WorldMatrix());
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Explosion_Test"),
+		ENUM_CLASS(LEVEL::STATIC), L"Layer_Effect", &desc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

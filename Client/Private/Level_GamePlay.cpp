@@ -411,7 +411,7 @@ void CLevel_GamePlay::Key_Input()
 	//{
 	//	Ready_Layer_Monster(TEXT("Layer_Monster"));
 	//}
-	//그럼빌드를처하세요
+
 	if (KEY_DOWN(DIK_RETURN))
 	{
 		CGameObject::DESC desc = {};
