@@ -190,6 +190,9 @@
     <ClInclude Include="..\Public\Shadow.h">
       <Filter>01.Utility\11. Shadow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Frustum.h">
+      <Filter>01.Utility\12. Frustum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -365,6 +368,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Shadow.cpp">
       <Filter>01.Utility\11. Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Frustum.cpp">
+      <Filter>01.Utility\12. Frustum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -562,6 +568,9 @@
     </Filter>
     <Filter Include="01.Utility\11. Shadow">
       <UniqueIdentifier>{98bd5298-63ac-4107-be35-7dd4bf2c5ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\12. Frustum">
+      <UniqueIdentifier>{248936f2-530e-4cb3-990f-595d0b5d8899}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

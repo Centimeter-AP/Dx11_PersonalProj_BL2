@@ -71,14 +71,17 @@ EVENT CMonster::Update(_float fTimeDelta)
 
 void CMonster::Late_Update(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_SHADOW, this);
-	m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
-	if (m_pColliderCom)
-		m_pGameInstance->Add_DebugComponent(m_pColliderCom);
-	if (m_pColliderHeadCom)
-		m_pGameInstance->Add_DebugComponent(m_pColliderHeadCom);
-	if (m_pNavigationCom)
-		m_pGameInstance->Add_DebugComponent(m_pNavigationCom);
+	if (m_pGameInstance->isIn_Frustum_WorldSpace(m_pTransformCom->Get_State(STATE::POSITION), 10.f))
+	{
+		m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_SHADOW, this);
+		m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);
+		if (m_pColliderCom)
+			m_pGameInstance->Add_DebugComponent(m_pColliderCom);
+		if (m_pColliderHeadCom)
+			m_pGameInstance->Add_DebugComponent(m_pColliderHeadCom);
+		if (m_pNavigationCom)
+			m_pGameInstance->Add_DebugComponent(m_pNavigationCom);
+	}
 }
 
 HRESULT CMonster::Render()

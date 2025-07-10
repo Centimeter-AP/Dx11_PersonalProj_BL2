@@ -4,6 +4,7 @@
 #include "Picking_Manager.h"
 #include "Renderer.h"
 #include "PipeLine.h"
+#include "Frustum.h"
 #include "Font_Manager.h"
 #include "Input_Device.h"
 #include "Level_Manager.h"
@@ -79,7 +80,9 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pShadow)
 		return E_FAIL;
 
-
+	m_pFrustum = CFrustum::Create();
+	if (nullptr == m_pFrustum)
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -93,6 +96,8 @@ void CGameInstance::Update_Engine(_float fTimeDelta)
 	m_pObject_Manager->Update(fTimeDelta);
 
 	m_pPipeLine->Update();
+
+	m_pFrustum->Transform_ToWorldSpace();
 
 	m_pObject_Manager->Late_Update(fTimeDelta);
 
@@ -463,9 +468,9 @@ HRESULT CGameInstance::Add_MRT(const _wstring& strMRTTag, const _wstring& strTar
 	return m_pTarget_Manager->Add_MRT(strMRTTag, strTargetTag);
 }
 
-HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isDepthClear)
+HRESULT CGameInstance::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isTargetClear, _bool isDepthClear)
 {
-	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, isDepthClear);
+	return m_pTarget_Manager->Begin_MRT(strMRTTag, pDSV, isTargetClear, isDepthClear);
 }
 
 HRESULT CGameInstance::End_MRT()
@@ -522,10 +527,19 @@ const _float4x4* CGameInstance::Get_Light_ProjMatrix()
 }
 #pragma endregion
 
+#pragma region FRUSTUM
+
+_bool CGameInstance::isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange)
+{
+	return m_pFrustum->isIn_WorldSpace(vWorldPos, fRange);
+}
+#pragma endregion
+
 void CGameInstance::Release_Engine()
 {
-
 	Safe_Release(m_pShadow);
+
+	Safe_Release(m_pFrustum);
 
 	Safe_Release(m_pTarget_Manager);
 

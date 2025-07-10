@@ -13,6 +13,9 @@ Texture2D g_DepthTexture;
 Texture2D g_SpecularTexture;
 Texture2D g_ShadowTexture;
 
+Texture2D g_FinalTexture;
+Texture2D g_BlurXTexture;
+
 vector g_vLightDir;
 vector g_vLightPos;
 float g_fLightRange;
@@ -214,23 +217,6 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     if (fOldViewZ + 10.f < vPosition.w)
         Out.vBackBuffer = Out.vBackBuffer * 0.6f;
     
-    
-    
-    
-//    float2 vTexcoord;
-    
-//    vector vColor;
-    
-//    for (int i = -6; i < 7; ++i)
-//    {
-//        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
-//        vTexcoord.y = In.vTexcoord.y;
-        
-//        Out.vColor += g_fWeights[i + 6] * g_Texture.Sample(DefaultSampler, vTexcoord);   
-//    }
-    
-//    Out.vColor /= 6.0f;
-    
     return Out;    
 }
 
@@ -240,9 +226,60 @@ float g_fWeights[13] =
     0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1.f, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
 };
 
+
+struct PS_OUT_BLUR
+{
+    vector vColor : SV_TARGET0;
+};
+
+PS_OUT_BLUR PS_MAIN_BLURX(PS_IN In)
+{
+    PS_OUT_BLUR Out;
+
+    float2 vTexcoord;
+    
+    vector vColor;
+    
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
+        vTexcoord.y = In.vTexcoord.y;
+  
+        Out.vColor += g_fWeights[i + 6] * g_FinalTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vColor /= 6.0f;
+    
+    return Out;
+}
+
+PS_OUT PS_MAIN_BLURY(PS_IN In)
+{
+    PS_OUT Out;
+
+    float2 vTexcoord;
+    
+    vector vColor;
+    
+    for (int i = -6; i < 7; ++i)
+    {
+        vTexcoord.x = In.vTexcoord.x;
+        vTexcoord.y = In.vTexcoord.y + i / 720.f;
+  
+        Out.vBackBuffer += g_fWeights[i + 6] * g_BlurXTexture.Sample(LinearClampSampler, vTexcoord);
+    }
+
+    Out.vBackBuffer /= 6.0f;
+    
+    return Out;
+}
+
+
+
+
 technique11 DefaultTechnique
 {
-    pass Debug 
+    pass Debug //0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -254,7 +291,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_DEBUG();
     }
 
-    pass Light_Directional
+    pass Light_Directional//1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -266,7 +303,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_LIGHT_DIRECTIONAL();
     }
 
-    pass Light_Point
+    pass Light_Point//2
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -278,7 +315,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_LIGHT_POINT();
     }
 
-    pass Deferred
+    pass Deferred//3
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -288,6 +325,28 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DEFERRED();
+    }
+
+    pass BlurX//4
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLURX();
+    }
+
+    pass BlurY//5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_BLURY();
     }
   
 }
