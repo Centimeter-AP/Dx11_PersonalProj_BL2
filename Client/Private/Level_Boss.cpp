@@ -323,12 +323,65 @@ HRESULT CLevel_Boss::Ready_Lights()
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vDiffuse = _float4(0.4f, 0.4f, 0.4f, 1.f);
+	LightDesc.vAmbient = _float4(0.2f, 0.2f, 0.2f, 1.f);
 	LightDesc.vSpecular = _float4(0.3f, 0.3f, 0.3f, 1.f);
 
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
+
+
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.fRange = 100.f;
+	LightDesc.vAmbient = _float4(0.06f, 0.02f, 0.1f, 1.0f);
+	LightDesc.vDiffuse = _float4(0.20f, 0.08f, 0.40f, 1.0f);
+	//LightDesc.vSpecular = _float4(0.75f, 0.60f, 1.00f, 1.0f);
+	LightDesc.vSpecular = _float4(0.10f, 0.04f, 0.20f, 1.0f);
+
+
+#define ADD_PURPLE_POINTLIGHT(x, y, z)							\
+	LightDesc.vPosition = _float4(x, y, z, 1.f);		\
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))	\
+		return E_FAIL;
+
+
+	ADD_PURPLE_POINTLIGHT(169.153, 117.39, 122.182);
+	ADD_PURPLE_POINTLIGHT(254.933, 135.458, -3.00446);
+	ADD_PURPLE_POINTLIGHT(67.2147, 52.4714, 206.151);
+	ADD_PURPLE_POINTLIGHT(43.101, 69.8857, 146.281);
+	ADD_PURPLE_POINTLIGHT(59.199, 123.539, 103.168);
+	ADD_PURPLE_POINTLIGHT(38.7896, 126.28, -32.413);
+	ADD_PURPLE_POINTLIGHT(13.7532, 180.337, -12.3291);
+	ADD_PURPLE_POINTLIGHT(34.9153, 163.112, -116.858);
+	ADD_PURPLE_POINTLIGHT(-4.39817, 81.6552, 77.3488);
+	ADD_PURPLE_POINTLIGHT(-8.47138, 76.2952, 146.465);
+	ADD_PURPLE_POINTLIGHT(23.9756, 88.7342, 335.816);
+	ADD_PURPLE_POINTLIGHT(-33.3746, 95.774, 291.532);
+	ADD_PURPLE_POINTLIGHT(-61.3469, 151.309, 244.766);
+	ADD_PURPLE_POINTLIGHT(-23.349, 206.952, 359.55);
+	ADD_PURPLE_POINTLIGHT(-18.2155, 241.409, 309.554);
+	ADD_PURPLE_POINTLIGHT(30.938, 285.092, 388.23);
+	ADD_PURPLE_POINTLIGHT(79.733, 300.352, 394.54);
+	ADD_PURPLE_POINTLIGHT(77.6912, 269.097, 372.781);
+	ADD_PURPLE_POINTLIGHT(128.411, 286.409, 377.383);
+	ADD_PURPLE_POINTLIGHT(272.035, 135.197, 338.068);
+	ADD_PURPLE_POINTLIGHT(418.931, 136.11, 298.014);
+	ADD_PURPLE_POINTLIGHT(372.732, 138.364, 399.353);
+	ADD_PURPLE_POINTLIGHT(312.019, 72.8633, 80.8681);
+	ADD_PURPLE_POINTLIGHT(327.616, 102.94, 83.7235);
+	ADD_PURPLE_POINTLIGHT(377.857, 172.164, 178.702);
+	ADD_PURPLE_POINTLIGHT(167.26, 149.359, 365.384);
+	ADD_PURPLE_POINTLIGHT(209.859, 108.633, -48.6191);
+	ADD_PURPLE_POINTLIGHT(268.129, 8.91216, 278.191);
+	ADD_PURPLE_POINTLIGHT(251.793, 62.4851, 308.733);
+	ADD_PURPLE_POINTLIGHT(150.316, 71.3566, 157.674);
+	ADD_PURPLE_POINTLIGHT(196.579, 102.501, 104.988);
+	ADD_PURPLE_POINTLIGHT(-86.8788, 193.923, -76.2842);
+	ADD_PURPLE_POINTLIGHT(-46.8368, 206.643, -132.747);
+	ADD_PURPLE_POINTLIGHT(-99.8456, 97.7251, 28.701);
+
+
+
 
 	return S_OK;
 }
@@ -389,11 +442,11 @@ void CLevel_Boss::Key_Input()
 
 		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
 		LightDesc.vPosition = *vCamPos;
-		LightDesc.fRange = 60.f;
+		LightDesc.fRange = 130.f;
 		// Ambient : 아주 어두운 보라
-		LightDesc.vAmbient = _float4(0.03f, 0.01f, 0.05f, 1.0f);
+		LightDesc.vAmbient = _float4(0.06f, 0.02f, 0.1f, 1.0f);
 		// Diffuse : 어두운 자수정 컬러
-		LightDesc.vDiffuse = _float4(0.10f, 0.04f, 0.20f, 1.0f);
+		LightDesc.vDiffuse = _float4(0.20f, 0.08f, 0.40f, 1.0f);
 		// Specular: 살짝 푸른 빛 도는 하이라이트, Power=28 (중앙이 또렷하게)
 		LightDesc.vSpecular = _float4(0.75f, 0.60f, 1.00f, 1.0f);
 		if (FAILED(m_pGameInstance->Add_Light(LightDesc)))

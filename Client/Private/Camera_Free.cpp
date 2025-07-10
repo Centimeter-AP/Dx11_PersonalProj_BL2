@@ -24,9 +24,9 @@ HRESULT CCamera_Free::Initialize(void* pArg)
 
 	Desc.vEye = _float3(0.f, 20.f, -15.f);
 	Desc.vAt = _float3(0.f, 0.f, 0.f);
-	Desc.fFov = XMConvertToRadians(60.0f);
+	Desc.fFov = XMConvertToRadians(45.f);
 	Desc.fNear = 0.1f;
-	Desc.fFar = 500.f;
+	Desc.fFar = 1000.f;
 	Desc.fRotationPerSec = XMConvertToRadians(180.0f);
 	Desc.fSpeedPerSec = 30.0f;
 	Desc.szName = TEXT("Camera");
@@ -78,7 +78,11 @@ void CCamera_Free::Priority_Update(_float fTimeDelta)
 		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), MouseMove * fTimeDelta * m_fSensor);
 	}
 
-
+	if (KEY_DOWN(DIK_SPACE))
+	{
+		auto vCamPos = m_pGameInstance->Get_CamPosition();
+		cout << vCamPos->x << ", " << vCamPos->y << ", " << vCamPos->z << endl;
+	}
 
 	__super::Bind_Matrices();
 }

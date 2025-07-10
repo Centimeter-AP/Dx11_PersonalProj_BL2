@@ -51,13 +51,18 @@ HRESULT CTarget_Manager::Add_MRT(const _wstring& strMRTTag, const _wstring& strT
 	return S_OK;
 }
 
-HRESULT CTarget_Manager::Begin_MRT(const _wstring& strMRTTag)
+HRESULT CTarget_Manager::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV, _bool isDepthClear)
 {
 	list<CRenderTarget*>*	pMRTList = Find_MRT(strMRTTag);
 	if (nullptr == pMRTList)
 		return E_FAIL;
 
 	m_pContext->OMGetRenderTargets(1, &m_pBackBuffer, &m_pOriginalDSV);
+
+	ID3D11DepthStencilView* pDepthStencilView = nullptr == pDSV ? m_pOriginalDSV : pDSV;
+
+	if (true == isDepthClear)
+		m_pContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 	_uint			iNumTargets = { 0 };
 
@@ -69,7 +74,7 @@ HRESULT CTarget_Manager::Begin_MRT(const _wstring& strMRTTag)
 		pRenderTargets[iNumTargets++] = pRenderTarget->Get_RTV();
 	}
 
-	m_pContext->OMSetRenderTargets(iNumTargets, pRenderTargets, m_pOriginalDSV);
+	m_pContext->OMSetRenderTargets(iNumTargets, pRenderTargets, pDepthStencilView);
 
 	return S_OK;
 }

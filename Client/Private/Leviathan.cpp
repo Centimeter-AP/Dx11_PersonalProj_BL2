@@ -141,15 +141,21 @@ HRESULT CLeviathan::Render()
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS, 0)))
 			int a = 0;
 
-		//if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_EmissiveTexture", i, aiTextureType_EMISSIVE, 0)))
-		//	continue;
-		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
-
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 
-		if (FAILED(m_pShaderCom->Begin(0)))
-			return E_FAIL;
+		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_EmissiveTexture", i, aiTextureType_EMISSIVE, 0)))
+		{
+			if (FAILED(m_pShaderCom->Begin(ANIMMESH_DEFAULT)))
+				return E_FAIL;
+		}
+		else
+		{
+			if (FAILED(m_pShaderCom->Begin(ANIMMESH_EMISSIVE)))
+				return E_FAIL;
+		}
 
+
+		
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}

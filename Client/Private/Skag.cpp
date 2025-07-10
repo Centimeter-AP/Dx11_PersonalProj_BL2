@@ -123,6 +123,9 @@ HRESULT CSkag::Render()
 	return S_OK;
 }
 
+
+
+
 HRESULT CSkag::Ready_Components(void* pArg)
 {
 	/* For.Com_Shader */

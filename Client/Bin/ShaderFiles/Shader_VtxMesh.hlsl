@@ -2,9 +2,9 @@
 
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D g_DiffuseTexture;
-texture2D g_NormalTexture;
-texture2D g_EmissiveTexture;
+Texture2D g_DiffuseTexture;
+Texture2D g_NormalTexture;
+Texture2D g_EmissiveTexture;
 
 
 struct VS_IN
@@ -62,8 +62,15 @@ struct PS_OUT
     vector vDiffuse : SV_TARGET0;
     vector vNormal : SV_TARGET1;
     vector vDepth : SV_TARGET2;
-    vector vPickPos : SV_TARGET3;
-    vector vEmissive : SV_TARGET4;
+    vector vEmissive : SV_TARGET3;
+};
+
+struct PS_OUT_EMISSIVE
+{
+    vector vDiffuse : SV_TARGET0;
+    vector vNormal : SV_TARGET1;
+    vector vDepth : SV_TARGET2;
+    vector vEmissive : SV_TARGET3;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -84,10 +91,37 @@ PS_OUT PS_MAIN(PS_IN In)
    
     Out.vDiffuse = vMtrlDiffuse;
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
-    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 500.0f, 0.f, 0.f);
-    Out.vEmissive = g_EmissiveTexture.sample(DefaultSampler, In.vTexcoord);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
     return Out;
 }
+
+
+PS_OUT_EMISSIVE PS_MAIN_EMISSIVE(PS_IN In)
+{
+    PS_OUT_EMISSIVE Out;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+    
+    vNormal = mul(vNormal, WorldMatrix);
+    
+   
+    Out.vDiffuse = vMtrlDiffuse;
+
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+    Out.vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    return Out;
+}
+
 
 PS_OUT PS_SKYDOME(PS_IN In)
 {
@@ -125,5 +159,16 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_SKYDOME();
     }
-   
+
+    pass Emissive
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_EMISSIVE();
+    }
+
 }

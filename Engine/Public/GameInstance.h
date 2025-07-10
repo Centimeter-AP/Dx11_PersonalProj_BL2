@@ -4,6 +4,7 @@
 /* 엔진 내에 존재하는 유일한 싱글톤 클래스이다. */
 /* 엔진 개발자가 클라개밫자에게 보여주고싶은 함수를 ... */
 #include "Prototype_Manager.h"
+#include "Shadow.h"
 
 NS_BEGIN(Engine)
 
@@ -134,7 +135,7 @@ public:
 #pragma region TARGET_MANAGER
 	HRESULT Add_RenderTarget(const _wstring& strTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixelFormat, const _float4& vClearColor);
 	HRESULT Add_MRT(const _wstring& strMRTTag, const _wstring& strTargetTag);
-	HRESULT Begin_MRT(const _wstring& strMRTTag);
+	HRESULT Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencilView* pDSV = nullptr, _bool isDepthClear = false);
 	HRESULT End_MRT();
 	HRESULT Bind_RT_ShaderResource(const _wstring& strTargetTag, class CShader* pShader, const _char* pContantName);
 	HRESULT Copy_RT_Resource(const _wstring& strTargetTag, ID3D11Texture2D* pDest);
@@ -149,6 +150,12 @@ public:
 #pragma region PICKING
 	_bool Picking(_float4* pOut);
 #pragma endregion
+
+#pragma region SHADOW
+	HRESULT Ready_Light_For_Shadow(const CShadow::SHADOW_DESC& Desc);
+	const _float4x4* Get_Light_ViewMatrix();
+	const _float4x4* Get_Light_ProjMatrix();
+#pragma region
 
 private:
 	class CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -166,6 +173,7 @@ private:
 	class CCamera_Manager*		m_pCamera_Manager = { nullptr };
 	class CTarget_Manager*		m_pTarget_Manager = { nullptr };
 	class CPicking* m_pPicking = { nullptr };
+	class CShadow* m_pShadow = { nullptr };
 
 
 public:

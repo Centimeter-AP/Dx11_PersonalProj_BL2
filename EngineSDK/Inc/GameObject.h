@@ -38,6 +38,7 @@ public:
 	virtual EVENT Update(_float fTimeDelta);
 	virtual void Late_Update(_float fTimeDelta);
 	virtual HRESULT Render();
+	virtual HRESULT Render_Shadow() { return S_OK; }
 
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) {};
 

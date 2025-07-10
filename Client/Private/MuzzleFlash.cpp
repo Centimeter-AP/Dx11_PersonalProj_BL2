@@ -21,6 +21,8 @@ HRESULT CMuzzleFlash::Initialize_Prototype()
 
 HRESULT CMuzzleFlash::Initialize(void* pArg)
 {
+	DESC* pDesc = static_cast<DESC*>(pArg);
+
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
@@ -33,10 +35,12 @@ HRESULT CMuzzleFlash::Initialize(void* pArg)
 	m_fTileSize.y = 1.0f / _float(m_iTileY);
 	m_pTransformCom->Rotation(m_pTransformCom->Get_State(STATE::UP), XMConvertToRadians(90.f));
 	m_pTransformCom->Scaling(0.25f, 0.25f, 0.25f);
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(1.f, -0.07f, 0.f, 1.f));
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(1.f, pDesc->fPosOffsetY, 0.f, 1.f));
 	m_iTileIdx = rand() % (m_iTileX * m_iTileY);
 	m_fOffset.x = (m_iTileIdx % m_iTileX) * m_fTileSize.x;
 	m_fOffset.y = (m_iTileIdx / m_iTileX) * m_fTileSize.y;
+
+	m_fPosOffsetY = pDesc->fPosOffsetY;
 	m_isActive = false;
 	return S_OK;
 }

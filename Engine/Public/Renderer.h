@@ -31,6 +31,9 @@ private:
 
 	_float4x4					m_WorldMatrix{}, m_ViewMatrix{}, m_ProjMatrix{};
 
+	ID3D11DepthStencilView*		m_pShadowDSV = { nullptr };
+	_uint						m_iOriginalViewportWidth{}, m_iOriginalViewportHeight{};
+
 private:
 	list<class CGameObject*>	m_RenderObjects[ENUM_CLASS(RENDERGROUP::RG_END)];
 
@@ -41,12 +44,19 @@ private:
 
 private:
 	HRESULT Render_Priority();
+	HRESULT Render_Shadow();
 	HRESULT Render_NonBlend();
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
 	HRESULT Render_Lights();
 	HRESULT Render_BackBuffer();
 	HRESULT Render_NonLight();
+	HRESULT Render_Blur();
+
+private:
+	HRESULT Ready_DepthStencilView(_uint iWidth, _uint iHeight);
+	HRESULT Change_ViewportDesc(_uint iWidth, _uint iHeight);
+
 
 #ifdef _DEBUG
 private:

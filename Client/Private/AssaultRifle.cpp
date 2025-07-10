@@ -1,6 +1,7 @@
 #include "AssaultRifle.h"
 #include "ARState.h"
 #include "GameInstance.h"
+#include "MuzzleFlash.h"
 
 CAssaultRifle::CAssaultRifle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CWeapon{ pDevice, pContext }
@@ -29,6 +30,9 @@ HRESULT CAssaultRifle::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+
+	if (FAILED(Ready_PartObjects(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_ARStates()))
@@ -157,6 +161,17 @@ HRESULT CAssaultRifle::Ready_ARStates()
 
 HRESULT CAssaultRifle::Ready_PartObjects(void* pArg)
 {
+	CMuzzleFlash::DESC			MuzzleDesc;
+	MuzzleDesc.pParentObject = this;
+	MuzzleDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	MuzzleDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	MuzzleDesc.eShaderPath = POSTEX_GRID_PICK;
+	MuzzleDesc.bHasTransformPreset = true;
+	XMStoreFloat4x4(&MuzzleDesc.PresetMatrix, XMMatrixIdentity());
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC),
+		TEXT("PartObject_Weapon_Effect_MuzzleFlash"), TEXT("Prototype_GameObject_Effect_MuzzleFlash"), &MuzzleDesc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 

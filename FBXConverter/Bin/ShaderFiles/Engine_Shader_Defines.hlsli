@@ -21,10 +21,17 @@ sampler LinearClampSampler = sampler_state
     AddressV = clamp;
 };
 
+sampler MirrorSampler = sampler_state
+{
+    filter = min_mag_mip_linear;
+    AddressU = mirror;
+    AddressV = mirror;
+};
+
 RasterizerState RS_Default
 {
     FillMode = Solid;
-    CullMode = none;
+    CullMode = back;
 };
 
 RasterizerState RS_Cull_Front
@@ -32,7 +39,6 @@ RasterizerState RS_Cull_Front
     FillMode = Solid;
     CullMode = front;
 };
-
 
 RasterizerState RS_Cull_Back
 {

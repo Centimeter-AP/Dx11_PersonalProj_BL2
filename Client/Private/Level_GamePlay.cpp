@@ -382,6 +382,15 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 		return E_FAIL;
 
 
+	CShadow::SHADOW_DESC		Desc{};
+	Desc.vEye = _float4(35.f, 128.f, 2.5f, 1.f);
+	Desc.vAt = _float4(100.f, 0.f, 100.f, 1.f);
+	Desc.fFovy = XMConvertToRadians(60.f);
+	Desc.fNear = 0.1f;
+	Desc.fFar = 1000.f;
+
+	if (FAILED(m_pGameInstance->Ready_Light_For_Shadow(Desc)))
+		return E_FAIL;
 
 	//LightDesc.eType = LIGHT_DESC::TYPE_POINT;
 	//LightDesc.vPosition = _float4(30.f, 10.0f, 30.f, 1.f);

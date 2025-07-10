@@ -10,7 +10,7 @@ float g_fPercentage;
 float g_fOpacity = 1.f;
 
 // 타일 이미지용
-texture2D g_MaskTexture;
+Texture2D g_MaskTexture;
 float2 g_fTileSize;
 float2 g_fTileOffset;
 float4 g_vColor = { 1.f, 1.f, 1.f, 1.f };
@@ -184,7 +184,7 @@ float4 SoftEffect(float4 vOrigColor, float4 vProjPos)
     
     if (vDepthDesc.y != 0.f)
     {
-        float fOldViewZ = vDepthDesc.y * 500.f;
+        float fOldViewZ = vDepthDesc.y * 1000.f;
         float fDiff = (fOldViewZ - vProjPos.w);
         vOrigColor.a = vOrigColor.a * saturate(fDiff) * (vOrigColor.r + 0.2f);
     }
@@ -252,11 +252,12 @@ PS_OUT PS_MAIN_SOFTEFFECT_COLOR(PS_IN_PROJPOS In)
     return Out;
 }
 
-PS_OUT PS_MAIN_SOFTEFFECT_COLOR(PS_IN_PROJPOS In)
+PS_OUT PS_MAIN_SOFTEFFECT_DISTORT(PS_IN_PROJPOS In)
 {
     PS_OUT Out;
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDistortMask = g_DistortionMaskTexture.Sample(DefaultSampler, In.vTexcoord);
    
     if (all(Out.vColor.rgb < 0.1f))
         discard;

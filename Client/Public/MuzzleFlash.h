@@ -11,6 +11,7 @@ class CMuzzleFlash final : public CSpriteEffect
 public:
 	typedef struct tagMuzzleFlashDesc : public CSpriteEffect::DESC
 	{
+		_float fPosOffsetY = { -0.07f };
 	}DESC;
 private:
 	CMuzzleFlash(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -37,7 +38,7 @@ private:
 	_float2 m_fTileSize{};
 	_float2 m_fOffset{};
 	_float	m_fOpacity = { 1.f };
-
+	_float  m_fPosOffsetY = {};
 	_float m_fShowTicker = {};
 
 public:

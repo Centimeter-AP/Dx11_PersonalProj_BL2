@@ -2,13 +2,16 @@
 
 /* 상수테이블 ConstantTable */
 matrix g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix g_LightViewMatrix, g_LightProjMatrix;
 matrix g_ViewMatrixInv, g_ProjMatrixInv;
-texture2D g_RenderTargetTexture;
-texture2D g_NormalTexture;
-texture2D g_DiffuseTexture;
-texture2D g_ShadeTexture;
-texture2D g_DepthTexture;
-texture2D g_SpecularTexture;
+Texture2D g_RenderTargetTexture;
+Texture2D g_NormalTexture;
+Texture2D g_DiffuseTexture;
+Texture2D g_EmissiveTexture;
+Texture2D g_ShadeTexture;
+Texture2D g_DepthTexture;
+Texture2D g_SpecularTexture;
+Texture2D g_ShadowTexture;
 
 vector g_vLightDir;
 vector g_vLightPos;
@@ -90,7 +93,7 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_DIRECTIONAL(PS_IN In)
     Out.vShade = g_vLightDiffuse * saturate(fShade);
     
     vector  vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);    
-    float fViewZ = vDepthDesc.y * 500.f;
+    float fViewZ = vDepthDesc.y * 1000.f;
     
     vector vWorldPos;
     
@@ -126,7 +129,7 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
     
         
     vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
-    float fViewZ = vDepthDesc.y * 500.f;
+    float fViewZ = vDepthDesc.y * 1000.f;
     
     vector vWorldPos;
     
@@ -160,8 +163,6 @@ PS_OUT_LIGHT PS_MAIN_LIGHT_POINT(PS_IN In)
     return Out;
 }
 
-
-
 PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 {
     PS_OUT Out;
@@ -177,10 +178,67 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
     
     Out.vBackBuffer = vDiffuse * vShade + vSpecular;
     
+    vector vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    
+    Out.vBackBuffer.rgb += vEmissive.rgb;
+    
+    
+    
+    vector vDepthDesc = g_DepthTexture.Sample(DefaultSampler, In.vTexcoord);
+    float fViewZ = vDepthDesc.y * 1000.f;
+    
+    vector vPosition;
+
+    vPosition.x = In.vTexcoord.x * 2.f - 1.f;
+    vPosition.y = In.vTexcoord.y * -2.f + 1.f;
+    vPosition.z = vDepthDesc.x;
+    vPosition.w = 1.f;
+
+    vPosition = vPosition * fViewZ;
+    
+    vPosition = mul(vPosition, g_ProjMatrixInv);
+    vPosition = mul(vPosition, g_ViewMatrixInv);
+    
+    vPosition = mul(vPosition, g_LightViewMatrix);
+    vPosition = mul(vPosition, g_LightProjMatrix);
+    
+    float2 vTexcoord;
+    
+    /* (-1, 1 ~ 1, -1) -> (0, 0 ~ 1, 1) */
+    vTexcoord.x = vPosition.x / vPosition.w * 0.5f + 0.5f;
+    vTexcoord.y = vPosition.y / vPosition.w * -0.5f + 0.5f;    
+    
+    float4  vOldDepthDesc = g_ShadowTexture.Sample(DefaultSampler, vTexcoord);
+    float fOldViewZ = vOldDepthDesc.y * 1000.f;
+    
+    if (fOldViewZ + 10.f < vPosition.w)
+        Out.vBackBuffer = Out.vBackBuffer * 0.6f;
+    
+    
+    
+    
+//    float2 vTexcoord;
+    
+//    vector vColor;
+    
+//    for (int i = -6; i < 7; ++i)
+//    {
+//        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
+//        vTexcoord.y = In.vTexcoord.y;
+        
+//        Out.vColor += g_fWeights[i + 6] * g_Texture.Sample(DefaultSampler, vTexcoord);   
+//    }
+    
+//    Out.vColor /= 6.0f;
+    
     return Out;    
 }
 
 
+float g_fWeights[13] =
+{
+    0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1.f, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
+};
 
 technique11 DefaultTechnique
 {

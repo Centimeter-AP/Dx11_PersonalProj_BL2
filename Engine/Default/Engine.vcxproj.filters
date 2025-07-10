@@ -187,6 +187,9 @@
     <ClInclude Include="..\Public\Picking.h">
       <Filter>01.Utility\07.Picking\RTPicking</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Shadow.h">
+      <Filter>01.Utility\11. Shadow</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -359,6 +362,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Picking.cpp">
       <Filter>01.Utility\07.Picking\RTPicking</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Shadow.cpp">
+      <Filter>01.Utility\11. Shadow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -553,6 +559,9 @@
     </Filter>
     <Filter Include="01.Utility\07.Picking\RTPicking">
       <UniqueIdentifier>{3b4f6256-bb7e-4f7d-9b2c-a92d79f75c09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\11. Shadow">
+      <UniqueIdentifier>{98bd5298-63ac-4107-be35-7dd4bf2c5ece}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

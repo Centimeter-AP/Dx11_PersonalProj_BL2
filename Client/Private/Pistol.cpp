@@ -52,7 +52,6 @@ void CPistol::Priority_Update(_float fTimeDelta)
 		return;
 	__super::Priority_Update(fTimeDelta);
 	Update_State(fTimeDelta);
-
 }
 
 EVENT CPistol::Update(_float fTimeDelta)
