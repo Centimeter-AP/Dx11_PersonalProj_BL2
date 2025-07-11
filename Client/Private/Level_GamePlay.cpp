@@ -383,9 +383,9 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 
 
 	CShadow::SHADOW_DESC		Desc{};
-	Desc.vEye = _float4(35.f, 128.f, 2.5f, 1.f);
-	Desc.vAt = _float4(100.f, 0.f, 100.f, 1.f);
-	Desc.fFovy = XMConvertToRadians(60.f);
+	Desc.vEye = _float4(26.f, 86.f, -28.f, 1.f);
+	Desc.vAt = _float4(75.f, 4.f, 78.f, 1.f);
+	Desc.fFovy = XMConvertToRadians(45.f);
 	Desc.fNear = 0.1f;
 	Desc.fFar = 1000.f;
 

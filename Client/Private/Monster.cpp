@@ -71,7 +71,7 @@ EVENT CMonster::Update(_float fTimeDelta)
 
 void CMonster::Late_Update(_float fTimeDelta)
 {
-	if (m_pGameInstance->isIn_Frustum_WorldSpace(m_pTransformCom->Get_State(STATE::POSITION), 10.f))
+	//if (m_pGameInstance->isIn_Frustum_WorldSpace(m_pTransformCom->Get_State(STATE::POSITION), 10.f))
 	{
 		m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_SHADOW, this);
 		m_pGameInstance->Add_RenderGroup(RENDERGROUP::RG_NONBLEND, this);

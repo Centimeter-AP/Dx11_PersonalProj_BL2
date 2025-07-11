@@ -56,7 +56,7 @@ HRESULT CTarget_Manager::Begin_MRT(const _wstring& strMRTTag, ID3D11DepthStencil
 	list<CRenderTarget*>*	pMRTList = Find_MRT(strMRTTag);
 	if (nullptr == pMRTList)
 		return E_FAIL;
-
+	
 	m_pContext->OMGetRenderTargets(1, &m_pBackBuffer, &m_pOriginalDSV);
 
 	ID3D11DepthStencilView* pDepthStencilView = nullptr == pDSV ? m_pOriginalDSV : pDSV;

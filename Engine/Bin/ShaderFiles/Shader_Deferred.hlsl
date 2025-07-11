@@ -221,11 +221,26 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 }
 
 
-float g_fWeights[13] =
+float g_f13Weights[13] =
 {
     0.0561, 0.1353, 0.278, 0.4868, 0.7261, 0.9231, 1.f, 0.9231, 0.7261, 0.4868, 0.278, 0.1353, 0.0561
 };
 
+
+float g_f7Weights[7] =
+{
+    0.0702, 0.1315, 0.1900, 0.2166, 0.1900, 0.1315, 0.0702 
+};
+
+float g_f21Weights[21] =
+{
+    0.0022, 0.0045, 0.0083, 0.0144, 0.0234,
+    0.0356, 0.0505, 0.0669, 0.0831, 0.0973,
+    0.1070,
+    0.1110, 0.1070, 0.0973, 0.0831,
+    0.0669, 0.0505, 0.0356, 0.0234, 0.0144,
+    0.0083
+};
 
 struct PS_OUT_BLUR
 {
@@ -242,13 +257,23 @@ PS_OUT_BLUR PS_MAIN_BLURX(PS_IN In)
     
     for (int i = -6; i < 7; ++i)
     {
-        vTexcoord.x = In.vTexcoord.x + i / 1280.f;
+        vTexcoord.x = In.vTexcoord.x + i * 1.f / 1280.f;
         vTexcoord.y = In.vTexcoord.y;
-  
-        Out.vColor += g_fWeights[i + 6] * g_FinalTexture.Sample(LinearClampSampler, vTexcoord);
+    
+        Out.vColor += g_f13Weights[i + 6] * g_FinalTexture.Sample(LinearClampSampler, vTexcoord);
     }
-
-    Out.vColor /= 6.0f;
+    Out.vColor /= 7.9808f;
+    
+    
+    //for (int i = -10; i < 11; ++i)
+    //{
+    //    vTexcoord.x = In.vTexcoord.x + i * 2.f/ 1280.f;
+    //    vTexcoord.y = In.vTexcoord.y;
+    //
+    //    Out.vColor += g_f21Weights[i + 10] * g_FinalTexture.Sample(LinearClampSampler, vTexcoord);
+    //}
+    
+    
     
     return Out;
 }
@@ -264,12 +289,25 @@ PS_OUT PS_MAIN_BLURY(PS_IN In)
     for (int i = -6; i < 7; ++i)
     {
         vTexcoord.x = In.vTexcoord.x;
-        vTexcoord.y = In.vTexcoord.y + i / 720.f;
-  
-        Out.vBackBuffer += g_fWeights[i + 6] * g_BlurXTexture.Sample(LinearClampSampler, vTexcoord);
+        vTexcoord.y = In.vTexcoord.y + i * 1.f / 720.f;
+    
+        Out.vBackBuffer += g_f13Weights[i + 6] * g_BlurXTexture.Sample(LinearClampSampler, vTexcoord);
     }
+    
+    Out.vBackBuffer /= 7.9808f;
 
-    Out.vBackBuffer /= 6.0f;
+
+    //for (int i = -10; i < 11; ++i)
+    //{
+    //    vTexcoord.x = In.vTexcoord.x;
+    //    vTexcoord.y = In.vTexcoord.y + i * 2.f / 720.f;
+    //
+    //    Out.vBackBuffer += g_f21Weights[i + 10] * g_FinalTexture.Sample(LinearClampSampler, vTexcoord);
+    //}
+    
+    Out.vBackBuffer *= 2.f;
+    
+    
     
     return Out;
 }

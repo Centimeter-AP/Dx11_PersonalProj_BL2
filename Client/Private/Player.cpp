@@ -14,6 +14,7 @@
 #include "UI_HPShieldPannel.h"
 #include "UI_AmmoPannel.h"
 #include "UI_EnemyHP.h"
+#include "Screen_Hit.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
 constexpr _float NONCOMBAT_TIMER = 10.f;
@@ -181,6 +182,7 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 	if (CI_MONSTERATK(eHitColID))
 	{
 		CMonster* pHitOwner = static_cast<CMonster*>(pHitCol->Get_Owner());
+		static_cast<CScreen_Hit*>(m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second)->Show_Effect(pHitOwner->Get_Transform()->Get_State(STATE::POSITION));
 		if (pHitOwner->Is_FirstHit())
 		{
 			if (m_bShield)
@@ -189,6 +191,7 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 				if (m_fShield <= 0.f)
 				{
 					// ShieldBreak();  /* ½¯µå »Ç°¡Áø ÀÌÆåÆ®? */
+
 					m_fShield = 0.f;
 					m_bShield = false;
 				}
@@ -205,6 +208,7 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 	if (CI_MONSTERBULLET(eHitColID))
 	{
 		CBullet* pHitOwner = static_cast<CBullet*>(pHitCol->Get_Owner());
+		static_cast<CScreen_Hit*>(m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second)->Show_Effect(pHitOwner->Get_Transform()->Get_State(STATE::POSITION));
 		if (m_bShield)
 		{
 			m_fShield -= static_cast<_float>(pHitOwner->Get_Damage());
@@ -456,15 +460,6 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_AmmoPannel"), TEXT("Prototype_GameObject_UI_AmmoPannel"), &UIAmmoPDesc)))
 		return E_FAIL;
 
-
-	//CUI_Ammo::DESC			UIAmmoDesc;
-	//UIAmmoDesc.fX = g_iWinSizeX - 180.f;
-	//UIAmmoDesc.fY = g_iWinSizeY - 70.f;
-	//UIAmmoDesc.fSizeX = 214.f;
-	//UIAmmoDesc.fSizeY = 36.0f;
-	//if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Ammo"), TEXT("Prototype_GameObject_UI_Ammo"), &UIAmmoDesc)))
-	//	return E_FAIL;
-
 	CUI_Exp::DESC			UIExpDesc;
 	UIExpDesc.fX = g_iWinSizeX * 0.5f;// 640 640
 	UIExpDesc.fY = g_iWinSizeY - 80.f;
@@ -492,6 +487,18 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 		return E_FAIL;
 
 	m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second->Set_Active(false);
+
+	CScreen_Hit::DESC			ScreenHitDesc;
+	ScreenHitDesc.fX = g_iWinSizeX * 0.5f; // 0.72%
+	ScreenHitDesc.fY = g_iWinSizeY * 0.5f;
+	ScreenHitDesc.fSizeX = 514.f;
+	ScreenHitDesc.fSizeY = 131.f;
+	ScreenHitDesc.pPlayerOnShield = &m_bShield;
+	ScreenHitDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Screen_Hit"), TEXT("Prototype_GameObject_UI_Screen_Hit"), &ScreenHitDesc)))
+		return E_FAIL;
+
+	m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second->Set_Active(false);
 
 
 	return S_OK;

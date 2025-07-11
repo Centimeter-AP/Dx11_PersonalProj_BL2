@@ -40,7 +40,9 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Final"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f))))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurX"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.0f, 1.0f, 1.0f, 1.0f))))
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurX"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurY"), ViewportDesc.Width, ViewportDesc.Height, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(0.0f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 
@@ -65,6 +67,8 @@ HRESULT CRenderer::Initialize()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BlurX"), TEXT("Target_BlurX"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BlurY"), TEXT("Target_BlurY"))))
 		return E_FAIL;
 
 
@@ -101,12 +105,15 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Emissive"), fRTWidth * 0.5f, fRTHeight * 3.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
 
+
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shade"), fRTWidth * 1.5f, fRTHeight * 0.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Specular"), fRTWidth * 1.5f, fRTHeight * 1.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_Shadow"), ViewportDesc.Width - fRTWidth * 0.5f, fRTHeight * 0.5f, fRTWidth, fRTHeight)))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Ready_RT_Debug(TEXT("Target_BlurY"), ViewportDesc.Width - fRTWidth * 0.5f, fRTHeight * 1.5f, fRTWidth, fRTHeight)))
 		return E_FAIL;
 #endif
 
@@ -130,22 +137,24 @@ HRESULT CRenderer::Add_RenderGroup(RENDERGROUP eRenderGroup, CGameObject* pRende
 
 HRESULT CRenderer::Draw()
 {
-	
 	if (FAILED(Render_Priority()))
 		return E_FAIL;	
+
 	if (FAILED(Render_Shadow()))
 		return E_FAIL;
-	
+
 	if (FAILED(Render_NonBlend()))
 		return E_FAIL;
+
 	if (FAILED(Render_Lights()))
+		return E_FAIL;
+
+	if (FAILED(Render_Blur()))
 		return E_FAIL;
 
 	if (FAILED(Render_BackBuffer()))
 		return E_FAIL;
 
-	//if (FAILED(Render_Blur()))
-	//	return E_FAIL;
 
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
@@ -201,7 +210,7 @@ HRESULT CRenderer::Render_Priority()
 
 HRESULT CRenderer::Render_Shadow()
 {
-	m_pGameInstance->Begin_MRT(TEXT("MRT_ShadowObjects"), m_pShadowDSV, true);
+	m_pGameInstance->Begin_MRT(TEXT("MRT_ShadowObjects"), m_pShadowDSV, true, true);
 
 	if (FAILED(Change_ViewportDesc(g_iMaxWidth, g_iMaxHeight)))
 		return E_FAIL;
@@ -334,7 +343,7 @@ HRESULT CRenderer::Render_BackBuffer()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Shadow"), m_pShader, "g_ShadowTexture")))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Emissive"), m_pShader, "g_EmissiveTexture")))
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_BlurY"), m_pShader, "g_EmissiveTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Bind_Matrix("g_WorldMatrix", &m_WorldMatrix)))
@@ -388,7 +397,7 @@ HRESULT CRenderer::Render_Blur()
 		return E_FAIL;
 	if (FAILED(m_pShader->Bind_Matrix("g_ProjMatrix", &m_ProjMatrix)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Final"), m_pShader, "g_FinalTexture")))
+	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_Emissive"), m_pShader, "g_FinalTexture")))
 		return E_FAIL;
 
 	m_pShader->Begin(4);
@@ -396,7 +405,7 @@ HRESULT CRenderer::Render_Blur()
 	m_pVIBuffer->Render();
 
 	m_pGameInstance->End_MRT();
-
+	m_pGameInstance->Begin_MRT(TEXT("MRT_BlurY"));
 	
 	/* 백버퍼에 찍는다. */
 	if (FAILED(m_pGameInstance->Bind_RT_ShaderResource(TEXT("Target_BlurX"), m_pShader, "g_BlurXTexture")))
@@ -405,6 +414,7 @@ HRESULT CRenderer::Render_Blur()
 	m_pShader->Begin(5);
 	m_pVIBuffer->Bind_Buffers();
 	m_pVIBuffer->Render();
+	m_pGameInstance->End_MRT();
 
 	return S_OK;
 }
@@ -478,7 +488,8 @@ HRESULT CRenderer::Render_Debug()
 	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer);
 	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_Lights"), m_pShader, m_pVIBuffer);
 	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_ShadowObjects"), m_pShader, m_pVIBuffer);
-	
+	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_Final"), m_pShader, m_pVIBuffer);
+	m_pGameInstance->Render_MRT_Debug(TEXT("MRT_BlurY"), m_pShader, m_pVIBuffer);
 
 	return S_OK;
 }

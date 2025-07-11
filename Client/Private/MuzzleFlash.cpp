@@ -34,13 +34,13 @@ HRESULT CMuzzleFlash::Initialize(void* pArg)
 	m_fTileSize.x = 1.0f / _float(m_iTileX);
 	m_fTileSize.y = 1.0f / _float(m_iTileY);
 	m_pTransformCom->Rotation(m_pTransformCom->Get_State(STATE::UP), XMConvertToRadians(90.f));
-	m_pTransformCom->Scaling(0.25f, 0.25f, 0.25f);
-	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(1.f, pDesc->fPosOffsetY, 0.f, 1.f));
+	m_pTransformCom->Scaling(0.5f, 0.5f, 0.5f);
+	m_pTransformCom->Set_State(STATE::POSITION, XMVectorSetW(XMLoadFloat3(&pDesc->vPosOffset),1.f));
+	//m_pTransformCom->Set_State(STATE::POSITION, XMVectorSet(1.f, -0.07f, 0.f, 1.f));
 	m_iTileIdx = rand() % (m_iTileX * m_iTileY);
 	m_fOffset.x = (m_iTileIdx % m_iTileX) * m_fTileSize.x;
 	m_fOffset.y = (m_iTileIdx / m_iTileX) * m_fTileSize.y;
 
-	m_fPosOffsetY = pDesc->fPosOffsetY;
 	m_isActive = false;
 	return S_OK;
 }
@@ -108,10 +108,10 @@ void CMuzzleFlash::Show_Effect()
 
 	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
 	LightDesc.vPosition = _float4(m_CombinedWorldMatrix._41, m_CombinedWorldMatrix._42, m_CombinedWorldMatrix._43, 1.f);
-	LightDesc.fRange = 30.f;
-	LightDesc.vDiffuse = _float4(0.5f, 0.39f, 0.f, 1.f);
+	LightDesc.fRange = 50.f;
+	LightDesc.vDiffuse = _float4(0.7f, 0.49f, 0.1f, 1.f);
 	LightDesc.vAmbient = _float4(0.5f, 0.5f, 0.5f, 0.f);
-	LightDesc.vSpecular = _float4(1.f, 0.78f, 0.f, 0.f);
+	LightDesc.vSpecular = _float4(1.f, 0.78f, 0.6f, 0.f);
 
 	m_pGameInstance->Add_Light(LightDesc);
 }

@@ -117,7 +117,7 @@ PS_OUT_EMISSIVE PS_MAIN_EMISSIVE(PS_IN In)
 
     Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
     Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
-    Out.vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vEmissive = g_EmissiveTexture.Sample(DefaultSampler, In.vTexcoord) * 2.f;
     
     return Out;
 }

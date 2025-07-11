@@ -480,6 +480,9 @@
     <ClInclude Include="..\Public\WaterExplode.h">
       <Filter>02.GameObjects\10. Effect\Sprite\WaterExplode</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Screen_Hit.h">
+      <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Hit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -758,6 +761,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\WaterExplode.cpp">
       <Filter>02.GameObjects\10. Effect\Sprite\WaterExplode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Screen_Hit.cpp">
+      <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Hit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -116,6 +116,22 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_COLORING(PS_IN In)
+{
+    PS_OUT Out;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+   
+    //if (Out.vColor.a < 0.2f)
+    //    discard;
+    
+    Out.vColor.rgb *= g_vColor.rgb;
+    
+    Out.vColor.a *= g_fOpacity;
+    
+    return Out;
+}
+
 PS_OUT PS_MAIN_BlackDiscard(PS_IN In)
 {
     PS_OUT Out;
@@ -306,7 +322,18 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
-    pass AlphaTest_AlphaBlend_For_UIBars//3
+    pass AlphaTest_AlphaBlendAndColor //3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_None, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_COLORING();
+    }
+    pass AlphaTest_AlphaBlend_For_UIBars//4
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -317,7 +344,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_UIBar();
     }
-    pass AlphaTest_AlphaBlend_For_UIBars_RightDiscard//4
+    pass AlphaTest_AlphaBlend_For_UIBars_RightDiscard//5
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_None, 0);
@@ -328,7 +355,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_UIBar_RightDiscard();
     }
-    pass SoftEffect // 5
+    pass SoftEffect // 6
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -338,7 +365,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT();
     }
-    pass Grid_Pick // 6
+    pass Grid_Pick // 7
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -348,7 +375,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_GRID();
     }
-    pass WaterExplode // 7
+    pass WaterExplode // 8
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -358,7 +385,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT_COLOR();
     }
-    pass Phaselock_Distort // 8
+    pass Phaselock_Distort // 9
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);

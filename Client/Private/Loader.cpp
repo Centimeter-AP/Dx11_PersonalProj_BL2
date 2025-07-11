@@ -41,6 +41,7 @@
 /** Effect **/
 #include "TestSpirteEffect.h"
 #include "Screen_Snow.h"
+#include "Screen_Hit.h"
 #include "Snow.h"
 #include "MuzzleFlash.h"
 #include "WaterExplode.h"
@@ -222,6 +223,11 @@ HRESULT CLoader::Loading_For_Logo()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tex_Assault_Muzzle_Flash_Front.dds")))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_Texture_Screen_Hit */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Screen_Hit"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Hit%d.png"), 2))))
+		return E_FAIL;
+
 
 #pragma endregion
 
@@ -308,6 +314,11 @@ HRESULT CLoader::Loading_For_Logo()
 	/* For.Prototype_GameObject_Effect_MuzzleFlash */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Effect_MuzzleFlash"),
 		CMuzzleFlash::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_UI_Screen_Hit */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Screen_Hit"),
+		CScreen_Hit::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 #pragma endregion

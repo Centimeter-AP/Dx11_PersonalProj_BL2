@@ -167,6 +167,7 @@ HRESULT CAssaultRifle::Ready_PartObjects(void* pArg)
 	MuzzleDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 	MuzzleDesc.eShaderPath = POSTEX_GRID_PICK;
 	MuzzleDesc.bHasTransformPreset = true;
+	MuzzleDesc.vPosOffset = { 2.f, -0.07f, -0.1f };
 	XMStoreFloat4x4(&MuzzleDesc.PresetMatrix, XMMatrixIdentity());
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC),
 		TEXT("PartObject_Weapon_Effect_MuzzleFlash"), TEXT("Prototype_GameObject_Effect_MuzzleFlash"), &MuzzleDesc)))
