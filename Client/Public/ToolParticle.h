@@ -27,6 +27,7 @@ public:
 	virtual HRESULT Render();
 
 	void Set_PType(_uint iPType) { m_iPType = iPType; }
+	void Set_Loop(_bool isLoop);
 
 private:
 	CShader*						m_pShaderCom = { nullptr };

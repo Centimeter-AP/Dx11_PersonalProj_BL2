@@ -775,7 +775,7 @@ public:
 		switch (m_ePhaselockStatus)
 		{
 		case PL_LIFT:
-			m_pOwner->m_pTransformCom->Go_Up(fTimeDelta * 0.5f);
+			m_pOwner->m_pTransformCom->Go_Up(fTimeDelta * 0.7f);
 			break;
 		case PL_LOOP:
 			m_fPhaselockTicker += fTimeDelta;

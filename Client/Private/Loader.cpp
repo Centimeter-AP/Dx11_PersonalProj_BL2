@@ -46,6 +46,9 @@
 #include "MuzzleFlash.h"
 #include "WaterExplode.h"
 #include "Explosion.h"
+#include "PhaselockSphere.h"
+#include "WebBallParticle.h"
+#include "WaterExplodeParticle.h"
 #include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -234,6 +237,11 @@ HRESULT CLoader::Loading_For_Logo()
 
 
 #pragma region EFFECT_TEXTURES
+	/* For.Prototype_Component_Texture_Explosion_Corrosive */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Explosion_Corrosive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tex_Explosion_Corrosive.dds")))))
+		return E_FAIL;
+
 	/* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds")))))
@@ -242,11 +250,40 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Waterripple_Dif"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WaterrippleBLK_Pan_512_Dif.dds")))))
 		return E_FAIL;
-	/* For.Prototype_Component_Texture_WaterExplode_Waterripple_Dif */
+	/* For.Prototype_Component_Texture_WaterExplode_Waterripple_Mask */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Waterripple_Mask"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WaterrippleBLK_Pan_512_Dif.dds")))))
 		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_PhaseLockBubble */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PhaseLockBubble"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/PhaseLockBubble_Dif_Tex.dds")))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_WaterExplode_Waterripple_Mask */ // rgb
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PhaseLockScreenUvMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/PhaseLockScreenUvMask_Dif_Tex.dds")))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_WaterExplode_Waterripple_Mask */ // 보라
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PhaseLockScreenMask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/PhaseLockScreenMask02_Dif_Tex.dds")))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_Texture_WebBall */ 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WebBall"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WebBall.dds")))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_WebBallParticle */ 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WebBallParticle"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WebParticle.dds")))))
+		return E_FAIL;
+
 #pragma endregion
+
+	/* For.Prototype_Component_Texture_DefaultDissolve */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_DefaultDissolve"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Noise.png")))))
+		return E_FAIL;
+
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
@@ -336,9 +373,14 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Screen_Hit"),
 		CScreen_Hit::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
-
+	
 #pragma endregion
 
+
+	/* For.Prototype_GameObject_UI_Screen_Hit */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Effect_PhaselockBubble"),
+		CPhaselockSphere::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	
 	
@@ -356,10 +398,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Terrain"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Terrain/Frost/DirtySnow_Dif.dds"), 1))))
 		return E_FAIL;
-
-
-
-
 
 	/* For.Prototype_Component_Texture_Splash */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_Splash"),
@@ -432,7 +470,20 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplosionDesc))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_WebBallParticle */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		WebBallDesc{};
+	WebBallDesc.iNumInstance = 40;
+	WebBallDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	WebBallDesc.vRange = _float3(0.1f, 0.1f, 0.1f);
+	WebBallDesc.vSize = _float2(0.01f, 0.1f);
+	WebBallDesc.vLifeTime = _float2(0.1f, 0.3f);
+	WebBallDesc.vSpeed = _float2(10.f, 18.f);
+	WebBallDesc.isLoop = true;
+	WebBallDesc.vPivot = _float3(0.1f, 0.f, 0.1f); 
 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_WebBallParticle"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &WebBallDesc))))
+		return E_FAIL;
 
 	///* For.Prototype_Component_VIBuffer_Cube */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
@@ -479,6 +530,12 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_Pistol"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
 			"../Bin/Resources/Models/Bin_Anim/Pistol.bin", PreTransMatrix))))
+		return E_FAIL;
+
+	PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_WebBall"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
+			"../Bin/Resources/Models/Bin_NonAnim/PlainSphere.bin", PreTransMatrix))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("네비게이션을(를) 로딩중입니다."));
@@ -582,6 +639,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WaterExplode"),
 		CWaterExplode::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+#pragma region PROTOTYPE_PARTICLES
+	/* For.Prototype_GameObject_WebBallParticle */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WebBallParticle"),
+		CWebBallParticle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+#pragma endregion
+
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));
 
@@ -772,6 +837,20 @@ HRESULT CLoader::Loading_For_Boss()
 			"../Bin/Resources/Models/Bin_NonAnim/BarrensRockBoulder_02.bin", PreTransMatrix))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_WaterExplodeParticle */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		WEPDesc{};
+	WEPDesc.iNumInstance = 30;
+	WEPDesc.vCenter = _float3(0.f, 0.f, 0.0f);
+	WEPDesc.vRange = _float3(1.f, 1.f, 1.f);
+	WEPDesc.vSize = _float2(10.f, 16.f);
+	WEPDesc.vLifeTime = _float2(0.3f, 0.5f);
+	WEPDesc.vSpeed = _float2(5.f, 10.f);
+	WEPDesc.isLoop = false;
+	WEPDesc.vPivot = _float3(0.f, -0.8f, 0.0f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_WaterExplodeParticle"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &WEPDesc))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("네비게이션을(를) 로딩중입니다."));
 
@@ -867,6 +946,11 @@ HRESULT CLoader::Loading_For_Boss()
 	/* For.Prototype_GameObject_WaterExplode */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WaterExplode"),
 		CWaterExplode::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_WaterExplodeParticle */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WaterExplodeParticle"),
+		CWaterExplodeParticle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("로딩이 완료되었습니다."));

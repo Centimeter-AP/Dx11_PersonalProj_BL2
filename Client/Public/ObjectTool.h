@@ -63,7 +63,7 @@ private:
 	_float					m_fAutosaveTimeAcc = {};
 
 	/*******For Particles *******/
-	enum PARTICLE_TYPE { PTYPE_SPREAD, PTYPE_DROP, PTYPE_END };
+	enum PARTICLE_TYPE { PTYPE_SPREAD, PTYPE_DROP, PTYPE_SPDROP, PTYPE_END };
 	_bool					m_isParticlePreview = { false };	
 	PARTICLE_TYPE			m_eParticleType = PTYPE_END;
 	_float3					m_vPivot = {0.f, 0.f, 0.f};

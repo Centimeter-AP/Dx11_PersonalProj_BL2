@@ -1,5 +1,6 @@
 #include "SpiderAntSpit.h"
 #include "GameInstance.h"
+#include "WebBallParticle.h"
 
 CSpiderAntSpit::CSpiderAntSpit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CBullet{pDevice, pContext}
@@ -18,13 +19,23 @@ HRESULT CSpiderAntSpit::Initialize_Prototype()
 
 HRESULT CSpiderAntSpit::Initialize(void* pArg)
 {
-	if (FAILED(__super::Initialize(pArg)))
+	if (FAILED(CGameObject::Initialize(pArg)))
 		return E_FAIL;
+
+	DESC* pDesc = static_cast<CSpiderAntSpit::DESC*>(pArg);
+
+	m_vTargetPos = pDesc->vTargetPos;
+	m_iDamage = pDesc->iDamage;
+
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
+	if (FAILED(Ready_PartObjects(pArg)))
+		return E_FAIL;
 
 
+
+	m_pTransformCom->Scaling(0.5f, 0.5f, 0.5f);
 	Launch_Projectile(m_vTargetPos, 50.f);
 	return S_OK;
 }
@@ -33,6 +44,11 @@ void CSpiderAntSpit::Priority_Update(_float fTimeDelta)
 {
 	if (m_isActive == false)
 		return;
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Priority_Update(fTimeDelta);
+	}
 }
 
 EVENT CSpiderAntSpit::Update(_float fTimeDelta)
@@ -46,7 +62,15 @@ EVENT CSpiderAntSpit::Update(_float fTimeDelta)
 	Update_Projectile(fTimeDelta);
 	m_pColliderCom->Update(m_pTransformCom->Get_WorldMatrix());
 
+
 	__super::Update(fTimeDelta);
+
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Update(fTimeDelta);
+	}
+
 
 	return EVN_NONE;
 }
@@ -57,12 +81,15 @@ void CSpiderAntSpit::Late_Update(_float fTimeDelta)
 		return;
 	m_pColliderCom->Set_ColliderColor(RGBA_CYAN);
 	__super::Late_Update(fTimeDelta);
+	for (auto& pPartObject : m_PartObjects)
+	{
+		if (nullptr != pPartObject.second)
+			pPartObject.second->Late_Update(fTimeDelta);
+	}
 }
 
 HRESULT CSpiderAntSpit::Render()
 {
-	//__super::Render(); //부를 모델 없어서 잠시 주석..
-
 	if (FAILED(m_pTransformCom->Bind_ShaderResource(m_pShaderCom, "g_WorldMatrix")))
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::VIEW))))
@@ -74,20 +101,15 @@ HRESULT CSpiderAntSpit::Render()
 
 	for (_uint i = 0; i < iNumMesh; i++)
 	{
-
 		if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DiffuseTexture", 0)))
 			return E_FAIL;
-		//if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
-		//	continue;
-		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
-		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
-		if (FAILED(m_pShaderCom->Begin(0)))
+
+		if (FAILED(m_pShaderCom->Begin(MESH_DEFAULT)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}
-
 
 	return S_OK;
 }
@@ -107,12 +129,35 @@ HRESULT CSpiderAntSpit::Ready_Components(void* pArg)
 		TEXT("Com_Collider"), reinterpret_cast<CComponent**>(&m_pColliderCom), &SphereDesc)))
 		return E_FAIL;
 
+	/* For.Com_Model */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_WebBall"),
+		TEXT("Com_Model"), reinterpret_cast<CComponent**>(&m_pModelCom))))
+		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_Component_Texture_WebBall"),
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WebBall"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
+	/* For.Com_Shader */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"), // 총 전용 셰이더로 바꾸던지 패스를 바꾸던지
+		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CSpiderAntSpit::Ready_PartObjects(void* pArg)
+{
+	CWebBallParticle::DESC			ParticleDesc;
+	ParticleDesc.pParentObject = this;
+	ParticleDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	ParticleDesc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+	ParticleDesc.bHasTransformPreset = true;
+	XMStoreFloat4x4(&ParticleDesc.PresetMatrix, XMMatrixIdentity());
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC),
+		TEXT("PartObject_Effect_Particle"), TEXT("Prototype_GameObject_WebBallParticle"), &ParticleDesc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -209,4 +254,5 @@ CGameObject* CSpiderAntSpit::Clone(void* pArg)
 void CSpiderAntSpit::Free()
 {
 	__super::Free();
+	Safe_Release(m_pTextureCom);
 }

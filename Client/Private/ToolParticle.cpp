@@ -45,6 +45,10 @@ EVENT CToolParticle::Update(_float fTimeDelta)
 	{
 		m_pVIBufferCom->Drop(fTimeDelta);
 	}
+	if (m_iPType == 2)
+	{
+		m_pVIBufferCom->Spread_Drop(fTimeDelta);
+	}
 	return EVN_NONE;
 
 }
@@ -80,6 +84,11 @@ HRESULT CToolParticle::Render()
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CToolParticle::Set_Loop(_bool isLoop)
+{
+	m_pVIBufferCom->Set_Loop(isLoop);
 }
 
 HRESULT CToolParticle::Ready_Components()

@@ -24,7 +24,7 @@ HRESULT CSkag::Initialize(void* pArg)
  	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	Initialize_BasicStatus(rand()%3 + 1);
+	Initialize_BasicStatus(rand() % 3 + 1);
 
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;

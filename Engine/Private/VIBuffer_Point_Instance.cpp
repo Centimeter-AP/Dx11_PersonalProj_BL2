@@ -8,7 +8,7 @@ CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(ID3D11Device* pDevice, ID3D11
 }
 
 CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(const CVIBuffer_Point_Instance& Prototype)
-	: CVIBuffer_Instance{ Prototype }
+	: CVIBuffer_Instance( Prototype )
 	, m_pVertexInstances { Prototype.m_pVertexInstances }
 	, m_vPivot { Prototype.m_vPivot }
 	, m_pSpeeds{ Prototype.m_pSpeeds }	
@@ -222,6 +222,39 @@ void CVIBuffer_Point_Instance::Drop_Wave(_float fTimeDelta)
 	}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
+void CVIBuffer_Point_Instance::Spread_Drop(_float fTimeDelta)
+{
+	D3D11_MAPPED_SUBRESOURCE	SubResource{};
+
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXPOS_PARTICLE_INSTANCE* pVertices = static_cast<VTXPOS_PARTICLE_INSTANCE*>(SubResource.pData);
+
+	_vector vDir = {};
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].vLifeTime.y += fTimeDelta;
+
+		vDir = XMVectorSetW(XMVector3Normalize(XMLoadFloat3(&m_vPivot) - XMLoadFloat4(&m_pVertexInstances[i].vTranslation)), 0.f);
+
+		XMStoreFloat4(&pVertices[i].vTranslation,
+			XMLoadFloat4(&pVertices[i].vTranslation) - (vDir * m_pSpeeds[i] * fTimeDelta));
+
+		_float t = pVertices[i].vLifeTime.y / pVertices[i].vLifeTime.x * 1.f;
+		pVertices[i].vTranslation.y -= 9.8f * t * fTimeDelta;
+		if (true == m_isLoop &&
+			pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
+		{
+			pVertices[i].vLifeTime.y = 0.f;
+			pVertices[i].vTranslation = m_pVertexInstances[i].vTranslation;
+		}
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+
 }
 
 CVIBuffer_Point_Instance* CVIBuffer_Point_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pArg)

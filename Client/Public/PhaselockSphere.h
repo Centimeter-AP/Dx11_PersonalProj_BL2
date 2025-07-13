@@ -8,6 +8,11 @@ NS_BEGIN(Client)
 
 class CPhaselockSphere final : public CSpriteEffect
 {
+public:
+	typedef struct tagPhaselockSphereDesc : public CSpriteEffect::DESC
+	{
+		_float fLastTime = {};
+	}DESC;
 private:
 	CPhaselockSphere(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPhaselockSphere(const CPhaselockSphere& Prototype);
@@ -26,7 +31,9 @@ private:
 	HRESULT Bind_ShaderResources();
 
 private:
-	CTexture* m_pTextureMaskCom = { nullptr };
+	CTexture*	m_pTextureMaskCom = { nullptr };
+	_float		m_fTimeAcc = { 0.f };
+	_float		m_fLastTime = { 0.f };
 
 
 public:

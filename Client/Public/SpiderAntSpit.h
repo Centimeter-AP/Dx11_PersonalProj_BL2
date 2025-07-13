@@ -32,6 +32,7 @@ public:
 
 private:
 	HRESULT Ready_Components(void* pArg);
+	HRESULT Ready_PartObjects(void* pArg);
 
 	void Launch_Projectile(const _float3& targetPos, _float fSpeed);
 	void Update_Projectile(_float fTimeDelta);

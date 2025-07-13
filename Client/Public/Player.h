@@ -86,7 +86,7 @@ public:
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) override;
 
 	void Key_Input(_float fTimeDelta);
-		 
+
 	void Set_State(PLA_STATE eState);
 	void Initialize_BasicStatus();
 	HRESULT Change_Level(_uint iLevelIndex);

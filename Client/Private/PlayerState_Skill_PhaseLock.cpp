@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "Monster.h"
 #include <UI_Phaselock.h>
+#include "PhaselockSphere.h"
 
 void CPlayerState_Skill_PhaseLock::Enter()
 {
@@ -13,6 +14,7 @@ void CPlayerState_Skill_PhaseLock::Enter()
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock, false);
 		static_cast<CMonster*>(m_pOwner->m_pCurPickedCollider->Get_Owner())->OnHit_Phaselock();
 		m_bSuccess = true;
+		XMStoreFloat3(&vTargetPos, m_pOwner->m_pCurPickedCollider->Get_Owner()->Get_Transform()->Get_State(STATE::POSITION));
 	}
 	else
 	{
@@ -35,6 +37,15 @@ void CPlayerState_Skill_PhaseLock::Execute(_float fTimeDelta)
 	{
 		static_cast<CUI_Phaselock*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_UI_Phaselock"))->second)->Set_UsingUI();
 		m_bCatched = true;
+		/**********/
+		CPhaselockSphere::DESC Desc = {};
+		Desc.bHasTransformPreset = true;
+		Desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+		Desc.fLastTime = m_pOwner->m_fPhaselockDuration;
+		XMStoreFloat4x4(&Desc.PresetMatrix, XMMatrixTranslation(vTargetPos.x, vTargetPos.y + 9.f, vTargetPos.z));
+
+		m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Effect_PhaselockBubble"),
+			ENUM_CLASS(LEVEL::STATIC), TEXT("Layer_Effect"), &Desc);
 	}
 }
 

@@ -1,6 +1,6 @@
 #include "WaterExplode.h"
 
-#include "Explosion.h"
+#include "WaterExplodeParticle.h"
 #include "GameInstance.h"
 
 CWaterExplode::CWaterExplode(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -33,12 +33,15 @@ HRESULT CWaterExplode::Initialize(void* pArg)
 	m_isActive = true;
 	m_fOpacity = 1.f;
 
-	CExplosion::DESC desc = {};
+	CWaterExplodeParticle::DESC desc = {};
 	desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 	desc.bHasTransformPreset = true;
 	desc.vColor = _float3(0.6f, 0.8f, 1.f);
 	XMStoreFloat4x4(&desc.PresetMatrix, m_pTransformCom->Get_WorldMatrix());
-	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Explosion_Test"),
+	//desc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	//desc.pParentObject = this;
+
+ 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WaterExplodeParticle"),
 		ENUM_CLASS(LEVEL::STATIC), L"Layer_Effect", &desc)))
 		return E_FAIL;
 
@@ -128,7 +131,7 @@ HRESULT CWaterExplode::Ready_Components()
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
-		TEXT("Com_TextureMask"), reinterpret_cast<CComponent**>(&m_pTextureWaterCom))))
+		TEXT("Com_TextureWater"), reinterpret_cast<CComponent**>(&m_pTextureWaterCom))))
 		return E_FAIL;
 
 	return S_OK;
@@ -176,7 +179,7 @@ CGameObject* CWaterExplode::Clone(void* pArg)
 	{
 		MSG_BOX("Failed to Cloned : CWaterExplode");
 		Safe_Release(pInstance);
-	}
+	} 
 
 	return pInstance;
 }
@@ -185,7 +188,10 @@ void CWaterExplode::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pVIBufferCom);
-	Safe_Release(m_pShaderCom);
-	Safe_Release(m_pTextureCom);
-}
+	//Safe_Release(m_pVIBufferCom);
+	//Safe_Release(m_pShaderCom);
+	//Safe_Release(m_pTextureCom);
+	Safe_Release(m_pTextureMaskCom);
+	Safe_Release(m_pTextureWaterCom);
+
+} 

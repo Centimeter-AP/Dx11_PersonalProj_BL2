@@ -155,7 +155,6 @@ HRESULT CLeviathan::Render()
 		}
 
 
-		
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}

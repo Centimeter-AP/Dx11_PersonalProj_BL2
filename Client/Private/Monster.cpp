@@ -37,26 +37,15 @@ HRESULT CMonster::Initialize(void* pArg)
 	//	return E_FAIL;
 	//
 	//m_pModelCom->Set_Animation(3, true);
-
+	/* For.Com_Texture */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_DefaultDissolve"),
+		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pDissolveTextureCom))))
+		return E_FAIL;
 	return S_OK;
 }
 
 void CMonster::Priority_Update(_float fTimeDelta)
 {
-#pragma region AnimationTests
-	static _uint test = {};
-	if (KEY_DOWN(DIK_LBRACKET))
-	{
-		test > 73 ? test = 0 : test++;
-		m_pModelCom->Set_Animation(test, true);
-	}
-	if (KEY_DOWN(DIK_RBRACKET))
-	{
-		test < 1 ? test = 74 : test--;
-		m_pModelCom->Set_Animation(test, true);
-	}
-#pragma endregion
-
 
 }
 
@@ -92,6 +81,10 @@ HRESULT CMonster::Render()
 
 	_uint		iNumMesh = m_pModelCom->Get_NumMeshes();
 
+	
+
+	if (FAILED(m_pDissolveTextureCom->Bind_ShaderResource(m_pShaderCom, "g_DissolveTexture", 0)))
+		return E_FAIL;
 	for (_uint i = 0; i < iNumMesh; i++)
 	{
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
@@ -99,7 +92,7 @@ HRESULT CMonster::Render()
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS, 0)))
 			continue;
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
-		if (FAILED(m_pShaderCom->Begin(0)))
+		if (FAILED(m_pShaderCom->Begin(ANIMMESH_DISSOLVE)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -183,6 +176,11 @@ HRESULT CMonster::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
 		return E_FAIL;
+	_float fDissolveRatio = m_fDeathDelay / m_fForceDeathDelay;
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fDissolveRatio", &fDissolveRatio, sizeof(_float))))
+		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -253,4 +251,5 @@ void CMonster::Free()
 	Safe_Release(m_pTarget);
 	Safe_Release(m_pGravityCom);
 	Safe_Release(m_pNavigationCom);
+	Safe_Release(m_pDissolveTextureCom);
 }

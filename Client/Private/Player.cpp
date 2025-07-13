@@ -158,16 +158,16 @@ HRESULT CPlayer::Render()
 
 #ifdef _DEBUG
 
-	_wstring strTest;
-	_wstring strCurPickedCollider;
-	if (m_pCurPickedCollider != nullptr)
-		strCurPickedCollider = m_pCurPickedCollider->Get_Owner()->Get_VIBufferTag();
-
-	strTest = TEXT("PlayerVariables");
-	strTest += TEXT("\nCurPickedCollider : ") + strCurPickedCollider;
-	strTest += TEXT("\nCurPickedDistance : ") + to_wstring(m_fCurPickedDistance);
-	strTest += TEXT("\nPlayer HP : ") + to_wstring(m_iHP) + L" / " + to_wstring(m_iMaxHP);
-	m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strTest.c_str(), _float2(400.f, 0.f), XMVectorSet(0.7f, 0.1f, 0.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
+	//_wstring strTest;
+	//_wstring strCurPickedCollider;
+	//if (m_pCurPickedCollider != nullptr)
+	//	strCurPickedCollider = m_pCurPickedCollider->Get_Owner()->Get_VIBufferTag();
+	//
+	//strTest = TEXT("PlayerVariables");
+	//strTest += TEXT("\nCurPickedCollider : ") + strCurPickedCollider;
+	//strTest += TEXT("\nCurPickedDistance : ") + to_wstring(m_fCurPickedDistance);
+	//strTest += TEXT("\nPlayer HP : ") + to_wstring(m_iHP) + L" / " + to_wstring(m_iMaxHP);
+	//m_pGameInstance->Draw_Font(TEXT("Font_WillowBody"), strTest.c_str(), _float2(400.f, 0.f), XMVectorSet(0.7f, 0.1f, 0.f, 1.f), 0.f, _float2(0.f, 0.f), 0.4f);
 
 #endif 
 

@@ -8,6 +8,9 @@ matrix g_BoneMatrices[512];
 Texture2D g_DiffuseTexture;
 Texture2D g_NormalTexture;
 Texture2D g_EmissiveTexture;
+Texture2D g_DissolveTexture;
+
+float g_fDissolveRatio;
 
 struct VS_IN
 {
@@ -167,6 +170,43 @@ PS_OUT PS_MAIN(PS_IN In)
     return Out;
 }
 
+
+PS_OUT PS_MAIN_DISSOLVE(PS_IN In)
+{
+    PS_OUT Out;
+    
+    vector vMtrlDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    if (vMtrlDiffuse.a < 0.3f)
+        discard;
+    
+    float vDissolve = g_DissolveTexture.Sample(DefaultSampler, In.vTexcoord).r;
+
+    if (vDissolve <= g_fDissolveRatio)
+        discard;
+    
+    float fEdgeWidth = fwidth(vDissolve) * 2.f;
+    
+    if (abs(vDissolve - g_fDissolveRatio) < fEdgeWidth)
+        vMtrlDiffuse = float4(1.0, 1.0, 1.0, 1.0f);
+    
+    vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexcoord);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+        
+    float3x3 WorldMatrix = float3x3(In.vTangent.xyz, In.vBinormal, In.vNormal.xyz);
+    
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    Out.vDiffuse = vMtrlDiffuse;
+    
+    /* -1.f -> 0.f, 1.f -> 1.f */    
+    Out.vNormal = vector(vNormal.xyz * 0.5f + 0.5f, 0.f);
+    
+    Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.0f, 0.f, 0.f);
+    Out.vEmissive = vector(0.f, 0.f, 0.f, 0.f);
+    
+    return Out;
+}
+
 struct PS_IN_SHADOW
 {
     float4 vPosition : SV_POSITION;
@@ -220,6 +260,17 @@ technique11 DefaultTechnique
         VertexShader = compile vs_5_0 VS_MAIN_SHADOW();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_SHADOW();
+    }
+
+    pass Dissolve
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_Default, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE();
     }
    
    

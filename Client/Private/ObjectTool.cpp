@@ -437,6 +437,7 @@ HRESULT CObjectTool::Make_Particles()
 	ImGui::DragFloat3("Range", reinterpret_cast<_float*>(&m_vRange), 0.1f, 1.f, 1000.f, "%.1f");
 	ImGui::DragFloat2("Size", reinterpret_cast<_float*>(&m_vSize), 0.1f, 1.f, 1000.f, "%.1f");
 	ImGui::DragFloat3("Center", reinterpret_cast<_float*>(&m_vCenter), 0.1f, -1000.f, 1000.f, "%.1f");
+	ImGui::Checkbox("Loop", &m_isLoop);
 
 	if (ImGui::RadioButton("Explosion", m_eParticleType == PTYPE_SPREAD)) {
 		m_eParticleType = PTYPE_SPREAD;
@@ -444,9 +445,17 @@ HRESULT CObjectTool::Make_Particles()
 	if (ImGui::RadioButton("Drop", m_eParticleType == PTYPE_DROP)) {
 		m_eParticleType = PTYPE_DROP;
 	}
+	if (ImGui::RadioButton("Spread + Drop", m_eParticleType == PTYPE_SPDROP)) {
+		m_eParticleType = PTYPE_SPDROP;
+	}
 	if (m_pToolParticle != nullptr)
 	{
 		m_pToolParticle->Set_PType(m_eParticleType);
+	}
+	if (Button("Change Loop"))
+	{
+		m_isLoop = !m_isLoop;
+		m_pToolParticle->Set_Loop(m_isLoop);
 	}
 
 	if (Button("Make Particle"))

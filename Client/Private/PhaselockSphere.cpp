@@ -21,12 +21,11 @@ HRESULT CPhaselockSphere::Initialize_Prototype()
 
 HRESULT CPhaselockSphere::Initialize(void* pArg)
 {
-	CBlendObject::DESC			Desc{};
+	CPhaselockSphere::DESC* Desc = static_cast<CPhaselockSphere::DESC*>(pArg);
 
-	Desc.fRotationPerSec = 0.f;
-	Desc.fSpeedPerSec = 0.f;
+	m_fLastTime = Desc->fLastTime;
 
-	if (FAILED(__super::Initialize(&Desc)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Components()))
@@ -43,8 +42,19 @@ void CPhaselockSphere::Priority_Update(_float fTimeDelta)
 
 EVENT CPhaselockSphere::Update(_float fTimeDelta)
 {
-	m_pTransformCom->Get_Scaled();
-	m_pTransformCom->Scaling();
+	if (m_bDead)
+		return EVN_DEAD;
+
+	m_pTransformCom->Scaling(4.f, 4.f, 4.f);
+	m_pTransformCom->Set_Matrix(m_pTransformCom->Billboard());
+
+	m_fTimeAcc += fTimeDelta;
+	if (m_fTimeAcc >= m_fLastTime)
+	{
+		m_bDead = true;
+		return EVN_DEAD;
+	}
+	
 	return EVN_NONE;
 }
 
@@ -58,7 +68,7 @@ HRESULT CPhaselockSphere::Render()
 	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
-	if (FAILED(m_pShaderCom->Begin(POSTEX_SOFTEFFECT)))
+	if (FAILED(m_pShaderCom->Begin(POSTEX_PHASELOCK_DISTORT)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBufferCom->Bind_Buffers()))
@@ -102,6 +112,13 @@ HRESULT CPhaselockSphere::Bind_ShaderResources()
 		return E_FAIL;
 	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", m_pGameInstance->Get_Transform_Float4x4(D3DTS::PROJ))))
 		return E_FAIL;
+
+
+
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTimeAcc", &m_fTimeAcc, sizeof(_float))))
+		return E_FAIL;
+
+
 
 	if (FAILED(m_pTextureCom->Bind_ShaderResource(m_pShaderCom, "g_Texture", 0)))
 		return E_FAIL;	

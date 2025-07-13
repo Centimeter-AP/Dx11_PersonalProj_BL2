@@ -9,6 +9,7 @@ class CShader;
 class CModel;
 class CNavigation;
 class CGravity;
+class CTexture;
 NS_END
 
 NS_BEGIN(Client)
@@ -56,6 +57,7 @@ protected:
 	CNavigation*		m_pNavigationCom = { nullptr };
 	CCollider*			m_pColliderCom = { nullptr };
 	CCollider*			m_pColliderHeadCom = { nullptr }; // at least
+	CTexture*			m_pDissolveTextureCom = { nullptr };
 
 protected:
 	_int				m_iLevel = {};
@@ -65,7 +67,7 @@ protected:
 	_int				m_iDefense = {};
 	_float				m_fSpeed = {};
 	_float				m_fDeathDelay = {};
-	const _float		m_fForceDeathDelay = { 0.f };
+	const _float		m_fForceDeathDelay = { 1.f };
 	_float				m_fBase_HP = {};
 	_float				m_fBase_ATK = {};
 	_float				m_fGrowthRate = { 1.13f }; // 13% º∫¿Â

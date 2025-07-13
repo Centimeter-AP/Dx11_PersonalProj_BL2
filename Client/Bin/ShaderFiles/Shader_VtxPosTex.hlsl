@@ -14,6 +14,7 @@ Texture2D g_MaskTexture;
 float2 g_fTileSize;
 float2 g_fTileOffset;
 float4 g_vColor = { 1.f, 1.f, 1.f, 1.f };
+float g_fTimeAcc;
 
 /* 정점의 기초적인 변환 (월드변환, 뷰, 투영변환) */ 
 /* 정점의 구성 정보를 변형할 수 있다. */ 
@@ -272,7 +273,12 @@ PS_OUT PS_MAIN_SOFTEFFECT_DISTORT(PS_IN_PROJPOS In)
 {
     PS_OUT Out;
     
-    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    float2 uv = In.vTexcoord;
+
+    // 사인 파형으로 왜곡, sin(시간)은 -1에서 1 사이를 왔다갔다함 5.0은 주파수, 0.02는 진폭값
+    uv.x += sin(g_fTimeAcc * 5.0f + uv.y * 10.0f) * 0.02f;
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, uv);
     vector vDistortMask = g_DistortionMaskTexture.Sample(DefaultSampler, In.vTexcoord);
    
     if (all(Out.vColor.rgb < 0.1f))
@@ -282,7 +288,6 @@ PS_OUT PS_MAIN_SOFTEFFECT_DISTORT(PS_IN_PROJPOS In)
     /*화면 전체 기준(0, 0 ~ 1, 1)으로 이펙트의 픽셀이 그려질 위치에 해당하는 좌표 */    
     Out.vColor = SoftEffect(Out.vColor, In.vProjPos);
     
-    //Out.vColor.rgb *= float3(0.6f, 0.8f, 1.f);
     Out.vColor *= g_vColor;
     return Out;
 }
@@ -393,6 +398,6 @@ technique11 DefaultTechnique
 
         VertexShader = compile vs_5_0 VS_MAIN_PROJPOS();
         GeometryShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT();
+        PixelShader = compile ps_5_0 PS_MAIN_SOFTEFFECT_DISTORT();
     }
 }

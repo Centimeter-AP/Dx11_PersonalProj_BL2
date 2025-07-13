@@ -202,9 +202,6 @@
     <Filter Include="02.GameObjects\10. Effect\Sprite\MuzzleFlash">
       <UniqueIdentifier>{2105f7d1-deed-450a-b854-25a56edbe340}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\10. Effect\Sprite\BulletTrail">
-      <UniqueIdentifier>{9c0a8cad-3d94-4fb8-925b-671634139b69}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\07. UI\StaticUI\UI_AmmoPannel">
       <UniqueIdentifier>{4e8285c7-91f8-470a-99fe-cb590c280ce6}</UniqueIdentifier>
     </Filter>
@@ -228,6 +225,15 @@
     </Filter>
     <Filter Include="02.GameObjects\10. Effect\Sprite\PhaselockSphere">
       <UniqueIdentifier>{771fc9d4-a990-493b-853f-d63f3e77e920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\WaterExplodeParticle">
+      <UniqueIdentifier>{c006172c-111f-4ae4-8f8c-beed36497a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\WebBallParticle">
+      <UniqueIdentifier>{54ce82cc-7042-42ec-88ef-6edf4161e6b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\ScreenEffect\Screen_PhaseLock">
+      <UniqueIdentifier>{cba5f3c3-ddea-46e4-8186-124d835f4330}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -494,6 +500,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\PhaselockSphere.h">
       <Filter>02.GameObjects\10. Effect\Sprite\PhaselockSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WaterExplodeParticle.h">
+      <Filter>02.GameObjects\10. Effect\Particle\WaterExplodeParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\WebBallParticle.h">
+      <Filter>02.GameObjects\10. Effect\Particle\WebBallParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Screen_PhaseLock.h">
+      <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_PhaseLock</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -782,6 +797,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\PhaselockSphere.cpp">
       <Filter>02.GameObjects\10. Effect\Sprite\PhaselockSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WaterExplodeParticle.cpp">
+      <Filter>02.GameObjects\10. Effect\Particle\WaterExplodeParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\WebBallParticle.cpp">
+      <Filter>02.GameObjects\10. Effect\Particle\WebBallParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Screen_PhaseLock.cpp">
+      <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_PhaseLock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
