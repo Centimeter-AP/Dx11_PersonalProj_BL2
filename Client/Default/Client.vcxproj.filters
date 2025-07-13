@@ -223,6 +223,12 @@
     <Filter Include="02.GameObjects\10. Effect\Sprite\WaterExplode">
       <UniqueIdentifier>{d44bc22a-509a-461a-85d6-a6004f74b31b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\Tool">
+      <UniqueIdentifier>{6f6da174-e295-4f4b-af2a-be42913c7185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Sprite\PhaselockSphere">
+      <UniqueIdentifier>{771fc9d4-a990-493b-853f-d63f3e77e920}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -482,6 +488,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Screen_Hit.h">
       <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolParticle.h">
+      <Filter>02.GameObjects\10. Effect\Particle\Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhaselockSphere.h">
+      <Filter>02.GameObjects\10. Effect\Sprite\PhaselockSphere</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -764,6 +776,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Screen_Hit.cpp">
       <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolParticle.cpp">
+      <Filter>02.GameObjects\10. Effect\Particle\Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhaselockSphere.cpp">
+      <Filter>02.GameObjects\10. Effect\Sprite\PhaselockSphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

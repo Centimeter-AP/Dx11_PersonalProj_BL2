@@ -434,6 +434,20 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Aim"), TEXT("Prototype_GameObject_UI_Aim"), &UIAimDesc)))
 		return E_FAIL;
 
+
+	CScreen_Hit::DESC			ScreenHitDesc;
+	ScreenHitDesc.fX = g_iWinSizeX * 0.5f; // 0.72%
+	ScreenHitDesc.fY = g_iWinSizeY * 0.5f;
+	ScreenHitDesc.fSizeX = 514.f;
+	ScreenHitDesc.fSizeY = 131.f;
+	ScreenHitDesc.pPlayerOnShield = &m_bShield;
+	ScreenHitDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Screen_Hit"), TEXT("Prototype_GameObject_UI_Screen_Hit"), &ScreenHitDesc)))
+		return E_FAIL;
+
+	m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second->Set_Active(false);
+
+
 	CUI_HPShieldPannel::DESC			UIHPSHDesc;
 	UIHPSHDesc.fX = 180.f;
 	UIHPSHDesc.fY = g_iWinSizeY - 70.f;
@@ -487,18 +501,6 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 		return E_FAIL;
 
 	m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second->Set_Active(false);
-
-	CScreen_Hit::DESC			ScreenHitDesc;
-	ScreenHitDesc.fX = g_iWinSizeX * 0.5f; // 0.72%
-	ScreenHitDesc.fY = g_iWinSizeY * 0.5f;
-	ScreenHitDesc.fSizeX = 514.f;
-	ScreenHitDesc.fSizeY = 131.f;
-	ScreenHitDesc.pPlayerOnShield = &m_bShield;
-	ScreenHitDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
-	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_UI_Screen_Hit"), TEXT("Prototype_GameObject_UI_Screen_Hit"), &ScreenHitDesc)))
-		return E_FAIL;
-
-	m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second->Set_Active(false);
 
 
 	return S_OK;

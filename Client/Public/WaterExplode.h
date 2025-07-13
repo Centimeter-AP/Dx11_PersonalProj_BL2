@@ -33,6 +33,7 @@ private:
 
 private:
 	CTexture*	m_pTextureMaskCom = { nullptr };
+	CTexture*	m_pTextureWaterCom = { nullptr };
 	_float		m_fOpacity = { 1.f };
 
 	_float		m_fShowTicker = {};

@@ -7,8 +7,7 @@
 #include "Camera_Tool.h"
 #include "Camera_FPS.h"
 #include "Player.h"
-//ImGuiFileDialog g_ImGuiFileDialog;
-//ImGuiFileDialog::Instance() 이래 싱글톤으로 쓰라고 신이 말하고 감
+#include "ToolParticle.h"
 
 
 CObjectTool::CObjectTool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -174,6 +173,20 @@ HRESULT CObjectTool::Render_ObjectTool()
 			return E_FAIL;
 		}
 	}
+	if (Button("Preview Particles"))
+	{
+		m_isParticlePreview = !m_isParticlePreview;
+	}
+	if (m_isParticlePreview)
+	{
+		if (FAILED(Make_Particles()))
+		{
+			ImGui::End();
+			ImGui::End();
+			return E_FAIL;
+		}
+	}
+
 	ImGui::SeparatorText("Find Object");
 
 	if (Button("Open Directory"))
@@ -411,6 +424,68 @@ HRESULT CObjectTool::Make_Player()
 		pPrevCamera->Set_Using(false);
 		m_isPlayerExists = true;
 	}
+	return S_OK;
+}
+
+HRESULT CObjectTool::Make_Particles()
+{
+	ImGui::Begin("Particle Maker");
+	ImGui::DragInt("Num Instance", &m_iNumInstance, 1, 1, 1000, "%d");
+	ImGui::DragFloat3("Pivot", reinterpret_cast<_float*>(&m_vPivot), 0.1f, -1000.f, 1000.f, "%.1f");
+	ImGui::DragFloat2("LifeTime", reinterpret_cast<_float*>(&m_vLifeTime), 0.1f, 0.f, 100.f, "%.1f");
+	ImGui::DragFloat2("Speed", reinterpret_cast<_float*>(&m_vSpeed), 0.1f, 1.f, 1000.f, "%.1f");
+	ImGui::DragFloat3("Range", reinterpret_cast<_float*>(&m_vRange), 0.1f, 1.f, 1000.f, "%.1f");
+	ImGui::DragFloat2("Size", reinterpret_cast<_float*>(&m_vSize), 0.1f, 1.f, 1000.f, "%.1f");
+	ImGui::DragFloat3("Center", reinterpret_cast<_float*>(&m_vCenter), 0.1f, -1000.f, 1000.f, "%.1f");
+
+	if (ImGui::RadioButton("Explosion", m_eParticleType == PTYPE_SPREAD)) {
+		m_eParticleType = PTYPE_SPREAD;
+	}
+	if (ImGui::RadioButton("Drop", m_eParticleType == PTYPE_DROP)) {
+		m_eParticleType = PTYPE_DROP;
+	}
+	if (m_pToolParticle != nullptr)
+	{
+		m_pToolParticle->Set_PType(m_eParticleType);
+	}
+
+	if (Button("Make Particle"))
+	{
+		if (m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Particle")) != nullptr)
+		{
+			m_pGameInstance->Clear_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Particle"));
+			m_pToolParticle = nullptr;
+		}
+		/* For.Prototype_Component_VIBuffer_Explosion_Test */
+		CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		Desc{};
+		Desc.iNumInstance = m_iNumInstance;
+		Desc.vCenter = m_vCenter;
+		Desc.vRange = m_vRange;
+		Desc.vSize = m_vSize;
+		Desc.vLifeTime = m_vLifeTime;
+		Desc.vSpeed = m_vSpeed;
+		Desc.isLoop = m_isLoop;
+		Desc.vPivot = m_vPivot;
+
+		if (FAILED(m_pGameInstance->Replace_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_Component_VIBuffer_ToolParticle"),
+			CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &Desc))))
+			return E_FAIL;
+
+		/* For.Prototype_GameObject_Explosion_Test */
+		if (FAILED(m_pGameInstance->Replace_Prototype(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_ToolParticle"),
+			CToolParticle::Create(m_pDevice, m_pContext))))
+			return E_FAIL;
+
+		CGameObject::DESC Particledesc = {};
+		Particledesc.iLevelID = ENUM_CLASS(LEVEL::MAPTOOL);
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Prototype_GameObject_ToolParticle"),
+			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Particle"), &Particledesc)))
+			return E_FAIL;
+
+		m_pToolParticle = static_cast<CToolParticle*>(m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Particle"), 0));
+	}
+
+	ImGui::End();
 	return S_OK;
 }
 

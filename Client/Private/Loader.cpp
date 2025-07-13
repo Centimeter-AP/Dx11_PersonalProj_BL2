@@ -229,8 +229,24 @@ HRESULT CLoader::Loading_For_Logo()
 		return E_FAIL;
 
 
+
 #pragma endregion
 
+
+#pragma region EFFECT_TEXTURES
+	/* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds")))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_WaterExplode_Waterripple_Dif */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Waterripple_Dif"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WaterrippleBLK_Pan_512_Dif.dds")))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_WaterExplode_Waterripple_Dif */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Waterripple_Mask"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WaterrippleBLK_Pan_512_Dif.dds")))))
+		return E_FAIL;
+#pragma endregion
 
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
@@ -342,15 +358,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		return E_FAIL;
 
 
-	/* For.Prototype_Component_Shader_VtxRectInstance */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxRectInstance"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxRectInstance.hlsl"), VTXRECT_PARTICLE_INSTANCE::Elements, VTXRECT_PARTICLE_INSTANCE::iNumElements))))
-		return E_FAIL;
 
-	/* For.Prototype_Component_Shader_VtxPosInstance */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosInstance"),
-		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxPosInstance.hlsl"), VTXPOS_PARTICLE_INSTANCE::Elements, VTXPOS_PARTICLE_INSTANCE::iNumElements))))
-		return E_FAIL;
 
 
 	/* For.Prototype_Component_Texture_Splash */
@@ -411,13 +419,14 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	/* For.Prototype_Component_VIBuffer_Explosion_Test */
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		ExplosionDesc{};
-	ExplosionDesc.iNumInstance = 1000;
-	ExplosionDesc.vCenter = _float3(100.f, 50.f, 100.0f);
-	ExplosionDesc.vRange = _float3(200.f, 3.0f, 200.f);
-	ExplosionDesc.vSize = _float2(10.f, 20.f);
+	ExplosionDesc.iNumInstance = 300;
+	ExplosionDesc.vCenter = _float3(10.f, 5.f, 10.0f);
+	ExplosionDesc.vRange = _float3(10.f, 3.0f, 10.f);
+	ExplosionDesc.vSize = _float2(1.f, 1.f);
 	ExplosionDesc.vLifeTime = _float2(2.f, 5.f);
-	ExplosionDesc.vSpeed = _float2(10.f, 20.f);
+	ExplosionDesc.vSpeed = _float2(15.f, 20.f);
 	ExplosionDesc.isLoop = true;
+	ExplosionDesc.vPivot = _float3(10.f, 5.f, 10.0f);
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Explosion_Test"),
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplosionDesc))))
@@ -569,11 +578,6 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CScreen_Snow::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-
-	/* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds")))))
-		return E_FAIL;
 	/* For.Prototype_GameObject_WaterExplode */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WaterExplode"),
 		CWaterExplode::Create(m_pDevice, m_pContext))))
@@ -691,14 +695,7 @@ HRESULT CLoader::Loading_For_Boss()
 		return E_FAIL;
 
 
-	/* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Skag_Spit_Ball_Dif.dds")))))
-		return E_FAIL;
-	///* For.Prototype_Component_Texture_WaterExplode_Spit_Dif */
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Tex_Assault_Muzzle_Flash_Front.dds")))))
-	//	return E_FAIL;
+
 
 
 

@@ -2,6 +2,12 @@
 
 #include "Bullet.h"
 
+NS_BEGIN(Engine)
+class CTexture;
+NS_END
+
+
+NS_BEGIN(Client)
 class CSpiderAntSpit final : public CBullet
 {
 
@@ -31,6 +37,7 @@ private:
 	void Update_Projectile(_float fTimeDelta);
 
 private:
+	CTexture* m_pTextureCom = { nullptr };
 	_vector m_vVelocity = XMVectorZero();
 	_vector m_vGravity = XMVectorSet(0.f, -55.f, 0.f, 0.f);
 	_bool   m_bIsProjectile = false;
@@ -44,3 +51,4 @@ public:
 
 };
 
+NS_END

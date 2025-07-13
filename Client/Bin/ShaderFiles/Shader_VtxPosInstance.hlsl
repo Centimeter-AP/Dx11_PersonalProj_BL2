@@ -117,6 +117,30 @@ PS_OUT PS_MAIN(PS_IN In)
     
     Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);           
     
+    if(Out.vColor.a < 0.3f || Out.vColor.r < 0.2f)
+        discard;
+    
+
+    
+    //Out.vColor.a = saturate(In.vLifeTime.x - In.vLifeTime.y);
+    Out.vColor.rgb *= g_vColor;
+
+    if (In.vLifeTime.y >= In.vLifeTime.x)
+        discard;
+    
+    return Out;
+}
+
+PS_OUT PS_MAIN_GRID(PS_IN In)
+{
+    PS_OUT Out;    
+    
+    float2 baseUV = In.vTexcoord * 0.5f;
+    
+    float2 finalUV = baseUV + float2(0.f, 0.5f);
+    
+    Out.vColor = g_Texture.Sample(DefaultSampler, finalUV);
+    
     if(Out.vColor.a < 0.3f)
         discard;
     
@@ -143,9 +167,21 @@ technique11 DefaultTechnique
         SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
         
 
-        VertexShader = compile vs_5_0 VS_MAIN();    
+        VertexShader = compile vs_5_0 VS_MAIN();     
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN();      
+    }
+ 
+    pass Grid_Pick
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_Default, 0);
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+        
+
+        VertexShader = compile vs_5_0 VS_MAIN();    
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_GRID();      
     }
  
 }
