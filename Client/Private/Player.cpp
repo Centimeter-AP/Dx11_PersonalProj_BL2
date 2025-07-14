@@ -657,6 +657,18 @@ const CGameObject* CPlayer::Get_CurWeapon()
 	return nullptr;
 }
 
+const _float3& CPlayer::Get_CurPickedPos()
+{
+	_matrix matFinal = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iCameraBoneIdx)) * m_pTransformCom->Get_WorldMatrix();
+
+	_vector vEye = XMVectorSetW(matFinal.r[3], 1.f);
+	_vector vLook = XMVectorSetW(XMVector4Normalize(matFinal.r[0]), 0.f);
+	_float3 CurPickedPos = {};
+
+	XMStoreFloat3(&CurPickedPos, vEye + vLook * m_fCurPickedDistance);
+	return CurPickedPos;
+}
+
 void CPlayer::Check_Player_NoHitTime(_float fTimeDelta)
 {
 	m_fNoHitTimeTicker += fTimeDelta;

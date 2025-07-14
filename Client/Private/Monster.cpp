@@ -4,6 +4,7 @@
 #include <Terrain.h>
 #include <Player.h>
 #include "Weapon.h"
+#include "MonsterHitParticle.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
@@ -217,6 +218,16 @@ void CMonster::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 	if (CI_PLWEAPON(eHitColID))
 	{
 		m_iHP -= static_cast<const CWeapon*>(static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurWeapon())->Get_Damage();
+		CMonsterHitParticle::DESC desc = {};
+		desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+		desc.bHasTransformPreset = true;
+		//XMStoreFloat4x4(&desc.PresetMatrix, m_pTransformCom->Get_WorldMatrix());
+		auto& vPos = static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurPickedPos();
+		XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_MonsterHitParticle"),
+			ENUM_CLASS(LEVEL::STATIC), L"Layer_Effect", &desc)))
+			return ;
+
 		if (m_iHP <= 0)
 		{
 			m_iHP = 0;

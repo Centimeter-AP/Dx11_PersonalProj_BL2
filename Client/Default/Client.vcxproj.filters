@@ -235,6 +235,12 @@
     <Filter Include="02.GameObjects\10. Effect\ScreenEffect\Screen_PhaseLock">
       <UniqueIdentifier>{cba5f3c3-ddea-46e4-8186-124d835f4330}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\MonsterHit">
+      <UniqueIdentifier>{7a79f319-417b-476f-8e86-a6a67311153b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Sprite\PhaselockHand">
+      <UniqueIdentifier>{956cae7a-358d-4c60-ba7e-d642178a7248}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -509,6 +515,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Screen_PhaseLock.h">
       <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_PhaseLock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MonsterHitParticle.h">
+      <Filter>02.GameObjects\10. Effect\Particle\MonsterHit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhaselockHand.h">
+      <Filter>02.GameObjects\10. Effect\Sprite\PhaselockHand</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -806,6 +818,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Screen_PhaseLock.cpp">
       <Filter>02.GameObjects\10. Effect\ScreenEffect\Screen_PhaseLock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MonsterHitParticle.cpp">
+      <Filter>02.GameObjects\10. Effect\Particle\MonsterHit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhaselockHand.cpp">
+      <Filter>02.GameObjects\10. Effect\Sprite\PhaselockHand</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

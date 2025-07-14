@@ -49,6 +49,7 @@
 #include "PhaselockSphere.h"
 #include "WebBallParticle.h"
 #include "WaterExplodeParticle.h"
+#include "MonsterHitParticle.h"
 #include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -267,6 +268,14 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PhaseLockScreenMask"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/PhaseLockScreenMask02_Dif_Tex.dds")))))
 		return E_FAIL;
+	/* For.Prototype_Component_Texture_EnergySwirl */ // 회오리
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_EnergySwirl"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/EnergySwirl_Dif_Tex.dds")))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_EnergyOrb */ // 손에 오브?
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_EnergyOrb"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/EnergyOrbCoreColor_Dif_Tex.dds")))))
+		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_WebBall */ 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WebBall"),
@@ -276,6 +285,11 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WebBallParticle"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WebParticle.dds")))))
 		return E_FAIL;
+	
+	///* For.Prototype_Component_Texture_WebBallParticle */ 
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WebBallParticle"),
+	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WebParticle.dds")))))
+	//	return E_FAIL;
 
 #pragma endregion
 
@@ -485,6 +499,21 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &WebBallDesc))))
 		return E_FAIL;
 
+	/* For.Prototype_Component_VIBuffer_WebBallParticle */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		MonsterHitDesc{};
+	MonsterHitDesc.iNumInstance = 100;
+	MonsterHitDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	MonsterHitDesc.vRange = _float3(0.1f, 0.1f, 0.1f);
+	MonsterHitDesc.vSize = _float2(0.03f, 0.07f);
+	MonsterHitDesc.vLifeTime = _float2(0.1f, 0.3f);
+	MonsterHitDesc.vSpeed = _float2(5.f, 10.f);
+	MonsterHitDesc.isLoop = false;
+	MonsterHitDesc.vPivot = _float3(0.f, 0.f, 0.f); 
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_MonsterHitParticle"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &MonsterHitDesc))))
+		return E_FAIL;
+
 	///* For.Prototype_Component_VIBuffer_Cube */
 	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Component_VIBuffer_Cube"),
 	//	CVIBuffer_Cube::Create(m_pGraphic_Device))))
@@ -644,6 +673,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_WebBallParticle */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WebBallParticle"),
 		CWebBallParticle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_MonsterHitParticle */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_MonsterHitParticle"),
+		CMonsterHitParticle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
 

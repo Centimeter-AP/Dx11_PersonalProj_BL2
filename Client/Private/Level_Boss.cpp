@@ -433,27 +433,27 @@ void CLevel_Boss::Key_Input()
 		pPrevCamera->Set_Using(false);
 	}
 
-	if (KEY_DOWN(DIK_SPACE))
-	{
-		auto vCamPos = m_pGameInstance->Get_CamPosition();
-		cout << vCamPos->x << ", " << vCamPos->y << ", " << vCamPos->z << endl;
+	//if (KEY_DOWN(DIK_SPACE))
+	//{
+	//	auto vCamPos = m_pGameInstance->Get_CamPosition();
+	//	cout << vCamPos->x << ", " << vCamPos->y << ", " << vCamPos->z << endl;
 
-		LIGHT_DESC			LightDesc{};
+	//	LIGHT_DESC			LightDesc{};
 
-		LightDesc.eType = LIGHT_DESC::TYPE_POINT;
-		LightDesc.vPosition = *vCamPos;
-		LightDesc.fRange = 130.f;
-		// Ambient : 아주 어두운 보라
-		LightDesc.vAmbient = _float4(0.06f, 0.02f, 0.1f, 1.0f);
-		// Diffuse : 어두운 자수정 컬러
-		LightDesc.vDiffuse = _float4(0.20f, 0.08f, 0.40f, 1.0f);
-		// Specular: 살짝 푸른 빛 도는 하이라이트, Power=28 (중앙이 또렷하게)
-		LightDesc.vSpecular = _float4(0.75f, 0.60f, 1.00f, 1.0f);
-		if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-			return ;
+	//	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	//	LightDesc.vPosition = *vCamPos;
+	//	LightDesc.fRange = 130.f;
+	//	// Ambient : 아주 어두운 보라
+	//	LightDesc.vAmbient = _float4(0.06f, 0.02f, 0.1f, 1.0f);
+	//	// Diffuse : 어두운 자수정 컬러
+	//	LightDesc.vDiffuse = _float4(0.20f, 0.08f, 0.40f, 1.0f);
+	//	// Specular: 살짝 푸른 빛 도는 하이라이트, Power=28 (중앙이 또렷하게)
+	//	LightDesc.vSpecular = _float4(0.75f, 0.60f, 1.00f, 1.0f);
+	//	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+	//		return ;
 
 
-	}
+	//}
 
 }
 

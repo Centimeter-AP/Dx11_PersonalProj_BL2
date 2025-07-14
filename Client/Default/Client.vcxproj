@@ -166,7 +166,9 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
+    <ClInclude Include="..\Public\MonsterHitParticle.h" />
     <ClInclude Include="..\Public\MuzzleFlash.h" />
+    <ClInclude Include="..\Public\PhaselockHand.h" />
     <ClInclude Include="..\Public\PhaselockSphere.h" />
     <ClInclude Include="..\Public\Screen_Hit.h" />
     <ClInclude Include="..\Public\Screen_PhaseLock.h" />
@@ -259,7 +261,9 @@
     <ClCompile Include="..\Private\Camera_FPS.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Tool.cpp" />
+    <ClCompile Include="..\Private\MonsterHitParticle.cpp" />
     <ClCompile Include="..\Private\MuzzleFlash.cpp" />
+    <ClCompile Include="..\Private\PhaselockHand.cpp" />
     <ClCompile Include="..\Private\PhaselockSphere.cpp" />
     <ClCompile Include="..\Private\Screen_Hit.cpp" />
     <ClCompile Include="..\Private\Screen_PhaseLock.cpp" />
