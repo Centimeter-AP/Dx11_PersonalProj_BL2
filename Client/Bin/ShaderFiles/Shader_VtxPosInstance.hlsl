@@ -122,8 +122,8 @@ PS_OUT PS_MAIN(PS_IN In)
     
 
     
-    Out.vColor.a = saturate(In.vLifeTime.y / In.vLifeTime.x);
-    //Out.vColor.a = saturate(In.vLifeTime.x - In.vLifeTime.y);
+    Out.vColor.a *= saturate(In.vLifeTime.y / In.vLifeTime.x);
+    //Out.vColor.a = Out.vColor.a * saturate(In.vLifeTime.x - In.vLifeTime.y);
     //Out.vColor.rgb *= g_vColor;
 
     if (In.vLifeTime.y >= In.vLifeTime.x)
@@ -180,7 +180,7 @@ PS_OUT PS_MAIN_COLOR(PS_IN In)
 technique11 DefaultTechnique
 {
   
-    pass Default
+    pass Default//0
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -192,7 +192,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();      
     }
  
-    pass Grid_Pick
+    pass Grid_Pick//1
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);
@@ -204,7 +204,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_GRID();      
     }
    
-    pass Color
+    pass Color//2
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_Default, 0);

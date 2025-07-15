@@ -73,7 +73,6 @@ HRESULT CRenderer::Initialize()
 
 
 
-
 	m_pVIBuffer = CVIBuffer_Rect::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;

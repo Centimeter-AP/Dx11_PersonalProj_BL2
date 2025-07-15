@@ -42,7 +42,7 @@ void CPlayerState_Fire::Enter()
 	CCamera_FPS* pCamera = dynamic_cast<CCamera_FPS*>(m_pGameInstance->Find_Object(m_pOwner->Get_CurLevel(), L"Layer_Camera", CAM_FPS));
 	if (pCamera == nullptr)
 	{
-		MSG_BOX("CCamera_FPS is nullptr in CPlayerState_Fire::Enter()");
+		MSG_BOX("CCamera_FPS is nullptr");
 		return;
 	}
 	pCamera->Start_Recoil();

@@ -16,10 +16,10 @@ class CSpriteEffect abstract : public CBlendObject
 public:
 	typedef struct tagSpriteEffectDesc : public CBlendObject::DESC
 	{
-		_bool			bAnimation = { false };
-		_uint			iFrame = {};
-		POSTEX_PATH		eShaderPath = { POSTEX_SOFTEFFECT };
-
+		_bool				bAnimation = { false };
+		_uint				iFrame = {};
+		POSTEX_PATH			eShaderPath = { POSTEX_SOFTEFFECT };
+		const _float4x4*	pSocketMatrix = { nullptr };
 	}DESC;
 
 protected:

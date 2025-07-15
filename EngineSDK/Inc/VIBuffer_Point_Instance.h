@@ -29,6 +29,7 @@ public:
 	virtual void Spread(_float fTimeDelta)override;
 	void Drop_Wave(_float fTimeDelta);
 	void Spread_Drop(_float fTimeDelta);
+	void Drop_Gravity(_float fTimeDelta);
 
 	void Set_Loop(_bool isLoop) { m_isLoop = isLoop; }
 

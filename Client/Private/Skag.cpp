@@ -203,6 +203,7 @@ HRESULT CSkag::Ready_SkagStates()
 	m_pStates[SKAG_STATE::STATE_Attack_Tongue] = new CSkagState_Attack_Tongue(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Leap] = new CSkagState_Attack_Leap(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Charge] = new CSkagState_Attack_Charge(this);
+	m_pStates[SKAG_STATE::STATE_Attack_Charge_Strike] = new CSkagState_Attack_Charge_Strike(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Run_Bite] = new CSkagState_Attack_RunBite(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Run_Tongue] = new CSkagState_Attack_RunTongue(this);
 	m_pStates[SKAG_STATE::STATE_Provoked] = new CSkagState_Provoked(this);
@@ -262,13 +263,21 @@ void CSkag::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
 	__super::On_Collision(iMyColID, iHitColID, pHitCol);
 
-	switch (iHitColID)
+	if (iMyColID == ENUM_CLASS(COL_ID::MONSTER_SKAG_ATK))
 	{
-	case ENUM_CLASS(COL_ID::PLAYER_SKILL_PHASELOCK):
-		break;
-	default:
-		break;
+		switch (iHitColID)
+		{
+		case ENUM_CLASS(COL_ID::PLAYER_BODY):
+			if (m_eCurState == SKAG_STATE::STATE_Attack_Charge)
+			{
+				Set_State(SKAG_STATE::STATE_Attack_Charge_Strike);
+			}
+			break;
+		default:
+			break;
+		}
 	}
+
 }
 
 void CSkag::OnHit_Phaselock()

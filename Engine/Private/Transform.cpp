@@ -61,6 +61,15 @@ void CTransform::Scaling(const _float3& vScale)
 	Set_State(STATE::LOOK, XMVector3Normalize(Get_State(STATE::LOOK)) * vScale.z);
 }
 
+void CTransform::Scaling_Ratio(_float fX, _float fY, _float fZ)
+{
+	_float3 vOrigScale = Get_Scaled();
+
+	Set_State(STATE::RIGHT, XMVector3Normalize(Get_State(STATE::RIGHT)) * vOrigScale.x * fX);
+	Set_State(STATE::UP, XMVector3Normalize(Get_State(STATE::UP)) * vOrigScale.y * fY);
+	Set_State(STATE::LOOK, XMVector3Normalize(Get_State(STATE::LOOK)) * vOrigScale.z * fZ);
+}
+
 void CTransform::Go_Straight(_float fTimeDelta, CCollider* pMyCol, _uint iGroupID)
 {
 	_vector		vPosition = Get_State(STATE::POSITION);
@@ -240,6 +249,31 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	Set_State(STATE::LOOK, XMVector4Transform(vLook, RotationMatrix));
 }
 
+_matrix CTransform::Rotation_Billboard(_fvector vAxis, _fmatrix SrcMatrix, _float fRadian)
+{
+	_matrix m_Return = XMMatrixIdentity();
+
+	_float3	vScaled = _float3(XMVectorGetX(XMVector3Length(SrcMatrix.r[0])),
+		XMVectorGetX(XMVector3Length(SrcMatrix.r[1])),
+		XMVectorGetX(XMVector3Length(SrcMatrix.r[2])));
+
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScaled.x;
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScaled.y;
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScaled.z;
+
+	_matrix		RotationMatrix = XMMatrixRotationAxis(vAxis, fRadian);
+
+
+	m_Return.r[0] = XMVector4Transform(SrcMatrix.r[0], RotationMatrix);
+	m_Return.r[1] = XMVector4Transform(SrcMatrix.r[1], RotationMatrix);
+	m_Return.r[2] = XMVector4Transform(SrcMatrix.r[2], RotationMatrix);
+	m_Return.r[3] = SrcMatrix.r[3];
+
+
+
+	return m_Return;
+}
+
 void CTransform::Rotation(_float fX, _float fY, _float fZ)
 {
 	_float3		vScaled = Get_Scaled();
@@ -370,12 +404,51 @@ _matrix CTransform::Billboard()
 	XMStoreFloat3((_float3*)&m_Return.m[2][0], XMVector3Normalize(vLook) * vScaled.z);
 	XMStoreFloat3((_float3*)&m_Return.m[3][0], vPosition);
 	m_Return._44 = 1.f;
-
-	//_float3 vRight = reinterpret_cast<_float3*>(&matCamWorld.m[0][0])->Normalize() * vScaled.x;
-	////_float3 vUp = reinterpret_cast<_float3*>(&matCamWorld.m[1][0])->Normalize() * vScaled.y;
-	//_float3 vLook = reinterpret_cast<_float3*>(&matCamWorld.m[2][0])->Normalize() * vScaled.z;
-	
 	return XMLoadFloat4x4(&m_Return);
+}
+
+_matrix CTransform::Compute_Billboard(_fmatrix SrcMatrix)
+{
+	_float4x4 m_Return = {};
+	XMStoreFloat4x4(&m_Return, XMMatrixIdentity());
+
+	_float3	vScaled = _float3(XMVectorGetX(XMVector3Length(SrcMatrix.r[0])),
+		XMVectorGetX(XMVector3Length(SrcMatrix.r[1])),
+		XMVectorGetX(XMVector3Length(SrcMatrix.r[2])));
+
+	_vector	vPosition = SrcMatrix.r[3];
+
+	_matrix matCamWorld = m_pGameInstance->Get_Transform_Matrix_Inv(D3DTS::VIEW);
+
+	_vector vRight = matCamWorld.r[0]; // X axis
+	_vector vUp = matCamWorld.r[1]; // Y axis
+	_vector vLook = matCamWorld.r[2]; // Z axis
+
+	XMStoreFloat3((_float3*)&m_Return.m[0][0], XMVector3Normalize(vRight) * vScaled.x);
+	XMStoreFloat3((_float3*)&m_Return.m[1][0], XMVector3Normalize(vUp) * vScaled.y);
+	XMStoreFloat3((_float3*)&m_Return.m[2][0], XMVector3Normalize(vLook) * vScaled.z);
+	XMStoreFloat3((_float3*)&m_Return.m[3][0], vPosition);
+	m_Return._44 = 1.f;
+
+	return XMLoadFloat4x4(&m_Return);
+}
+
+_matrix CTransform::Turn_Billboard(_fmatrix SrcMatrix, _float fTimeDelta)
+{
+	_matrix m_Return = XMMatrixIdentity();
+	 
+	_matrix	RotationMatrix = XMMatrixRotationAxis(SrcMatrix.r[2], m_fRotationPerSec * fTimeDelta);
+
+	//Set_State(STATE::RIGHT, XMVector4Transform(SrcMatrix.r[0], RotationMatrix));
+	//Set_State(STATE::UP, XMVector4Transform(SrcMatrix.r[1], RotationMatrix));
+	//Set_State(STATE::LOOK, XMVector4Transform(SrcMatrix.r[2], RotationMatrix));
+
+	m_Return.r[0] = XMVector4Transform(SrcMatrix.r[0], RotationMatrix);
+	m_Return.r[1] = XMVector4Transform(SrcMatrix.r[1], RotationMatrix);
+	m_Return.r[2] = XMVector4Transform(SrcMatrix.r[2], RotationMatrix);
+	m_Return.r[3] = SrcMatrix.r[3];
+
+	return m_Return;
 }
 
 _float CTransform::Compute_Target_Look_Angle(_fvector vTargetPos)

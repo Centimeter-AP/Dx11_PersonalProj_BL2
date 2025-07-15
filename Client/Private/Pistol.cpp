@@ -91,7 +91,6 @@ HRESULT CPistol::Render()
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
-
 		if (FAILED(m_pModelCom->Render(i)))
 			return E_FAIL;
 	}

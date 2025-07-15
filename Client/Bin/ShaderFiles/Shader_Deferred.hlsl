@@ -28,6 +28,7 @@ vector g_vMtrlSpecular = 1.f;
 
 vector g_vCamPosition;
 
+
 struct VS_IN
 {
     float3 vPosition : POSITION;
@@ -306,8 +307,6 @@ PS_OUT PS_MAIN_BLURY(PS_IN In)
     //}
     
     Out.vBackBuffer *= 2.f;
-    
-    
     
     return Out;
 }

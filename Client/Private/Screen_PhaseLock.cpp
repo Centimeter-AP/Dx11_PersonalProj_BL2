@@ -47,27 +47,6 @@ EVENT CScreen_PhaseLock::Update(_float fTimeDelta)
         return EVN_NONE;
 
     m_fShowTicker += fTimeDelta;
-    if (m_fShowTicker <= 0.1f)
-    {
-        m_vColorPercent = { 3.f, 0.f, 0.f, 1.f };
-    }
-    else
-    {
-        if (m_vColorPercent.y < 1.f ||
-            m_vColorPercent.z < 1.f)
-        {
-            m_vColorPercent.x -= fTimeDelta * 6.f;
-            m_vColorPercent.y += fTimeDelta * 4.f;
-            m_vColorPercent.z += fTimeDelta * 4.f;
-        }
-        else
-            m_vColorPercent = { 1.f, 1.f, 1.f, 1.f };
-    }
-
-    if (m_fShowTicker >= 1.f)
-    {
-		m_fOpacity -= fTimeDelta * 2.f;
-    }
 
     return EVN_NONE;
 }

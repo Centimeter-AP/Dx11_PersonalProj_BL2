@@ -61,6 +61,7 @@ public:
 	void Go_Straight(_float fTimeDelta, class CCollider* pMyCol, _uint iGroupID); //deprecated
 	void Scaling(_float fX = 1.f, _float fY = 1.f, _float fZ = 1.f);
 	void Scaling(const _float3& vScale);
+	void Scaling_Ratio(_float fX = 1.f, _float fY = 1.f, _float fZ = 1.f);
 
 public:
 	void Go_Straight(_float fTimeDelta, class CNavigation* pNavigation = nullptr, _bool isGrounded = true); 
@@ -76,6 +77,7 @@ public:
 	void Go_Down(_float fTimeDelta);
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
+	_matrix Rotation_Billboard(_fvector vAxis, _fmatrix SrcMatrix, _float fRadian);
 	void Rotation(_float fX, _float fY, _float fZ);
 
 public:
@@ -86,7 +88,9 @@ public:
 	void LookAtLerp_NoY(_fvector vAt, _float fTimeDelta, _float fLerpSpeed);
 
 public:
-	_matrix Billboard();
+	_matrix Billboard(); // 이건 내거 빌보드 후 반환
+	_matrix Compute_Billboard(_fmatrix SrcMatrix); // 이건 매개변수 받아서 빌보드 후 반환
+	_matrix Turn_Billboard(_fmatrix SrcMatrix, _float fTimeDelta);
 
 public:
 	_float Compute_Target_Look_Angle(_fvector vTargetPos);

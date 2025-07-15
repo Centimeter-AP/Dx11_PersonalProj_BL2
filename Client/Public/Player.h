@@ -117,7 +117,7 @@ public:
 	const CGameObject* Get_CurWeapon();
 	const _uint	Get_CurLevel() { return m_iLevelID; }
 	const _float& Get_CurPickedDistance() { return m_fCurPickedDistance; }
-	const _float3& Get_CurPickedPos();
+	const _float3 Get_CurPickedPos();
 
 private:
 	CShader*			m_pShaderCom = { nullptr };

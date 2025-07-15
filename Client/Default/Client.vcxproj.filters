@@ -241,6 +241,12 @@
     <Filter Include="02.GameObjects\10. Effect\Sprite\PhaselockHand">
       <UniqueIdentifier>{956cae7a-358d-4c60-ba7e-d642178a7248}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\Energy">
+      <UniqueIdentifier>{c840ce57-4c24-497e-9026-cbf42458bad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\10. Effect\Particle\BossSmokeParticle">
+      <UniqueIdentifier>{d447c166-64de-414e-b562-c60f19daab20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -519,8 +525,11 @@
     <ClInclude Include="..\Public\MonsterHitParticle.h">
       <Filter>02.GameObjects\10. Effect\Particle\MonsterHit</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PhaselockHand.h">
+    <ClInclude Include="..\Public\PhaselockSwirl.h">
       <Filter>02.GameObjects\10. Effect\Sprite\PhaselockHand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\BossSmokeParticle.h">
+      <Filter>02.GameObjects\10. Effect\Particle\BossSmokeParticle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -822,8 +831,11 @@
     <ClCompile Include="..\Private\MonsterHitParticle.cpp">
       <Filter>02.GameObjects\10. Effect\Particle\MonsterHit</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PhaselockHand.cpp">
+    <ClCompile Include="..\Private\PhaselockSwirl.cpp">
       <Filter>02.GameObjects\10. Effect\Sprite\PhaselockHand</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\BossSmokeParticle.cpp">
+      <Filter>02.GameObjects\10. Effect\Particle\BossSmokeParticle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

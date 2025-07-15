@@ -21,6 +21,9 @@ HRESULT CSpriteEffect::Initialize_Prototype()
 
 HRESULT CSpriteEffect::Initialize(void* pArg)
 {
+	if (nullptr == pArg)
+		return E_FAIL;
+
 	DESC* pDesc = static_cast<DESC*>(pArg);
 
 	m_bAnimation = pDesc->bAnimation;

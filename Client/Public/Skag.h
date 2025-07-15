@@ -48,7 +48,7 @@ public:
 	};
 
 	enum SKAG_STATE {
-		STATE_Attack_Bite, STATE_Attack_Charge, STATE_Attack_Claw, STATE_Attack_ElementBreath, STATE_Attack_Leap,
+		STATE_Attack_Bite, STATE_Attack_Charge, STATE_Attack_Charge_Strike, STATE_Attack_Claw, STATE_Attack_ElementBreath, STATE_Attack_Leap,
 		STATE_Attack_Radius, STATE_Attack_Run_Bite, STATE_Attack_Run_Tongue, STATE_Attack_Spit, STATE_Attack_Tongue,
 		STATE_Death, STATE_Dodge, STATE_GetUp, STATE_Hardflinch, STATE_Idle, STATE_Injured_Walk, STATE_Knockback, STATE_Leap,
 		STATE_Patrol, STATE_Perch_DONTUSE, STATE_PhaseLocked, STATE_Provoked, STATE_Provoked_Idle, STATE_Retreat, STATE_Roar, STATE_Run,

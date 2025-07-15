@@ -78,6 +78,8 @@ void CCollider_Manager::Intersect_Group(_uint iSrcGroupID, _uint iDstGroupID, _b
 		{
 			if (!pDstCollider->Is_Active())
 				continue;
+			if (pSrcCollider->Get_Owner() == pDstCollider->Get_Owner())
+				continue;
 			if (pSrcCollider != pDstCollider && true == pSrcCollider->Intersect(pDstCollider))
 			{
 				pSrcCollider->Get_Owner()->On_Collision(pSrcCollider->Get_ColliderID(), pDstCollider->Get_ColliderID(), pDstCollider);

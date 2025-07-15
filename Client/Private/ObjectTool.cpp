@@ -448,6 +448,9 @@ HRESULT CObjectTool::Make_Particles()
 	if (ImGui::RadioButton("Spread + Drop", m_eParticleType == PTYPE_SPDROP)) {
 		m_eParticleType = PTYPE_SPDROP;
 	}
+	if (ImGui::RadioButton("Drop_Gravity", m_eParticleType == PTYPE_DROPGRAV)) {
+		m_eParticleType = PTYPE_DROPGRAV;
+	}
 	if (m_pToolParticle != nullptr)
 	{
 		m_pToolParticle->Set_PType(m_eParticleType);

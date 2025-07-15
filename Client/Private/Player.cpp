@@ -1,7 +1,7 @@
 #include "Player.h"
 #include "PlayerState.h"
 #include "GameInstance.h"
-#include "Camera.h"
+#include "Camera_FPS.h"
 #include "Monster.h"
 #include "Bullet.h"
 #include "Terrain.h"
@@ -15,6 +15,7 @@
 #include "UI_AmmoPannel.h"
 #include "UI_EnemyHP.h"
 #include "Screen_Hit.h"
+#include "PhaselockSwirl.h"
 
 constexpr _float PLAYER_DEFAULTSPEED = 10.f;
 constexpr _float NONCOMBAT_TIMER = 10.f;
@@ -182,9 +183,16 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 	if (CI_MONSTERATK(eHitColID))
 	{
 		CMonster* pHitOwner = static_cast<CMonster*>(pHitCol->Get_Owner());
-		static_cast<CScreen_Hit*>(m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second)->Show_Effect(pHitOwner->Get_Transform()->Get_State(STATE::POSITION));
 		if (pHitOwner->Is_FirstHit())
 		{
+			static_cast<CScreen_Hit*>(m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second)->Show_Effect(pHitOwner->Get_Transform()->Get_State(STATE::POSITION));
+			CCamera_FPS* pCamera = dynamic_cast<CCamera_FPS*>(m_pGameInstance->Find_Object(Get_CurLevel(), L"Layer_Camera", CAM_FPS));
+			if (pCamera == nullptr)
+			{
+				MSG_BOX("CCamera_FPS is nullptr");
+				return;
+			}
+			pCamera->Start_Recoil();
 			if (m_bShield)
 			{
 				m_fShield -= static_cast<_float>(pHitOwner->Get_Damage());
@@ -226,11 +234,6 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 		pHitOwner->Set_Dead();
 		m_fNoHitTimeTicker = 0.f;
 	}
-
-	//if (CI_MONSTER(eHitColID))
-	//	;
-	//if (m_iHP <= 0)
-	//	;
 }
 
 void CPlayer::Key_Input(_float fTimeDelta)
@@ -247,6 +250,7 @@ void CPlayer::Key_Input(_float fTimeDelta)
 		m_iHP = m_iMaxHP;
 		m_fShield = m_fMaxShield;
 	}
+
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
 	{
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);
@@ -263,6 +267,8 @@ void CPlayer::Key_Input(_float fTimeDelta)
 
 		m_pTransformCom->Turn(m_pTransformCom->Get_State(STATE::RIGHT), fDeltaPitch);
 	}
+
+	
 }
 
 void CPlayer::Set_State(PLA_STATE eState)
@@ -508,6 +514,25 @@ HRESULT CPlayer::Ready_UIObjects(void* pArg)
 
 HRESULT CPlayer::Ready_Effects(void* pArg)
 {
+	CSpriteEffect::DESC SpriteDesc = {};
+	SpriteDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
+	SpriteDesc.bActive = true;
+	SpriteDesc.fRotationPerSec = 10.f;
+	//"L_Weapon_Bone"
+	_uint iBoneIdx = m_pModelCom->Find_BoneIndex("L_Weapon_Bone");
+	SpriteDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	SpriteDesc.pParentObject = this;
+	SpriteDesc.pSocketMatrix = m_pModelCom->Get_CombinedTransformationMatrix(iBoneIdx);
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_PhaselockHand"),
+	//	ENUM_CLASS(LEVEL::STATIC), TEXT("Layer_PlayerEffect"), &SpriteDesc)))
+	//	return E_FAIL;
+	if (FAILED(__super::Add_PartObject(ENUM_CLASS(LEVEL::STATIC), TEXT("PartObject_Player_Effect_PhaselockHand"), TEXT("Prototype_GameObject_PhaselockHand"), &SpriteDesc)))
+		return E_FAIL;
+
+
+	m_PartObjects.find(TEXT("PartObject_Player_Effect_PhaselockHand"))->second->Set_Active(false);
+
+
 	return S_OK;
 }
 
@@ -657,7 +682,7 @@ const CGameObject* CPlayer::Get_CurWeapon()
 	return nullptr;
 }
 
-const _float3& CPlayer::Get_CurPickedPos()
+const _float3 CPlayer::Get_CurPickedPos()
 {
 	_matrix matFinal = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iCameraBoneIdx)) * m_pTransformCom->Get_WorldMatrix();
 

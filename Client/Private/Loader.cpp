@@ -50,6 +50,8 @@
 #include "WebBallParticle.h"
 #include "WaterExplodeParticle.h"
 #include "MonsterHitParticle.h"
+#include "PhaselockSwirl.h"
+
 #include "Sky.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -286,10 +288,10 @@ HRESULT CLoader::Loading_For_Logo()
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WebParticle.dds")))))
 		return E_FAIL;
 	
-	///* For.Prototype_Component_Texture_WebBallParticle */ 
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WebBallParticle"),
-	//	CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/WebParticle.dds")))))
-	//	return E_FAIL;
+	/* For.Prototype_Component_Texture_Smoke */ 
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Smoke"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Explosion_Smoke_Dif.dds")))))
+		return E_FAIL;
 
 #pragma endregion
 
@@ -669,6 +671,11 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CWaterExplode::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	/* For.Prototype_GameObject_WaterExplode */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_PhaselockHand"),
+		CPhaselockSwirl::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 #pragma region PROTOTYPE_PARTICLES
 	/* For.Prototype_GameObject_WebBallParticle */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_WebBallParticle"),
@@ -716,19 +723,19 @@ HRESULT CLoader::Loading_For_Maptool()
 			"../Bin/Resources/Models/Bin_Anim/Pistol.bin", PreTransMatrix))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_VIBuffer_Explosion_Test */
-	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		ExplosionDesc{};
-	ExplosionDesc.iNumInstance = 1000;
-	ExplosionDesc.vCenter = _float3(100.f, 50.f, 100.0f);
-	ExplosionDesc.vRange = _float3(200.f, 3.0f, 200.f);
-	ExplosionDesc.vSize = _float2(10.f, 20.f);
-	ExplosionDesc.vLifeTime = _float2(2.f, 5.f);
-	ExplosionDesc.vSpeed = _float2(10.f, 20.f);
-	ExplosionDesc.isLoop = true;
+	///* For.Prototype_Component_VIBuffer_Explosion_Test */
+	//CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		ExplosionDesc{};
+	//ExplosionDesc.iNumInstance = 1000;
+	//ExplosionDesc.vCenter = _float3(100.f, 50.f, 100.0f);
+	//ExplosionDesc.vRange = _float3(200.f, 3.0f, 200.f);
+	//ExplosionDesc.vSize = _float2(10.f, 20.f);
+	//ExplosionDesc.vLifeTime = _float2(2.f, 5.f);
+	//ExplosionDesc.vSpeed = _float2(10.f, 20.f);
+	//ExplosionDesc.isLoop = true;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Explosion_Test"),
-		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplosionDesc))))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Explosion_Test"),
+	//	CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &ExplosionDesc))))
+	//	return E_FAIL;
 
 
 

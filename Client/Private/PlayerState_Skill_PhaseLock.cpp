@@ -3,6 +3,7 @@
 #include "Monster.h"
 #include <UI_Phaselock.h>
 #include "PhaselockSphere.h"
+#include "PhaselockSwirl.h"
 
 void CPlayerState_Skill_PhaseLock::Enter()
 {
@@ -15,6 +16,7 @@ void CPlayerState_Skill_PhaseLock::Enter()
 		static_cast<CMonster*>(m_pOwner->m_pCurPickedCollider->Get_Owner())->OnHit_Phaselock();
 		m_bSuccess = true;
 		XMStoreFloat3(&vTargetPos, m_pOwner->m_pCurPickedCollider->Get_Owner()->Get_Transform()->Get_State(STATE::POSITION));
+		static_cast<CPhaselockSwirl*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Effect_PhaselockHand"))->second)->Show_Effect();
 	}
 	else
 	{
@@ -46,6 +48,8 @@ void CPlayerState_Skill_PhaseLock::Execute(_float fTimeDelta)
 
 		m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Effect_PhaselockBubble"),
 			ENUM_CLASS(LEVEL::STATIC), TEXT("Layer_Effect"), &Desc);
+
+
 	}
 }
 

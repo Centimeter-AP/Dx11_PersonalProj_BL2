@@ -202,14 +202,12 @@ float4 SoftEffect(float4 vOrigColor, float4 vProjPos)
     if (vDepthDesc.y != 0.f)
     {
         float fOldViewZ = vDepthDesc.y * 1000.f;
-        float fDiff = (fOldViewZ - vProjPos.w);
-        vOrigColor.a = vOrigColor.a * saturate(fDiff) * (vOrigColor.r + 0.2f);
+        float fDiff = (fOldViewZ - vProjPos.w) / vProjPos.w;
+        vOrigColor.a = saturate(vOrigColor.a * saturate(fDiff));
     }
-    //vOrigColor.rgb *= float3(0.6f, 0.8f, 1.f);
     
     return vOrigColor;
 }
-
 
 PS_OUT PS_MAIN_SOFTEFFECT(PS_IN_PROJPOS In)
 {
@@ -224,7 +222,7 @@ PS_OUT PS_MAIN_SOFTEFFECT(PS_IN_PROJPOS In)
     /*화면 전체 기준(0, 0 ~ 1, 1)으로 이펙트의 픽셀이 그려질 위치에 해당하는 좌표 */    
     Out.vColor = SoftEffect(Out.vColor, In.vProjPos);
     
-    Out.vColor.rgb *= float3(0.6f, 0.8f, 1.f);
+    //Out.vColor.rgb *= float3(0.6f, 0.8f, 1.f);
     return Out;
 }
 

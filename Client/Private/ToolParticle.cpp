@@ -49,6 +49,10 @@ EVENT CToolParticle::Update(_float fTimeDelta)
 	{
 		m_pVIBufferCom->Spread_Drop(fTimeDelta);
 	}
+	if (m_iPType == 3)
+	{
+		m_pVIBufferCom->Drop_Gravity(fTimeDelta);
+	}
 	return EVN_NONE;
 
 }
@@ -104,7 +108,7 @@ HRESULT CToolParticle::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_WaterExplode_Spit_Dif"),
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Smoke"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 

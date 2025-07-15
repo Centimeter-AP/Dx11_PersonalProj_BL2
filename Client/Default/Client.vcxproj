@@ -158,6 +158,7 @@
     <ClInclude Include="..\Public\ARState.h" />
     <ClInclude Include="..\public\AssaultRifle.h" />
     <ClInclude Include="..\public\BackGround.h" />
+    <ClInclude Include="..\Public\BossSmokeParticle.h" />
     <ClInclude Include="..\public\Bullet.h" />
     <ClInclude Include="..\Public\Camera_FPS.h" />
     <ClInclude Include="..\Public\Camera_Free.h" />
@@ -168,7 +169,7 @@
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\MonsterHitParticle.h" />
     <ClInclude Include="..\Public\MuzzleFlash.h" />
-    <ClInclude Include="..\Public\PhaselockHand.h" />
+    <ClInclude Include="..\Public\PhaselockSwirl.h" />
     <ClInclude Include="..\Public\PhaselockSphere.h" />
     <ClInclude Include="..\Public\Screen_Hit.h" />
     <ClInclude Include="..\Public\Screen_PhaseLock.h" />
@@ -257,13 +258,14 @@
     <ClCompile Include="..\Private\ARState_Reload_Fast.cpp" />
     <ClCompile Include="..\private\AssaultRifle.cpp" />
     <ClCompile Include="..\private\BackGround.cpp" />
+    <ClCompile Include="..\Private\BossSmokeParticle.cpp" />
     <ClCompile Include="..\private\Bullet.cpp" />
     <ClCompile Include="..\Private\Camera_FPS.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Tool.cpp" />
     <ClCompile Include="..\Private\MonsterHitParticle.cpp" />
     <ClCompile Include="..\Private\MuzzleFlash.cpp" />
-    <ClCompile Include="..\Private\PhaselockHand.cpp" />
+    <ClCompile Include="..\Private\PhaselockSwirl.cpp" />
     <ClCompile Include="..\Private\PhaselockSphere.cpp" />
     <ClCompile Include="..\Private\Screen_Hit.cpp" />
     <ClCompile Include="..\Private\Screen_PhaseLock.cpp" />
