@@ -15,6 +15,7 @@
 #include "Object_Manager.h"
 #include "Camera_Manager.h"
 #include "Target_Manager.h"
+#include "Sound_Device.h"
 
 IMPLEMENT_SINGLETON(CGameInstance);
 
@@ -60,6 +61,10 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 	if (nullptr == m_pPipeLine)
 		return E_FAIL;
 
+	m_pSound_Device = CSound_Device::Create();
+	if (nullptr == m_pSound_Device)
+		return E_FAIL;
+
 	m_pPicking_Manager = CPicking_Manager::Create(*ppDeviceOut, *ppContextOut, EngineDesc.hWnd);
 	if (nullptr == m_pPicking_Manager)
 		return E_FAIL;
@@ -90,6 +95,7 @@ HRESULT CGameInstance::Initialize_Engine(const ENGINE_DESC& EngineDesc, _Out_ ID
 void CGameInstance::Update_Engine(_float fTimeDelta)
 {
 	m_pInput_Device->Update();
+	m_pSound_Device->Update();
 
 	m_pObject_Manager->Priority_Update(fTimeDelta);
 
@@ -533,6 +539,22 @@ _bool CGameInstance::isIn_Frustum_WorldSpace(_fvector vWorldPos, _float fRange)
 {
 	return m_pFrustum->isIn_WorldSpace(vWorldPos, fRange);
 }
+HRESULT CGameInstance::LoadSound(const string& Path, _bool is3D, _bool loop, _bool stream, unordered_map<string, class CSound_Core*>* pOut)
+{
+	return m_pSound_Device->LoadSound(Path, is3D, loop, stream, pOut);
+}
+CSound_Core* CGameInstance::Get_Single_Sound(const string& strKey)
+{
+	return m_pSound_Device->Get_Single_Sound(strKey);
+}
+void CGameInstance::Set_Listener_Position(CTransform* pTransform, const _float3& vel)
+{
+	m_pSound_Device->Set_Listener_Position(pTransform, vel);
+}
+void CGameInstance::Set_Master_Volume(_float volume)
+{
+	m_pSound_Device->Set_Master_Volume(volume);
+}
 #pragma endregion
 
 void CGameInstance::Release_Engine()
@@ -562,6 +584,8 @@ void CGameInstance::Release_Engine()
 	Safe_Release(m_pLevel_Manager);
 
 	Safe_Release(m_pInput_Device);
+
+	Safe_Release(m_pSound_Device);
 
 	Safe_Release(m_pGraphic_Device);
 

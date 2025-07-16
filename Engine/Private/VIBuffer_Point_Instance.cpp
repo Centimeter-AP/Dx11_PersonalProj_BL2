@@ -224,6 +224,52 @@ void CVIBuffer_Point_Instance::Drop_Wave(_float fTimeDelta)
 	m_pContext->Unmap(m_pVBInstance, 0);
 }
 
+void CVIBuffer_Point_Instance::Falling(_float fTimeDelta)
+{
+	D3D11_MAPPED_SUBRESOURCE SubResource{};
+	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &SubResource);
+
+	VTXPOS_PARTICLE_INSTANCE* pVertices = static_cast<VTXPOS_PARTICLE_INSTANCE*>(SubResource.pData);
+
+	for (size_t i = 0; i < m_iNumInstance; i++)
+	{
+		pVertices[i].vLifeTime.y = fTimeDelta;
+
+		if (m_isLoop && pVertices[i].vLifeTime.y >= pVertices[i].vLifeTime.x)
+		{
+			pVertices[i].vLifeTime.y -= pVertices[i].vLifeTime.x;
+		}
+
+		const _float4& basePos = m_pVertexInstances[i].vTranslation;
+
+		_float fallSpeed = m_pSpeeds[i];
+		_float damping = expf(-0.3f * fTimeDelta);
+
+		// Y축 감쇠된 낙하 + 진동
+		_float sinWaveY = sinf(fTimeDelta * 4.f + i) * 3.3f;  // 진동 범위 0.3
+		_float baseFallY = fallSpeed * fTimeDelta * damping;
+
+		_float finalY = basePos.y + baseFallY - sinWaveY;
+
+		// XZ 방향 더 크게 흔들기 (비틀리듯)
+		_float swingAmpX = 0.3f + 0.1f * (i % 3);
+		_float swingAmpZ = 0.3f + 0.1f * (i % 5);
+		_float swingFreq = 3.0f + 0.5f * (i % 4);
+
+		_float phase = fTimeDelta * swingFreq + i * 10.f;
+
+		_float offsetX = sinf(phase) * swingAmpX;
+		_float offsetZ = cosf(phase) * swingAmpZ;
+
+		pVertices[i].vTranslation.x = basePos.x + offsetX;
+		pVertices[i].vTranslation.y = finalY;
+		pVertices[i].vTranslation.z = basePos.z + offsetZ;
+
+	}
+
+	m_pContext->Unmap(m_pVBInstance, 0);
+}
+
 void CVIBuffer_Point_Instance::Spread_Drop(_float fTimeDelta)
 {
 	D3D11_MAPPED_SUBRESOURCE	SubResource{};
@@ -271,8 +317,7 @@ void CVIBuffer_Point_Instance::Drop_Gravity(_float fTimeDelta)
 		//vDir = XMVectorSetW(XMVector3Normalize(XMLoadFloat3(&m_vPivot) - XMLoadFloat4(&m_pVertexInstances[i].vTranslation)), 0.f);
 
 
-
-		pVertices[i].vTranslation.y = pVertices[i].vTranslation.y + m_pSpeeds[i] * fTimeDelta;
+		pVertices[i].vTranslation.y = pVertices[i].vTranslation.y + m_pSpeeds[i] * fTimeDelta * 1.5f;
 		//pVertices[i].vTranslation.y -= m_pSpeeds[i] * fTimeDelta;
 		_float t = pVertices[i].vLifeTime.y /*/ pVertices[i].vLifeTime.x */* m_pSpeeds[i] * 1.f;
 		pVertices[i].vTranslation.y -= 9.8f * t * fTimeDelta;
@@ -283,6 +328,15 @@ void CVIBuffer_Point_Instance::Drop_Gravity(_float fTimeDelta)
 			pVertices[i].vTranslation.y = m_pVertexInstances[i].vTranslation.y;
 		}
 	}
+
+	/*
+	// 부드럽게 작아지게 곡선 적용 (지수 감쇠)
+	float fScale = 1.f - (fProgress * fProgress);
+
+	Out.vPSize = float2(length(In.TransformMatrix._11_12_13) * length(g_WorldMatrix._11_12_13)
+		, length(In.TransformMatrix._21_22_23) * length(g_WorldMatrix._21_22_23))
+		* fScale;
+		* */
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 }

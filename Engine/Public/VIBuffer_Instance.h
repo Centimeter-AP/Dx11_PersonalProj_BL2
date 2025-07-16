@@ -51,4 +51,4 @@ public:
 	virtual void Free() override;
 };
 
-NS_END;
+NS_END

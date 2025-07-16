@@ -28,6 +28,7 @@ public:
 	virtual void Drop(_float fTimeDelta)override;
 	virtual void Spread(_float fTimeDelta)override;
 	void Drop_Wave(_float fTimeDelta);
+	void Falling(_float fTimePosition);
 	void Spread_Drop(_float fTimeDelta);
 	void Drop_Gravity(_float fTimeDelta);
 

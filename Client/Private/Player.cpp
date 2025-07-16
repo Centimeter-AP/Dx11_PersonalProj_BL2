@@ -250,7 +250,11 @@ void CPlayer::Key_Input(_float fTimeDelta)
 		m_iHP = m_iMaxHP;
 		m_fShield = m_fMaxShield;
 	}
-
+	if (KEY_DOWN(DIK_SPACE))
+	{
+		auto vCamPos = m_pGameInstance->Get_CamPosition();
+		cout << vCamPos->x << ", " << vCamPos->y << ", " << vCamPos->z << endl;
+	}
 	if (MouseMove = m_pGameInstance->Get_DIMouseMove(DIMM::X))
 	{
 		m_pTransformCom->Turn(XMVectorSet(0.f, 1.f, 0.f, 0.f), MouseMove * fTimeDelta * m_fSensor);

@@ -50,6 +50,7 @@
 #include "WebBallParticle.h"
 #include "WaterExplodeParticle.h"
 #include "MonsterHitParticle.h"
+#include "BossSmokeParticle.h"
 #include "PhaselockSwirl.h"
 
 #include "Sky.h"
@@ -231,7 +232,7 @@ HRESULT CLoader::Loading_For_Logo()
 
 	/* For.Prototype_Component_Texture_Screen_Hit */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Screen_Hit"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Hit%d.png"), 2))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Hit%d.png"), 2)))) 
 		return E_FAIL;
 
 
@@ -299,6 +300,14 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_DefaultDissolve"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Effect/Noise.png")))))
 		return E_FAIL;
+	/* For.Prototype_Component_Texture_PurpleRock */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PurpleRock"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Etc/Volcanic_Slag_Dif.dds")))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_PurpleRock */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PurpleRock_Emissive"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Etc/Volcanic_Slag_Emis.dds")))))
+		return E_FAIL;
 
 
 
@@ -309,7 +318,10 @@ HRESULT CLoader::Loading_For_Logo()
 
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
-	
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), _wstring(TEXT("Prototype_Component_Sound_Weapon"))
+		CSoundController::Create(TEXT("Path")))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 
@@ -501,7 +513,7 @@ HRESULT CLoader::Loading_For_GamePlay()
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &WebBallDesc))))
 		return E_FAIL;
 
-	/* For.Prototype_Component_VIBuffer_WebBallParticle */
+	/* For.Prototype_Component_VIBuffer_MonsterHitParticle */
 	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		MonsterHitDesc{};
 	MonsterHitDesc.iNumInstance = 100;
 	MonsterHitDesc.vCenter = _float3(0.f, 0.f, 0.f);
@@ -514,6 +526,21 @@ HRESULT CLoader::Loading_For_GamePlay()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_MonsterHitParticle"),
 		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &MonsterHitDesc))))
+		return E_FAIL;
+
+	/* For.Prototype_Component_VIBuffer_BossSmokeParticle */
+	CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		BossSmokeDesc{};
+	BossSmokeDesc.iNumInstance = 100;
+	BossSmokeDesc.vCenter = _float3(0.f, 0.f, 0.f);
+	BossSmokeDesc.vRange = _float3(150.f, 30.f, 60.f);
+	BossSmokeDesc.vSize = _float2(10.f, 20.f);
+	BossSmokeDesc.vLifeTime = _float2(3.f, 5.f);
+	BossSmokeDesc.vSpeed = _float2(10.f, 13.f);
+	BossSmokeDesc.isLoop = true;
+	BossSmokeDesc.vPivot = _float3(0.f, 0.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_BossSmokeParticle"),
+		CVIBuffer_Point_Instance::Create(m_pDevice, m_pContext, &BossSmokeDesc))))
 		return E_FAIL;
 
 	///* For.Prototype_Component_VIBuffer_Cube */
@@ -684,6 +711,10 @@ HRESULT CLoader::Loading_For_GamePlay()
 	/* For.Prototype_GameObject_MonsterHitParticle */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_MonsterHitParticle"),
 		CMonsterHitParticle::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	/* For.Prototype_GameObject_BossSmokeParticle */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_BossSmokeParticle"),
+		CBossSmokeParticle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 #pragma endregion
 
@@ -865,13 +896,13 @@ HRESULT CLoader::Loading_For_Boss()
 			"../Bin/Resources/Models/Bin_NonAnim/Leviathan_HitMesh.bin", PreTransMatrix))))
 		return E_FAIL;
 
-	PreTransMatrix =/* XMMatrixScaling(0.1f, 0.1f, 0.1f) **/ XMMatrixRotationY(XMConvertToRadians(-90.f));
+	PreTransMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Levi_Boulder"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
 			"../Bin/Resources/Models/Bin_NonAnim/BarrensRockBoulder.bin", PreTransMatrix))))
 		return E_FAIL;
 
-	PreTransMatrix =/* XMMatrixScaling(0.1f, 0.1f, 0.1f) **/ XMMatrixRotationY(XMConvertToRadians(-90.f));
+	PreTransMatrix = XMMatrixScaling(0.1f, 0.1f, 0.1f) * XMMatrixRotationY(XMConvertToRadians(-90.f));
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_Component_Model_Levi_Boulder_Small"),
 		CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM,
 			"../Bin/Resources/Models/Bin_NonAnim/BarrensRockBoulder_02.bin", PreTransMatrix))))

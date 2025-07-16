@@ -24,6 +24,10 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 
+
+#include "FMOD/fmod.hpp"
+#include "FMOD/fmod_studio.hpp"
+
 #include <d3dcompiler.h>
 using namespace DirectX;
 

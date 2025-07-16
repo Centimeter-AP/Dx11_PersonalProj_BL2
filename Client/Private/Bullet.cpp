@@ -77,9 +77,10 @@ HRESULT CBullet::Render()
 	{
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0)))
 			continue;
+
 		//m_pModelCom->Bind_Material(m_pShaderCom, "g_DiffuseTexture", i, aiTextureType_DIFFUSE, 0);
-		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
-		if (FAILED(m_pShaderCom->Begin(0)))
+		//m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", i);
+		if (FAILED(m_pShaderCom->Begin(MESH_DEFAULT)))
 			return E_FAIL;
 
 		if (FAILED(m_pModelCom->Render(i)))
@@ -94,7 +95,7 @@ HRESULT CBullet::Render()
 HRESULT CBullet::Ready_Components(void* pArg)
 {
 	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxAnimMesh"), // 총 전용 셰이더로 바꾸던지 패스를 바꾸던지
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"),
 		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
 		return E_FAIL;
 

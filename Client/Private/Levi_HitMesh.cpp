@@ -48,7 +48,7 @@ void CLevi_HitMesh::Priority_Update(_float fTimeDelta)
 	fTime += fTimeDelta;
 	if (fTime >= 1.f)
 	{
-		cout << m_strSocketBoneName << " HP : " << m_iHP << endl;
+		//cout << m_strSocketBoneName << " HP : " << m_iHP << endl;
 		fTime = 0.f;
 	}
 	if (m_iHP <= 0)

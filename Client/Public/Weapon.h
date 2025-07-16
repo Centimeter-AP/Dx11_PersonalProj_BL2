@@ -6,6 +6,7 @@
 NS_BEGIN(Engine)
 class CShader;
 class CModel;
+class CSoundController;
 NS_END
 
 NS_BEGIN(Client)
@@ -34,6 +35,7 @@ public:
 protected:
 	CShader* m_pShaderCom = { nullptr };
 	CModel* m_pModelCom = { nullptr };
+	CSoundController* m_pSoundCom = { nullptr };
 
 	class CTransform*		m_pPlayerTransform = { nullptr };
 	CModel*					m_pPlayerModel = { nullptr };

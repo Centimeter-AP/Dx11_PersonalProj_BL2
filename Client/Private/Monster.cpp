@@ -221,7 +221,6 @@ void CMonster::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 		CMonsterHitParticle::DESC desc = {};
 		desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 		desc.bHasTransformPreset = true;
-		//XMStoreFloat4x4(&desc.PresetMatrix, m_pTransformCom->Get_WorldMatrix());
 		auto& vPos = static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurPickedPos();
 		XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_MonsterHitParticle"),

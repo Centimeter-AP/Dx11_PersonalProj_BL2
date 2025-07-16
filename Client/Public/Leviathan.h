@@ -70,7 +70,7 @@ private:
 
 public:
 	virtual void On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol) override;
-	HRESULT Spawn_Bullet();
+	HRESULT Spawn_Bullet(_bool isLaunch = true);
 
 private:
 	CCollider*				m_pColliderGroundAttackCom = { nullptr };

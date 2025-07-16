@@ -3,6 +3,8 @@
 #include "Leviathan.h"
 #include "GameInstance.h"
 #include "Player.h"
+#include "BossSmokeParticle.h"
+#include "Levi_Bullet.h"
 
 NS_BEGIN(Client)
 
@@ -48,7 +50,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Engage" << endl;
+		//cout << " Boss State: Engage" << endl;
 
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Roar, false);
 
@@ -77,7 +79,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Idle" << endl;
+		//cout << " Boss State: Idle" << endl;
 
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::idle_injured, true);
@@ -150,7 +152,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Attack_Spray" << endl;
+		//cout << " Boss State: Attack_Spray" << endl;
 
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_slag_spray, false);
@@ -197,13 +199,13 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Attack_Rock" << endl;
+		//cout << " Boss State: Attack_Rock" << endl;
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_rock_throw, false);
 		else
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Rock_Throw, false);
-
-
+		m_bMakeBullet = false;
+		m_bLaunchBullet = false;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -211,12 +213,35 @@ public:
 		{
 			m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Idle);
 		}
+		_float fTrackPos = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
+		if (23.f <= fTrackPos && m_bMakeBullet == false)
+		{
+			m_pOwner->Spawn_Bullet(false);
+			m_bMakeBullet = true;
+		}
+		if (95.f <= fTrackPos && m_bLaunchBullet == false)
+		{
+			CGameObject* pBullet = m_pGameInstance->Find_Object(ENUM_CLASS(LEVEL::BOSS), TEXT("Layer_MonBullet"), 0);
+			if (nullptr != pBullet)
+			{
+				_float3 vTargetPos = {};
+				XMStoreFloat3(&vTargetPos, m_pTarget->Get_Transform()->Get_State(STATE::POSITION));
+				static_cast<CLevi_Bullet*>(pBullet)->Launch_Projectile(vTargetPos, 70.f);
+				m_bLaunchBullet = true;
+			}
+		}
+
+		// 23에 생성
+		// 95에 던지기
 	}
 	virtual void Exit() override
 	{
 
 	}
 	virtual void Free() override { __super::Free(); }
+private:
+	_bool m_bMakeBullet = { false };
+	_bool m_bLaunchBullet = { false };
 };
 
 class CLeviathanState_Attack_Slam final : public CLeviathanState
@@ -230,14 +255,14 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Attack_slam" << endl;
+		//cout << " Boss State: Attack_slam" << endl;
 		m_bSlam = false;
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_tongue_ground_slam, false);
 		else
 			//rand() % 3 == 0 ? 
-			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false);
-			//Set_OwnerAnim(CLeviathan::LEVI_ANIM::ground_slam, false); // tongue는....?음
+			//Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false);
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::ground_slam, false); // tongue는....?음
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -252,6 +277,15 @@ public:
 		{
 			m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 			static_cast<CPlayer*>(m_pTarget)->Set_State(CPlayer::STATE_Jump);
+
+			CBossSmokeParticle::DESC desc = {};
+			desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
+			desc.bHasTransformPreset = true;
+			XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(128.f, 104.f, 106.f));
+			if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_BossSmokeParticle"),
+				ENUM_CLASS(LEVEL::STATIC), L"Layer_Effect", &desc)))
+				return;
+
 			m_bSlam = true;
 		}
 		if (99.f <= fTrackPos)
@@ -281,7 +315,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Attack_Spitworm" << endl;
+		//cout << " Boss State: Attack_Spitworm" << endl;
 
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Spit_worm, false);
 		m_bSpawnBullet = false;
@@ -322,7 +356,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: Damaged" << endl;
+		//cout << " Boss State: Damaged" << endl;
 
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_damage, false);
@@ -357,7 +391,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: stun_left" << endl;
+		//cout << " Boss State: stun_left" << endl;
 
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::lefteye_start, false);
 		m_iStunStatus = STUN_START;
@@ -416,7 +450,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: stun_right" << endl;
+		//cout << " Boss State: stun_right" << endl;
 
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::righteye_start, false);
 		m_iStunStatus = STUN_START;
@@ -474,7 +508,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << " Boss State: lookaround" << endl;
+		//cout << " Boss State: lookaround" << endl;
 
 		rand() % 3 == 0 ? Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle_tongue_out_look_around, false) :
 						  Set_OwnerAnim(CLeviathan::LEVI_ANIM::Idle_look_around, false);
@@ -505,7 +539,7 @@ public:
 public:
 	virtual void Enter() override
 	{
-		cout << "[Dead]" << endl;
+		//cout << "[Dead]" << endl;
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CLeviathan::LEVI_ANIM::Death), false);
 		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CLeviathan::LEVI_ANIM::Death), 15.f);
 	}

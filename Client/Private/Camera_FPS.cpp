@@ -59,7 +59,7 @@ void CCamera_FPS::Priority_Update(_float fTimeDelta)
 #ifdef _CONSOLE
 	static _float consoleTicker = {};
 	consoleTicker += fTimeDelta;
-	if (consoleTicker >= 1.f)
+	if (consoleTicker >= 3.f)
 	{
 		// 쓰고 싶은 것..
 		consoleTicker = 0.f;

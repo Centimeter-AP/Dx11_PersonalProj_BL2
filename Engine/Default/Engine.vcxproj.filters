@@ -193,6 +193,15 @@
     <ClInclude Include="..\Public\Frustum.h">
       <Filter>01.Utility\12. Frustum</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\SoundController.h">
+      <Filter>01.Utility\04.Components\SoundController</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Core.h">
+      <Filter>00.System\01.Device\SoundDevice\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Device.h">
+      <Filter>00.System\01.Device\SoundDevice</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Timer.cpp">
@@ -371,6 +380,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Frustum.cpp">
       <Filter>01.Utility\12. Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Core.cpp">
+      <Filter>00.System\01.Device\SoundDevice\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Device.cpp">
+      <Filter>00.System\01.Device\SoundDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\SoundController.cpp">
+      <Filter>01.Utility\04.Components\SoundController</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -571,6 +589,15 @@
     </Filter>
     <Filter Include="01.Utility\12. Frustum">
       <UniqueIdentifier>{248936f2-530e-4cb3-990f-595d0b5d8899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04.Components\SoundController">
+      <UniqueIdentifier>{526e3297-6aa9-457a-90eb-1523463346d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Device\SoundDevice">
+      <UniqueIdentifier>{1bfa52f3-c3f1-4154-8d08-d48af0803bf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.System\01.Device\SoundDevice\Core">
+      <UniqueIdentifier>{c01db877-84b9-4d1b-a134-ba6b03d52874}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

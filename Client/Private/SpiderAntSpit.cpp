@@ -19,13 +19,8 @@ HRESULT CSpiderAntSpit::Initialize_Prototype()
 
 HRESULT CSpiderAntSpit::Initialize(void* pArg)
 {
-	if (FAILED(CGameObject::Initialize(pArg)))
+	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	DESC* pDesc = static_cast<CSpiderAntSpit::DESC*>(pArg);
-
-	m_vTargetPos = pDesc->vTargetPos;
-	m_iDamage = pDesc->iDamage;
 
 
 	if (FAILED(Ready_Components(pArg)))
@@ -139,10 +134,7 @@ HRESULT CSpiderAntSpit::Ready_Components(void* pArg)
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
-	/* For.Com_Shader */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxMesh"), // 총 전용 셰이더로 바꾸던지 패스를 바꾸던지
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom))))
-		return E_FAIL;
+
 
 	return S_OK;
 }

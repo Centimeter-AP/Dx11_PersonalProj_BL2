@@ -2,6 +2,7 @@
 
 #include "VIBuffer_Point_Instance.h"
 #include "VIBuffer_Terrain.h"
+#include "SoundController.h"
 #include "VIBuffer_Cell.h"
 #include "VIBuffer_Cube.h"
 #include "VIBuffer_Rect.h"

@@ -45,7 +45,10 @@ EVENT CBossSmokeParticle::Update(_float fTimeDelta)
 {
 	if (m_bDead)
 		return EVN_DEAD;
-	m_pVIBufferCom->Drop_Gravity(fTimeDelta);
+
+	//static _float temp = {};
+	//temp += fTimeDelta;
+	m_pVIBufferCom->Falling(m_fTimeAcc);
 	m_fTimeAcc += fTimeDelta;
 	if (m_fTimeAcc >= m_fMaxLifeTime)
 	{
@@ -119,12 +122,12 @@ HRESULT CBossSmokeParticle::Ready_Components()
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_MonsterHitParticle"),
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_BossSmokeParticle"),
 		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
-	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Explosion_Corrosive"),
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_Smoke"),
 		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom))))
 		return E_FAIL;
 
@@ -137,7 +140,7 @@ CBossSmokeParticle* CBossSmokeParticle::Create(ID3D11Device* pDevice, ID3D11Devi
 
 	if (FAILED(pInstance->Initialize_Prototype()))
 	{
-		MSG_BOX("Failed to Created : CMainApp");
+		MSG_BOX("Failed to Created : CBossSmokeParticle");
 		Safe_Release(pInstance);
 	}
 

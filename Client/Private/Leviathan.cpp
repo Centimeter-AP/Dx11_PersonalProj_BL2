@@ -73,7 +73,7 @@ void CLeviathan::Priority_Update(_float fTimeDelta)
 	fTime += fTimeDelta;
 	if (fTime >= 1.f)
 	{
-		cout << "Leviathan HP : " << m_iHP << endl;
+		//cout << "Leviathan HP : " << m_iHP << endl;
 		fTime = 0.f;
 	}
 }
@@ -318,7 +318,7 @@ void CLeviathan::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCo
 	__super::On_Collision(iMyColID, iHitColID, pHitCol);
 }
 
-HRESULT CLeviathan::Spawn_Bullet()
+HRESULT CLeviathan::Spawn_Bullet(_bool isLaunch)
 {
 	auto TailBoneMat = XMLoadFloat4x4(m_pModelCom->Get_CombinedTransformationMatrix(m_iTongueBoneIdx)) * m_pTransformCom->Get_WorldMatrix();
 
@@ -327,6 +327,10 @@ HRESULT CLeviathan::Spawn_Bullet()
 	SpitDesc.iLevelID = ENUM_CLASS(LEVEL::BOSS);
 	SpitDesc.fSpeedPerSec = 10.f;
 	SpitDesc.iDamage = m_iDamage;
+	SpitDesc.pParentMatrix = m_pTransformCom->Get_WorldMatrix4x4Ptr();
+	if (false == isLaunch)
+		SpitDesc.pSocketMatrix = const_cast<_float4x4*>(m_pModelCom->Get_CombinedTransformationMatrix(m_iTongueBoneIdx));
+	SpitDesc.bLaunch = isLaunch;
 	_vector targetPos = m_pTarget->Get_Transform()->Get_State(STATE::POSITION);
 	XMStoreFloat3(&SpitDesc.vTargetPos, XMVectorSetY(targetPos, targetPos.m128_f32[1]));
 
