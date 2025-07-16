@@ -167,6 +167,7 @@
     <ClInclude Include="..\Public\Client_Enum.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
+    <ClInclude Include="..\Public\DamageFont.h" />
     <ClInclude Include="..\Public\MonsterHitParticle.h" />
     <ClInclude Include="..\Public\MuzzleFlash.h" />
     <ClInclude Include="..\Public\PhaselockSwirl.h" />
@@ -263,6 +264,7 @@
     <ClCompile Include="..\Private\Camera_FPS.cpp" />
     <ClCompile Include="..\Private\Camera_Free.cpp" />
     <ClCompile Include="..\Private\Camera_Tool.cpp" />
+    <ClCompile Include="..\Private\DamageFont.cpp" />
     <ClCompile Include="..\Private\MonsterHitParticle.cpp" />
     <ClCompile Include="..\Private\MuzzleFlash.cpp" />
     <ClCompile Include="..\Private\PhaselockSwirl.cpp" />

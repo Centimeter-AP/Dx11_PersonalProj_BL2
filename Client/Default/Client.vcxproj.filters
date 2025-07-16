@@ -247,6 +247,9 @@
     <Filter Include="02.GameObjects\10. Effect\Particle\BossSmokeParticle">
       <UniqueIdentifier>{d447c166-64de-414e-b562-c60f19daab20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07. UI\StaticUI\DamageFont">
+      <UniqueIdentifier>{bf41f3eb-880b-4366-afa6-3aeaa3281f52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -530,6 +533,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\BossSmokeParticle.h">
       <Filter>02.GameObjects\10. Effect\Particle\BossSmokeParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DamageFont.h">
+      <Filter>02.GameObjects\07. UI\StaticUI\DamageFont</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -836,6 +842,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BossSmokeParticle.cpp">
       <Filter>02.GameObjects\10. Effect\Particle\BossSmokeParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DamageFont.cpp">
+      <Filter>02.GameObjects\07. UI\StaticUI\DamageFont</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

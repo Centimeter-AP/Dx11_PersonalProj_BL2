@@ -82,19 +82,6 @@ namespace Client
 	{
 		UI_PRIORITY,
 
-
-		UI_EFFECT,
-
-
-		UI_DECO,
-
-
-		UI_FONT,
-
-
-		UI_BUTTON,
-
-
 		UI_HUD_START,
 		UI_HIT_SHIELD,
 		UI_HIT_HP,
@@ -106,13 +93,26 @@ namespace Client
 		UI_SHIELDBAR,
 		UI_SHIELD,
 		UI_AMMO_ICON,
-		UI_AMMOBAR, 
+		UI_AMMOBAR,
 		UI_AMMO,
 		UI_EXP_BAR,
 		UI_EXP,
 		UI_SKILL_BAR,
 		UI_SKILL,
 		UI_HUD_END,
+
+		UI_EFFECT,
+
+
+		UI_DECO,
+
+
+		UI_FONT_START,
+		UI_FONT_DAMAGE,
+		UI_FONT_END,
+
+
+		UI_BUTTON,
 
 
 		UI_PLAYER,

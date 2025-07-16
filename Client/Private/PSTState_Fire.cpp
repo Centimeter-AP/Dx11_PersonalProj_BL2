@@ -10,7 +10,8 @@ void CPSTState_Fire::Enter()
 	m_pOwner->m_iCurAmmoLeft--;
 	if (m_pOwner->m_iCurAmmoLeft < 0)
 		MSG_BOX("Å«ÀÏ³µµû!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
+	string tagSound = "Audio_Banks_" + to_string(329 + rand()%6);
+	m_pOwner->m_pSoundCom->Play(tagSound);
 }
 
 void CPSTState_Fire::Execute(_float fTimeDelta)

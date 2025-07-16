@@ -5,6 +5,7 @@
 #include <Player.h>
 #include "Weapon.h"
 #include "MonsterHitParticle.h"
+#include "DamageFont.h"
 
 CMonster::CMonster(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject { pDevice, pContext }
@@ -214,18 +215,42 @@ void CMonster::Ride_Terrain()
 void CMonster::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
 	COL_ID eHitColID = static_cast<COL_ID>(iHitColID);
-
+	COL_ID eMyColID = static_cast<COL_ID>(iMyColID);
 	if (CI_PLWEAPON(eHitColID))
 	{
-		m_iHP -= static_cast<const CWeapon*>(static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurWeapon())->Get_Damage();
 		CMonsterHitParticle::DESC desc = {};
 		desc.iLevelID = ENUM_CLASS(LEVEL::STATIC);
 		desc.bHasTransformPreset = true;
-		auto& vPos = static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurPickedPos();
+		auto vPos = static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurPickedPos();
 		XMStoreFloat4x4(&desc.PresetMatrix, XMMatrixTranslation(vPos.x, vPos.y, vPos.z));
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_MonsterHitParticle"),
 			ENUM_CLASS(LEVEL::STATIC), L"Layer_Effect", &desc)))
 			return ;
+
+
+		CDamageFont::DESC DamageDesc = {};
+		DamageDesc.vWorldPosition = vPos;
+		_float fDamageMultiply = 1.f;
+		if (CI_MONSTERHEAD(eMyColID))
+		{
+			fDamageMultiply = 1.5f + m_pGameInstance->Compute_Random_Normal();
+
+			DamageDesc.strDamage = TEXT("CRITICAL");
+			DamageDesc.vFontColor = { 1.f, 0.f, 0.f };
+			if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_DamageFont"),
+				ENUM_CLASS(LEVEL::STATIC), L"Layer_UI", &DamageDesc)))
+				return;
+		}
+
+		_int iDamage = static_cast<_int>(static_cast<const CWeapon*>(static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurWeapon())->Get_Damage() * fDamageMultiply);
+		m_iHP -= iDamage;
+
+		DamageDesc.strDamage = to_wstring(iDamage);
+		DamageDesc.vFontColor = { 1.f, 1.f, 1.f };
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_DamageFont"),
+			ENUM_CLASS(LEVEL::STATIC), L"Layer_UI", &DamageDesc)))
+			return;
+
 
 		if (m_iHP <= 0)
 		{

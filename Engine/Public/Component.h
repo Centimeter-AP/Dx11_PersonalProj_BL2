@@ -7,7 +7,7 @@ NS_BEGIN(Engine)
 class ENGINE_DLL CComponent abstract : public CBase
 {
 protected:
-	CComponent() {};
+	CComponent();
 	CComponent(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CComponent(const CComponent& Prototype);
 	virtual ~CComponent() = default;

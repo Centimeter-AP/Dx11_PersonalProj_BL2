@@ -421,6 +421,10 @@ void CGameInstance::Draw_Font(const _wstring& strFontTag, const _tchar* pText, c
 {
 	m_pFont_Manager->Draw(strFontTag, pText, vPosition, vColor, fRotation, vOrigin, fScale);
 }
+_vector CGameInstance::MeasureFont(const _wstring& strFontTag, const _tchar* pText, _bool ignoreWhiteSpace)
+{
+	return m_pFont_Manager->MeasureFont(strFontTag, pText, ignoreWhiteSpace);
+}
 #pragma endregion
 
 #pragma region COLLIDER_MANAGER

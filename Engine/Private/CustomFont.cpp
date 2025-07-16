@@ -17,7 +17,13 @@ HRESULT CCustomFont::Initialize(const _tchar* pFontFilePath)
 
 void CCustomFont::Draw(SpriteBatch* pBatch, const _tchar* pText, const _float2& vPosition, _fvector vColor, _float fRotation, const _float2& vOrigin, _float fScale)
 {
+
 	m_pFont->DrawString(pBatch, pText, vPosition, vColor, fRotation, vOrigin, fScale);
+}
+
+_vector CCustomFont::MeasureFont(const _tchar* pText, _bool ignoreWhiteSpace)
+{
+	return m_pFont->MeasureString(pText, ignoreWhiteSpace);
 }
 
 CCustomFont* CCustomFont::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const _tchar* pFontFilePath)

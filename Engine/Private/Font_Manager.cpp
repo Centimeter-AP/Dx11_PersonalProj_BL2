@@ -43,6 +43,15 @@ void CFont_Manager::Draw(const _wstring& strFontTag, const _tchar* pText, const 
 	m_pBatch->End();
 }
 
+_vector CFont_Manager::MeasureFont(const _wstring& strFontTag, const _tchar* pText, _bool ignoreWhiteSpace)
+{
+	CCustomFont* pFont = Find_Font(strFontTag);
+	if (nullptr == pFont)
+		return XMVectorSet(0.f, 0.f, 0.f, 0.f);
+
+	return pFont->MeasureFont(pText, ignoreWhiteSpace);
+}
+
 CCustomFont* CFont_Manager::Find_Font(const _wstring& strFontTag)
 {
 	auto	iter = m_Fonts.find(strFontTag);

@@ -37,6 +37,7 @@
 #include "UI_AmmoPannel.h"
 #include "UI_Exp.h"
 #include "UI_EnemyHP.h"
+#include "DamageFont.h"
 
 /** Effect **/
 #include "TestSpirteEffect.h"
@@ -319,8 +320,8 @@ HRESULT CLoader::Loading_For_Logo()
 
 	lstrcpy(m_szLoadingText, TEXT("사운드을(를) 로딩중입니다."));
 
-	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), _wstring(TEXT("Prototype_Component_Sound_Weapon"))
-		CSoundController::Create(TEXT("Path")))))
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Weapon"),
+		CSoundController::Create("../Bin/Resources/Sound/Weapon/"))))
 		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
@@ -400,6 +401,11 @@ HRESULT CLoader::Loading_For_Logo()
 	/* For.Prototype_GameObject_UI_Screen_Hit */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_Screen_Hit"),
 		CScreen_Hit::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_UI_Screen_Hit */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_DamageFont"),
+		CDamageFont::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 #pragma endregion
