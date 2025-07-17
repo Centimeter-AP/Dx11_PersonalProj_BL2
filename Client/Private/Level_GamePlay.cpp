@@ -122,8 +122,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
 	RakkDesc.bHasTransformPreset = true;
-	RakkDesc.iNavigationIndex = 50;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 13.f, rand()%10 + 40.f));
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
 		return E_FAIL;
@@ -136,39 +147,52 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	SkagDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SkagDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Skag");
 	//SkagDesc.bHasTransformPreset = true;
-	SkagDesc.iNavigationIndex = 55;
-	XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
+	SkagDesc.iNavigationIndex = 717;
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
 		return E_FAIL;
-	// 667, 668, 767, 808, 936, 853, 770
+	SkagDesc.iNavigationIndex = 668;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 618;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 718;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 966;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 966;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 967;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 852;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 809;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 767;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
+	SkagDesc.iNavigationIndex = 768;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
+		return E_FAIL;
 	
-
-	//SkagDesc.iNavigationIndex = 56;
-	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
-	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-	//	return E_FAIL;
-
-	//SkagDesc.iNavigationIndex = 57;
-	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
-	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-	//	return E_FAIL;
-
-	//SkagDesc.iNavigationIndex = 936;
-	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
-	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-	//	return E_FAIL;
-
-	//SkagDesc.iNavigationIndex = 767;
-	//XMStoreFloat4x4(&SkagDesc.PresetMatrix, XMMatrixTranslation(50.f, 2.f, 40.f));
-	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Skag"),
-	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SkagDesc)))
-	//	return E_FAIL;
-
-
 
 	CSpiderAnt::DESC	SpiderAntDesc;
 	SpiderAntDesc.bActive = true;
@@ -177,15 +201,19 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	SpiderAntDesc.fSpeedPerSec = 10.f;
 	SpiderAntDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	SpiderAntDesc.strVIBufferTag = TEXT("Prototype_Component_Model_SpiderAnt");
-	//SpiderAntDesc.bHasTransformPreset = true;
-	SpiderAntDesc.iNavigationIndex = 51;
-	XMStoreFloat4x4(&SpiderAntDesc.PresetMatrix, XMMatrixTranslation(60.f, 2.f, 50.f));
+	SpiderAntDesc.iNavigationIndex = 1011;
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
 		return E_FAIL;
-
-	SpiderAntDesc.iNavigationIndex = 49;
-	XMStoreFloat4x4(&SpiderAntDesc.PresetMatrix, XMMatrixTranslation(60.f, 2.f, 50.f));
+	SpiderAntDesc.iNavigationIndex = 1012;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
+		return E_FAIL;
+	SpiderAntDesc.iNavigationIndex = 1325;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
+		return E_FAIL;
+	SpiderAntDesc.iNavigationIndex = 1294;
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_SpiderAnt"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &SpiderAntDesc)))
 		return E_FAIL;
@@ -210,7 +238,8 @@ HRESULT CLevel_GamePlay::Ready_Layer_Player(const _wstring strLayerTag)
 	PlayerDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	PlayerDesc.bHasTransformPreset = true;
 	XMStoreFloat4x4(&PlayerDesc.PresetMatrix, XMMatrixScaling(1.5f, 1.5f, 1.5f));
-	PlayerDesc.iNavigationIndex = 32;
+	//PlayerDesc.iNavigationIndex = 32;
+	PlayerDesc.iNavigationIndex = 1056;
 	PlayerDesc.szName = TEXT("Player");
 	PlayerDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Siren_Hand");
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Player"),
@@ -415,10 +444,10 @@ HRESULT CLevel_GamePlay::Ready_Sound()
 	m_pBGM->Set_Volume(0.6f);
 	m_pBGM->Play();
 	m_pEnv[0] = m_pGameInstance->Get_Single_Sound("Audio_Streaming_40");
-	m_pEnv[0]->Set_Volume(0.3f);
+	m_pEnv[0]->Set_Volume(0.1f);
 	m_pEnv[0]->Play();
 	m_pEnv[1] = m_pGameInstance->Get_Single_Sound("Audio_Streaming_481");
-	m_pEnv[1]->Set_Volume(0.3f);
+	m_pEnv[1]->Set_Volume(0.2f);
 	m_pEnv[1]->Play();
 
 	return S_OK;

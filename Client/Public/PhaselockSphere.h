@@ -34,7 +34,7 @@ private:
 	CTexture*	m_pTextureMaskCom = { nullptr };
 	_float		m_fTimeAcc = { 0.f };
 	_float		m_fLastTime = { 0.f };
-
+	_float4		m_vColor = {1.f, 1.f, 1.f, 1.f};
 
 public:
 	static CPhaselockSphere* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

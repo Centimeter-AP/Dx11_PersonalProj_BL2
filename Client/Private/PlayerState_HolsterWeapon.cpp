@@ -9,6 +9,7 @@ void CPlayerState_HolsterWeapon::Enter()
 	{
 	case CPlayer::WEAPON_TYPE::WTYPE_AR:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::AR_Holster, false);
+		m_pOwner->m_pSoundCom->Play("holster_ar");
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PST_Holster, false);

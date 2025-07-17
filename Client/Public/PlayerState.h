@@ -54,13 +54,25 @@ public:
 protected:
 	void Default_Movements(_float fTimeDelta) {
 		if (KEY_PRESSING(DIK_W))
+		{
 			m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
+			m_pOwner->m_bWalking = true;
+		}
 		if (KEY_PRESSING(DIK_S))
+		{
 			m_pOwner->m_pTransformCom->Go_Backward_Hover(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
+			m_pOwner->m_bWalking = true;
+		}
 		if (KEY_PRESSING(DIK_A))
+		{
 			m_pOwner->m_pTransformCom->Go_Left(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
+			m_pOwner->m_bWalking = true;
+		}
 		if (KEY_PRESSING(DIK_D))
+		{
 			m_pOwner->m_pTransformCom->Go_Right(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
+			m_pOwner->m_bWalking = true;
+		}
 	}
 
 protected:

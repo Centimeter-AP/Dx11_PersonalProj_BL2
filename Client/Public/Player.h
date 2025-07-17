@@ -141,6 +141,7 @@ private: /* ㅋㅋ */
 	_bool				m_bShield = { true }; // 이걸따로두는게맞나? 
 	_int				m_iShieldRechargeRate = {}; // 1초당 얼마나 차는지
 	_float				m_fShieldRechargeDelay = {}; // 일정 시간 이상 피격되지 않으면 채움
+	_bool				m_bChargeShieldSound = { false };
 
 	_float				m_fNoHitTimeTicker = {}; // 이녀석이 비피격 상태 초 체크 할 것 (전투 비전투 상태도 체크할까요)
 	_bool				m_bCombat = { false }; // 전투/비전투
@@ -182,7 +183,13 @@ private: /* 스킬 변수 */
 	
 private:
 	_float				m_fWalkSoundInterval = {};
+	_bool				m_bWalking = { false };
+	_bool				m_bRunning = { false };
+	
+	void Play_StepSound(_float fTimeDelta);
 
+	_bool				m_bJumped = { false };
+	_float				m_fHitSoundInterval = {};
 
 private:
 	_int				m_iAmmo[WTYPE_END] = {};

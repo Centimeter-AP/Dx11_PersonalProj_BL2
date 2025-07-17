@@ -24,7 +24,11 @@ public:
 protected:
 	CBullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CBullet(const CBullet& Prototype);
-	virtual ~CBullet() = default;
+	virtual ~CBullet()
+	{
+		int a = 0;
+
+	}
 
 public:
 	virtual HRESULT Initialize_Prototype();

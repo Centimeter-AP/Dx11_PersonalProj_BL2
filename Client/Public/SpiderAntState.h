@@ -189,6 +189,8 @@ public:
 	virtual void Execute(_float fTimeDelta) override
 	{
 		//Console(fTimeDelta);
+		m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
+
 		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 		fNextTicker += fTimeDelta;
 		if (fNextTicker >= 1.f)
@@ -202,13 +204,16 @@ public:
 				switch (rand() % 10)
 				{
 				case 0:
-					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
+					//m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Run);
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot1);
 					break;
 				case 1:
-					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Leap);
+					//m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Leap);
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot3);
 					break;
 				case 2:
-					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Charge);
+					//m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Charge);
+					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot6);
 					break;
 				case 3:
 					m_pOwner->Set_State(CSpiderAnt::SPIDERANT_STATE::STATE_Attack_Shot1);
@@ -784,6 +789,8 @@ public:
 				m_ePhaselockStatus = PL_FALL;
 				m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSpiderAnt::SPIDERANT_ANIM::PhaseLock_Fall), 3.f);
 				Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::PhaseLock_Fall, false);
+				m_pOwner->m_pSoundCom->SetVolume("pl_end", 0.6f);
+				m_pOwner->m_pSoundCom->Play("pl_end");
 			}
 			break;
 		case PL_FALL:

@@ -20,7 +20,10 @@ public:
 private:
 	CLevi_Bullet(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CLevi_Bullet(const CLevi_Bullet& Prototype);
-	virtual ~CLevi_Bullet() = default;
+	virtual ~CLevi_Bullet()
+	{
+		int a = 0;
+	};
 
 public:
 	virtual HRESULT Initialize_Prototype();

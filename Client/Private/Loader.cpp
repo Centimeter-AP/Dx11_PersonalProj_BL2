@@ -327,6 +327,21 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Player"),
 		CSoundController::Create("../Bin/Resources/Sound/Player/"))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Rakk"),
+		CSoundController::Create("../Bin/Resources/Sound/Monster/Rakk/"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Skag"),
+		CSoundController::Create("../Bin/Resources/Sound/Monster/Skag/"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Spiderant"),
+		CSoundController::Create("../Bin/Resources/Sound/Monster/Spiderant/"))))
+		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Boss"),
+	//	CSoundController::Create("../Bin/Resources/Sound/Monster/Boss/"))))
+	//	return E_FAIL;
+	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_"),
+	//	CSoundController::Create("../Bin/Resources/Sound/Monster/"))))
+	//	return E_FAIL;
 
 	m_pGameInstance->LoadSound("../Bin/Resources/Sound/BGM/");
 

@@ -239,4 +239,5 @@ void CLevi_Bullet::Free()
 {
 	__super::Free();
 	Safe_Release(m_pTextureCom);
+	Safe_Release(m_pTextureEmissiveCom);
 }

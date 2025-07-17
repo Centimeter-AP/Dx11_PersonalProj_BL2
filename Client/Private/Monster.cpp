@@ -284,6 +284,7 @@ void CMonster::Free()
 	Safe_Release(m_pColliderCom);
 	Safe_Release(m_pColliderHeadCom);
 	Safe_Release(m_pTarget);
+	Safe_Release(m_pSoundCom);
 	Safe_Release(m_pGravityCom);
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pDissolveTextureCom);

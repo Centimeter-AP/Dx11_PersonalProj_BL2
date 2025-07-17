@@ -203,7 +203,7 @@ float4 SoftEffect(float4 vOrigColor, float4 vProjPos)
     {
         float fOldViewZ = vDepthDesc.y * 1000.f;
         float fDiff = (fOldViewZ - vProjPos.w) / vProjPos.w;
-        vOrigColor.a = saturate(vOrigColor.a * saturate(fDiff));
+        vOrigColor.a = vOrigColor.a * saturate(fDiff);
     }
     
     return vOrigColor;
@@ -279,10 +279,10 @@ PS_OUT PS_MAIN_SOFTEFFECT_DISTORT(PS_IN_PROJPOS In)
     Out.vColor = g_Texture.Sample(DefaultSampler, uv);
     vector vDistortMask = g_DistortionMaskTexture.Sample(DefaultSampler, In.vTexcoord);
    
-    if (all(Out.vColor.rgb < 0.1f))
-        discard;
-    if (all(Out.vColor.rgb < 0.2f))
-        Out.vColor.a = Out.vColor.r;
+    //if (all(Out.vColor.rgb < 0.1f))
+    //    discard;
+    //if (all(Out.vColor.rgb < 0.2f))
+    //    Out.vColor.a = Out.vColor.r;
     /*화면 전체 기준(0, 0 ~ 1, 1)으로 이펙트의 픽셀이 그려질 위치에 해당하는 좌표 */    
     Out.vColor = SoftEffect(Out.vColor, In.vProjPos);
     

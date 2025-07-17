@@ -9,6 +9,7 @@ class CShader;
 class CModel;
 class CNavigation;
 class CGravity;
+class CSoundController;
 class CTexture;
 NS_END
 
@@ -58,6 +59,7 @@ protected:
 	CCollider*			m_pColliderCom = { nullptr };
 	CCollider*			m_pColliderHeadCom = { nullptr }; // at least
 	CTexture*			m_pDissolveTextureCom = { nullptr };
+	CSoundController*	m_pSoundCom = { nullptr };
 
 protected:
 	_int				m_iLevel = {};

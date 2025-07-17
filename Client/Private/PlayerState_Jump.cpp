@@ -6,7 +6,7 @@ void CPlayerState_Jump::Enter()
 {
 	m_isLanded = m_isJumping = false;
 	m_pOwner->m_pGravityCom->Jump();
-
+	m_pOwner->m_bJumped = true;
 	switch (m_pOwner->m_eCurWeapon)
 	{
 	case CPlayer::WEAPON_TYPE::WTYPE_AR:
@@ -20,6 +20,12 @@ void CPlayerState_Jump::Enter()
 	default:
 		break;
 	}
+	string strSound = "Audio_Banks_" + to_string(7523 + rand() % 3);
+	m_pOwner->m_pSoundCom->SetVolume(strSound, 0.4f);
+	m_pOwner->m_pSoundCom->Play(strSound);
+	strSound = "Siren_PL_Start_Jump_0" + to_string(1 + rand() % 5);
+	m_pOwner->m_pSoundCom->SetVolume(strSound, 0.7f);
+	m_pOwner->m_pSoundCom->Play(strSound);
 }
 
 void CPlayerState_Jump::Execute(_float fTimeDelta)

@@ -17,12 +17,19 @@ void CPlayerState_Skill_PhaseLock::Enter()
 		m_bSuccess = true;
 		XMStoreFloat3(&vTargetPos, m_pOwner->m_pCurPickedCollider->Get_Owner()->Get_Transform()->Get_State(STATE::POSITION));
 		static_cast<CPhaselockSwirl*>(m_pOwner->m_PartObjects.find(TEXT("PartObject_Player_Effect_PhaselockHand"))->second)->Show_Effect();
+		m_pOwner->m_pSoundCom->SetVolume("pl_start", 0.7f);
+		m_pOwner->m_pSoundCom->Play("pl_start");
+		string strSound = "Siren_PL_Start_Action_Skill_0" + to_string(1 + rand() % 22);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 1.f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	else
 	{
 		m_pOwner->m_bPhaselockAble = false;
 		m_pOwner->m_fPhaselockCooldownTicker = m_pOwner->m_fPhaselockCooldown - 1.f;
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PLA_BASIC::BASIC_PhaseLock_Fail, false);
+		m_pOwner->m_pSoundCom->SetVolume("pl_fail", 0.7f);
+		m_pOwner->m_pSoundCom->Play("pl_fail");
 	}
 	m_bCatched = false;
 }

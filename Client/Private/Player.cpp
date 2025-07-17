@@ -96,9 +96,23 @@ EVENT CPlayer::Update(_float fTimeDelta)
 		return EVN_NONE;
 	Key_Input(fTimeDelta);
 	Update_State(fTimeDelta);
+	Play_StepSound(fTimeDelta);
 	//Ride_Terrain();
+	
 	if (m_pGravityCom->Is_Grounded())
+	{
 		m_pTransformCom->Set_State(Engine::STATE::POSITION, m_pNavigationCom->SetUp_Height(m_pTransformCom->Get_State(Engine::STATE::POSITION), 5.f));
+		if (m_bJumped == true)
+		{
+			string strSound = "Audio_Banks_" + to_string(7526 + rand() % 3);
+			m_pSoundCom->SetVolume(strSound, 0.5f);
+			m_pSoundCom->Play(strSound);
+			strSound = "Siren_PL_React_Land_0" + to_string(1 + rand() % 5);
+			m_pSoundCom->SetVolume(strSound, 0.7f);
+			m_pSoundCom->Play(strSound);
+			m_bJumped = false;
+		}
+	}
 	m_pGravityCom->Update(fTimeDelta);
 	Check_Player_NoHitTime(fTimeDelta);
 	Cooldown_Phaselock(fTimeDelta);
@@ -192,7 +206,14 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 				MSG_BOX("CCamera_FPS is nullptr");
 				return;
 			}
-			pCamera->Start_Recoil();
+			pCamera->Start_Shake();
+			m_bChargeShieldSound = false;
+			if (rand()%100 > 80)
+			{
+				string strSound = "Siren_GEN_React_Pain_0" + to_string(1 + rand() % 5);
+				m_pSoundCom->SetVolume(strSound, 0.7f);
+				m_pSoundCom->Play(strSound);
+			}
 			if (m_bShield)
 			{
 				m_fShield -= static_cast<_float>(pHitOwner->Get_Damage());
@@ -217,6 +238,12 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 	{
 		CBullet* pHitOwner = static_cast<CBullet*>(pHitCol->Get_Owner());
 		static_cast<CScreen_Hit*>(m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second)->Show_Effect(pHitOwner->Get_Transform()->Get_State(STATE::POSITION));
+		if (rand() % 100 > 80)
+		{
+			string strSound = "Siren_GEN_React_Pain_0" + to_string(1 + rand() % 5);
+			m_pSoundCom->SetVolume(strSound, 0.7f);
+			m_pSoundCom->Play(strSound);
+		}
 		if (m_bShield)
 		{
 			m_fShield -= static_cast<_float>(pHitOwner->Get_Damage());
@@ -711,6 +738,12 @@ void CPlayer::Check_Player_NoHitTime(_float fTimeDelta)
 	if (m_fShield < m_fMaxShield && m_fNoHitTimeTicker >= m_fShieldRechargeDelay)
 	{
 		Recharge_Shield(fTimeDelta);
+		if (m_bChargeShieldSound == false)
+		{
+			m_pSoundCom->Play("Audio_Banks_18238");
+			m_pSoundCom->SetVolume("Audio_Banks_18238", 0.3f);
+			m_bChargeShieldSound = true;
+		}
 	}
 	if (true == m_bCombat && m_fNoHitTimeTicker >= NONCOMBAT_TIMER)
 		m_bCombat = false;
@@ -759,6 +792,37 @@ void CPlayer::Cooldown_Phaselock(_float fTimeDelta)
 			m_fPhaselockCooldownTicker = 0.f;
 		}
 	}
+}
+
+void CPlayer::Play_StepSound(_float fTimeDelta)
+{
+
+	if (m_bWalking && m_pGravityCom->Is_Grounded())
+	{
+		m_fWalkSoundInterval += fTimeDelta;
+		_float m_fWalkSound = 0.41f;
+		string strWalkSound = "Audio_Banks_";
+		if (m_bSprint)
+		{
+			strWalkSound += to_string(7499 + rand() % 12);
+			m_fWalkSound = 0.3f;
+		}
+		else
+		{
+			strWalkSound += to_string(17036 + rand() % 12);
+		}
+		if (m_fWalkSoundInterval >= m_fWalkSound)
+		{
+			string strWeapSound = "Audio_Banks_" + to_string(17003 + rand() % 16);
+			m_pSoundCom->SetVolume(strWeapSound, 0.4f);
+			m_pSoundCom->Play(strWeapSound);
+			m_pSoundCom->SetVolume(strWalkSound, 0.4f);
+			m_pSoundCom->Play(strWalkSound);
+			m_fWalkSoundInterval = 0.f;
+		}
+		m_bWalking = false;	
+	}
+
 }
 
 void CPlayer::Change_Weapon(WEAPON_TYPE eWeaponType)

@@ -114,7 +114,7 @@ public:
 
 
 private:
-	_uint m_iSpineBoneIdx = {};
+	_uint				m_iSpineBoneIdx = {};
 
 private:
 	CCollider*			m_pColliderGroundAttackCom = { nullptr };
@@ -129,7 +129,7 @@ private: // 상태 체크용 부모 변수들
 	_bool           m_bChargeCheck = { false };
 	_float			m_fLeapCheckTimer = {};
 	_float			m_fChargeCheckTimer = {};
-	
+	_bool			m_bFlinch = { false };
 	void AttackTimer(_float fTimeDelta);
 
 public:

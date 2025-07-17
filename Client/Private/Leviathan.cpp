@@ -210,6 +210,12 @@ HRESULT CLeviathan::Ready_Components(void* pArg)
 	//if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Collider_AABB"),
 	//	TEXT("Com_ColliderAttack"), reinterpret_cast<CComponent**>(&m_pColliderGroundAttackCom), &AABBDesc)))
 	//	return E_FAIL;
+
+	///* For.Com_Sound */
+	//if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Boss"),
+	//	TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
+	//	return E_FAIL;
+
 	return S_OK;
 }
 

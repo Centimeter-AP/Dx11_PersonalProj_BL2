@@ -63,7 +63,7 @@ EVENT CDamageFont::Update(_float fTimeDelta)
 	_vector vWorldPos = XMVectorSetW(XMLoadFloat3(&m_vWorldPosition), 1.f);
 
 	_float fDist = XMVectorGetX(XMVector3Length(vWorldPos - XMLoadFloat4(m_pGameInstance->Get_CamPosition())));
-	_float fDistScale = 5.f / fDist;
+	_float fDistScale = 10.f / fDist;
 	// 위로 튀어오르는 오프셋: y = v0*t – ½*g*t²
 	const _float fGravity = 9.8f;
 	_float offsetY = m_fVelocity * m_fAge - 0.5f * fGravity * m_fAge * m_fAge;

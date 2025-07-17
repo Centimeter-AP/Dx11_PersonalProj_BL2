@@ -37,14 +37,13 @@ HRESULT CSpiderAnt::Initialize(void* pArg)
 	m_eCurState = STATE_Idle;
 	Set_State(m_eCurState);
 
-	m_fAttackableDistance = 3.f;
-	m_fDetectiveDistance = 20.f;
 
 	m_iSpineBoneIdx = m_pModelCom->Find_BoneIndex("Spine1");
 	m_iHeadBoneIdx = m_pModelCom->Find_BoneIndex("Head");
 	m_iTailBoneIdx = m_pModelCom->Find_BoneIndex("Tail6");
 
 	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CurCenterPoint());
+	m_pTransformCom->Rotation(0.f, m_pGameInstance->Compute_Random(0.f, 10.f), 0.f);
 	return S_OK;
 }
 
@@ -178,6 +177,11 @@ HRESULT CSpiderAnt::Ready_Components(void* pArg)
 		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
 		return E_FAIL;
 
+	/* For.Com_Sound */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Spiderant"),
+		TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -212,7 +216,7 @@ void CSpiderAnt::Initialize_BasicStatus(_int iLevel)
 	m_iDamage = m_pGameInstance->AddVariance(m_iDamage, 0.15f);
 	m_iDefense = 0.f;
 
-	m_fAttackableDistance = 6.f;
+	m_fAttackableDistance = 8.f;
 	m_fDetectiveDistance = 80.f;
 
 	m_fLeapCheckTimer = 10.f;

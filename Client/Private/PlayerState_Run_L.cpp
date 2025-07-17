@@ -22,6 +22,7 @@ void CPlayerState_Run_L::Enter()
 void CPlayerState_Run_L::Execute(_float fTimeDelta)
 {
 	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
+	m_pOwner->m_bWalking = true;
 	if (KEY_PRESSING(DIK_A))
 	{
 		m_pOwner->m_pTransformCom->Go_Left(fTimeDelta, m_pOwnerNavi, *m_pIsGrounded);
@@ -59,5 +60,4 @@ void CPlayerState_Run_L::Execute(_float fTimeDelta)
 
 void CPlayerState_Run_L::Exit()
 {
-
 }

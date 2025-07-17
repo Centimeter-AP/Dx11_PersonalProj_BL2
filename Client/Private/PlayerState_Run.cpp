@@ -22,6 +22,7 @@ void CPlayerState_Run::Enter()
 void CPlayerState_Run::Execute(_float fTimeDelta)
 {
 	m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
+	m_pOwner->m_bWalking = true;
 	if (!KEY_PRESSING(DIK_W))
 	{
 		if (!KEY_PRESSING(DIK_S))

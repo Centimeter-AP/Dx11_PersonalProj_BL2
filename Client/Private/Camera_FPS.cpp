@@ -112,6 +112,19 @@ void CCamera_FPS::Start_Recoil()
 	m_bRecoiling = true;
 }
 
+void CCamera_FPS::Start_Shake()
+{
+	auto rnd = [](float range) { return ((rand() / (float)RAND_MAX) * 2 - 1) * range; };
+
+	float xJitter = rnd(0.002f);     // 좌우 약 ±0.002
+	float yKick = 0.005f + rnd(0.002f);  // 상하 0.003~0.007
+	float zPush = -0.005f + rnd(0.002f); // 앞뒤 -0.007~-0.003
+
+	m_vRecoilOffset = { xJitter, yKick, zPush };
+	m_vRecoilVelocity = { 0.f, 0.f, 0.f };
+	m_bRecoiling = true;
+}
+
 HRESULT CCamera_FPS::Set_PlayerBone()
 {
 	// 본 인덱스 얻기

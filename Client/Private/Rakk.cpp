@@ -47,19 +47,7 @@ HRESULT CRakk::Initialize(void* pArg)
 
 void CRakk::Priority_Update(_float fTimeDelta)
 {
-#pragma region AnimationTests
-	static _uint test = {};
-	if (KEY_DOWN(DIK_LBRACKET))
-	{
-		test > 30 ? test = 0 : test++;
-		m_pModelCom->Set_Animation(test, true);
-	}
-	if (KEY_DOWN(DIK_RBRACKET))
-	{
-		test < 1 ? test = 30 : test--;
-		m_pModelCom->Set_Animation(test, true);
-	}
-#pragma endregion
+
 	Update_State(fTimeDelta);
 
 }
@@ -155,6 +143,10 @@ HRESULT CRakk::Ready_Components(void* pArg)
 		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
 		return E_FAIL;
 
+	/* For.Com_Sound */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Rakk"),
+		TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
+		return E_FAIL;
 
 	return S_OK;
 }

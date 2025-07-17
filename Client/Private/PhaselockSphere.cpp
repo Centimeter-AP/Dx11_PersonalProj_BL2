@@ -31,6 +31,7 @@ HRESULT CPhaselockSphere::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	m_pTransformCom->Scaling(4.f, 4.f, 4.f);
 
 	return S_OK;
 }
@@ -45,14 +46,15 @@ EVENT CPhaselockSphere::Update(_float fTimeDelta)
 	if (m_bDead)
 		return EVN_DEAD;
 
-	m_pTransformCom->Scaling(4.f, 4.f, 4.f);
 	m_pTransformCom->Set_Matrix(m_pTransformCom->Billboard());
 
 	m_fTimeAcc += fTimeDelta;
 	if (m_fTimeAcc >= m_fLastTime)
 	{
-		m_bDead = true;
-		return EVN_DEAD;
+		m_pTransformCom->Scaling_Ratio(1.02f, 1.02f, 1.02f);
+		m_vColor = _float4{ m_vColor.x + fTimeDelta * 100.f, m_vColor.y + fTimeDelta * 100.f, m_vColor.z + fTimeDelta * 100.f, m_vColor.w - fTimeDelta * 10.f };
+		if (m_vColor.w <= 0.f)
+			m_bDead = true;
 	}
 	
 	return EVN_NONE;
@@ -116,6 +118,8 @@ HRESULT CPhaselockSphere::Bind_ShaderResources()
 
 
 	if (FAILED(m_pShaderCom->Bind_RawValue("g_fTimeAcc", &m_fTimeAcc, sizeof(_float))))
+		return E_FAIL;
+	if (FAILED(m_pShaderCom->Bind_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
 		return E_FAIL;
 
 

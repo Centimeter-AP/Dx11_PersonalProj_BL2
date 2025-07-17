@@ -113,6 +113,7 @@ public:
 	{
 		cout << "Idle" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Idle, true);
+		m_fTimeAcc = 0.f;
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -123,13 +124,21 @@ public:
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Provoked);
 			return;
 		}
+		m_fTimeAcc += fTimeDelta;
+		if (m_fTimeAcc >= m_pGameInstance->Compute_Random(1.f, 2.5f))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Patrol);
+			return;
+		}
 
 	}
 	virtual void Exit() override
 	{
-
+		m_fTimeAcc = 0.f;
 	}
 	virtual void Free() override { __super::Free(); }
+private:
+	_float m_fTimeAcc = {};
 };
 
 class CSkagState_Patrol final : public CSkagState
@@ -145,18 +154,26 @@ public:
 	{
 		cout << "patrol" << endl;
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Patrol_Walk_F, true);
+		m_pOwner->m_pTransformCom->Rotation(0.f, m_pGameInstance->Compute_Random(0.f, 5.f), 0.f);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-
+		m_fTimeAcc += fTimeDelta;
+		m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta*0.8f, m_pOwnerNavi);
+		if (m_fTimeAcc >= m_pGameInstance->Compute_Random(1.f, 2.f))
+		{
+			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Idle);
+			return;
+		}
 	}
 	virtual void Exit() override
 	{
-
+		m_fTimeAcc = 0.f;
 	}
 	virtual void Free() override { __super::Free(); }
+private:
+	_float m_fTimeAcc = {};
 };
-
 
 class CSkagState_Hit final : public CSkagState
 {
@@ -170,7 +187,7 @@ public:
 	virtual void Enter() override
 	{
 		cout << "Hit" << endl;
-		Set_OwnerAnim(CSkag::SKAG_ANIM::Hardflinch1, true);
+		Set_OwnerAnim(CSkag::SKAG_ANIM::Hardflinch1, false);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -222,7 +239,6 @@ private:
 	_float m_fDecel = {1.f};
 };
 
-
 class CSkagState_Provoked final : public CSkagState
 {
 public:
@@ -238,6 +254,9 @@ public:
 		rand() % 2 ?
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Provoked_var1, false) :
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Provoked_var2, false);
+		string strSound = "Skag_Roar" + to_string(rand()%3);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.5f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -324,6 +343,9 @@ public:
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite1, false) :
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Bite2, false);
 		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
+		string strSound = "Skag_Attack" + to_string(rand() % 3);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.5f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -356,7 +378,9 @@ public:
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue1, false) :
 			Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Tongue2, false);
 		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
-
+		string strSound = "Skag_Attack" + to_string(rand() % 3);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.5f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -404,6 +428,10 @@ public:
 				Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Loop, true);
 				m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 				//XMStoreFloat3(&vChargePos, m_pTargetTransform->Get_State(STATE::POSITION));
+				strRunSound = "Skag_Run" + to_string(rand() % 3);
+				m_pOwner->m_pSoundCom->SetVolume(strRunSound, 0.3f);
+				m_pOwner->m_pSoundCom->Play(strRunSound);
+				m_pOwner->m_pSoundCom->Set_Loop(strRunSound, -1);
 			}
 		}
 		if (ChargeStatus[1] == false)
@@ -445,6 +473,8 @@ public:
 		vChargePos = {};
 		fDecel = 0.9f;
 		fChargingTime = {};
+		m_pOwner->m_pSoundCom->Stop(strRunSound);
+
 	}
 	virtual void Free() override { __super::Free(); }
 private:
@@ -453,6 +483,7 @@ private:
 	_float fDecel = {0.9f};
 	_float fChargingTime = {};
 	const _float fForceChargingTime = {2.f};
+	string strRunSound;
 };
 
 class CSkagState_Attack_Charge_HitWall final : public CSkagState
@@ -500,6 +531,9 @@ public:
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Charge_Strike, false);
 		m_pOwner->m_pColliderGroundAttackCom->Set_Active(false);
 		m_pOwner->Set_FirstHit_True();
+		string strSound = "Skag_ChargeHit" + to_string(rand() % 4);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.5f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -628,6 +662,9 @@ public:
 		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Bite, false);
 		m_pOwner->m_pTransformCom->LookAt_NoY(m_pTarget->Get_Transform()->Get_State(STATE::POSITION));
+		string strSound = "Skag_Attack" + to_string(rand() % 3);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.5f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -660,6 +697,9 @@ public:
 		cout << "a_runtongue" << endl;
 		m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Attack_Run_Tongue, false);
+		string strSound = "Skag_Attack" + to_string(rand() % 3);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.5f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -698,6 +738,10 @@ public:
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Run_F3, true)) :
 		Set_OwnerAnim(CSkag::SKAG_ANIM::Run_F_Big1, true);
 		m_pOwner->m_pModelCom->Play_Animation(0.001f);
+		strSound = "Skag_Run" + to_string(rand() % 3);
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.3f);
+		m_pOwner->m_pSoundCom->Play(strSound);
+		m_pOwner->m_pSoundCom->Set_Loop(strSound, -1);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -742,6 +786,7 @@ public:
 	virtual void Exit() override
 	{
 
+		m_pOwner->m_pSoundCom->Stop(strSound);
 	}
 	virtual void Free() override { __super::Free(); }
 
@@ -749,6 +794,7 @@ private:
 	const _float m_fChargeDist = { 40.f };
 	const _float m_fLeapDist = { 30.f };
 	const _float m_fRunAtkDist = { 15.f };
+	string		strSound;
 };
 
 class CSkagState_Phaselocked final : public CSkagState
@@ -805,6 +851,8 @@ public:
 				m_ePhaselockStatus = PL_FALL;
 				m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Fall), 3.f); 
 				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Fall, false);
+				m_pOwner->m_pSoundCom->SetVolume("pl_end", 0.6f);
+				m_pOwner->m_pSoundCom->Play("pl_end");
 			}
 			break;
 		case PL_FALL:
@@ -814,6 +862,7 @@ public:
 				m_ePhaselockStatus = PL_LAND;
 				//m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::PhaseLock_Land), 45.f);
 				Set_OwnerAnim(CSkag::SKAG_ANIM::PhaseLock_Land, false);
+
 			}
 			break;
 		case PL_LAND:
@@ -847,6 +896,10 @@ public:
 		cout << "[Dead]" << endl;
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CSkag::SKAG_ANIM::Death_var1), false);
 		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CSkag::SKAG_ANIM::Death_var1), 15.f);
+		string strSound = "Skag_Death" + to_string(rand() % 3);
+		
+		m_pOwner->m_pSoundCom->SetVolume(strSound, 0.5f);
+		m_pOwner->m_pSoundCom->Play(strSound);
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{

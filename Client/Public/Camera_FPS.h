@@ -32,6 +32,7 @@ public:
 	HRESULT Initialize_Player(); // 임시 함수임 카메라매니저좀 만드삼
 	
 	void Start_Recoil();
+	void Start_Shake();
 
 private:
 	HRESULT Set_PlayerBone();

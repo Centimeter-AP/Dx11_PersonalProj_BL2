@@ -129,7 +129,6 @@ public:
 
 	virtual void Execute(_float fTimeDelta) override
 	{
-		Console(fTimeDelta);
 		m_pOwner->m_fRotatingDegree += fTimeDelta * 45.f;
 
 		m_pOwner->m_pTransformCom->Rotation(XMVectorSet(0.f, 1.f, 0.f, 0.f), XMConvertToRadians(m_pOwner->m_fRotatingDegree));
@@ -140,19 +139,7 @@ public:
 			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Flying_Idle);
 		}
 
-		if (KEY_DOWN(DIK_F))
-		{
-			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_PhaseLocked);
-			return;
-		}
-
-		if (KEY_DOWN(DIK_0))
-		{
-			m_pOwner->Set_State(CRakk::RAKK_STATE::STATE_Landing);
-			return;
-		}
-
-		Detect_Target();
+		//Detect_Target();
 	}
 	virtual void Exit() override
 	{
@@ -211,7 +198,6 @@ public:
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		Console(fTimeDelta);
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
 			if (rand() % 100 < 20)
@@ -245,7 +231,6 @@ public:
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		Console(fTimeDelta);
 		if (true == m_pOwner->m_pModelCom->Play_Animation(fTimeDelta))
 		{
 			rand() % 2 == 0 ?

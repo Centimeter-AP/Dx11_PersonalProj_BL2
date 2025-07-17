@@ -190,6 +190,11 @@ HRESULT CSkag::Ready_Components(void* pArg)
 		TEXT("Com_Gravity"), reinterpret_cast<CComponent**>(&m_pGravityCom), &GravityDesc)))
 		return E_FAIL;
 
+	/* For.Com_Sound */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Skag"),
+		TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -198,6 +203,7 @@ HRESULT CSkag::Ready_SkagStates()
 	m_pStates[SKAG_STATE::STATE_Idle] =  new CSkagState_Idle(this);
 	m_pStates[SKAG_STATE::STATE_Death] = new CSkagState_Dead(this);
 	m_pStates[SKAG_STATE::STATE_Patrol] = new CSkagState_Patrol(this);
+	m_pStates[SKAG_STATE::STATE_Hardflinch] = new CSkagState_Hit(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Bite] = new CSkagState_Attack_Bite(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Claw] = new CSkagState_Attack_Claw(this);
 	m_pStates[SKAG_STATE::STATE_Attack_Tongue] = new CSkagState_Attack_Tongue(this);
@@ -262,6 +268,12 @@ void CSkag::Set_State_Dead()
 void CSkag::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 {
 	__super::On_Collision(iMyColID, iHitColID, pHitCol);
+	
+	if (m_iHP < m_iMaxHP * 0.25f && m_bFlinch == false)
+	{
+		Set_State(SKAG_STATE::STATE_Hardflinch);
+		m_bFlinch = true;
+	}
 
 	if (iMyColID == ENUM_CLASS(COL_ID::MONSTER_SKAG_ATK))
 	{
