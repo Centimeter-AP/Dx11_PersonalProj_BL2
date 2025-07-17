@@ -37,7 +37,7 @@ protected:
 	CModel* m_pModelCom = { nullptr };
 	CSoundController* m_pSoundCom = { nullptr };
 
-	class CTransform*		m_pPlayerTransform = { nullptr };
+	class CTransform*		m_pPlayerTransform = { nullptr }; 
 	CModel*					m_pPlayerModel = { nullptr };
 	string					m_szPlayerCameraBoneName;
 	const _float4x4*		m_pPlayerWorldMatrix = { nullptr };

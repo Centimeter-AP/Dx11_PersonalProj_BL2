@@ -62,6 +62,7 @@ public:
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_PartObjects(void* pArg);
+	HRESULT Ready_UIObjects(void* pArg);
 	HRESULT Ready_HitMeshes(void* pArg);
 	HRESULT Ready_LeviathanStates();
 
@@ -79,6 +80,7 @@ private:
 	class CLeviathanState*	m_pStates[STATE_END] = { nullptr };
 	LEVI_STATE				m_eCurState =  { LEVI_STATE::STATE_END };
 	LEVI_STATE				m_ePrevState = { LEVI_STATE::STATE_END };
+	CGameObject*			m_pUI = { nullptr };
 
 private:
 	_bool					m_bInjured = { false }; // 힛메쉬 한두개 남았을 때 부터?

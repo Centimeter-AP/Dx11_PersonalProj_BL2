@@ -4,6 +4,7 @@
 #include "GameInstance.h"
 #include "Weapon.h"
 #include "Player.h"
+#include "DamageFont.h"
 
 CLevi_HitMesh::CLevi_HitMesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CGameObject{ pDevice, pContext }
@@ -167,7 +168,16 @@ void CLevi_HitMesh::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHi
 
 	if (CI_PLWEAPON(eHitColID))
 	{
-		m_iHP -= static_cast<const CWeapon*>(static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurWeapon())->Get_Damage();
+		_int iDamage = static_cast<_int>(static_cast<const CWeapon*>(static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurWeapon())->Get_Damage());
+		m_iHP -= iDamage;
+		CDamageFont::DESC DamageDesc = {};
+		DamageDesc.vWorldPosition = static_cast<CPlayer*>(pHitCol->Get_Owner())->Get_CurPickedPos();
+		DamageDesc.strDamage = to_wstring(iDamage);
+		DamageDesc.vFontColor = { 1.f, 1.f, 1.f };
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_DamageFont"),
+			ENUM_CLASS(LEVEL::STATIC), L"Layer_UI", &DamageDesc)))
+			return;
+
 		if (m_iHP <= 0)
 		{
 			m_iHP = 0;

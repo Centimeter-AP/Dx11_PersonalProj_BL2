@@ -9,6 +9,7 @@ class CShader;
 class CModel;
 class CNavigation;
 class CGravity;
+class CSoundController;
 NS_END
 
 NS_BEGIN(Client)
@@ -125,6 +126,8 @@ private:
 	CCollider*			m_pColliderCom = { nullptr };
 	CGravity*			m_pGravityCom = { nullptr };
 	CNavigation*		m_pNavigationCom = { nullptr };
+	CSoundController*	m_pSoundCom = { nullptr };
+
 	_int				m_iNavIndex = {};
 
 private: /* ㅋㅋ */
@@ -176,7 +179,10 @@ private: /* 스킬 변수 */
 	_float				m_fPhaselockUsableDistance = {};
 
 	void Cooldown_Phaselock(_float fTimeDelta);
-	// 시간 안되겟지만 다른 스킬 추가하면 밑에
+	
+private:
+	_float				m_fWalkSoundInterval = {};
+
 
 private:
 	_int				m_iAmmo[WTYPE_END] = {};

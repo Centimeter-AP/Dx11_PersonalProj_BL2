@@ -220,6 +220,7 @@
     <ClInclude Include="..\Public\UI_Ammo.h" />
     <ClInclude Include="..\Public\UI_AmmoPannel.h" />
     <ClInclude Include="..\Public\UI_Ammo_Bar.h" />
+    <ClInclude Include="..\Public\UI_BossHP.h" />
     <ClInclude Include="..\Public\UI_EnemyHP.h" />
     <ClInclude Include="..\Public\UI_Exp.h" />
     <ClInclude Include="..\Public\UI_HP.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="..\Private\UI_Ammo.cpp" />
     <ClCompile Include="..\Private\UI_AmmoPannel.cpp" />
     <ClCompile Include="..\Private\UI_Ammo_Bar.cpp" />
+    <ClCompile Include="..\Private\UI_BossHP.cpp" />
     <ClCompile Include="..\Private\UI_EnemyHP.cpp" />
     <ClCompile Include="..\Private\UI_Exp.cpp" />
     <ClCompile Include="..\Private\UI_HP.cpp" />

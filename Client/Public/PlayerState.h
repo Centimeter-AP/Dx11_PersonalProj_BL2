@@ -257,7 +257,7 @@ public:
 private:
 	_bool m_bSuccess = { false };
 	_bool m_bCatched = { false };
-	_float3 vTargetPos = {};
+	_float3  vTargetPos = {};
 };
 
 class CPlayerState_CloseAttack final : public CPlayerState

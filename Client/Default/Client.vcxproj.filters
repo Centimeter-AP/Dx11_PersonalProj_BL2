@@ -97,9 +97,6 @@
     <Filter Include="02.GameObjects\07. UI\StaticUI">
       <UniqueIdentifier>{c4cb7a60-3ab0-49ed-8030-24896353daea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\07. UI\Inventory">
-      <UniqueIdentifier>{1b101d00-b404-4920-a495-1d291e8d14f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\04. Player\PlayerWeapon">
       <UniqueIdentifier>{dd64e3dd-6298-405f-b733-e670ec5c22fe}</UniqueIdentifier>
     </Filter>
@@ -205,9 +202,6 @@
     <Filter Include="02.GameObjects\07. UI\StaticUI\UI_AmmoPannel">
       <UniqueIdentifier>{4e8285c7-91f8-470a-99fe-cb590c280ce6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.GameObjects\07. UI\DamageFont">
-      <UniqueIdentifier>{16304fb7-2a43-49a0-8c5e-868aaf1c1b72}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.GameObjects\07. UI\StaticUI\EnemyHP">
       <UniqueIdentifier>{e7652dd2-9df2-40a8-a8eb-687d8d276cd8}</UniqueIdentifier>
     </Filter>
@@ -249,6 +243,9 @@
     </Filter>
     <Filter Include="02.GameObjects\07. UI\StaticUI\DamageFont">
       <UniqueIdentifier>{bf41f3eb-880b-4366-afa6-3aeaa3281f52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.GameObjects\07. UI\BossHPBar">
+      <UniqueIdentifier>{ec2346ea-2fcd-4763-8b5b-f924386836e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -536,6 +533,9 @@
     </ClInclude>
     <ClInclude Include="..\Public\DamageFont.h">
       <Filter>02.GameObjects\07. UI\StaticUI\DamageFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_BossHP.h">
+      <Filter>02.GameObjects\07. UI\BossHPBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -845,6 +845,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\DamageFont.cpp">
       <Filter>02.GameObjects\07. UI\StaticUI\DamageFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_BossHP.cpp">
+      <Filter>02.GameObjects\07. UI\BossHPBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

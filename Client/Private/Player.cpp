@@ -314,7 +314,10 @@ void CPlayer::EnemyHPUI_Check()
 	if (m_pLastPickedCollider != m_pCurPickedCollider)
 	{
 		if (m_pCurPickedCollider != nullptr)
-			static_cast<CUI_EnemyHP*>(m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second)->Show_UI(m_pCurPickedCollider->Get_Owner());
+		{
+			if (m_pCurPickedCollider->Get_ColliderID() != ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN_HITMESH))
+				static_cast<CUI_EnemyHP*>(m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second)->Show_UI(m_pCurPickedCollider->Get_Owner());
+		}
 		else
 			static_cast<CUI_EnemyHP*>(m_PartObjects.find(TEXT("PartObject_Player_UI_EnemyHP"))->second)->Hide_UI();
 	}
@@ -386,6 +389,10 @@ HRESULT CPlayer::Ready_Components(void* pArg)
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Siren_1st.anim)");
 	m_pModelCom->Add_Animations(R"(../Bin/Resources/Models/Bin_Anim/Base_Siren_All.anim)");
 
+	/* For.Com_Sound */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Player"),
+		TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
+		return E_FAIL;
 
 	m_pColliderCom->Set_ColliderColor(RGBA_GREEN);
 
@@ -797,6 +804,7 @@ void CPlayer::Free()
 	Safe_Release(m_pNavigationCom);
 	Safe_Release(m_pModelCom);
 	Safe_Release(m_pShaderCom);
+	Safe_Release(m_pSoundCom);
 
 	//for (auto& Weapon : m_pWeapons)
 	//	Safe_Release(Weapon);

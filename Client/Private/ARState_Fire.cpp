@@ -9,6 +9,8 @@ void CARState_Fire::Enter()
 	m_pOwner->m_iCurAmmoLeft--;
 	if (m_pOwner->m_iCurAmmoLeft < 0)
 		MSG_BOX("Å«ÀÏ³µµû!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	string tagSound = "Audio_Banks_" + to_string(17381 + rand() % 5);
+	m_pOwner->m_pSoundCom->Play(tagSound);
 }
 
 void CARState_Fire::Execute(_float fTimeDelta)

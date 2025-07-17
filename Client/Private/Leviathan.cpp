@@ -3,7 +3,7 @@
 #include "GameInstance.h"
 #include "Levi_HitMesh.h"
 #include "Levi_Bullet.h"
-
+#include "UI_BossHP.h"
 CLeviathan::CLeviathan(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CMonster { pDevice, pContext }
 {
@@ -40,15 +40,14 @@ HRESULT CLeviathan::Initialize(void* pArg)
 	Set_State(m_eCurState);
 
 	m_iTongueBoneIdx = m_pModelCom->Find_BoneIndex("tongue_jaw");
-
+	m_iMaxHP = 1200;
 
 	return S_OK;
 }
 
 void CLeviathan::Priority_Update(_float fTimeDelta)
 {
-	m_iHP = 0;
-
+	_int iHP = {};
 	if (KEY_DOWN(DIK_P))
 	{
 		m_PartObjects.begin()->second->Set_Dead();
@@ -58,9 +57,10 @@ void CLeviathan::Priority_Update(_float fTimeDelta)
 		if (nullptr != pPartObject.second)
 		{
 			pPartObject.second->Priority_Update(fTimeDelta);
-			m_iHP += static_cast<CLevi_HitMesh*>(pPartObject.second)->Get_HP();
+			iHP += static_cast<CLevi_HitMesh*>(pPartObject.second)->Get_HP();
 		}
 	}
+	m_iHP = iHP;
 	if (m_iHP <= 0 && m_bDying == false)
 	{
 		Set_State(LEVI_STATE::STATE_Dead);
@@ -103,6 +103,7 @@ HRESULT CLeviathan::Update_PartObjects(_float fTimeDelta)
 				Set_State(LEVI_STATE::STATE_Stun_Left);
 			else if (iter->first == TEXT("PartObject_HitMesh_RightEye"))
 				Set_State(LEVI_STATE::STATE_Stun_Right);
+
 			m_pGameInstance->Delete_Collider(iter->second);
 			Safe_Release(iter->second);
 			iter = m_PartObjects.erase(iter);
@@ -216,6 +217,29 @@ HRESULT CLeviathan::Ready_PartObjects(void* pArg)
 {
 	if (FAILED(Ready_HitMeshes(pArg)))
 		return E_FAIL;
+	if (FAILED(Ready_UIObjects(pArg)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLeviathan::Ready_UIObjects(void* pArg)
+{
+	CUI_BossHP::DESC			UIHPDesc;
+	UIHPDesc.fX = g_iWinSizeX * 0.5f;
+	UIHPDesc.fY = 80.f;
+	UIHPDesc.fSizeX = 294.f * 2.f;
+	UIHPDesc.fSizeY = 17.0f;
+	UIHPDesc.iUIDepth = ENUM_CLASS(UI_DEPTH::UI_HP);
+	UIHPDesc.iMaxHP = &m_iMaxHP;
+	UIHPDesc.iHP = &m_iHP;
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_BossHP"),
+		ENUM_CLASS(LEVEL::STATIC), TEXT("Layer_UI"), &UIHPDesc)))
+		return E_FAIL;
+
+	//m_pUI = m_PartObjects.find(TEXT("PartObject_Boss_UI_HP"))->second;
+	//m_pUI->Set_Active(false);
+
 
 	return S_OK;
 }

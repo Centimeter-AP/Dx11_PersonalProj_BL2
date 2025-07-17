@@ -64,6 +64,7 @@ public:
 	}
 	virtual void Exit() override
 	{
+		//m_pOwner->m_pUI->Set_Active(true);
 
 	}
 	virtual void Free() override { __super::Free(); }

@@ -12,6 +12,7 @@ void CPlayerState_HolsterWeapon::Enter()
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_PISTOL:
 		m_pOwner->m_pModelCom->Set_Animation(CPlayer::PST_Holster, false);
+		m_pOwner->m_pSoundCom->Play("Audio_Banks_17376");
 		break;
 	case CPlayer::WEAPON_TYPE::WTYPE_UNARMED:
 		break;

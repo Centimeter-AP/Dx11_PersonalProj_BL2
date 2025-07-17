@@ -37,6 +37,7 @@
 #include "UI_AmmoPannel.h"
 #include "UI_Exp.h"
 #include "UI_EnemyHP.h"
+#include "UI_BossHP.h"
 #include "DamageFont.h"
 
 /** Effect **/
@@ -219,11 +220,11 @@ HRESULT CLoader::Loading_For_Logo()
 
 	/* For.Prototype_Component_Texture_UI_Bar_BossHP_Back */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_BossHP_Back"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp_Back.png"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_BossHP.png"), 1))))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_UI_Bar_BossHP */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_BossHP"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_Bar_Exp.png"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/UI_BossHP_Bar.png"), 1))))
 		return E_FAIL;
 
 	/* For.Prototype_Component_Texture_MuzzleFlash */
@@ -323,6 +324,11 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Weapon"),
 		CSoundController::Create("../Bin/Resources/Sound/Weapon/"))))
 		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Player"),
+		CSoundController::Create("../Bin/Resources/Sound/Player/"))))
+		return E_FAIL;
+
+	m_pGameInstance->LoadSound("../Bin/Resources/Sound/BGM/");
 
 	lstrcpy(m_szLoadingText, TEXT("원형객체을(를) 로딩중입니다."));
 
@@ -403,15 +409,19 @@ HRESULT CLoader::Loading_For_Logo()
 		CScreen_Hit::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
-	/* For.Prototype_GameObject_UI_Screen_Hit */
+	/* For.Prototype_GameObject_UI_DamageFont */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_DamageFont"),
 		CDamageFont::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_UI_BossHP */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_UI_BossHP"),
+		CUI_BossHP::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 	
 #pragma endregion
 
-
-	/* For.Prototype_GameObject_UI_Screen_Hit */
+	/* For.Prototype_GameObject_Effect_PhaselockBubble */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Effect_PhaselockBubble"),
 		CPhaselockSphere::Create(m_pDevice, m_pContext))))
 		return E_FAIL;

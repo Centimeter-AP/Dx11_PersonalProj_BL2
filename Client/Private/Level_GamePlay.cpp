@@ -44,6 +44,9 @@ HRESULT CLevel_GamePlay::Initialize()
 	if (FAILED(Ready_Layer_Effect(TEXT("Layer_Effect"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Sound()))
+		return E_FAIL;
+
 	ShowCursor(FALSE);
 
 	return S_OK;
@@ -406,6 +409,21 @@ HRESULT CLevel_GamePlay::Ready_Lights()
 	return S_OK;
 }
 
+HRESULT CLevel_GamePlay::Ready_Sound()
+{
+	m_pBGM = m_pGameInstance->Get_Single_Sound("Audio_Streaming_141");
+	m_pBGM->Set_Volume(0.6f);
+	m_pBGM->Play();
+	m_pEnv[0] = m_pGameInstance->Get_Single_Sound("Audio_Streaming_40");
+	m_pEnv[0]->Set_Volume(0.3f);
+	m_pEnv[0]->Play();
+	m_pEnv[1] = m_pGameInstance->Get_Single_Sound("Audio_Streaming_481");
+	m_pEnv[1]->Set_Volume(0.3f);
+	m_pEnv[1]->Play();
+
+	return S_OK;
+}
+
 void CLevel_GamePlay::Intersect()
 {
 	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER), false); 
@@ -485,4 +503,8 @@ CLevel_GamePlay* CLevel_GamePlay::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 void CLevel_GamePlay::Free()
 {
 	__super::Free();
+	m_pBGM->Stop();
+	Safe_Release(m_pBGM);
+	Safe_Release(m_pEnv[0]);
+	Safe_Release(m_pEnv[1]);
 }

@@ -5,6 +5,8 @@
 void CARState_Reload::Enter()
 {
 	m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CAssaultRifle::AR_ANIM::R_Jakobs), false);
+
+	m_pOwner->m_pSoundCom->Play("reload_AR");
 }
 
 void CARState_Reload::Execute(_float fTimeDelta)

@@ -38,6 +38,9 @@ HRESULT CLevel_Boss::Initialize()
 
 	if (FAILED(Ready_Layer_Boss(TEXT("Layer_Boss"))))
 		return E_FAIL;
+	
+	if (FAILED(Ready_Layer_UI(TEXT("Layer_UI"))))
+		return E_FAIL;
 
 	//if (FAILED(Ready_Layer_Monster(TEXT("Layer_Monster"))))
 	//	return E_FAIL;
@@ -180,6 +183,12 @@ HRESULT CLevel_Boss::Ready_Layer_Boss(const _wstring strLayerTag)
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::BOSS), TEXT("Prototype_GameObject_Leviathan"),
 		ENUM_CLASS(LEVEL::BOSS), strLayerTag, &LeviDesc)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLevel_Boss::Ready_Layer_UI(const _wstring strLayerTag)
+{
 
 	return S_OK;
 }

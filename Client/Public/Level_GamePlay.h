@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "Level.h"
+#include "GameInstance.h"
 
 NS_BEGIN(Client)
 
@@ -26,10 +27,15 @@ private:
 	HRESULT Ready_Layer_Effect(const _wstring strLayerTag);
 	HRESULT Ready_Layer_UI(const _wstring strLayerTag);
 	HRESULT Ready_Lights();
-
+	HRESULT Ready_Sound();
 	void Intersect();
 	
 	void Key_Input();
+
+private:
+	CSound_Core* m_pBGM = { nullptr };
+	CSound_Core* m_pEnv[2] = {nullptr};
+
 
 public:
 	static CLevel_GamePlay* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
