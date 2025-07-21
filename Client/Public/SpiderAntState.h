@@ -185,10 +185,15 @@ public:
 		cout << "provoked_idle" << endl;
 		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Idle_Ready, true);
 		fNextTicker = 0.f;
+		if (rand() % 2)
+		{
+			string strSound = "Spiderant_Idle" + to_string(rand() % 3);
+			m_pOwner->m_pSoundCom->SetVolume(strSound, 0.6f);
+			m_pOwner->m_pSoundCom->Play(strSound);
+		}
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		//Console(fTimeDelta);
 		m_pOwner->m_pTransformCom->LookAtLerp_NoY(m_pTargetTransform->Get_State(STATE::POSITION), fTimeDelta, 8.f);
 
 		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
@@ -492,7 +497,8 @@ public:
 		cout << "a_Shot1" << endl;
 		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Attack_1Shot, false);
 		bSpawnBullet = false;
-
+		m_pOwner->m_pSoundCom->SetVolume("Spiderant_Shot0", 0.4f);
+		m_pOwner->m_pSoundCom->Play("Spiderant_Shot0");
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -535,6 +541,9 @@ public:
 		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Attack_3Shot, false);
 		for (auto& bSpawn : bSpawnBullet)
 			bSpawn = false;
+
+		m_pOwner->m_pSoundCom->SetVolume("Spiderant_Shot0", 0.6f);
+		m_pOwner->m_pSoundCom->Play("Spiderant_Shot0");
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -587,6 +596,9 @@ public:
 		Set_OwnerAnim(CSpiderAnt::SPIDERANT_ANIM::Attack_6Shot, false);
 		for (auto& bSpawn : bSpawnBullet)
 			bSpawn = false;
+
+		m_pOwner->m_pSoundCom->SetVolume("Spiderant_Shot0", 0.6f);
+		m_pOwner->m_pSoundCom->Play("Spiderant_Shot0");
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{

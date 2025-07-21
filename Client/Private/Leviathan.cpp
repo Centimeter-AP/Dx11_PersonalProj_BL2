@@ -41,6 +41,7 @@ HRESULT CLeviathan::Initialize(void* pArg)
 
 	m_iTongueBoneIdx = m_pModelCom->Find_BoneIndex("tongue_jaw");
 	m_iMaxHP = 1200;
+	m_iDamage = 40.f;
 
 	return S_OK;
 }
@@ -102,6 +103,10 @@ HRESULT CLeviathan::Update_PartObjects(_float fTimeDelta)
 			if (iter->first == TEXT("PartObject_HitMesh_LeftEye"))
 				Set_State(LEVI_STATE::STATE_Stun_Left);
 			else if (iter->first == TEXT("PartObject_HitMesh_RightEye"))
+				Set_State(LEVI_STATE::STATE_Stun_Right);
+			else if (iter->first == TEXT("PartObject_HitMesh_Tongue"))
+				Set_State(LEVI_STATE::STATE_Stun_Left);
+			else if (iter->first == TEXT("PartObject_HitMesh_Heart"))
 				Set_State(LEVI_STATE::STATE_Stun_Right);
 
 			m_pGameInstance->Delete_Collider(iter->second);
@@ -211,10 +216,10 @@ HRESULT CLeviathan::Ready_Components(void* pArg)
 	//	TEXT("Com_ColliderAttack"), reinterpret_cast<CComponent**>(&m_pColliderGroundAttackCom), &AABBDesc)))
 	//	return E_FAIL;
 
-	///* For.Com_Sound */
-	//if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Boss"),
-	//	TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
-	//	return E_FAIL;
+	/* For.Com_Sound */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Boss"),
+		TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
+		return E_FAIL;
 
 	return S_OK;
 }

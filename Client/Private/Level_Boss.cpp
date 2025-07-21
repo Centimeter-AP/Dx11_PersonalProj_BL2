@@ -48,6 +48,9 @@ HRESULT CLevel_Boss::Initialize()
 	if (FAILED(Ready_Layer_MapObject(TEXT("Layer_MapObject"))))
 		return E_FAIL;
 
+	if (FAILED(Ready_Sound()))
+		return E_FAIL;
+
 
 
 	//ShowCursor(FALSE);
@@ -395,6 +398,23 @@ HRESULT CLevel_Boss::Ready_Lights()
 	return S_OK;
 }
 
+HRESULT CLevel_Boss::Ready_Sound()
+{
+	m_pBGM = m_pGameInstance->Get_Single_Sound("Audio_Streaming_262");
+	m_pBGM->Set_Volume(0.4f);
+	m_pBGM->Play();
+	m_pEnv[0] = m_pGameInstance->Get_Single_Sound("Audio_Streaming_179");
+	m_pEnv[0]->Set_Volume(0.05f);
+	m_pEnv[0]->Play();
+	m_pEnv[1] = m_pGameInstance->Get_Single_Sound("Audio_Streaming_176");
+	m_pEnv[1]->Set_Volume(0.2f);
+	m_pEnv[1]->Play();
+	m_pEnv[2] = m_pGameInstance->Get_Single_Sound("Audio_Streaming_255");
+	m_pEnv[2]->Set_Volume(0.1f);
+	m_pEnv[2]->Play();
+	return S_OK;
+}
+
 void CLevel_Boss::Intersect()
 {
 	m_pGameInstance->Intersect_Group(ENUM_CLASS(COL_GROUP::PLAYER), ENUM_CLASS(COL_GROUP::MONSTER));
@@ -483,4 +503,11 @@ CLevel_Boss* CLevel_Boss::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pCo
 void CLevel_Boss::Free()
 {
 	__super::Free();
+	m_pBGM->Stop();
+	m_pEnv[0]->Stop();
+	m_pEnv[1]->Stop();
+	Safe_Release(m_pBGM);
+	Safe_Release(m_pEnv[0]);
+	Safe_Release(m_pEnv[1]);
+	Safe_Release(m_pEnv[2]);
 }

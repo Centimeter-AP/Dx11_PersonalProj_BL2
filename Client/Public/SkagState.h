@@ -158,8 +158,10 @@ public:
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
-		m_fTimeAcc += fTimeDelta;
+		m_pOwner->m_pModelCom->Play_Animation(fTimeDelta);
 		m_pOwner->m_pTransformCom->Go_Straight_Hover(fTimeDelta*0.8f, m_pOwnerNavi);
+		m_fTimeAcc += fTimeDelta;
+
 		if (m_fTimeAcc >= m_pGameInstance->Compute_Random(1.f, 2.f))
 		{
 			m_pOwner->Set_State(CSkag::SKAG_STATE::STATE_Idle);

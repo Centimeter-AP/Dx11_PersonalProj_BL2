@@ -150,7 +150,7 @@ _vector CNavigation::Get_CurCenterPoint()
 
 #ifdef _DEBUG
 
-_bool CNavigation::bNavigationDraw = true;
+_bool CNavigation::bNavigationDraw = false;
 
 HRESULT CNavigation::Render()
 {	

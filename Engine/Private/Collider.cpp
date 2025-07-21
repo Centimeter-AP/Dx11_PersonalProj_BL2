@@ -154,7 +154,7 @@ const _float3 CCollider::Get_Penetrated()
 
 #ifdef _DEBUG
 
-_bool CCollider::bColliderDraw = true;
+_bool CCollider::bColliderDraw = false;
 
 HRESULT CCollider::Render()
 {

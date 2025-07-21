@@ -7,6 +7,8 @@
 #include "Camera_FPS.h"
 
 #include "BackGround.h"
+#include "LoadingWeapon.h"
+#include "LoadingUI.h"
 
 #include "Terrain.h"
 #include "MapObject.h"
@@ -136,15 +138,18 @@ HRESULT CLoader::Loading_For_Loading()
 
 HRESULT CLoader::Loading_For_Logo()
 {
-	
 	lstrcpy(m_szLoadingText, TEXT("텍스쳐을(를) 로딩중입니다."));
 	/* For.Prototype_Component_Texture_BackGround*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_BackGround"),
-		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo.dds"), 1))))
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo_Background.dds"), 1))))
 		return E_FAIL;
 	/* For.Prototype_Component_Texture_Logo_BackGround*/
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::LOGO), TEXT("Prototype_Component_Texture_Logo_BackGround"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/Logo_Background.dds"), 1))))
+		return E_FAIL;
+	/* For.Prototype_Component_Texture_LoadingUI */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_LoadingUI"),
+		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/UI/Logo/LoadingUI%d.dds"), 2))))
 		return E_FAIL;
 
 	/*************************** Loading for Static Objects *****************************/
@@ -306,7 +311,7 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PurpleRock"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Etc/Volcanic_Slag_Dif.dds")))))
 		return E_FAIL;
-	/* For.Prototype_Component_Texture_PurpleRock */
+	/* For.Prototype_Component_Texture_PurpleRock_Emissive */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PurpleRock_Emissive"),
 		CTexture::Create(m_pDevice, m_pContext, TEXT("../Bin/Resources/Textures/Etc/Volcanic_Slag_Emis.dds")))))
 		return E_FAIL;
@@ -315,6 +320,11 @@ HRESULT CLoader::Loading_For_Logo()
 
 	lstrcpy(m_szLoadingText, TEXT("모델을(를) 로딩중입니다."));
 
+	_matrix PreTransMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) */* XMMatrixRotationZ(XMConvertToRadians(-90.f)) **/ XMMatrixRotationY(XMConvertToRadians(90.f));
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Model_LoadingWeapon"),
+		CModel::Create(m_pDevice, m_pContext, MODEL::ANIM,
+			"../Bin/Resources/Models/Bin_Anim/AssaultRifle.bin", PreTransMatrix))))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("셰이더을(를) 로딩중입니다."));
 
@@ -336,9 +346,9 @@ HRESULT CLoader::Loading_For_Logo()
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Spiderant"),
 		CSoundController::Create("../Bin/Resources/Sound/Monster/Spiderant/"))))
 		return E_FAIL;
-	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Boss"),
-	//	CSoundController::Create("../Bin/Resources/Sound/Monster/Boss/"))))
-	//	return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Boss"),
+		CSoundController::Create("../Bin/Resources/Sound/Monster/Boss/"))))
+		return E_FAIL;
 	//if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_"),
 	//	CSoundController::Create("../Bin/Resources/Sound/Monster/"))))
 	//	return E_FAIL;
@@ -439,6 +449,16 @@ HRESULT CLoader::Loading_For_Logo()
 	/* For.Prototype_GameObject_Effect_PhaselockBubble */
 	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_Effect_PhaselockBubble"),
 		CPhaselockSphere::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	/* For.Prototype_GameObject_Effect_PhaselockBubble */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_LoadingWeapon"),
+		CLoadingWeapon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+	
+	/* For.Prototype_GameObject_Effect_PhaselockBubble */
+	if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_LoadingUI"),
+		CLoadingUI::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	

@@ -30,6 +30,7 @@ public:
 	{
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(eAnim), isLoop);
 	}
+
 protected:
 	CLeviathan*		m_pOwner;
 	CGameObject*	m_pTarget = { nullptr };
@@ -53,7 +54,7 @@ public:
 		//cout << " Boss State: Engage" << endl;
 
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::Roar, false);
-
+		m_pOwner->m_pSoundCom->Play("Boss_roar");
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -122,7 +123,7 @@ public:
 				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_SpitWorm);
 				break;
 			case 2:
-				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
+				//m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_Spray);
 				break;
 			case 3:
 				m_pOwner->Set_State(CLeviathan::LEVI_STATE::STATE_Attack_ThrowRock);
@@ -217,6 +218,7 @@ public:
 		_float fTrackPos = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
 		if (23.f <= fTrackPos && m_bMakeBullet == false)
 		{
+			m_pOwner->m_pSoundCom->Play("rockbreaklong");
 			m_pOwner->Spawn_Bullet(false);
 			m_bMakeBullet = true;
 		}
@@ -261,8 +263,8 @@ public:
 		if (m_pOwner->m_bInjured)
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Injured_tongue_ground_slam, false);
 		else
-			//rand() % 3 == 0 ? 
-			//Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false);
+			rand() % 2? 
+			Set_OwnerAnim(CLeviathan::LEVI_ANIM::Tongue_ground_slam, false):
 			Set_OwnerAnim(CLeviathan::LEVI_ANIM::ground_slam, false); // tongue´Â....?À½
 	}
 	virtual void Execute(_float fTimeDelta) override
@@ -287,6 +289,7 @@ public:
 				ENUM_CLASS(LEVEL::STATIC), L"Layer_Effect", &desc)))
 				return;
 
+			rand() % 2 ? m_pOwner->m_pSoundCom->Play("slam1") : m_pOwner->m_pSoundCom->Play("slam2");
 			m_bSlam = true;
 		}
 		if (99.f <= fTrackPos)
@@ -331,7 +334,7 @@ public:
 		_float fTrackPos = m_pOwner->m_pModelCom->Get_CurrentTrackPosition();
 		if (50.f <= fTrackPos && m_bSpawnBullet == false)
 		{
-			m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
+			//m_pOwner->m_pColliderGroundAttackCom->Set_Active(true);
 			m_pOwner->Spawn_Bullet();
 			m_bSpawnBullet = true;
 		}
@@ -397,6 +400,7 @@ public:
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::lefteye_start, false);
 		m_iStunStatus = STUN_START;
 		m_fStunTicker = 0.f;
+		m_pOwner->m_pSoundCom->Play("roar1");
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -456,6 +460,7 @@ public:
 		Set_OwnerAnim(CLeviathan::LEVI_ANIM::righteye_start, false);
 		m_iStunStatus = STUN_START;
 		m_fStunTicker = 0.f;
+		m_pOwner->m_pSoundCom->Play("roar1");
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{
@@ -543,6 +548,7 @@ public:
 		//cout << "[Dead]" << endl;
 		m_pOwner->m_pModelCom->Set_Animation(ENUM_CLASS(CLeviathan::LEVI_ANIM::Death), false);
 		m_pOwner->m_pModelCom->Set_Animation_TickPerSecond(ENUM_CLASS(CLeviathan::LEVI_ANIM::Death), 15.f);
+		m_pOwner->m_pSoundCom->Play("roar3");
 	}
 	virtual void Execute(_float fTimeDelta) override
 	{

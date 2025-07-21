@@ -114,6 +114,7 @@ HRESULT CLevel_GamePlay::Ready_Layer_Camera(const _wstring strLayerTag)
 
 HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 {
+	srand(_uint(time(NULL)));
 	CRakk::DESC RakkDesc;
 	RakkDesc.bActive = true;
 	RakkDesc.szName = L"Rakk";
@@ -122,22 +123,54 @@ HRESULT CLevel_GamePlay::Ready_Layer_Monster(const _wstring strLayerTag)
 	RakkDesc.iLevelID = ENUM_CLASS(LEVEL::GAMEPLAY);
 	RakkDesc.strVIBufferTag = TEXT("Prototype_Component_Model_Rakk");
 	RakkDesc.bHasTransformPreset = true;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%200, rand()%3 + 20.f, rand()%200));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
 		return E_FAIL;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
 		return E_FAIL;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
 		return E_FAIL;
-	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
 	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
 		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
 		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand() % 200, rand() % 3 + 20.f, rand() % 200));
+	if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+		ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+		return E_FAIL;
+	//XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+	//	return E_FAIL;
+	//XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+	//	return E_FAIL;
+	//XMStoreFloat4x4(&RakkDesc.PresetMatrix, XMMatrixTranslation(rand()%10 + 40.f, rand()%3 + 20.f, rand()%10 + 40.f));
+	//if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::GAMEPLAY), TEXT("Prototype_GameObject_Rakk"),
+	//	ENUM_CLASS(LEVEL::GAMEPLAY), strLayerTag, &RakkDesc)))
+	//	return E_FAIL;
 
 	CSkag::DESC	SkagDesc;
 	SkagDesc.bActive = true;
@@ -533,6 +566,8 @@ void CLevel_GamePlay::Free()
 {
 	__super::Free();
 	m_pBGM->Stop();
+	m_pEnv[0]->Stop();
+	m_pEnv[1]->Stop();
 	Safe_Release(m_pBGM);
 	Safe_Release(m_pEnv[0]);
 	Safe_Release(m_pEnv[1]);

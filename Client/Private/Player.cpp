@@ -131,8 +131,8 @@ EVENT CPlayer::Update(_float fTimeDelta)
 
 void CPlayer::Late_Update(_float fTimeDelta)
 {
-	/*if (m_isActive == false)
-		return;*/
+	if (m_isActive == false)
+		return;
 	for (auto& pPartObject : m_PartObjects)
 	{
 		if (nullptr != pPartObject.second)
@@ -158,7 +158,9 @@ HRESULT CPlayer::Render()
 			continue;
 		if (FAILED(m_pModelCom->Bind_Material(m_pShaderCom, "g_NormalTexture", i, aiTextureType_NORMALS, 0)))
 			continue;
+
 		m_pModelCom->Bind_Bone_Matrices(m_pShaderCom, "g_BoneMatrices", static_cast<_uint>(i));
+
 		if (FAILED(m_pShaderCom->Begin(0)))
 			return E_FAIL;
 
@@ -238,11 +240,13 @@ void CPlayer::On_Collision(_uint iMyColID, _uint iHitColID, CCollider* pHitCol)
 	{
 		CBullet* pHitOwner = static_cast<CBullet*>(pHitCol->Get_Owner());
 		static_cast<CScreen_Hit*>(m_PartObjects.find(TEXT("PartObject_Player_UI_Screen_Hit"))->second)->Show_Effect(pHitOwner->Get_Transform()->Get_State(STATE::POSITION));
-		if (rand() % 100 > 80)
+		if (rand() % 100 > 30)
 		{
 			string strSound = "Siren_GEN_React_Pain_0" + to_string(1 + rand() % 5);
 			m_pSoundCom->SetVolume(strSound, 0.7f);
 			m_pSoundCom->Play(strSound);
+			m_pSoundCom->SetVolume("Audio_Banks_7923", 0.7f);
+			m_pSoundCom->Play("Audio_Banks_7923");
 		}
 		if (m_bShield)
 		{
@@ -671,6 +675,7 @@ HRESULT CPlayer::Change_Level(_uint iLevelIndex)
 	if (FAILED(__super::Add_Component(m_iLevelID, TEXT("Prototype_Component_Navigation"),
 		TEXT("Com_Navigation"), reinterpret_cast<CComponent**>(&m_pNavigationCom), &NaviDesc)))
 		return E_FAIL;
+	m_isActive = true;
 
 	/* For.Com_Gravity */
 	CGravity::DESC	GravityDesc{};
@@ -689,7 +694,7 @@ HRESULT CPlayer::Change_Level(_uint iLevelIndex)
 	}
 
 	m_pTransformCom->Set_State(STATE::POSITION, m_pNavigationCom->Get_CurCenterPoint());
-
+	//m_pTransformCom->LookAt(XMVectorSet(150.f, 10.f, 150.f, 1.f));
 	m_pGameInstance->Add_Collider(ENUM_CLASS(COL_GROUP::PLAYER), m_pColliderCom);
 }
 

@@ -118,7 +118,7 @@ void CRenderTarget::Free()
 {
 	__super::Free();
 
-	SaveDDSTextureToFile(m_pContext, m_pTexture2D, TEXT("../Bin/Diffuse.dds"));
+	//SaveDDSTextureToFile(m_pContext, m_pTexture2D, TEXT("../Bin/Diffuse.dds"));
 
 	Safe_Release(m_pSRV);
 	Safe_Release(m_pRTV);

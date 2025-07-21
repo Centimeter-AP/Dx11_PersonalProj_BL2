@@ -31,6 +31,15 @@ void CPlayerState_Reload::Execute(_float fTimeDelta)
 	{
 		m_pOwner->Set_State(CPlayer::PLA_STATE::STATE_Idle);
 	}
+	if (KEY_DOWN(DIK_SPACE))
+	{
+		if (m_pOwner->m_pGravityCom->Is_Grounded())
+		{
+			m_pOwner->m_pGravityCom->Jump();
+			m_pOwner->m_bJumped = true; 
+			return;
+		}
+	}
 }
 
 void CPlayerState_Reload::Exit()

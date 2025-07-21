@@ -129,34 +129,34 @@ HRESULT CUI_BossHP::Ready_Components()
 {
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom[TYPE_BACK]))))
+		TEXT("Com_Shader_back"), reinterpret_cast<CComponent**>(&m_pShaderCom[TYPE_BACK]))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom[TYPE_BACK]))))
+		TEXT("Com_VIBuffer_back"), reinterpret_cast<CComponent**>(&m_pVIBufferCom[TYPE_BACK]))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_BossHP_Back"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BACK]))))
+		TEXT("Com_Texture_back"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BACK]))))
 		return E_FAIL;
 
 	/**************************************************************/
 
 	/* For.Com_Shader */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Shader_VtxPosTex"),
-		TEXT("Com_Shader"), reinterpret_cast<CComponent**>(&m_pShaderCom[TYPE_BAR]))))
+		TEXT("Com_Shader_bar"), reinterpret_cast<CComponent**>(&m_pShaderCom[TYPE_BAR]))))
 		return E_FAIL;
 
 	/* For.Com_VIBuffer */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_VIBuffer_Rect"),
-		TEXT("Com_VIBuffer"), reinterpret_cast<CComponent**>(&m_pVIBufferCom[TYPE_BAR]))))
+		TEXT("Com_VIBuffer_bar"), reinterpret_cast<CComponent**>(&m_pVIBufferCom[TYPE_BAR]))))
 		return E_FAIL;
 
 	/* For.Com_Texture */
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_UI_Bar_BossHP"),
-		TEXT("Com_Texture"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BAR]))))
+		TEXT("Com_Texture_bar"), reinterpret_cast<CComponent**>(&m_pTextureCom[TYPE_BAR]))))
 		return E_FAIL;
 
 	return S_OK;
@@ -197,5 +197,4 @@ void CUI_BossHP::Free()
 		Safe_Release(m_pShaderCom[i]);
 		Safe_Release(m_pTextureCom[i]);
 	}
-
 }

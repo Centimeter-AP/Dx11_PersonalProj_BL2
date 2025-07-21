@@ -4,6 +4,7 @@
 
 NS_BEGIN(Engine)
 class CTexture;
+class CSoundController;
 NS_END
 
 NS_BEGIN(Client)
@@ -40,15 +41,18 @@ private:
 	void Update_Projectile(_float fTimeDelta);
 
 private:
-	CTexture* m_pTextureCom = nullptr;
-	CTexture* m_pTextureEmissiveCom = nullptr;
-	_vector m_vVelocity = XMVectorZero();
-	_vector m_vGravity = XMVectorSet(0.f, -65.f, 0.f, 0.f);
-	_bool   m_bIsProjectile = false;
+	CTexture* m_pTextureCom = { nullptr };
+	CTexture* m_pTextureEmissiveCom = { nullptr };
+	CSoundController* m_pSoundCom = { nullptr };
+	_float4	  m_vVelocity = {};
+	_float4	  m_vGravity = { 0.f, -65.f, 0.f, 0.f };
+	_bool	  m_bIsProjectile = false;
 
 	_float	m_fLifeTime = {};
 	_bool	m_bLaunched = { false };
 	_float4x4* m_pSocketMatrix = { nullptr };
+	_bool	m_bBreakSound = { false };
+	//_float3	m_vRotAxis = {};
 
 public:
 	static CLevi_Bullet* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

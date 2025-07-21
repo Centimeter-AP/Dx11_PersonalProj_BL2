@@ -58,11 +58,8 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
 
 	BackGroundDesc.fX = g_iWinSizeX * 0.5f;
 	BackGroundDesc.fY = g_iWinSizeY * 0.5f;
-	BackGroundDesc.fSizeX = 200.0f;
-	BackGroundDesc.fSizeY = 200.0f;	
-
-	//BackGroundDesc.fSizeX = g_iWinSizeX;
-	//BackGroundDesc.fSizeY = g_iWinSizeY; 
+	BackGroundDesc.fSizeX = g_iWinSizeX;
+	BackGroundDesc.fSizeY = g_iWinSizeY; 
 
 	if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::LOGO), TEXT("Prototype_GameObject_BackGround"),
 		static_cast<_uint>(LEVEL::LOGO), strLayerTag, &BackGroundDesc)))
@@ -73,7 +70,6 @@ HRESULT CLevel_Logo::Ready_Layer_BackGround(const _wstring strLayerTag)
 
 HRESULT CLevel_Logo::Ready_Layer_StaticUI(const _wstring strLayerTag)
 {
-
 
 	return S_OK;
 }

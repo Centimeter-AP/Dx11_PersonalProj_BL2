@@ -247,6 +247,9 @@
     <Filter Include="02.GameObjects\07. UI\BossHPBar">
       <UniqueIdentifier>{ec2346ea-2fcd-4763-8b5b-f924386836e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.GameObjects\07. UI\Loading">
+      <UniqueIdentifier>{778c6e93-6b04-41e0-a94c-b80cd28b212e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -536,6 +539,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\UI_BossHP.h">
       <Filter>02.GameObjects\07. UI\BossHPBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingUI.h">
+      <Filter>02.GameObjects\07. UI\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LoadingWeapon.h">
+      <Filter>02.GameObjects\07. UI\Loading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -848,6 +857,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_BossHP.cpp">
       <Filter>02.GameObjects\07. UI\BossHPBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingUI.cpp">
+      <Filter>02.GameObjects\07. UI\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LoadingWeapon.cpp">
+      <Filter>02.GameObjects\07. UI\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

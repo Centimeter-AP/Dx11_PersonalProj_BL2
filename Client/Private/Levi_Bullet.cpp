@@ -32,6 +32,12 @@ HRESULT CLevi_Bullet::Initialize(void* pArg)
 
 	if (true == pDesc->bLaunch)
 		Launch_Projectile(m_vTargetPos, 70.f);
+
+	//m_vRotAxis = {
+	//	m_pGameInstance->Compute_Random_Normal(),
+	//	m_pGameInstance->Compute_Random_Normal(),
+	//	m_pGameInstance->Compute_Random_Normal()
+	//};
 	return S_OK;
 }
 
@@ -44,7 +50,10 @@ void CLevi_Bullet::Priority_Update(_float fTimeDelta)
 EVENT CLevi_Bullet::Update(_float fTimeDelta)
 {
 	if (m_bDead)
+	{
+
 		return EVN_DEAD;
+	}
 
 	if (m_isActive == false)
 		return EVN_NONE;
@@ -119,7 +128,7 @@ HRESULT CLevi_Bullet::Ready_Components(void* pArg)
 	SphereDesc.pOwner = this;
 	SphereDesc.eType = COLLIDER::SPHERE;
 	SphereDesc.iColliderGroup = ENUM_CLASS(COL_GROUP::MON_BULLET);
-	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN_ATK);
+	SphereDesc.iColliderID = ENUM_CLASS(COL_ID::MONSTER_BOSS_LEVIATHAN_BULLET);
 	SphereDesc.fRadius = 8.f;
 	SphereDesc.vCenter = _float3(0.f, 0.f, 0.f);
 
@@ -142,7 +151,10 @@ HRESULT CLevi_Bullet::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Texture_PurpleRock_Emissive"),
 		TEXT("Com_Texture_Emissive"), reinterpret_cast<CComponent**>(&m_pTextureEmissiveCom))))
 		return E_FAIL;
-
+	/* For.Com_Sound */
+	if (FAILED(__super::Add_Component(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_Component_Sound_Boss"),
+		TEXT("Com_Sound"), reinterpret_cast<CComponent**>(&m_pSoundCom))))
+		return E_FAIL;
 	return S_OK;
 }
 
@@ -160,7 +172,7 @@ void CLevi_Bullet::Launch_Projectile(const _float3& targetPos, _float fSpeed)
 	_float    Dh = sqrtf(gx * gx + gz * gz);
 	_float    Dy = gy;
 	_float    v = fSpeed;
-	_float    g = -XMVectorGetY(m_vGravity); // e.g. 9.8
+	_float    g = -XMVectorGetY(XMLoadFloat4(&m_vGravity)); // e.g. 9.8
 
 	// 3) 판별식 및 θ 계산 (고각/저각 중 하나 선택)
 	_float v2 = v * v;
@@ -183,8 +195,7 @@ void CLevi_Bullet::Launch_Projectile(const _float3& targetPos, _float fSpeed)
 	_vector dirH = XMVector3Normalize(XMVectorSet(gx, 0.f, gz, 0.f));
 	_vector v0_h = XMVectorScale(dirH, v * cosf(thetaL));
 	_vector v0_v = XMVectorSet(0.f, v * sinf(thetaL), 0.f, 0.f);
-	m_vVelocity = XMVectorAdd(v0_h, v0_v);
-
+	XMStoreFloat4(&m_vVelocity, XMVectorAdd(v0_h, v0_v));
 	// 5) 발사 플래그
 	m_bIsProjectile = true;
 }
@@ -195,18 +206,30 @@ void CLevi_Bullet::Update_Projectile(_float fTimeDelta)
 		return;
 
 	// 1) 속도에 중력 가속 누적: v = v + g * dt
-	m_vVelocity = XMVectorAdd(m_vVelocity,
-		XMVectorScale(m_vGravity, fTimeDelta));
+
+	XMStoreFloat4(&m_vVelocity, XMVectorAdd(XMLoadFloat4(&m_vVelocity),
+		XMVectorScale(XMLoadFloat4(&m_vGravity), fTimeDelta)));
 
 	// 2) 위치 이동: P = P + v * dt
 	_vector vPos = m_pTransformCom->Get_State(STATE::POSITION);
 	vPos = XMVectorAdd(vPos,
-		XMVectorScale(m_vVelocity, fTimeDelta));
+		XMVectorScale(XMLoadFloat4(&m_vVelocity), fTimeDelta));
 	m_pTransformCom->Set_State(STATE::POSITION, vPos);
 
+	//m_pTransformCom->Turn(XMVectorSet(0.3f, 1.f, 0.5f, 0.9f) * 10.f, fTimeDelta);
+
 	m_fLifeTime += fTimeDelta;
+	if (m_fLifeTime > 1.5f && m_bBreakSound == false)
+	{
+		string strSound = "rockbreak" + to_string(rand() % 3);
+		m_pSoundCom->Play(strSound);
+		m_pSoundCom->SetVolume(strSound, 0.7f);
+		m_bBreakSound = true;
+	}
 	if (m_fLifeTime > 2.f)
+	{
 		m_bDead = true;
+	}
 }
 
 CLevi_Bullet* CLevi_Bullet::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -240,4 +263,5 @@ void CLevi_Bullet::Free()
 	__super::Free();
 	Safe_Release(m_pTextureCom);
 	Safe_Release(m_pTextureEmissiveCom);
+	Safe_Release(m_pSoundCom);
 }

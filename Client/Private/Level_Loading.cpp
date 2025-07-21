@@ -10,6 +10,7 @@
 
 #include "GameInstance.h"
 #include <BackGround.h>
+#include "LoadingUI.h"
 
 CLevel_Loading::CLevel_Loading(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 		: CLevel { pDevice, pContext }
@@ -29,7 +30,28 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevelID)
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, m_eNextLevelID);
 	if (nullptr == m_pLoader)
 		return E_FAIL;
-	
+
+	if (m_eNextLevelID != LEVEL::LOGO)
+	{
+		CLoadingUI::DESC				LoadingDesc{};
+
+		LoadingDesc.fX = g_iWinSizeX * 0.5f;
+		LoadingDesc.fY = g_iWinSizeY * 0.5f;
+		LoadingDesc.fSizeX = g_iWinSizeX;
+		LoadingDesc.fSizeY = g_iWinSizeY;
+		if (m_eNextLevelID == LEVEL::GAMEPLAY)
+			LoadingDesc.iLevelTextureIdx = 0;
+		else if (m_eNextLevelID == LEVEL::BOSS)
+		{
+			LoadingDesc.iLevelTextureIdx = 1;
+			GET_PLAYER->Set_Active(false);
+		}
+
+		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::STATIC), TEXT("Prototype_GameObject_LoadingUI"),
+			ENUM_CLASS(LEVEL::LOADING), TEXT("Layer_LoadingUI"), &LoadingDesc)))
+			return E_FAIL;
+		
+	}
 	return S_OK;
 }
 
@@ -77,17 +99,7 @@ HRESULT CLevel_Loading::Render()
 
 HRESULT CLevel_Loading::Ready_Layer_BackGround(const _wstring strLayerTag)
 {
-	//CBackGround::BACKGROUND_DESC				BackGroundDesc{};
 
-	//BackGroundDesc.fX = g_iWinSizeX * 0.5f;
-	//BackGroundDesc.fY = g_iWinSizeY * 0.5f;
-
-	//BackGroundDesc.fSizeX = g_iWinSizeX;
-	//BackGroundDesc.fSizeY = g_iWinSizeY;
-
-	//if (FAILED(m_pGameInstance->Add_GameObject(static_cast<_uint>(LEVEL::STATIC), TEXT("Prototype_GameObject_LoadingBackground"),
-	//	static_cast<_uint>(LEVEL::STATIC), strLayerTag, &BackGroundDesc)))
-	//	return E_FAIL;
 
 	return S_OK;
 }

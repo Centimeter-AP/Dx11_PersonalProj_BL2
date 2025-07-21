@@ -26,7 +26,7 @@ protected:
 	CBullet(const CBullet& Prototype);
 	virtual ~CBullet()
 	{
-		int a = 0;
+   		int a = 0;
 
 	}
 
