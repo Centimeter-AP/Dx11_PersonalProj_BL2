@@ -300,7 +300,7 @@ HRESULT CNavigationTool::Pick_Objects()
 						_uint iNumIndices = pMesh->Get_NumIndices();
 						_matrix WorldMatrix = pObject->Get_Transform()->Get_WorldMatrix();
 						// 월드 행렬 가져오기
-
+						
 						_float3 fPick = {};
 						_float fDist = {};
 						// 피킹된 위치 저장

@@ -25,7 +25,7 @@ HRESULT CConvertTool::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-	savePath = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\testing)";
+	savePath = R"(.)";
 
 
 
@@ -66,10 +66,34 @@ HRESULT CConvertTool::Render_ConvertTool()
 	Begin("Convert Tools", &m_pWindowData->ShowConvertMenu, NULL);
 	
 	IGFD::FileDialogConfig config;
+	if (Button("Set Save Path"))
+	{
+		config.path = savePath;
+		IFILEDIALOG->OpenDialog("SavePathDialog", "Select Where to Save", nullptr, config);
+
+	}
+	if (IFILEDIALOG->Display("SavePathDialog"))
+	{
+		if (IFILEDIALOG->IsOk())
+		{
+			auto selections = IFILEDIALOG->GetSelection();
+			if (!selections.empty())
+			{
+				for (auto FilePath : selections)
+				{
+					path selected = FilePath.second;
+					savePath = selected.parent_path().string();
+					//saveFileName =  / ModelPath.stem();
+				}
+			}
+		}
+		IFILEDIALOG->Close();
+	}
+
 	if (Button("Load NonAnim File"))
 	{
 		m_isAnim = false;	
-		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_NonAnim)";
+		//savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_NonAnim)";
 		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\Frost_P\StaticMesh3\FBX)";
 		config.countSelectionMax = 0; // 公力茄
 
@@ -79,7 +103,7 @@ HRESULT CConvertTool::Render_ConvertTool()
 	if (Button("Load Anim File"))
 	{
 		m_isAnim = true;
-		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+		//savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
 		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\)";
 		config.countSelectionMax = 0; // 公力茄
 
@@ -89,7 +113,7 @@ HRESULT CConvertTool::Render_ConvertTool()
 	if (Button("Load Anim File (Anim Only)"))
 	{
 		m_isAnimOnly = true;
-		savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
+		//savePath = R"(C:\Users\CMAP\Documents\github\Dx11_PersonalProj_BL2\Client\Bin\Resources\Models\Bin_Anim)";
 		config.path = R"(C:\Users\CMAP\Documents\Dx11_Personal_Projects\3d\Borderlands2 Exports\Borderlands2_ALL\GD_Siren_Streaming_SF\AnimSet\FBX)";
 		config.countSelectionMax = 0; // 公力茄
 

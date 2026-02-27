@@ -28,11 +28,12 @@ using json = nlohmann::json;
 #undef new
 #include "imgui.h"
 #include "imgui_internal.h"
-#pragma pop_macro("new")
 #include "imgui_impl_dx11.h"
 #include "imgui_impl_win32.h"
 #include "ImGuizmo.h"
+//#include "ImSequencer.h"
 #include "ImGuiFileDialog.h"
+#pragma pop_macro("new")
 using namespace ImGui;
 #endif
 

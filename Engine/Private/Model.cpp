@@ -284,10 +284,10 @@ HRESULT CModel::Add_Animations(const string& filepath)
 	if (!ifs.is_open())
 		return E_FAIL;
 	
-	_uint iAdditionalNumAnimations = {};
 
 	_uint iRootBoneIdx = Find_BoneIndex("Root");
 
+	_uint iAdditionalNumAnimations = {};
 	ifs.read(reinterpret_cast<_char*>(&iAdditionalNumAnimations), sizeof(_uint));  // 애니메이션 몇개읨 
 
 	for (size_t i = 0; i < iAdditionalNumAnimations; i++)

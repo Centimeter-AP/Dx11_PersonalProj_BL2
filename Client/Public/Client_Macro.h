@@ -1,67 +1,6 @@
 ﻿#pragma once
 
-#pragma region 프로토타입 넣는 매크로들
-#pragma region SR매크로
 
-#define ADD_TEXTURE(Name,Path,Cnt)																					\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_Texture_"))+L###Name ,	\
-CTexture::Create(m_pGraphic_Device, TEXT(Path), Cnt))))																\
-return E_FAIL
-
-#define ADD_TEXTURE_EX(Name,Path,Cnt,...)																			\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_Texture_"))+L###Name ,	\
-CTexture::Create(m_pGraphic_Device, TEXT(Path), Cnt, __VA_ARGS__))))												\
-return E_FAIL
-
-#define ADD_SOUND(Name,Path)																				\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_Sound_"))+L###Name ,	\
-CSoundController::Create(Path))))															\
-return E_FAIL
-
-#define ADD_SOUND_EX(Name,Path,...)																				\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_Sound_"))+L###Name ,	\
-CSoundController::Create(Path, __VA_ARGS__))))															\
-return E_FAIL
-
-#define ADD_MODEL(Name)																								\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_VIBuffer_"))+L###Name,	\
-CVIBuffer_##Name::Create(m_pGraphic_Device))))																		\
-return E_FAIL
-
-#define ADD_MODEL_EX(Name,...)																						\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_VIBuffer_"))+L###Name,	\
-CVIBuffer_##Name::Create(m_pGraphic_Device, __VA_ARGS__ ))))														\
-return E_FAIL
-
-#define ADD_PRTOBJ(Name)																							\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_GameObject_"))+L###Name ,		\
-C##Name::Create(m_pGraphic_Device))))																				\
-return E_FAIL
-
-#define ADD_PRTOBJ_EX(Name,...)																						\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_GameObject_"))+L###Name ,		\
-C##Name::Create(m_pGraphic_Device, __VA_ARGS__ ))))																	\
-return E_FAIL
-
-#define ADD_PRTCOM(Name)																							\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_")) +L###Name,			\
-C##Name::Create(m_pGraphic_Device))))																				\
-return E_FAIL
-
-#define ADD_PRTCOM_EX(Name,...)																						\
-if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, _wstring(TEXT("Prototype_Component_")) +L###Name,			\
-C##Name::Create(m_pGraphic_Device, __VA_ARGS__ ))))																	\
-return E_FAIL	
-
-#pragma endregion
-
-#define ADD_MODEL_NA(Name, eLevel, fScale, Path)																			\
-{_matrix PreTransMatrix = XMMatrixScaling(fScale, fScale, fScale) * XMMatrixRotationY(XMConvertToRadians(180.f));			\
-if (FAILED(m_pGameInstance->Add_Prototype(ENUM_CLASS(eLevel), _wstring(TEXT("Prototype_Component_Model_")) +L###Name,		\
-CModel::Create(m_pDevice, m_pContext, MODEL::NONANIM, Path, PreTransMatrix))))												\
-return E_FAIL;}
-
-#pragma endregion
 
 #pragma region 유틸리티
 
@@ -80,6 +19,16 @@ _float3 vCameraPos = { matCamWorld._41, matCamWorld._42, matCamWorld._43 };
 
 #define FWINCX static_cast<_float>(g_iWinSizeX)
 #define FWINCY static_cast<_float>(g_iWinSizeY)
+
+/* RGBA Color Float4 */
+#define RGBA_WHITE      _float4{1.f, 1.f, 1.f, 1.f}
+#define RGBA_BLACK      _float4{0.f, 0.f, 0.f, 1.f}
+#define RGBA_RED		_float4{1.f, 0.f, 0.f, 1.f}
+#define RGBA_GREEN      _float4{0.f, 1.f, 0.f, 1.f}
+#define RGBA_BLUE		_float4{0.f, 0.f, 1.f, 1.f}
+#define RGBA_YELLOW     _float4{1.f, 1.f, 0.f, 1.f}
+#define RGBA_MAGENTA	_float4{1.f, 0.f, 1.f, 1.f}
+#define RGBA_CYAN		_float4{0.f, 1.f, 1.f, 1.f}
 
 #define KEY_DOWN		m_pGameInstance->Key_Down
 #define	KEY_PRESSING	m_pGameInstance->Key_Pressing

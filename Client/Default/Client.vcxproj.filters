@@ -250,6 +250,12 @@
     <Filter Include="02.GameObjects\07. UI\Loading">
       <UniqueIdentifier>{778c6e93-6b04-41e0-a94c-b80cd28b212e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Levels\MapTool\Tools\Effect">
+      <UniqueIdentifier>{0f12f911-e7b1-4f3a-8ca2-25ee268d7534}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Levels\MapTool\Tools\Effect\Sequence">
+      <UniqueIdentifier>{8fa9abbb-2d80-48ab-a50e-4681c3731c0d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -545,6 +551,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\LoadingWeapon.h">
       <Filter>02.GameObjects\07. UI\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EffectTool.h">
+      <Filter>01.Levels\MapTool\Tools\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\EffectSequence.h">
+      <Filter>01.Levels\MapTool\Tools\Effect\Sequence</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -863,6 +875,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\LoadingWeapon.cpp">
       <Filter>02.GameObjects\07. UI\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EffectTool.cpp">
+      <Filter>01.Levels\MapTool\Tools\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\EffectSequence.cpp">
+      <Filter>01.Levels\MapTool\Tools\Effect\Sequence</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

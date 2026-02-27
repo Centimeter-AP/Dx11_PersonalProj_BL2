@@ -39,7 +39,7 @@ protected:
 	_float*						m_pSpeeds = { nullptr };
 	_float3						m_vPivot = {};
 	_bool						m_isLoop = { false };
-
+	
 public:
 	static CVIBuffer_Point_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const INSTANCE_DESC* pDesc);
 	virtual CComponent* Clone(void* pArg) override;

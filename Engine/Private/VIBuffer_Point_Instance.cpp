@@ -14,7 +14,7 @@ CVIBuffer_Point_Instance::CVIBuffer_Point_Instance(const CVIBuffer_Point_Instanc
 	, m_pSpeeds{ Prototype.m_pSpeeds }	
 	, m_isLoop { Prototype.m_isLoop }
 {
-	
+
 }
 
 HRESULT CVIBuffer_Point_Instance::Initialize_Prototype(const INSTANCE_DESC* pArg)

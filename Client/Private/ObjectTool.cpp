@@ -114,7 +114,7 @@ void CObjectTool::Key_Input()
 			{
 				m_eOperation = ImGuizmo::SCALE;
 			}
-			if (KEY_DOWN(DIK_B)) // ㅋㅋ 돚
+			if (KEY_DOWN(DIK_B)) 
 			{
 				m_bGizmoLock = !m_bGizmoLock;
 			}
@@ -260,7 +260,11 @@ HRESULT CObjectTool::Render_ObjectTool()
 		XMStoreFloat4x4(&mDesc.PresetMatrix, XMMatrixTranslation(50.f, 10.f, 50.f));
 		if (FAILED(m_pGameInstance->Add_GameObject(ENUM_CLASS(LEVEL::MAPTOOL), _wstring(L"Prototype_GameObject_") + ObjectTag,
 			ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_MapObject"), &mDesc)))
+		{
+			MSG_BOX("왜안될까");
+			ImGui::End();
 			return E_FAIL;
+		}
 	}
 
 	ImGui::Checkbox("Enable Gizmo", &m_isGizmoEnable);
@@ -468,6 +472,7 @@ HRESULT CObjectTool::Make_Particles()
 			m_pGameInstance->Clear_Layer(ENUM_CLASS(LEVEL::MAPTOOL), TEXT("Layer_Particle"));
 			m_pToolParticle = nullptr;
 		}
+
 		/* For.Prototype_Component_VIBuffer_Explosion_Test */
 		CVIBuffer_Point_Instance::POINT_INSTANCE_DESC		Desc{};
 		Desc.iNumInstance = m_iNumInstance;
@@ -738,8 +743,8 @@ HRESULT CObjectTool::Save_Objects(path SavePath)
 		return S_OK;
 
 	ofstream ofs(SavePath);
-	if (ofs.is_open())
-		int a = 0;
+	if (!ofs.is_open())
+		return E_FAIL;
 	json jSave;
 
 
